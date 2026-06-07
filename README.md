@@ -2,6 +2,8 @@
 
 **Give your AI agents and apps instant, secure access to 250+ enterprise systems.**
 
+Part of Fastn, the embedded integration platform for SaaS products and AI agents.
+
 Production-ready SDK with fully managed OAuth 2.1, SOC 2 certified platform, governed access, and sub-second execution. One SDK for OpenAI, Anthropic, Gemini, and Bedrock function calling.
 
 ## Why Fastn?
@@ -9,8 +11,8 @@ Production-ready SDK with fully managed OAuth 2.1, SOC 2 certified platform, gov
 | Problem | Fastn Solution |
 |---------|---------------|
 | Agents receive all tool schemas, burning tokens and increasing hallucination | `get_tools_for(prompt, limit=5)` semantically matches and returns only the most relevant tools |
-| API schemas are deeply nested, wasting context on structural wrappers | SDK auto-unwraps schemas for LLMs and re-wraps for execution — flat params in, correct API structure out |
-| Each SaaS API has its own OAuth flow, token refresh, and credential storage | Fully managed OAuth 2.1 vault — acquisition, auto-refresh, tenant isolation. No token management code. |
+| API schemas are deeply nested, wasting context on structural wrappers | SDK auto-unwraps schemas for LLMs and re-wraps for execution, flat params in, correct API structure out |
+| Each SaaS API has its own OAuth flow, token refresh, and credential storage | Fully managed OAuth 2.1 vault, acquisition, auto-refresh, tenant isolation. No token management code. |
 | Security and compliance are afterthoughts in most agent tooling | SOC 2 certified platform, role-based access control, audit trails, PII filtering |
 | LLM agents need tool schemas in provider-specific formats | `get_tools_for("Send a Slack message", format="openai")` returns ready-to-use schemas for OpenAI, Anthropic, Gemini, Bedrock |
 | Building automation workflows requires stitching APIs together | `fastn.flows.create("When a PR is opened, post to Slack")` handles orchestration |
@@ -36,13 +38,13 @@ fastn = FastnClient(api_key="...", project_id="...")
 fastn.slack.send_message(channel="general", text="Hello from Fastn!")
 ```
 
-IDE autocomplete works immediately — 250+ connector stubs ship in the package.
+IDE autocomplete works immediately, 250+ connector stubs ship in the package.
 
 For CLI usage:
 
 ```bash
 fastn login
-fastn connector sync   # optional — refreshes connector registry and type stubs
+fastn connector sync   # optional, refreshes connector registry and type stubs
 ```
 
 ## Terminology
@@ -59,11 +61,11 @@ Connectors provide tools. Flows compose tools. Agents run flows and tools with r
 
 ## How It Works
 
-Fastn sits between your AI agent and 250+ SaaS APIs as a unified context layer:
+Fastn sits between your AI agent and 250+ SaaS APIs as an embedded integration platform:
 
-- **Dynamic Tool Filtering** — `get_tools_for(prompt)` semantically matches against the full registry and returns only the top N tools (default: 5). This reduces tool context from ~125K tokens to ~2,500 tokens — roughly 98% less context for the LLM.
-- **Context Optimization** — composes tools and skills, filters schema inputs/outputs, and strips PII to minimize tokens and reduce hallucination. The SDK also flattens nested API wrappers for the LLM and re-wraps them for execution. Automatic and transparent.
-- **Fully Managed Auth** — OAuth 2.1 tokens and API keys are securely vaulted on the SOC 2 certified Fastn platform. The SDK calls the gateway; the gateway injects credentials per tenant. Tokens auto-refresh with a 30-second expiry buffer.
+- **Dynamic Tool Filtering**, `get_tools_for(prompt)` semantically matches against the full registry and returns only the top N tools (default: 5). This reduces tool context from ~125K tokens to ~2,500 tokens, roughly 98% less context for the LLM.
+- **Context Optimization**, composes tools and skills, filters schema inputs/outputs, and strips PII to minimize tokens and reduce hallucination. The SDK also flattens nested API wrappers for the LLM and re-wraps them for execution. Automatic and transparent.
+- **Fully Managed Auth**, OAuth 2.1 tokens and API keys are securely vaulted on the SOC 2 certified Fastn platform. The SDK calls the gateway; the gateway injects credentials per tenant. Tokens auto-refresh with a 30-second expiry buffer.
 
 ```
 Agent → get_tools_for(prompt) → SDK → Platform (semantic match) → top N tools (flat schemas)
@@ -75,9 +77,9 @@ Agent → execute(tool, params) → SDK (re-wrap) → Platform (inject credentia
 
 Fastn handles the three hardest parts of giving LLMs access to tools:
 
-1. **Discovery** — `get_tools_for(prompt)` uses semantic matching to find the right tools from 250+ connectors. Only the top N (default: 5) reach the LLM.
-2. **Schema translation** — Schemas are automatically flattened for LLM consumption and formatted for your provider (OpenAI, Anthropic, Gemini, Bedrock).
-3. **Execution** — `execute(tool, params)` routes through the gateway, which handles credential injection, parameter re-wrapping, retries, and logging.
+1. **Discovery**, `get_tools_for(prompt)` uses semantic matching to find the right tools from 250+ connectors. Only the top N (default: 5) reach the LLM.
+2. **Schema translation**, Schemas are automatically flattened for LLM consumption and formatted for your provider (OpenAI, Anthropic, Gemini, Bedrock).
+3. **Execution**, `execute(tool, params)` routes through the gateway, which handles credential injection, parameter re-wrapping, retries, and logging.
 
 ```python
 import json
@@ -85,7 +87,7 @@ from fastn import FastnClient
 
 fastn = FastnClient()
 
-# Step 1: Describe what you need — Fastn finds the right tools
+# Step 1: Describe what you need, Fastn finds the right tools
 tools = fastn.get_tools_for(
     "Send a message on Slack and create a Jira ticket",
     format="openai",   # also: anthropic, gemini, bedrock, raw
@@ -108,7 +110,7 @@ result = fastn.execute(
 
 Supported providers: **OpenAI**, **Anthropic Claude**, **Google Gemini**, **AWS Bedrock**, and any provider via `raw` format.
 
-## Flows — Tool Orchestration
+## Flows, Tool Orchestration
 
 ```python
 # Create a flow from natural language
@@ -123,9 +125,9 @@ run = fastn.flows.run(flow_id=result["flow_id"])
 status = fastn.flows.get_run(run_id=run["run_id"])
 ```
 
-## Auth — Credential Vault
+## Auth, Credential Vault
 
-Fastn manages the full OAuth lifecycle — token storage, auto-refresh, and per-tenant isolation — so your application never handles raw credentials.
+Fastn manages the full OAuth lifecycle, token storage, auto-refresh, and per-tenant isolation, so your application never handles raw credentials.
 
 ```python
 # Start OAuth for a user
@@ -162,10 +164,10 @@ Every API call goes through the Fastn gateway. The SDK handles client-side conce
 
 ## Documentation
 
-- **[Python SDK Guide](python/README.md)** — full API reference, terminology, examples, flows, auth, error handling
-- **[Changelog](python/CHANGELOG.md)** — release history
-- **[fastn.ai](https://fastn.ai)** — product overview
-- **[docs.fastn.ai](https://docs.fastn.ai)** — full documentation
+- **[Python SDK Guide](python/README.md)**, full API reference, terminology, examples, flows, auth, error handling
+- **[Changelog](python/CHANGELOG.md)**, release history
+- **[fastn.ai](https://fastn.ai)**, product overview
+- **[docs.fastn.ai](https://docs.fastn.ai)**, full documentation
 
 ## Repo Structure
 
