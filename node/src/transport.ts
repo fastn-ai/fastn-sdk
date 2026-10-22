@@ -125,7 +125,7 @@ export class FetchTransport implements Transport {
   async call(op: OpDef, input: Record<string, unknown>, opts: RequestOptions = {}): Promise<any> {
     const { url, init } = this.prepare(op, input, opts);
     const f = this.cfg.fetch ?? globalThis.fetch;
-    if (typeof f !== "function") throw new FastnNetworkError("No fetch available: use Node 18+ or pass { fetch } to the client", op.method, op.path);
+    if (typeof f !== "function") throw new FastnNetworkError("No fetch available: use Node 20+ or pass { fetch } to the client", op.method, op.path);
     const retryable = op.method === "GET" || init.headers["idempotency-key"] !== undefined;
     const maxRetries = retryable ? (opts.retries ?? this.cfg.retries) : 0;
     const timeoutMs = opts.timeoutMs ?? this.cfg.timeoutMs;

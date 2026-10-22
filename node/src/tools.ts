@@ -15,7 +15,7 @@ export interface ToolsClientConfig {
   key: string;
   /** The workspace endpoint, e.g. https://mcp.fastn.dev/trillet */
   url: string;
-  /** A fetch implementation, default globalThis.fetch (Node 18+). */
+  /** A fetch implementation, default globalThis.fetch (Node 20+). */
   fetch?: typeof fetch;
   /** Per-call timeout, default 120000 (tools can be slow). */
   timeoutMs?: number;

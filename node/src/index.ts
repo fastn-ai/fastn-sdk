@@ -30,7 +30,7 @@ export interface FastnClientConfig {
   defaults?: RequestOptions;
   /** Called after every HTTP attempt, for your logs. */
   onRequest?: (info: RequestLog) => void;
-  /** A fetch implementation, default globalThis.fetch (Node 18+). */
+  /** A fetch implementation, default globalThis.fetch (Node 20+). */
   fetch?: typeof fetch;
   userAgent?: string;
   /** Your fastn Connect workspace (connect.fastn.dev): its key and endpoint. Enables fastn.tools and customer(ref).tools. */
