@@ -1,7 +1,7 @@
 {
   "name": "@fastn-ai/sdk",
-  "version": "0.0.1",
-  "description": "Official fastn SDK for Node.js and TypeScript",
+  "version": "0.1.0",
+  "description": "Official fastn SDK for Node.js and TypeScript: the platform API (generated from the OpenAPI spec) and workspace tool calls",
   "license": "MIT",
   "author": "fastn",
   "homepage": "https://github.com/fastn-ai/fastn-sdk/tree/main/node#readme",
@@ -13,7 +13,13 @@
   "bugs": {
     "url": "https://github.com/fastn-ai/fastn-sdk/issues"
   },
-  "keywords": ["fastn", "sdk", "integrations", "mcp", "ai-agents"],
+  "keywords": [
+    "fastn",
+    "sdk",
+    "integrations",
+    "mcp",
+    "ai-agents"
+  ],
   "type": "module",
   "sideEffects": false,
   "engines": {
@@ -35,13 +41,18 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup",
+    "build": "npm run generate && tsup",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run test/unit",
     "lint:package": "publint --strict && attw --pack .",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "generate": "tsx scripts/generate.ts",
+    "test:live": "LIVE=1 vitest run test/live",
+    "spec:refresh": "tsx scripts/refresh-spec.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -52,6 +63,7 @@
     "@types/node": "^22.0.0",
     "publint": "^0.3.0",
     "tsup": "^8.0.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.4.0",
     "vitest": "^3.0.0"
   }

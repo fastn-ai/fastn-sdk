@@ -1,8 +1,13 @@
 # @fastn-ai/sdk
 
-Official fastn SDK for Node.js and TypeScript.
+The fastn platform REST API for Node and TypeScript. Every endpoint, generated from fastn's OpenAPI spec, plus a
+small hand-written layer that makes the common partner flow easy.
 
-> Status: early scaffold. The client API is not implemented yet.
+- Node 20+ (built-in fetch), no runtime dependencies, ESM and CommonJS, full types.
+- 638 operations in 23 areas (`orgs`, `embed`, `connections`, `unified`, `events`, `workflows`, ...), one method per
+  operation, named exactly like the operation in the API docs and the Fastn Workspace tools.
+- Customer context that hides fastn's internal org ids: you only ever use the id you gave fastn.
+- Event signature verification, retries, typed errors, pagination.
 
 ## Install
 
@@ -10,26 +15,153 @@ Official fastn SDK for Node.js and TypeScript.
 npm install @fastn-ai/sdk
 ```
 
-Requires Node.js 20 or later. Ships ESM and CommonJS with TypeScript types.
+## 60-second tour
+
+```ts
+import { FastnClient } from "@fastn-ai/sdk";
+
+const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });   // https://api.fastn.dev
+
+// 1. Register a customer under your account, using YOUR id for them.
+const customer = fastn.customer("acme-42");
+await customer.register({ name: "Acme Dental" });              // idempotent: returns the existing org on repeat
+
+// 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...).
+const link = await customer.setupLink({ widgetId: "wgt_...", connectionName: "Google Calendar" });
+console.log(link.data.setupUrl);                               // send this to the customer
+
+// 3. Read and write through the unified API, same field names as the catalog.
+const meetings = customer.records({ category: "scheduling", entity: "meeting", provider: "googleCalendar" });
+const booked = await meetings.create(
+  { title: "Intro call", start_time: "2026-11-03T15:00:00Z", end_time: "2026-11-03T15:30:00Z", timezone: "Europe/London", attendee_email: "jane@example.com" },
+  { idempotencyKey: "booking-123", correlationId: "req-abc" },  // safe to retry; traceable later
+);
+console.log(booked.id, booked.provider, booked.data.web_url);
+
+await meetings.update(booked.id, { start_time: "2026-11-03T16:00:00Z", end_time: "2026-11-03T16:30:00Z" });
+await meetings.search({ start_time: "2026-11-03T00:00:00Z", query: "Intro call" });
+await meetings.delete(booked.id, { idempotencyKey: "cancel-123" });
+
+const contacts = customer.records({ category: "crm", entity: "contact", provider: "hubspot" });
+await contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@example.com" });
+
+// 4. What did fastn do for my request id?
+await fastn.unified.listUnifiedCalls({ correlation_id: "req-abc" });
+```
+
+Every area is on the client directly, with typed inputs. Platform-admin areas (`admin`, `platformConfig`, `billing`, credential and callback routes) are generated for completeness and answer 403 with a partner key; the partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`.
+
+```ts
+await fastn.orgs.listOrgs({ type: "end_org" });
+await fastn.connections.listConnections({ endOrgId: await customer.id() });
+await fastn.events.listEventSubscriptions();
+await fastn.embed.getSetupLink({ id: "stp_..." });
+await fastn.call("getTenant", { id: "..." });                   // any operation by operationId
+```
+
+## Customer ids, explained once
+
+Use `fastn.customer(ref)` (or the `customer` option) and nothing else. The raw API names the same customer
+differently per operation; those generated input fields still exist, but they are the raw API and will be
+renamed on the platform side. Scoping calls to a customer needs a multi-tenant partner API key; the platform
+rejects the customer headers on a single-tenant key (not exercised by the tests here).
+
+| You see in the API docs        | What it is                                        | In this SDK                       |
+| ------------------------------ | ------------------------------------------------- | --------------------------------- |
+| `orgId` (createTenant body)    | the id YOU choose for the customer                | `fastn.customer(ref)`             |
+| `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names       | filled in for you                 |
+| `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `await customer.id()` (cached) |
+
+`customer.register()`, `setupLink()`, `embedToken()`, `connections()`, `get()`, `remove()` and `records(...)` all take the
+ref and resolve fastn's id only where the API insists on it.
+
+## Responses and errors
+
+Answers are returned exactly as the REST API sends them (usually `{ data: ... }`; unified records are
+`{ id, provider, data }`), so the SDK agrees 1:1 with the REST docs and Postman collection. Typed where the spec
+describes the answer, `Record<string, any>` otherwise.
+
+Non-2xx answers throw `FastnApiError` with `status`, `code` (e.g. `NOT_FOUND`, `VALIDATION_ERROR`), `message`,
+`details` and `requestId` (quote it when asking fastn for help). Network failures throw `FastnNetworkError`.
+`GET` calls and calls that carry an `idempotencyKey` are retried on 429/502/503/504 (default 2 retries, honouring
+`Retry-After`); other writes are never retried.
+
+```ts
+try { await fastn.orgs.getTenant({ id }); }
+catch (e) { if (e instanceof FastnApiError && e.isNotFound) ... }
+```
+
+## Per-call options
+
+Every method takes an optional second argument:
+
+```ts
+{ idempotencyKey, correlationId, customer, installationId, targetOrg, headers, timeoutMs, retries, signal }
+```
+
+`customer` is `{ ref: "acme-42" }` (your id) or `{ id: "<fastn org id>" }`. `new FastnClient({ defaults: { customer: { ref: "acme-42" } } })` applies options to every call.
+
+## Workspace tools: run anything your workspace has turned on
+
+The platform API above is one door. The other is your fastn Connect workspace (connect.fastn.dev > Tools): every connector you
+switch on there, Google Calendar, HubSpot, Slack, the Fastn Workspace itself, becomes a tool the SDK can list and run.
+Nothing in the SDK is tied to a connector; turn one on in the workspace and it shows up.
+
+```ts
+import { ToolsClient } from "@fastn-ai/sdk";              // or new FastnClient({ apiKey, tools: { key, url } }).tools
+
+const connect = new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: "https://mcp.fastn.dev/<workspace>" });
+const tools = await connect.tools();                           // every tool, e.g. googleCalendar__listEvents
+const cal = await connect.toolsOf("googleCalendar");           // one connector's tools, with their input schemas
+
+const r = await connect.customer("acme-42").call("googleCalendar__listEvents", { calendarId: "primary", timeMin: new Date().toISOString() });
+r.data                                                     // the tool's answer, JSON-decoded (r.text is the raw text)
+```
+
+- The workspace key is a different credential from the platform API key. Read it from Settings > API keys in connect.fastn.dev.
+- `customer(ref)` sends `X-Org-Id: ref`. A delegated key requires it on every call (400 otherwise); set it once with
+  `defaults: { customer: { ref } }` when one client serves one customer.
+- `userId` (sent as X-User-Id) is needed when the workspace runs calls as each person.
+- Failures throw `ToolError` with `kind` "http" (gateway), "rpc" (JSON-RPC, e.g. unknown tool) or "tool" (the tool ran
+  and answered an error), plus `status`, `code` and the gateway's message.
+- In "one shared account" mode every call runs as that one account, whatever customer you name. Per-customer accounts
+  need the "each customer org" mode in the workspace.
+- The gateway does not yet pass X-Org-Id on to the platform, so Fastn Workspace tools that act for a customer (unified
+  records, setup links) still take the customer in their arguments (`endOrgRef`) until that gateway change ships.
+
+## Events (webhooks)
+
+```ts
+import { parseEvent, verifyEventSignature } from "@fastn-ai/sdk";
+
+// Express: app.post("/fastn/events", express.raw({ type: "application/json" }), (req, res) => {
+const event = parseEvent(process.env.FASTN_EVENT_SECRET!, req.headers, req.body);   // throws on a bad signature
+// event.id is stable across retries: drop repeats by id.
+```
+
+The signature is `sha256=HMAC-SHA256(secret, "<X-Fastn-Timestamp>.<raw body>")`; deliveries older than 5 minutes
+are rejected (configurable). Always pass the raw body, never a re-serialised object.
+
+## Pagination
+
+```ts
+import { paginate } from "@fastn-ai/sdk";
+for await (const ev of paginate((i) => fastn.events.listEvents(i), { status: "failed" }, { pageSize: 100 })) ...
+```
+
+Works for `limit`/`offset` lists and cursor lists; stops on a short page, a missing cursor, or a list that ignores paging.
 
 ## Development
 
 ```bash
-cd node
-npm install
-npm run build          # tsup -> dist/ (ESM + CJS + .d.ts)
-npm run typecheck
-npm test               # vitest, tests in test/
-npm run lint:package   # publint + are-the-types-wrong on the packed tarball
+npm run generate     # spec/openapi-*.json -> src/generated (ops, types, api)
+npm test             # unit tests with a mocked fetch (31)
+LIVE=1 FASTN_API_KEY=... npm run test:live   # live run on api.fastn.dev (creates and removes test data)
+npm run build        # dist/ (esm + cjs + d.ts)
+npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a platform checkout
 ```
 
-```
-node/
-  src/
-    index.ts      public entry point (everything exported from @fastn-ai/sdk)
-    core/         config, errors
-  test/           *.test.ts
-```
+`spec/SOURCE.md` records which platform commit the spec came from.
 
 ## Releasing
 
