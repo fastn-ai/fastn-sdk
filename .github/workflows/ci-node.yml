@@ -1,0 +1,38 @@
+name: Node CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "node/**"
+      - ".github/workflows/ci-node.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "node/**"
+      - ".github/workflows/ci-node.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    defaults:
+      run:
+        working-directory: node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: node/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+      - run: npm run lint:package
