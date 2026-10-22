@@ -23,7 +23,7 @@ Production-ready SDK with fully managed OAuth 2.1, SOC 2 certified platform, gov
 | Language | Package | Status |
 |----------|---------|--------|
 | **Python** | [`fastn-ai`](https://pypi.org/project/fastn-ai/) | Stable (v0.3.1) |
-| **Node.js** | `@fastn/sdk` | Planned |
+| **Node.js** | [`@fastn-ai/sdk`](node/README.md) | In development |
 
 ## Quick Start (Python)
 
