@@ -38,7 +38,8 @@ node/
    ```bash
    git tag node/v0.0.1 && git push origin node/v0.0.1
    ```
-3. The `Publish Node SDK` workflow checks the tag matches `package.json`, runs the checks, and publishes to npm with provenance. It uses the `NPM_TOKEN` secret from the `npm` GitHub environment.
+3. The `Publish Node SDK` workflow checks the tag matches `package.json`, runs the checks, and runs `npm stage publish`. It uses the `NPM_TOKEN` secret (a stage-only token) from the `npm` GitHub environment.
+4. A maintainer opens npmjs.com > Staged Packages, reviews the version and approves it with 2FA. Only then is it installable.
 
 ## License
 
