@@ -34,11 +34,15 @@ jobs:
             echo "Tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION"
             exit 1
           fi
+      - name: Use npm with staged publishing (11.15.0+)
+        run: npm install -g npm@^11.15.0
       - run: npm ci
       - run: npm run typecheck
       - run: npm run build
       - run: npm test
       - run: npm run lint:package
-      - run: npm publish
+      # Stages the version on npm. A maintainer approves it with 2FA on
+      # npmjs.com (Staged Packages) before it becomes installable.
+      - run: npm stage publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
