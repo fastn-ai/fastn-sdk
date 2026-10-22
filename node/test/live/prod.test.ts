@@ -1,16 +1,17 @@
-// Live run against PROD (api.fastn.dev) with the Trillet workspace key. Skipped unless LIVE=1 and FASTN_API_KEY are set.
+// Live run against the fastn API with a partner API key. Skipped unless LIVE=1, FASTN_API_KEY and FASTN_TEST_CUSTOMER are set.
+// FASTN_TEST_CUSTOMER is the ref of a customer org that has Google Calendar and HubSpot connected.
 // Creates: one meeting + one HubSpot contact/note in the e2e customer org, and one throw-away customer org; all removed at the end.
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import fs from "node:fs";
 import { FastnClient, FastnApiError, paginate } from "../../src/index.js";
 
-const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY;
+const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY && !!process.env.FASTN_TEST_CUSTOMER;
 const d = describe.skipIf(!LIVE);
 const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
 const mask = (s: string) => s.replace(/(emb_|ucl_|fsk_[a-z]+_|whsec_|stp_tok_|sk_)[A-Za-z0-9_\-]{6,}/g, "$1***").replace(/[A-Za-z0-9_-]{48,}/g, "<tok>");
 const ev = (step: string, data: unknown) => fs.appendFileSync(EV, mask(JSON.stringify({ at: new Date().toISOString(), step, data })).slice(0, 2500) + "\n");
 const run = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-const E2E = "trillet_ws_prod_e2e";
+const E2E = process.env.FASTN_TEST_CUSTOMER ?? "";
 const day = new Date(Date.now() + 9 * 86400e3).toISOString().slice(0, 10);
 const utc = (rec: any) => { try { return new Date((rec?.data ?? rec).start_time).toISOString().slice(11, 16); } catch { return undefined; } };
 const dataOf = (r: any) => r?.data ?? r;
@@ -44,7 +45,7 @@ d("prod: orgs and customer context", () => {
 });
 
 d("prod: register a customer, setup link, delete", () => {
-  const ref = `trillet_ws_sdk_${run}`; let fastnId: string | undefined;
+  const ref = `sdk_test_customer_${run}`; let fastnId: string | undefined;
   it("register is idempotent and the ref round-trips", async () => {
     const c = fastn.customer(ref);
     expect(await c.find()).toBeUndefined();

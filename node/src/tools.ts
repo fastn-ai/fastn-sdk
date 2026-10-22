@@ -13,7 +13,7 @@ import { VERSION } from "./version.js";
 export interface ToolsClientConfig {
   /** The workspace's key (connect.fastn.dev > Settings > API keys). Sent as Authorization: Bearer. */
   key: string;
-  /** The workspace endpoint, e.g. https://mcp.fastn.dev/trillet */
+  /** The workspace endpoint, e.g. https://mcp.fastn.dev/<workspace> */
   url: string;
   /** A fetch implementation, default globalThis.fetch (Node 20+). */
   fetch?: typeof fetch;

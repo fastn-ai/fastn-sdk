@@ -1,25 +1,28 @@
-// The whole Trillet call flow, in the order of the Endpoint Guide, against PROD with the Trillet keys.
-// Skipped unless LIVE=1 and FASTN_API_KEY are set. FASTN_TOOLS_KEY adds the gateway (tools) route for the booking steps.
+// A partner's whole call flow, end to end, against the fastn API: register a business, let it connect its apps, check free time,
+// book, find, reschedule, list, cancel, find and update the CRM contact, log the call, follow-up task, deal, events.
+// Skipped unless LIVE=1, FASTN_API_KEY and FASTN_TEST_CUSTOMER are set. FASTN_TOOLS_KEY + FASTN_TOOLS_URL add the gateway (tools) route.
 // Creates on prod: one throw-away business org, one setup link (cancelled), one meeting (cancelled), one HubSpot note / task / deal
 // on the fixed test contact, one event subscription (deleted). The business org is suspended and deleted at the end.
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import fs from "node:fs";
 import { FastnClient, FastnApiError, ToolError, paginate } from "../../src/index.js";
 
-const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY;
+const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY && !!process.env.FASTN_TEST_CUSTOMER;
 const d = describe.skipIf(!LIVE);
 const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
 const mask = (s: string) => s.replace(/(emb_|ucl_|fsk_[a-z]+_|whsec_|stp_tok_|sk_)[A-Za-z0-9_\-]{6,}/g, "$1***").replace(/[A-Za-z0-9_-]{48,}/g, "<tok>");
 const ev = (step: string, data: unknown) => fs.appendFileSync(EV, mask(JSON.stringify({ at: new Date().toISOString(), step: `flow ${step}`, data })).slice(0, 2500) + "\n");
 const run = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-const E2E = "trillet_ws_prod_e2e";                 // the customer with Google Calendar + HubSpot connected
-const FLOW = `trillet_ws_flow_${run}`;             // a new business, registered and removed by this run
+const E2E = process.env.FASTN_TEST_CUSTOMER ?? "";  // a customer org with Google Calendar + HubSpot connected
+const FLOW = `sdk_flow_${run}`;                   // a new business, registered and removed by this run
 const day = new Date(Date.now() + 11 * 86400e3).toISOString().slice(0, 10);
 const dataOf = (r: any) => r?.data ?? r;
 const utc = (rec: any) => new Date(dataOf(rec).start_time).toISOString().slice(11, 16);
 const FIXED_CONTACT = "jane.sdk.live@example.com";
 
 let fastn: FastnClient; const log: any[] = [];
+let partnerOrg: string | undefined;
+const partnerOrgId = async () => { if (!partnerOrg) { const me = dataOf(await fastn.call("whoami" as any, {})); partnerOrg = me.org?.id ?? me.orgId; } return partnerOrg!; };
 let meetingId: string | undefined; let toolsMeetingId: string | undefined; let subId: string | undefined; let flowCreated = false;
 const e2e = () => fastn.customer(E2E);
 const G = { category: "scheduling", entity: "meeting", provider: "googleCalendar" } as const;
@@ -28,7 +31,7 @@ const H = (entity: string) => ({ category: "crm", entity, provider: "hubspot" })
 beforeAll(() => {
   fastn = new FastnClient({
     apiKey: process.env.FASTN_API_KEY!, onRequest: (i) => log.push(i), timeoutMs: 60_000,
-    tools: process.env.FASTN_TOOLS_KEY ? { key: process.env.FASTN_TOOLS_KEY, url: process.env.FASTN_TOOLS_URL ?? "https://mcp.fastn.dev/trillet" } : undefined,
+    tools: process.env.FASTN_TOOLS_KEY && process.env.FASTN_TOOLS_URL ? { key: process.env.FASTN_TOOLS_KEY, url: process.env.FASTN_TOOLS_URL } : undefined,
   });
 });
 afterAll(async () => {
@@ -40,7 +43,7 @@ afterAll(async () => {
   ev("requests", log.map((l) => `${l.method} ${l.url.replace("https://api.fastn.dev", "")} -> ${l.status} ${l.durationMs}ms`));
 });
 
-d("Trillet flow 1: register the business", () => {
+d("Partner flow 1: register the business", () => {
   it("register, read, list, rename", async () => {
     const biz = fastn.customer(FLOW);
     const created = dataOf(await biz.register({ name: `Flow Clinic ${run}` })); flowCreated = true;
@@ -52,25 +55,25 @@ d("Trillet flow 1: register the business", () => {
     ev("rename", { name: renamed.name }); expect(renamed.name).toBe(`Flow Clinic ${run} Ltd`);
   });
   it("org config: the partner's redirect list is read; a save round-trips on the throw-away org", async () => {
-    // setupLinkRedirectUrls lives on the PARTNER org (trillet); setup links take their redirectUrl from it. Read-only there.
-    const partner = dataOf(await fastn.orgs.getOrgConfig({ id: "trillet" } as any));
+    // setupLinkRedirectUrls lives on the PARTNER org (the caller); setup links take their redirectUrl from it. Read-only there.
+    const partner = dataOf(await fastn.orgs.getOrgConfig({ id: await partnerOrgId() } as any));
     ev("partner getOrgConfig", { keys: Object.keys(partner), redirects: partner.setupLinkRedirectUrls });
     expect(Array.isArray(partner.setupLinkRedirectUrls)).toBe(true);
     const id = await fastn.customer(FLOW).id();
-    await fastn.orgs.updateOrgConfig({ id, setupLinkRedirectUrls: ["https://app.trillet.ai/connected"] } as any);
+    await fastn.orgs.updateOrgConfig({ id, setupLinkRedirectUrls: ["https://example.com/connected"] } as any);
     const after = dataOf(await fastn.orgs.getOrgConfig({ id } as any)); ev("flow org getOrgConfig", after);
-    expect(after.setupLinkRedirectUrls).toEqual(["https://app.trillet.ai/connected"]);
+    expect(after.setupLinkRedirectUrls).toEqual(["https://example.com/connected"]);
   });
 });
 
-d("Trillet flow 2: let the business connect its apps", () => {
+d("Partner flow 2: let the business connect its apps", () => {
   it("setup link: create, read, status, cancel", async () => {
     const widgets = dataOf(await fastn.embed.listWidgets({} as any)); const w = (widgets.widgets ?? widgets)[0];
     const link = dataOf(await fastn.customer(FLOW).setupLink({ widgetId: w.id, connectionName: "Google Calendar", expiresInMinutes: 10, label: `flow ${run}` } as any));
     const id = link.setupId ?? link.id;
     ev("setupLink", { id, status: link.status, url: (link.setupUrl ?? link.url)?.replace(/#.*/, "#<tok>"), redirectUrl: link.redirectUrl });
     expect(id).toMatch(/^stp_/); expect(link.setupUrl ?? link.url).toContain("app.fastn.dev/setup/");
-    const partner = dataOf(await fastn.orgs.getOrgConfig({ id: "trillet" } as any));
+    const partner = dataOf(await fastn.orgs.getOrgConfig({ id: await partnerOrgId() } as any));
     expect(partner.setupLinkRedirectUrls).toContain(link.redirectUrl);           // the partner org's list decides the redirect
     const read = dataOf(await fastn.embed.getSetupLink({ id } as any)); expect(read.setupId ?? read.id).toBe(id);
     const st = dataOf(await fastn.embed.getSetupLinkStatus({ id } as any)); ev("setupLinkStatus", st);
@@ -86,7 +89,7 @@ d("Trillet flow 2: let the business connect its apps", () => {
   });
 });
 
-d("Trillet flow 3: the customer's connected accounts", () => {
+d("Partner flow 3: the customer's connected accounts", () => {
   it("connections, one connection, providers, categories", async () => {
     const conns = dataOf(await e2e().connections()); const list = conns.connections ?? conns;
     ev("connections", list.map((c: any) => ({ id: c.id, connector: c.connectorId ?? c.connector, status: c.status })));
@@ -101,7 +104,7 @@ d("Trillet flow 3: the customer's connected accounts", () => {
   });
 });
 
-d("Trillet flow 4: the phone call, scheduling", () => {
+d("Partner flow 4: the phone call, scheduling", () => {
   it("check free time", async () => {
     const r = dataOf(await e2e().records({ ...G, entity: "availability" }).create({ start_time: `${day}T08:00:00Z`, end_time: `${day}T18:00:00Z`, timezone: "Europe/London" }));
     ev("availability", { busy: r.busy?.length ?? r }); expect(Array.isArray(r.busy ?? r.slots ?? [])).toBe(true);
@@ -135,7 +138,7 @@ d("Trillet flow 4: the phone call, scheduling", () => {
   });
 });
 
-d("Trillet flow 5: the phone call, CRM", () => {
+d("Partner flow 5: the phone call, CRM", () => {
   it("find or create the contact, update it, log the call, follow-up task, deal", async () => {
     const C = e2e().records(H("contact"));
     const hits = dataOf(await C.search({ email: FIXED_CONTACT })); let contact = (hits.records ?? hits)[0];
@@ -155,7 +158,7 @@ d("Trillet flow 5: the phone call, CRM", () => {
   });
 });
 
-d("Trillet flow 6: events", () => {
+d("Partner flow 6: events", () => {
   it("subscribe, read, send a test event, see deliveries, list events, unsubscribe", async () => {
     const sub = dataOf(await fastn.events.createEventSubscription({ url: `https://example.com/fastn-sdk-flow-${run}`, eventTypes: ["connection.connected", "setup_link.completed", "unified.event"], description: `sdk flow ${run}` } as any));
     subId = sub.id; ev("subscribe", { id: sub.id, hasSecret: !!sub.secret, eventTypes: sub.eventTypes }); expect(sub.id).toBeTruthy(); expect(sub.secret).toMatch(/^whsec_/);
@@ -171,8 +174,8 @@ d("Trillet flow 6: events", () => {
   });
 });
 
-d("Trillet flow 7: the same booking steps through the gateway (tools route)", () => {
-  const skip = !process.env.FASTN_TOOLS_KEY;
+d("Partner flow 7: the same booking steps through the gateway (tools route)", () => {
+  const skip = !process.env.FASTN_TOOLS_KEY || !process.env.FASTN_TOOLS_URL;
   const P = { category: "scheduling", entity: "meeting", provider: "googleCalendar", endOrgRef: E2E };
   it.skipIf(skip)("check free time, book, read via fastnPlatform tools", async () => {
     const t = e2e().tools;
@@ -195,9 +198,9 @@ d("Trillet flow 7: the same booking steps through the gateway (tools route)", ()
   });
 });
 
-d("Trillet flow 8: who am I", () => {
+d("Partner flow 8: who am I", () => {
   it("whoami answers the partner org", async () => {
     const me = dataOf(await fastn.call("whoami" as any, {})); ev("whoami", { org: me.org?.id ?? me.orgId, actor: me.actor });
-    expect(me.org?.id ?? me.orgId).toBe("trillet");
+    expect(me.org?.id ?? me.orgId).toBe(await partnerOrgId());
   });
 });

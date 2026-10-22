@@ -1,21 +1,21 @@
-// Live run against the Trillet fastn Connect workspace (mcp.fastn.dev/trillet). Skipped unless LIVE=1 and FASTN_TOOLS_KEY are set.
+// Live run against a fastn Connect workspace. Skipped unless LIVE=1, FASTN_TOOLS_KEY, FASTN_TOOLS_URL and FASTN_TEST_CUSTOMER are set.
 // Creates one Google Calendar event (sdk-live-<run>) on the workspace's shared account and deletes it at the end.
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import fs from "node:fs";
 import { FastnClient, ToolsClient, ToolError } from "../../src/index.js";
 
-const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_TOOLS_KEY;
+const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_TOOLS_KEY && !!process.env.FASTN_TOOLS_URL && !!process.env.FASTN_TEST_CUSTOMER;
 const d = describe.skipIf(!LIVE);
-const URL_ = process.env.FASTN_TOOLS_URL ?? "https://mcp.fastn.dev/trillet";
+const URL_ = process.env.FASTN_TOOLS_URL ?? "";
 const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
 const mask = (s: string) => s.replace(/(emb_|ucl_|fsk_[a-z]+_|whsec_|stp_tok_|sk_)[A-Za-z0-9_\-]{6,}/g, "$1***").replace(/[A-Za-z0-9_-]{48,}/g, "<tok>");
 const ev = (step: string, data: unknown) => fs.appendFileSync(EV, mask(JSON.stringify({ at: new Date().toISOString(), step: `tools ${step}`, data })).slice(0, 2500) + "\n");
 const run = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-const E2E = "trillet_ws_prod_e2e";
+const E2E = process.env.FASTN_TEST_CUSTOMER ?? "";
 const day = new Date(Date.now() + 10 * 86400e3).toISOString().slice(0, 10);
 
 let ucl: ToolsClient; let eventId: string | undefined;
-// The Trillet key is a delegated key: the gateway requires X-Org-Id on every call, so the client defaults to the e2e customer.
+// A delegated workspace key requires X-Org-Id on every call, so the client defaults to the test customer.
 beforeAll(() => { ucl = new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: URL_, defaults: { customer: { ref: E2E } } }); });
 afterAll(async () => {
   if (eventId) {
