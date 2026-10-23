@@ -181,7 +181,9 @@ Works for `limit`/`offset` lists and cursor lists; stops on a short page, a miss
 ```bash
 npm run generate     # spec/openapi-*.json -> src/generated (ops, types, api)
 npm test             # unit tests with a mocked fetch (42)
-LIVE=1 FASTN_API_KEY=... npm run test:live   # live run on api.fastn.dev (creates and removes test data)
+LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... npm run test:live   # live run on api.fastn-test.dev (creates and removes test data)
+# FASTN_BASE_URL=https://api.fastn.dev LIVE_PROD=1 ... runs the same suite on production
+# FASTN_API_KEY=... npx tsx scripts/sweep/run.ts   # calls every published operation once on dev and writes a per-operation report
 npm run build        # dist/ (esm + cjs + d.ts)
 npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a platform checkout
 ```

@@ -64,7 +64,7 @@ d("tools: the workspace's tools", () => {
     ev("whoami", who.data);
     expect(typeof who.data).toBe("object");
     if (process.env.FASTN_API_KEY) {
-      const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY, tools: { key: process.env.FASTN_TOOLS_KEY!, url: URL_ } });
+      const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY, baseUrl: process.env.FASTN_BASE_URL, tools: { key: process.env.FASTN_TOOLS_KEY!, url: URL_ } });
       const viaClient = await fastn.customer(E2E).tools.call("fastnPlatform__whoami", {});
       expect(JSON.stringify(viaClient.data)).toBe(JSON.stringify(who.data));
     }

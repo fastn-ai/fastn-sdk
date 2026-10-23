@@ -5,6 +5,10 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import fs from "node:fs";
 import { FastnClient, FastnApiError, paginate } from "../../src/index.js";
 
+// Target: FASTN_BASE_URL, default https://api.fastn-test.dev (the development environment). Point it at
+// https://api.fastn.dev only with LIVE_PROD=1: the suite creates and deletes real customers, bookings and CRM records.
+const BASE_URL = process.env.FASTN_BASE_URL ?? "https://api.fastn-test.dev";
+if (/api\.fastn\.dev/.test(BASE_URL) && process.env.LIVE_PROD !== "1") throw new Error("FASTN_BASE_URL points at production; set LIVE_PROD=1 to run the live suite there");
 const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY && !!process.env.FASTN_TEST_CUSTOMER;
 const d = describe.skipIf(!LIVE);
 const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
@@ -17,8 +21,8 @@ const utc = (rec: any) => { try { return new Date((rec?.data ?? rec).start_time)
 const dataOf = (r: any) => r?.data ?? r;
 
 let fastn: FastnClient; const log: any[] = [];
-beforeAll(() => { fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY!, onRequest: (i) => log.push(i) }); });
-afterAll(() => ev("requests", log.map((l) => `${l.method} ${l.url.replace("https://api.fastn.dev", "")} -> ${l.status} ${l.durationMs}ms`)));
+beforeAll(() => { fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY!, baseUrl: BASE_URL, onRequest: (i) => log.push(i) }); });
+afterAll(() => ev("requests", log.map((l) => `${l.method} ${l.url.replace(BASE_URL, "")} -> ${l.status} ${l.durationMs}ms`)));
 
 d("prod: orgs and customer context", () => {
   it("listOrgs answers and the e2e customer resolves to a fastn id", async () => {
