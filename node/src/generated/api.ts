@@ -15,7 +15,7 @@ export class ActivityApi {
    * POST /v1/activity/track
    */
   trackActivity(input: T.TrackActivityInput, opts?: RequestOptions): Promise<T.TrackActivityOutput> {
-    return this._t.call(OPS.trackActivity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.trackActivity, input, opts);
   }
   /**
    * Track page engagement
@@ -23,7 +23,7 @@ export class ActivityApi {
    * POST /v1/activity/page
    */
   trackPageActivity(input: T.TrackPageActivityInput, opts?: RequestOptions): Promise<T.TrackPageActivityOutput> {
-    return this._t.call(OPS.trackPageActivity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.trackPageActivity, input, opts);
   }
   /**
    * Get current user's recent activity
@@ -31,7 +31,7 @@ export class ActivityApi {
    * GET /v1/activity/me
    */
   getMyActivity(input: T.GetMyActivityInput = {} as T.GetMyActivityInput, opts?: RequestOptions): Promise<T.GetMyActivityOutput> {
-    return this._t.call(OPS.getMyActivity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyActivity, input, opts);
   }
 }
 
@@ -46,7 +46,7 @@ export class AgentApi {
    * GET /v1/agent/orchestrator/sessions
    */
   agentListOrchestratorSessions(input: T.AgentListOrchestratorSessionsInput = {} as T.AgentListOrchestratorSessionsInput, opts?: RequestOptions): Promise<T.AgentListOrchestratorSessionsOutput> {
-    return this._t.call(OPS.agentListOrchestratorSessions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentListOrchestratorSessions, input, opts);
   }
   /**
    * Create an orchestrator session
@@ -54,7 +54,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/sessions
    */
   agentCreateOrchestratorSession(input: T.AgentCreateOrchestratorSessionInput = {} as T.AgentCreateOrchestratorSessionInput, opts?: RequestOptions): Promise<T.AgentCreateOrchestratorSessionOutput> {
-    return this._t.call(OPS.agentCreateOrchestratorSession, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentCreateOrchestratorSession, input, opts);
   }
   /**
    * Get a session's messages
@@ -62,7 +62,7 @@ export class AgentApi {
    * GET /v1/agent/orchestrator/sessions/{id}/messages
    */
   agentGetOrchestratorMessages(input: T.AgentGetOrchestratorMessagesInput, opts?: RequestOptions): Promise<T.AgentGetOrchestratorMessagesOutput> {
-    return this._t.call(OPS.agentGetOrchestratorMessages, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentGetOrchestratorMessages, input, opts);
   }
   /**
    * Upload an image or document attachment
@@ -70,7 +70,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/sessions/{id}/attachments
    */
   agentUploadOrchestratorAttachment(input: T.AgentUploadOrchestratorAttachmentInput, opts?: RequestOptions): Promise<T.AgentUploadOrchestratorAttachmentOutput> {
-    return this._t.call(OPS.agentUploadOrchestratorAttachment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentUploadOrchestratorAttachment, input, opts);
   }
   /**
    * Fetch a stored attachment
@@ -78,7 +78,7 @@ export class AgentApi {
    * GET /v1/agent/orchestrator/sessions/{id}/attachments/{attachmentId}
    */
   agentGetOrchestratorAttachment(input: T.AgentGetOrchestratorAttachmentInput, opts?: RequestOptions): Promise<T.AgentGetOrchestratorAttachmentOutput> {
-    return this._t.call(OPS.agentGetOrchestratorAttachment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentGetOrchestratorAttachment, input, opts);
   }
   /**
    * Stream an orchestrator turn (SSE)
@@ -86,7 +86,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/stream
    */
   agentOrchestratorStream(input: T.AgentOrchestratorStreamInput, opts?: RequestOptions): Promise<T.AgentOrchestratorStreamOutput> {
-    return this._t.call(OPS.agentOrchestratorStream, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentOrchestratorStream, input, opts);
   }
   /**
    * Diagnose a workflow error (SSE)
@@ -94,7 +94,7 @@ export class AgentApi {
    * POST /v1/agent/error-diagnosis
    */
   agentErrorDiagnosis(input: T.AgentErrorDiagnosisInput, opts?: RequestOptions): Promise<T.AgentErrorDiagnosisOutput> {
-    return this._t.call(OPS.agentErrorDiagnosis, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentErrorDiagnosis, input, opts);
   }
   /**
    * Generate customer-facing workflow docs
@@ -102,7 +102,7 @@ export class AgentApi {
    * POST /v1/agent/workflow/generate-docs
    */
   agentGenerateWorkflowDocs(input: T.AgentGenerateWorkflowDocsInput, opts?: RequestOptions): Promise<T.AgentGenerateWorkflowDocsOutput> {
-    return this._t.call(OPS.agentGenerateWorkflowDocs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentGenerateWorkflowDocs, input, opts);
   }
   /**
    * Rate an assistant reply
@@ -110,7 +110,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/feedback
    */
   submitOrchestratorFeedback(input: T.SubmitOrchestratorFeedbackInput, opts?: RequestOptions): Promise<T.SubmitOrchestratorFeedbackOutput> {
-    return this._t.call(OPS.submitOrchestratorFeedback, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.submitOrchestratorFeedback, input, opts);
   }
   /**
    * Search the web
@@ -118,7 +118,7 @@ export class AgentApi {
    * POST /v1/web/search
    */
   searchWeb(input: T.SearchWebInput, opts?: RequestOptions): Promise<T.SearchWebOutput> {
-    return this._t.call(OPS.searchWeb, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.searchWeb, input, opts);
   }
   /**
    * Fetch a web page as text
@@ -126,7 +126,7 @@ export class AgentApi {
    * POST /v1/web/fetch
    */
   fetchWebPage(input: T.FetchWebPageInput, opts?: RequestOptions): Promise<T.FetchWebPageOutput> {
-    return this._t.call(OPS.fetchWebPage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.fetchWebPage, input, opts);
   }
   /**
    * Plan the parts of an integration
@@ -134,7 +134,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/build-plan
    */
   agentBuildPlan(input: T.AgentBuildPlanInput, opts?: RequestOptions): Promise<T.AgentBuildPlanOutput> {
-    return this._t.call(OPS.agentBuildPlan, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentBuildPlan, input, opts);
   }
   /**
    * Suggest connectors for a use case
@@ -142,7 +142,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/suggest-connectors
    */
   agentSuggestConnectors(input: T.AgentSuggestConnectorsInput, opts?: RequestOptions): Promise<T.AgentSuggestConnectorsOutput> {
-    return this._t.call(OPS.agentSuggestConnectors, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentSuggestConnectors, input, opts);
   }
   /**
    * Delete an orchestrator session
@@ -150,7 +150,7 @@ export class AgentApi {
    * DELETE /v1/agent/orchestrator/sessions/{id}
    */
   agentDeleteOrchestratorSession(input: T.AgentDeleteOrchestratorSessionInput, opts?: RequestOptions): Promise<T.AgentDeleteOrchestratorSessionOutput> {
-    return this._t.call(OPS.agentDeleteOrchestratorSession, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentDeleteOrchestratorSession, input, opts);
   }
   /**
    * Rename an orchestrator session
@@ -158,7 +158,7 @@ export class AgentApi {
    * PATCH /v1/agent/orchestrator/sessions/{id}
    */
   agentRenameOrchestratorSession(input: T.AgentRenameOrchestratorSessionInput, opts?: RequestOptions): Promise<T.AgentRenameOrchestratorSessionOutput> {
-    return this._t.call(OPS.agentRenameOrchestratorSession, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentRenameOrchestratorSession, input, opts);
   }
   /**
    * Read a file from a session's virtual filesystem
@@ -166,7 +166,7 @@ export class AgentApi {
    * GET /v1/agent/orchestrator/sessions/{id}/files
    */
   agentGetOrchestratorFile(input: T.AgentGetOrchestratorFileInput, opts?: RequestOptions): Promise<T.AgentGetOrchestratorFileOutput> {
-    return this._t.call(OPS.agentGetOrchestratorFile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentGetOrchestratorFile, input, opts);
   }
   /**
    * Stop the running turn
@@ -174,7 +174,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/sessions/{id}/stop
    */
   agentStopOrchestratorSession(input: T.AgentStopOrchestratorSessionInput, opts?: RequestOptions): Promise<T.AgentStopOrchestratorSessionOutput> {
-    return this._t.call(OPS.agentStopOrchestratorSession, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentStopOrchestratorSession, input, opts);
   }
   /**
    * Queue a message into a running turn
@@ -182,7 +182,7 @@ export class AgentApi {
    * POST /v1/agent/orchestrator/sessions/{id}/inject
    */
   agentInjectOrchestratorMessage(input: T.AgentInjectOrchestratorMessageInput, opts?: RequestOptions): Promise<T.AgentInjectOrchestratorMessageOutput> {
-    return this._t.call(OPS.agentInjectOrchestratorMessage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.agentInjectOrchestratorMessage, input, opts);
   }
   /**
    * Research a SaaS company by domain
@@ -190,7 +190,7 @@ export class AgentApi {
    * POST /v1/agent/research/saas
    */
   researchSaas(input: T.ResearchSaasInput, opts?: RequestOptions): Promise<T.ResearchSaasOutput> {
-    return this._t.call(OPS.researchSaas, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.researchSaas, input, opts);
   }
   /**
    * Get SaaS research for a domain
@@ -198,7 +198,7 @@ export class AgentApi {
    * GET /v1/agent/research/saas/{domain}
    */
   getSaasResearch(input: T.GetSaasResearchInput, opts?: RequestOptions): Promise<T.GetSaasResearchOutput> {
-    return this._t.call(OPS.getSaasResearch, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSaasResearch, input, opts);
   }
   /**
    * Find the caller's connectors for a researched product
@@ -206,7 +206,7 @@ export class AgentApi {
    * POST /v1/agent/research/product/match
    */
   matchProductConnector(input: T.MatchProductConnectorInput, opts?: RequestOptions): Promise<T.MatchProductConnectorOutput> {
-    return this._t.call(OPS.matchProductConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.matchProductConnector, input, opts);
   }
   /**
    * Apply a correction to a researched product profile
@@ -214,7 +214,7 @@ export class AgentApi {
    * POST /v1/agent/research/product/revise
    */
   reviseProductProfile(input: T.ReviseProductProfileInput, opts?: RequestOptions): Promise<T.ReviseProductProfileOutput> {
-    return this._t.call(OPS.reviseProductProfile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.reviseProductProfile, input, opts);
   }
 }
 
@@ -229,7 +229,7 @@ export class ApiKeysApi {
    * GET /v1/api-keys
    */
   listApiKeys(input: T.ListApiKeysInput = {} as T.ListApiKeysInput, opts?: RequestOptions): Promise<T.ListApiKeysOutput> {
-    return this._t.call(OPS.listApiKeys, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listApiKeys, input, opts);
   }
   /**
    * Get API key
@@ -237,7 +237,7 @@ export class ApiKeysApi {
    * GET /v1/api-keys/{id}
    */
   getApiKey(input: T.GetApiKeyInput, opts?: RequestOptions): Promise<T.GetApiKeyOutput> {
-    return this._t.call(OPS.getApiKey, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getApiKey, input, opts);
   }
   /**
    * Update API key
@@ -245,7 +245,7 @@ export class ApiKeysApi {
    * PUT /v1/api-keys/{id}
    */
   updateApiKey(input: T.UpdateApiKeyInput, opts?: RequestOptions): Promise<T.UpdateApiKeyOutput> {
-    return this._t.call(OPS.updateApiKey, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateApiKey, input, opts);
   }
   /**
    * Revoke API key
@@ -253,7 +253,7 @@ export class ApiKeysApi {
    * DELETE /v1/api-keys/{id}
    */
   revokeApiKey(input: T.RevokeApiKeyInput, opts?: RequestOptions): Promise<T.RevokeApiKeyOutput> {
-    return this._t.call(OPS.revokeApiKey, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.revokeApiKey, input, opts);
   }
 }
 
@@ -268,7 +268,7 @@ export class AuthApi {
    * GET /v1/profile
    */
   getProfile(input: T.GetProfileInput = {} as T.GetProfileInput, opts?: RequestOptions): Promise<T.GetProfileOutput> {
-    return this._t.call(OPS.getProfile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getProfile, input, opts);
   }
   /**
    * Update current user profile
@@ -276,7 +276,7 @@ export class AuthApi {
    * PUT /v1/profile
    */
   updateProfile(input: T.UpdateProfileInput = {} as T.UpdateProfileInput, opts?: RequestOptions): Promise<T.UpdateProfileOutput> {
-    return this._t.call(OPS.updateProfile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateProfile, input, opts);
   }
   /**
    * Get current user security settings
@@ -284,7 +284,7 @@ export class AuthApi {
    * GET /v1/profile/security
    */
   getProfileSecurity(input: T.GetProfileSecurityInput = {} as T.GetProfileSecurityInput, opts?: RequestOptions): Promise<T.GetProfileSecurityOutput> {
-    return this._t.call(OPS.getProfileSecurity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getProfileSecurity, input, opts);
   }
 }
 
@@ -299,7 +299,7 @@ export class BillingApi {
    * GET /v1/plans
    */
   listPlans(input: T.ListPlansInput = {} as T.ListPlansInput, opts?: RequestOptions): Promise<T.ListPlansOutput> {
-    return this._t.call(OPS.listPlans, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listPlans, input, opts);
   }
   /**
    * Get plan by tier
@@ -307,7 +307,7 @@ export class BillingApi {
    * GET /v1/plans/{tier}
    */
   getPlan(input: T.GetPlanInput, opts?: RequestOptions): Promise<T.GetPlanOutput> {
-    return this._t.call(OPS.getPlan, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getPlan, input, opts);
   }
   /**
    * Get usage records
@@ -315,7 +315,7 @@ export class BillingApi {
    * GET /v1/usage
    */
   getUsage(input: T.GetUsageInput = {} as T.GetUsageInput, opts?: RequestOptions): Promise<T.GetUsageOutput> {
-    return this._t.call(OPS.getUsage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getUsage, input, opts);
   }
   /**
    * Set custom quota limit
@@ -323,7 +323,7 @@ export class BillingApi {
    * PUT /v1/quotas/limits
    */
   setQuotaLimit(input: T.SetQuotaLimitInput, opts?: RequestOptions): Promise<T.SetQuotaLimitOutput> {
-    return this._t.call(OPS.setQuotaLimit, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setQuotaLimit, input, opts);
   }
   /**
    * Remove a custom quota limit
@@ -331,7 +331,7 @@ export class BillingApi {
    * DELETE /v1/quotas/limits
    */
   deleteQuotaLimit(input: T.DeleteQuotaLimitInput, opts?: RequestOptions): Promise<T.DeleteQuotaLimitOutput> {
-    return this._t.call(OPS.deleteQuotaLimit, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteQuotaLimit, input, opts);
   }
   /**
    * Get quota usage
@@ -339,7 +339,7 @@ export class BillingApi {
    * GET /v1/quotas/usage
    */
   getQuotaUsage(input: T.GetQuotaUsageInput = {} as T.GetQuotaUsageInput, opts?: RequestOptions): Promise<T.GetQuotaUsageOutput> {
-    return this._t.call(OPS.getQuotaUsage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getQuotaUsage, input, opts);
   }
   /**
    * Get throttle config
@@ -347,7 +347,7 @@ export class BillingApi {
    * GET /v1/throttle
    */
   getThrottle(input: T.GetThrottleInput = {} as T.GetThrottleInput, opts?: RequestOptions): Promise<T.GetThrottleOutput> {
-    return this._t.call(OPS.getThrottle, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getThrottle, input, opts);
   }
   /**
    * Update throttle config
@@ -355,7 +355,7 @@ export class BillingApi {
    * PUT /v1/throttle
    */
   updateThrottle(input: T.UpdateThrottleInput, opts?: RequestOptions): Promise<T.UpdateThrottleOutput> {
-    return this._t.call(OPS.updateThrottle, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateThrottle, input, opts);
   }
   /**
    * Get current user's feature entitlements
@@ -363,7 +363,7 @@ export class BillingApi {
    * GET /v1/me/entitlements
    */
   getMyEntitlements(input: T.GetMyEntitlementsInput = {} as T.GetMyEntitlementsInput, opts?: RequestOptions): Promise<T.GetMyEntitlementsOutput> {
-    return this._t.call(OPS.getMyEntitlements, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyEntitlements, input, opts);
   }
   /**
    * Get current org's pending plan change request
@@ -371,7 +371,7 @@ export class BillingApi {
    * GET /v1/plan-change-requests/me
    */
   getMyPlanChangeRequest(input: T.GetMyPlanChangeRequestInput = {} as T.GetMyPlanChangeRequestInput, opts?: RequestOptions): Promise<T.GetMyPlanChangeRequestOutput> {
-    return this._t.call(OPS.getMyPlanChangeRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyPlanChangeRequest, input, opts);
   }
   /**
    * List quota limits with current usage
@@ -379,7 +379,7 @@ export class BillingApi {
    * GET /v1/quotas
    */
   listQuotas(input: T.ListQuotasInput = {} as T.ListQuotasInput, opts?: RequestOptions): Promise<T.ListQuotasOutput> {
-    return this._t.call(OPS.listQuotas, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listQuotas, input, opts);
   }
   /**
    * Check a quota dimension
@@ -387,7 +387,7 @@ export class BillingApi {
    * GET /v1/quotas/check/{dimension}
    */
   checkQuota(input: T.CheckQuotaInput, opts?: RequestOptions): Promise<T.CheckQuotaOutput> {
-    return this._t.call(OPS.checkQuota, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.checkQuota, input, opts);
   }
   /**
    * Get the Stripe subscription
@@ -395,7 +395,7 @@ export class BillingApi {
    * GET /v1/billing/subscription
    */
   getBillingSubscription(input: T.GetBillingSubscriptionInput = {} as T.GetBillingSubscriptionInput, opts?: RequestOptions): Promise<T.GetBillingSubscriptionOutput> {
-    return this._t.call(OPS.getBillingSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getBillingSubscription, input, opts);
   }
   /**
    * List Stripe invoices
@@ -403,7 +403,7 @@ export class BillingApi {
    * GET /v1/billing/invoices
    */
   listBillingInvoices(input: T.ListBillingInvoicesInput = {} as T.ListBillingInvoicesInput, opts?: RequestOptions): Promise<T.ListBillingInvoicesOutput> {
-    return this._t.call(OPS.listBillingInvoices, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listBillingInvoices, input, opts);
   }
   /**
    * Get the card on file
@@ -411,7 +411,7 @@ export class BillingApi {
    * GET /v1/billing/payment-method
    */
   getBillingPaymentMethod(input: T.GetBillingPaymentMethodInput = {} as T.GetBillingPaymentMethodInput, opts?: RequestOptions): Promise<T.GetBillingPaymentMethodOutput> {
-    return this._t.call(OPS.getBillingPaymentMethod, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getBillingPaymentMethod, input, opts);
   }
   /**
    * Request a plan change
@@ -419,7 +419,7 @@ export class BillingApi {
    * POST /v1/plan-change-requests
    */
   createPlanChangeRequest(input: T.CreatePlanChangeRequestInput, opts?: RequestOptions): Promise<T.CreatePlanChangeRequestOutput> {
-    return this._t.call(OPS.createPlanChangeRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createPlanChangeRequest, input, opts);
   }
   /**
    * Cancel the pending plan change request
@@ -427,7 +427,7 @@ export class BillingApi {
    * POST /v1/plan-change-requests/me/cancel
    */
   cancelMyPlanChangeRequest(input: T.CancelMyPlanChangeRequestInput = {} as T.CancelMyPlanChangeRequestInput, opts?: RequestOptions): Promise<T.CancelMyPlanChangeRequestOutput> {
-    return this._t.call(OPS.cancelMyPlanChangeRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.cancelMyPlanChangeRequest, input, opts);
   }
   /**
    * AI usage this month
@@ -435,7 +435,7 @@ export class BillingApi {
    * GET /v1/usage/ai
    */
   getAiUsage(input: T.GetAiUsageInput = {} as T.GetAiUsageInput, opts?: RequestOptions): Promise<T.GetAiUsageOutput> {
-    return this._t.call(OPS.getAiUsage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAiUsage, input, opts);
   }
 }
 
@@ -450,7 +450,7 @@ export class ConnectionsApi {
    * GET /v1/connections
    */
   listConnections(input: T.ListConnectionsInput = {} as T.ListConnectionsInput, opts?: RequestOptions): Promise<T.ListConnectionsOutput> {
-    return this._t.call(OPS.listConnections, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnections, input, opts);
   }
   /**
    * Store connector credentials
@@ -458,7 +458,7 @@ export class ConnectionsApi {
    * POST /v1/connections
    */
   storeConnections(input: T.StoreConnectionsInput, opts?: RequestOptions): Promise<T.StoreConnectionsOutput> {
-    return this._t.call(OPS.storeConnections, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.storeConnections, input, opts);
   }
   /**
    * Get a connection
@@ -466,7 +466,7 @@ export class ConnectionsApi {
    * GET /v1/connections/{id}
    */
   getConnection(input: T.GetConnectionInput, opts?: RequestOptions): Promise<T.GetConnectionOutput> {
-    return this._t.call(OPS.getConnection, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnection, input, opts);
   }
   /**
    * Update a connection
@@ -474,7 +474,7 @@ export class ConnectionsApi {
    * PUT /v1/connections/{id}
    */
   updateConnection(input: T.UpdateConnectionInput, opts?: RequestOptions): Promise<T.UpdateConnectionOutput> {
-    return this._t.call(OPS.updateConnection, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConnection, input, opts);
   }
   /**
    * Disconnect — delete a connection and its stored credential
@@ -482,7 +482,7 @@ export class ConnectionsApi {
    * DELETE /v1/connections/{id}
    */
   deleteConnections(input: T.DeleteConnectionsInput, opts?: RequestOptions): Promise<T.DeleteConnectionsOutput> {
-    return this._t.call(OPS.deleteConnections, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConnections, input, opts);
   }
   /**
    * List the org's SaaS connectors and their allowed connection scopes
@@ -490,7 +490,7 @@ export class ConnectionsApi {
    * GET /v1/saas-connectors
    */
   listSaasConnectors(input: T.ListSaasConnectorsInput = {} as T.ListSaasConnectorsInput, opts?: RequestOptions): Promise<T.ListSaasConnectorsOutput> {
-    return this._t.call(OPS.listSaasConnectors, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSaasConnectors, input, opts);
   }
   /**
    * List end customers' scoped connections for a registered SaaS connector
@@ -498,7 +498,7 @@ export class ConnectionsApi {
    * GET /v1/saas-connectors/{connectorId}/connections
    */
   listSaasConnectorConnections(input: T.ListSaasConnectorConnectionsInput, opts?: RequestOptions): Promise<T.ListSaasConnectorConnectionsOutput> {
-    return this._t.call(OPS.listSaasConnectorConnections, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSaasConnectorConnections, input, opts);
   }
   /**
    * Designate a connector as a SaaS connector and set its allowed connection scopes
@@ -506,7 +506,7 @@ export class ConnectionsApi {
    * PUT /v1/saas-connectors/{connectorId}
    */
   upsertSaasConnector(input: T.UpsertSaasConnectorInput, opts?: RequestOptions): Promise<T.UpsertSaasConnectorOutput> {
-    return this._t.call(OPS.upsertSaasConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.upsertSaasConnector, input, opts);
   }
   /**
    * Remove the SaaS-connector designation
@@ -514,7 +514,7 @@ export class ConnectionsApi {
    * DELETE /v1/saas-connectors/{connectorId}
    */
   deleteSaasConnector(input: T.DeleteSaasConnectorInput, opts?: RequestOptions): Promise<T.DeleteSaasConnectorOutput> {
-    return this._t.call(OPS.deleteSaasConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteSaasConnector, input, opts);
   }
   /**
    * Refresh this connection's OAuth tokens now
@@ -522,7 +522,7 @@ export class ConnectionsApi {
    * POST /v1/connections/{id}/refresh
    */
   refreshConnection(input: T.RefreshConnectionInput, opts?: RequestOptions): Promise<T.RefreshConnectionOutput> {
-    return this._t.call(OPS.refreshConnection, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.refreshConnection, input, opts);
   }
   /**
    * Start an OAuth connection
@@ -530,7 +530,7 @@ export class ConnectionsApi {
    * POST /v1/oauth/initiate
    */
   initiateOauthConnection(input: T.InitiateOauthConnectionInput, opts?: RequestOptions): Promise<T.InitiateOauthConnectionOutput> {
-    return this._t.call(OPS.initiateOauthConnection, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.initiateOauthConnection, input, opts);
   }
   /**
    * Make a connection the default
@@ -538,7 +538,7 @@ export class ConnectionsApi {
    * PATCH /v1/connections/{id}/default
    */
   setDefaultConnection(input: T.SetDefaultConnectionInput, opts?: RequestOptions): Promise<T.SetDefaultConnectionOutput> {
-    return this._t.call(OPS.setDefaultConnection, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setDefaultConnection, input, opts);
   }
   /**
    * Find a connection by name
@@ -546,7 +546,7 @@ export class ConnectionsApi {
    * GET /v1/connections/by-name/{connectorId}/{name}
    */
   getConnectionByName(input: T.GetConnectionByNameInput, opts?: RequestOptions): Promise<T.GetConnectionByNameOutput> {
-    return this._t.call(OPS.getConnectionByName, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectionByName, input, opts);
   }
   /**
    * Create a connect link
@@ -554,7 +554,7 @@ export class ConnectionsApi {
    * POST /v1/connect-links
    */
   createConnectLink(input: T.CreateConnectLinkInput, opts?: RequestOptions): Promise<T.CreateConnectLinkOutput> {
-    return this._t.call(OPS.createConnectLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConnectLink, input, opts);
   }
 }
 
@@ -569,7 +569,7 @@ export class ConnectorsApi {
    * GET /v1/connectors
    */
   listConnectors(input: T.ListConnectorsInput = {} as T.ListConnectorsInput, opts?: RequestOptions): Promise<T.ListConnectorsOutput> {
-    return this._t.call(OPS.listConnectors, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectors, input, opts);
   }
   /**
    * Create a connector
@@ -577,7 +577,7 @@ export class ConnectorsApi {
    * POST /v1/connectors
    */
   createConnector(input: T.CreateConnectorInput, opts?: RequestOptions): Promise<T.CreateConnectorOutput> {
-    return this._t.call(OPS.createConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConnector, input, opts);
   }
   /**
    * List connector requests
@@ -585,7 +585,7 @@ export class ConnectorsApi {
    * GET /v1/connector-requests
    */
   listConnectorRequests(input: T.ListConnectorRequestsInput = {} as T.ListConnectorRequestsInput, opts?: RequestOptions): Promise<T.ListConnectorRequestsOutput> {
-    return this._t.call(OPS.listConnectorRequests, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorRequests, input, opts);
   }
   /**
    * Request a connector the catalog does not carry
@@ -599,7 +599,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-requests
    */
   createConnectorRequest(input: T.CreateConnectorRequestInput, opts?: RequestOptions): Promise<T.CreateConnectorRequestOutput> {
-    return this._t.call(OPS.createConnectorRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConnectorRequest, input, opts);
   }
   /**
    * Triage a connector request
@@ -607,7 +607,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PATCH /v1/connector-requests/{id}
    */
   updateConnectorRequest(input: T.UpdateConnectorRequestInput, opts?: RequestOptions): Promise<T.UpdateConnectorRequestOutput> {
-    return this._t.call(OPS.updateConnectorRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConnectorRequest, input, opts);
   }
   /**
    * Get connector
@@ -615,7 +615,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}
    */
   getConnector(input: T.GetConnectorInput, opts?: RequestOptions): Promise<T.GetConnectorOutput> {
-    return this._t.call(OPS.getConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnector, input, opts);
   }
   /**
    * Update connector
@@ -623,7 +623,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/connectors/{id}
    */
   updateConnector(input: T.UpdateConnectorInput, opts?: RequestOptions): Promise<T.UpdateConnectorOutput> {
-    return this._t.call(OPS.updateConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConnector, input, opts);
   }
   /**
    * Delete connector (soft by default)
@@ -631,7 +631,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/connectors/{id}
    */
   deleteConnector(input: T.DeleteConnectorInput, opts?: RequestOptions): Promise<T.DeleteConnectorOutput> {
-    return this._t.call(OPS.deleteConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConnector, input, opts);
   }
   /**
    * Restore a soft-deleted connector
@@ -639,7 +639,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/restore
    */
   restoreConnector(input: T.RestoreConnectorInput, opts?: RequestOptions): Promise<T.RestoreConnectorOutput> {
-    return this._t.call(OPS.restoreConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.restoreConnector, input, opts);
   }
   /**
    * Restore a soft-deleted action
@@ -647,7 +647,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/restore
    */
   restoreAction(input: T.RestoreActionInput, opts?: RequestOptions): Promise<T.RestoreActionOutput> {
-    return this._t.call(OPS.restoreAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.restoreAction, input, opts);
   }
   /**
    * Activate connector for tenant
@@ -655,7 +655,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/activate
    */
   activateConnector(input: T.ActivateConnectorInput, opts?: RequestOptions): Promise<T.ActivateConnectorOutput> {
-    return this._t.call(OPS.activateConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.activateConnector, input, opts);
   }
   /**
    * Fork a parent's custom connector into your own org, secrets included
@@ -663,7 +663,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/fork
    */
   forkConnector(input: T.ForkConnectorInput, opts?: RequestOptions): Promise<T.ForkConnectorOutput> {
-    return this._t.call(OPS.forkConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkConnector, input, opts);
   }
   /**
    * Get a connector version
@@ -671,7 +671,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/versions/{versionId}
    */
   getConnectorVersion(input: T.GetConnectorVersionInput, opts?: RequestOptions): Promise<T.GetConnectorVersionOutput> {
-    return this._t.call(OPS.getConnectorVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorVersion, input, opts);
   }
   /**
    * List connector version pins
@@ -679,7 +679,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-version-pins
    */
   listConnectorVersionPins(input: T.ListConnectorVersionPinsInput = {} as T.ListConnectorVersionPinsInput, opts?: RequestOptions): Promise<T.ListConnectorVersionPinsOutput> {
-    return this._t.call(OPS.listConnectorVersionPins, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorVersionPins, input, opts);
   }
   /**
    * Pin a tenant to a connector version
@@ -687,7 +687,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-version-pins
    */
   upsertConnectorVersionPin(input: T.UpsertConnectorVersionPinInput, opts?: RequestOptions): Promise<T.UpsertConnectorVersionPinOutput> {
-    return this._t.call(OPS.upsertConnectorVersionPin, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.upsertConnectorVersionPin, input, opts);
   }
   /**
    * Remove a connector version pin
@@ -695,7 +695,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/connector-version-pins/{id}
    */
   deleteConnectorVersionPin(input: T.DeleteConnectorVersionPinInput, opts?: RequestOptions): Promise<T.DeleteConnectorVersionPinOutput> {
-    return this._t.call(OPS.deleteConnectorVersionPin, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConnectorVersionPin, input, opts);
   }
   /**
    * Who uses a connector version
@@ -703,7 +703,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/version-usage
    */
   getConnectorVersionUsage(input: T.GetConnectorVersionUsageInput, opts?: RequestOptions): Promise<T.GetConnectorVersionUsageOutput> {
-    return this._t.call(OPS.getConnectorVersionUsage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorVersionUsage, input, opts);
   }
   /**
    * Diff two versions of an action
@@ -711,7 +711,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/actions/{actionSlug}/version-diff
    */
   getActionVersionDiff(input: T.GetActionVersionDiffInput, opts?: RequestOptions): Promise<T.GetActionVersionDiffOutput> {
-    return this._t.call(OPS.getActionVersionDiff, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getActionVersionDiff, input, opts);
   }
   /**
    * Connector health
@@ -719,7 +719,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/integrations/health
    */
   listConnectorHealth(input: T.ListConnectorHealthInput = {} as T.ListConnectorHealthInput, opts?: RequestOptions): Promise<T.ListConnectorHealthOutput> {
-    return this._t.call(OPS.listConnectorHealth, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorHealth, input, opts);
   }
   /**
    * List vendor API changes
@@ -727,7 +727,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-changes
    */
   listConnectorChanges(input: T.ListConnectorChangesInput = {} as T.ListConnectorChangesInput, opts?: RequestOptions): Promise<T.ListConnectorChangesOutput> {
-    return this._t.call(OPS.listConnectorChanges, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorChanges, input, opts);
   }
   /**
    * Who a vendor change affects
@@ -735,7 +735,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-changes/{id}/consumers
    */
   listConnectorChangeConsumers(input: T.ListConnectorChangeConsumersInput, opts?: RequestOptions): Promise<T.ListConnectorChangeConsumersOutput> {
-    return this._t.call(OPS.listConnectorChangeConsumers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorChangeConsumers, input, opts);
   }
   /**
    * Accept or dismiss a vendor change
@@ -743,7 +743,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/connector-changes/{id}/status
    */
   setConnectorChangeStatus(input: T.SetConnectorChangeStatusInput, opts?: RequestOptions): Promise<T.SetConnectorChangeStatusOutput> {
-    return this._t.call(OPS.setConnectorChangeStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setConnectorChangeStatus, input, opts);
   }
   /**
    * Propose a fix for a vendor change
@@ -751,7 +751,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-changes/{id}/propose
    */
   proposeConnectorChangeFix(input: T.ProposeConnectorChangeFixInput, opts?: RequestOptions): Promise<T.ProposeConnectorChangeFixOutput> {
-    return this._t.call(OPS.proposeConnectorChangeFix, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.proposeConnectorChangeFix, input, opts);
   }
   /**
    * List connector update proposals
@@ -759,7 +759,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-update-proposals
    */
   listConnectorUpdateProposals(input: T.ListConnectorUpdateProposalsInput = {} as T.ListConnectorUpdateProposalsInput, opts?: RequestOptions): Promise<T.ListConnectorUpdateProposalsOutput> {
-    return this._t.call(OPS.listConnectorUpdateProposals, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorUpdateProposals, input, opts);
   }
   /**
    * Get a connector update proposal
@@ -767,7 +767,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-update-proposals/{id}
    */
   getConnectorUpdateProposal(input: T.GetConnectorUpdateProposalInput, opts?: RequestOptions): Promise<T.GetConnectorUpdateProposalOutput> {
-    return this._t.call(OPS.getConnectorUpdateProposal, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorUpdateProposal, input, opts);
   }
   /**
    * Accept or reject a proposal item
@@ -775,7 +775,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/connector-update-proposals/{id}/items/{itemId}
    */
   decideConnectorUpdateProposalItem(input: T.DecideConnectorUpdateProposalItemInput, opts?: RequestOptions): Promise<T.DecideConnectorUpdateProposalItemOutput> {
-    return this._t.call(OPS.decideConnectorUpdateProposalItem, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.decideConnectorUpdateProposalItem, input, opts);
   }
   /**
    * Apply a connector update proposal
@@ -783,7 +783,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-update-proposals/{id}/apply
    */
   applyConnectorUpdateProposal(input: T.ApplyConnectorUpdateProposalInput, opts?: RequestOptions): Promise<T.ApplyConnectorUpdateProposalOutput> {
-    return this._t.call(OPS.applyConnectorUpdateProposal, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.applyConnectorUpdateProposal, input, opts);
   }
   /**
    * Run the repair agent on a proposal
@@ -791,7 +791,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-update-proposals/{id}/agent-run
    */
   runConnectorUpdateAgent(input: T.RunConnectorUpdateAgentInput, opts?: RequestOptions): Promise<T.RunConnectorUpdateAgentOutput> {
-    return this._t.call(OPS.runConnectorUpdateAgent, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.runConnectorUpdateAgent, input, opts);
   }
   /**
    * Scan for stale connector versions
@@ -799,7 +799,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connector-staleness/scan
    */
   scanConnectorStaleness(input: T.ScanConnectorStalenessInput = {} as T.ScanConnectorStalenessInput, opts?: RequestOptions): Promise<T.ScanConnectorStalenessOutput> {
-    return this._t.call(OPS.scanConnectorStaleness, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.scanConnectorStaleness, input, opts);
   }
   /**
    * List staleness findings
@@ -807,7 +807,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connector-staleness
    */
   listConnectorStaleness(input: T.ListConnectorStalenessInput = {} as T.ListConnectorStalenessInput, opts?: RequestOptions): Promise<T.ListConnectorStalenessOutput> {
-    return this._t.call(OPS.listConnectorStaleness, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorStaleness, input, opts);
   }
   /**
    * Acknowledge or resolve a staleness finding
@@ -815,7 +815,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/connector-staleness/{id}/status
    */
   setConnectorStalenessStatus(input: T.SetConnectorStalenessStatusInput, opts?: RequestOptions): Promise<T.SetConnectorStalenessStatusOutput> {
-    return this._t.call(OPS.setConnectorStalenessStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setConnectorStalenessStatus, input, opts);
   }
   /**
    * Get a platform provider by slug
@@ -823,7 +823,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/platform-providers/by-slug/{platformSlug}
    */
   getPlatformProviderBySlug(input: T.GetPlatformProviderBySlugInput, opts?: RequestOptions): Promise<T.GetPlatformProviderBySlugOutput> {
-    return this._t.call(OPS.getPlatformProviderBySlug, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getPlatformProviderBySlug, input, opts);
   }
   /**
    * Get a platform provider
@@ -831,7 +831,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/platform-providers/{id}
    */
   getPlatformProvider(input: T.GetPlatformProviderInput, opts?: RequestOptions): Promise<T.GetPlatformProviderOutput> {
-    return this._t.call(OPS.getPlatformProvider, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getPlatformProvider, input, opts);
   }
   /**
    * List auth providers
@@ -839,7 +839,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/auth-providers
    */
   listAuthProviders(input: T.ListAuthProvidersInput = {} as T.ListAuthProvidersInput, opts?: RequestOptions): Promise<T.ListAuthProvidersOutput> {
-    return this._t.call(OPS.listAuthProviders, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuthProviders, input, opts);
   }
   /**
    * Create an auth provider
@@ -847,7 +847,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/auth-providers
    */
   createAuthProvider(input: T.CreateAuthProviderInput, opts?: RequestOptions): Promise<T.CreateAuthProviderOutput> {
-    return this._t.call(OPS.createAuthProvider, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAuthProvider, input, opts);
   }
   /**
    * Get an auth provider
@@ -855,7 +855,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/auth-providers/{id}
    */
   getAuthProvider(input: T.GetAuthProviderInput, opts?: RequestOptions): Promise<T.GetAuthProviderOutput> {
-    return this._t.call(OPS.getAuthProvider, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAuthProvider, input, opts);
   }
   /**
    * Update an auth provider
@@ -863,7 +863,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/auth-providers/{id}
    */
   updateAuthProvider(input: T.UpdateAuthProviderInput, opts?: RequestOptions): Promise<T.UpdateAuthProviderOutput> {
-    return this._t.call(OPS.updateAuthProvider, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAuthProvider, input, opts);
   }
   /**
    * Delete an auth provider
@@ -871,7 +871,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/auth-providers/{id}
    */
   deleteAuthProvider(input: T.DeleteAuthProviderInput, opts?: RequestOptions): Promise<T.DeleteAuthProviderOutput> {
-    return this._t.call(OPS.deleteAuthProvider, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAuthProvider, input, opts);
   }
   /**
    * List an auth provider's scopes
@@ -879,7 +879,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/auth-providers/{id}/scopes
    */
   listAuthProviderScopes(input: T.ListAuthProviderScopesInput, opts?: RequestOptions): Promise<T.ListAuthProviderScopesOutput> {
-    return this._t.call(OPS.listAuthProviderScopes, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuthProviderScopes, input, opts);
   }
   /**
    * List auth methods
@@ -887,7 +887,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/auth-methods
    */
   listAuthMethods(input: T.ListAuthMethodsInput = {} as T.ListAuthMethodsInput, opts?: RequestOptions): Promise<T.ListAuthMethodsOutput> {
-    return this._t.call(OPS.listAuthMethods, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuthMethods, input, opts);
   }
   /**
    * Create an auth method
@@ -895,7 +895,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/auth-methods
    */
   createAuthMethod(input: T.CreateAuthMethodInput, opts?: RequestOptions): Promise<T.CreateAuthMethodOutput> {
-    return this._t.call(OPS.createAuthMethod, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAuthMethod, input, opts);
   }
   /**
    * Get an auth method
@@ -903,7 +903,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/auth-methods/{id}
    */
   getAuthMethod(input: T.GetAuthMethodInput, opts?: RequestOptions): Promise<T.GetAuthMethodOutput> {
-    return this._t.call(OPS.getAuthMethod, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAuthMethod, input, opts);
   }
   /**
    * Update an auth method
@@ -911,7 +911,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/auth-methods/{id}
    */
   updateAuthMethod(input: T.UpdateAuthMethodInput, opts?: RequestOptions): Promise<T.UpdateAuthMethodOutput> {
-    return this._t.call(OPS.updateAuthMethod, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAuthMethod, input, opts);
   }
   /**
    * Delete an auth method
@@ -919,7 +919,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/auth-methods/{id}
    */
   deleteAuthMethod(input: T.DeleteAuthMethodInput, opts?: RequestOptions): Promise<T.DeleteAuthMethodOutput> {
-    return this._t.call(OPS.deleteAuthMethod, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAuthMethod, input, opts);
   }
   /**
    * List connector entities
@@ -927,7 +927,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/entities
    */
   listConnectorEntities(input: T.ListConnectorEntitiesInput = {} as T.ListConnectorEntitiesInput, opts?: RequestOptions): Promise<T.ListConnectorEntitiesOutput> {
-    return this._t.call(OPS.listConnectorEntities, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorEntities, input, opts);
   }
   /**
    * Create a connector entity
@@ -935,7 +935,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/entities
    */
   createConnectorEntity(input: T.CreateConnectorEntityInput, opts?: RequestOptions): Promise<T.CreateConnectorEntityOutput> {
-    return this._t.call(OPS.createConnectorEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConnectorEntity, input, opts);
   }
   /**
    * Get a connector entity
@@ -943,7 +943,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/entities/{id}
    */
   getConnectorEntity(input: T.GetConnectorEntityInput, opts?: RequestOptions): Promise<T.GetConnectorEntityOutput> {
-    return this._t.call(OPS.getConnectorEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorEntity, input, opts);
   }
   /**
    * Update a connector entity
@@ -951,7 +951,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/entities/{id}
    */
   updateConnectorEntity(input: T.UpdateConnectorEntityInput, opts?: RequestOptions): Promise<T.UpdateConnectorEntityOutput> {
-    return this._t.call(OPS.updateConnectorEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConnectorEntity, input, opts);
   }
   /**
    * Delete a connector entity
@@ -959,7 +959,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/entities/{id}
    */
   deleteConnectorEntity(input: T.DeleteConnectorEntityInput, opts?: RequestOptions): Promise<T.DeleteConnectorEntityOutput> {
-    return this._t.call(OPS.deleteConnectorEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConnectorEntity, input, opts);
   }
   /**
    * Analyze a connector's entities
@@ -967,7 +967,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/entities
    */
   getConnectorEntities(input: T.GetConnectorEntitiesInput, opts?: RequestOptions): Promise<T.GetConnectorEntitiesOutput> {
-    return this._t.call(OPS.getConnectorEntities, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorEntities, input, opts);
   }
   /**
    * List a connector's methods
@@ -975,7 +975,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/methods
    */
   getConnectorMethods(input: T.GetConnectorMethodsInput, opts?: RequestOptions): Promise<T.GetConnectorMethodsOutput> {
-    return this._t.call(OPS.getConnectorMethods, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorMethods, input, opts);
   }
   /**
    * List actions
@@ -983,7 +983,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions
    */
   listActions(input: T.ListActionsInput = {} as T.ListActionsInput, opts?: RequestOptions): Promise<T.ListActionsOutput> {
-    return this._t.call(OPS.listActions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listActions, input, opts);
   }
   /**
    * Create an action
@@ -991,7 +991,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions
    */
   createAction(input: T.CreateActionInput, opts?: RequestOptions): Promise<T.CreateActionOutput> {
-    return this._t.call(OPS.createAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAction, input, opts);
   }
   /**
    * Get an action
@@ -999,7 +999,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/{id}
    */
   getAction(input: T.GetActionInput, opts?: RequestOptions): Promise<T.GetActionOutput> {
-    return this._t.call(OPS.getAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAction, input, opts);
   }
   /**
    * Update an action
@@ -1007,7 +1007,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/actions/{id}
    */
   updateAction(input: T.UpdateActionInput, opts?: RequestOptions): Promise<T.UpdateActionOutput> {
-    return this._t.call(OPS.updateAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAction, input, opts);
   }
   /**
    * Delete an action
@@ -1015,7 +1015,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/actions/{id}
    */
   deleteAction(input: T.DeleteActionInput, opts?: RequestOptions): Promise<T.DeleteActionOutput> {
-    return this._t.call(OPS.deleteAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAction, input, opts);
   }
   /**
    * Fork a new action version
@@ -1023,7 +1023,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/new-version
    */
   createActionVersion(input: T.CreateActionVersionInput, opts?: RequestOptions): Promise<T.CreateActionVersionOutput> {
-    return this._t.call(OPS.createActionVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createActionVersion, input, opts);
   }
   /**
    * Propose a change to a managed action
@@ -1031,7 +1031,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/propose-update
    */
   proposeActionUpdate(input: T.ProposeActionUpdateInput, opts?: RequestOptions): Promise<T.ProposeActionUpdateOutput> {
-    return this._t.call(OPS.proposeActionUpdate, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.proposeActionUpdate, input, opts);
   }
   /**
    * Get an action's review
@@ -1039,7 +1039,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/{id}/review
    */
   getActionReview(input: T.GetActionReviewInput, opts?: RequestOptions): Promise<T.GetActionReviewOutput> {
-    return this._t.call(OPS.getActionReview, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getActionReview, input, opts);
   }
   /**
    * Comment on an action review
@@ -1047,7 +1047,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/review/comments
    */
   createActionReviewComment(input: T.CreateActionReviewCommentInput, opts?: RequestOptions): Promise<T.CreateActionReviewCommentOutput> {
-    return this._t.call(OPS.createActionReviewComment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createActionReviewComment, input, opts);
   }
   /**
    * Record an action test result
@@ -1055,7 +1055,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PATCH /v1/actions/{id}/test-result
    */
   setActionTestResult(input: T.SetActionTestResultInput, opts?: RequestOptions): Promise<T.SetActionTestResultOutput> {
-    return this._t.call(OPS.setActionTestResult, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setActionTestResult, input, opts);
   }
   /**
    * Save a response as a mock stub
@@ -1063,7 +1063,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/mock-stub
    */
   saveActionMockStub(input: T.SaveActionMockStubInput, opts?: RequestOptions): Promise<T.SaveActionMockStubOutput> {
-    return this._t.call(OPS.saveActionMockStub, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.saveActionMockStub, input, opts);
   }
   /**
    * List action versions
@@ -1071,7 +1071,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/{id}/versions
    */
   listActionVersions(input: T.ListActionVersionsInput, opts?: RequestOptions): Promise<T.ListActionVersionsOutput> {
-    return this._t.call(OPS.listActionVersions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listActionVersions, input, opts);
   }
   /**
    * Get an action version
@@ -1079,7 +1079,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/{id}/versions/{versionId}
    */
   getActionVersion(input: T.GetActionVersionInput, opts?: RequestOptions): Promise<T.GetActionVersionOutput> {
-    return this._t.call(OPS.getActionVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getActionVersion, input, opts);
   }
   /**
    * Promote an action to live
@@ -1087,7 +1087,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/promote
    */
   promoteAction(input: T.PromoteActionInput, opts?: RequestOptions): Promise<T.PromoteActionOutput> {
-    return this._t.call(OPS.promoteAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.promoteAction, input, opts);
   }
   /**
    * Sync an MCP connector's tools
@@ -1095,7 +1095,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/sync-mcp-tools
    */
   syncMcpTools(input: T.SyncMcpToolsInput, opts?: RequestOptions): Promise<T.SyncMcpToolsOutput> {
-    return this._t.call(OPS.syncMcpTools, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.syncMcpTools, input, opts);
   }
   /**
    * List connectors with webhook triggers
@@ -1103,7 +1103,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/webhook-configs/connectors
    */
   listWebhookConfigConnectors(input: T.ListWebhookConfigConnectorsInput = {} as T.ListWebhookConfigConnectorsInput, opts?: RequestOptions): Promise<T.ListWebhookConfigConnectorsOutput> {
-    return this._t.call(OPS.listWebhookConfigConnectors, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWebhookConfigConnectors, input, opts);
   }
   /**
    * List a connector's webhook configs
@@ -1111,7 +1111,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/webhook-config
    */
   listWebhookConfigs(input: T.ListWebhookConfigsInput, opts?: RequestOptions): Promise<T.ListWebhookConfigsOutput> {
-    return this._t.call(OPS.listWebhookConfigs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWebhookConfigs, input, opts);
   }
   /**
    * Create a webhook config
@@ -1119,7 +1119,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/webhook-config
    */
   createWebhookConfig(input: T.CreateWebhookConfigInput, opts?: RequestOptions): Promise<T.CreateWebhookConfigOutput> {
-    return this._t.call(OPS.createWebhookConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWebhookConfig, input, opts);
   }
   /**
    * Get a webhook config
@@ -1127,7 +1127,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/webhook-configs/{id}
    */
   getWebhookConfig(input: T.GetWebhookConfigInput, opts?: RequestOptions): Promise<T.GetWebhookConfigOutput> {
-    return this._t.call(OPS.getWebhookConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWebhookConfig, input, opts);
   }
   /**
    * Update a webhook config
@@ -1135,7 +1135,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/webhook-configs/{id}
    */
   updateWebhookConfig(input: T.UpdateWebhookConfigInput, opts?: RequestOptions): Promise<T.UpdateWebhookConfigOutput> {
-    return this._t.call(OPS.updateWebhookConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWebhookConfig, input, opts);
   }
   /**
    * Delete a webhook config
@@ -1143,7 +1143,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/webhook-configs/{id}
    */
   deleteWebhookConfig(input: T.DeleteWebhookConfigInput, opts?: RequestOptions): Promise<T.DeleteWebhookConfigOutput> {
-    return this._t.call(OPS.deleteWebhookConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWebhookConfig, input, opts);
   }
   /**
    * Run a webhook subscription
@@ -1151,7 +1151,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/webhook-configs/{id}/execute-subscription
    */
   executeWebhookSubscription(input: T.ExecuteWebhookSubscriptionInput, opts?: RequestOptions): Promise<T.ExecuteWebhookSubscriptionOutput> {
-    return this._t.call(OPS.executeWebhookSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeWebhookSubscription, input, opts);
   }
   /**
    * Import a connector bundle
@@ -1159,7 +1159,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/import
    */
   importConnectors(input: T.ImportConnectorsInput = {} as T.ImportConnectorsInput, opts?: RequestOptions): Promise<T.ImportConnectorsOutput> {
-    return this._t.call(OPS.importConnectors, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.importConnectors, input, opts);
   }
   /**
    * Delete several actions
@@ -1167,7 +1167,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/batch-delete
    */
   batchDeleteActions(input: T.BatchDeleteActionsInput, opts?: RequestOptions): Promise<T.BatchDeleteActionsOutput> {
-    return this._t.call(OPS.batchDeleteActions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.batchDeleteActions, input, opts);
   }
   /**
    * Export a connector's actions
@@ -1175,7 +1175,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/export
    */
   exportActions(input: T.ExportActionsInput, opts?: RequestOptions): Promise<T.ExportActionsOutput> {
-    return this._t.call(OPS.exportActions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.exportActions, input, opts);
   }
   /**
    * Export one action
@@ -1183,7 +1183,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/actions/{id}/export
    */
   exportAction(input: T.ExportActionInput, opts?: RequestOptions): Promise<T.ExportActionOutput> {
-    return this._t.call(OPS.exportAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.exportAction, input, opts);
   }
   /**
    * Import actions
@@ -1191,7 +1191,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/import
    */
   importActions(input: T.ImportActionsInput, opts?: RequestOptions): Promise<T.ImportActionsOutput> {
-    return this._t.call(OPS.importActions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.importActions, input, opts);
   }
   /**
    * Generate a mock response
@@ -1199,7 +1199,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/mock
    */
   mockAction(input: T.MockActionInput, opts?: RequestOptions): Promise<T.MockActionOutput> {
-    return this._t.call(OPS.mockAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.mockAction, input, opts);
   }
   /**
    * List connector versions
@@ -1207,7 +1207,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/connectors/{id}/versions
    */
   listConnectorVersions(input: T.ListConnectorVersionsInput, opts?: RequestOptions): Promise<T.ListConnectorVersionsOutput> {
-    return this._t.call(OPS.listConnectorVersions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorVersions, input, opts);
   }
   /**
    * Promote a connector
@@ -1215,7 +1215,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/promote
    */
   promoteConnector(input: T.PromoteConnectorInput, opts?: RequestOptions): Promise<T.PromoteConnectorOutput> {
-    return this._t.call(OPS.promoteConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.promoteConnector, input, opts);
   }
   /**
    * Publish a connector version
@@ -1223,7 +1223,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/publish-version
    */
   publishConnectorVersion(input: T.PublishConnectorVersionInput, opts?: RequestOptions): Promise<T.PublishConnectorVersionOutput> {
-    return this._t.call(OPS.publishConnectorVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.publishConnectorVersion, input, opts);
   }
   /**
    * Revert a connector to a version
@@ -1231,7 +1231,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/connectors/{id}/revert
    */
   revertConnector(input: T.RevertConnectorInput, opts?: RequestOptions): Promise<T.RevertConnectorOutput> {
-    return this._t.call(OPS.revertConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.revertConnector, input, opts);
   }
   /**
    * Execute a connector action
@@ -1239,7 +1239,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/actions/{id}/execute
    */
   executeAction(input: T.ExecuteActionInput, opts?: RequestOptions): Promise<T.ExecuteActionOutput> {
-    return this._t.call(OPS.executeAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeAction, input, opts);
   }
   /**
    * List action folders
@@ -1247,7 +1247,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/action-folders
    */
   listActionFolders(input: T.ListActionFoldersInput = {} as T.ListActionFoldersInput, opts?: RequestOptions): Promise<T.ListActionFoldersOutput> {
-    return this._t.call(OPS.listActionFolders, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listActionFolders, input, opts);
   }
   /**
    * Create an action folder
@@ -1255,7 +1255,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/action-folders
    */
   createActionFolder(input: T.CreateActionFolderInput, opts?: RequestOptions): Promise<T.CreateActionFolderOutput> {
-    return this._t.call(OPS.createActionFolder, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createActionFolder, input, opts);
   }
   /**
    * Get an action folder
@@ -1263,7 +1263,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/action-folders/{id}
    */
   getActionFolder(input: T.GetActionFolderInput, opts?: RequestOptions): Promise<T.GetActionFolderOutput> {
-    return this._t.call(OPS.getActionFolder, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getActionFolder, input, opts);
   }
   /**
    * Update an action folder
@@ -1271,7 +1271,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/action-folders/{id}
    */
   updateActionFolder(input: T.UpdateActionFolderInput, opts?: RequestOptions): Promise<T.UpdateActionFolderOutput> {
-    return this._t.call(OPS.updateActionFolder, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateActionFolder, input, opts);
   }
   /**
    * Delete an action folder
@@ -1279,7 +1279,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/action-folders/{id}
    */
   deleteActionFolder(input: T.DeleteActionFolderInput, opts?: RequestOptions): Promise<T.DeleteActionFolderOutput> {
-    return this._t.call(OPS.deleteActionFolder, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteActionFolder, input, opts);
   }
   /**
    * Probe a connector action's fields
@@ -1287,7 +1287,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/probes
    */
   probeConnector(input: T.ProbeConnectorInput, opts?: RequestOptions): Promise<T.ProbeConnectorOutput> {
-    return this._t.call(OPS.probeConnector, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.probeConnector, input, opts);
   }
   /**
    * Fetch sample values from a connector action
@@ -1295,7 +1295,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/probes/values
    */
   probeConnectorValues(input: T.ProbeConnectorValuesInput, opts?: RequestOptions): Promise<T.ProbeConnectorValuesOutput> {
-    return this._t.call(OPS.probeConnectorValues, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.probeConnectorValues, input, opts);
   }
   /**
    * Merge sub-entity probes into a parent probe
@@ -1303,7 +1303,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/probes/merge
    */
   mergeProbes(input: T.MergeProbesInput, opts?: RequestOptions): Promise<T.MergeProbesOutput> {
-    return this._t.call(OPS.mergeProbes, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.mergeProbes, input, opts);
   }
   /**
    * Get what is needed to write mock stubs for an action
@@ -1311,7 +1311,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}
    */
   generateActionMock(input: T.GenerateActionMockInput, opts?: RequestOptions): Promise<T.GenerateActionMockOutput> {
-    return this._t.call(OPS.generateActionMock, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.generateActionMock, input, opts);
   }
   /**
    * List an action's mock stubs
@@ -1319,7 +1319,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs
    */
   listMockStubs(input: T.ListMockStubsInput, opts?: RequestOptions): Promise<T.ListMockStubsOutput> {
-    return this._t.call(OPS.listMockStubs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listMockStubs, input, opts);
   }
   /**
    * Create a mock stub
@@ -1327,7 +1327,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs
    */
   createMockStub(input: T.CreateMockStubInput, opts?: RequestOptions): Promise<T.CreateMockStubOutput> {
-    return this._t.call(OPS.createMockStub, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createMockStub, input, opts);
   }
   /**
    * Regenerate an action's default mock stub
@@ -1335,7 +1335,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * POST /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/regenerate
    */
   regenerateMockStubs(input: T.RegenerateMockStubsInput, opts?: RequestOptions): Promise<T.RegenerateMockStubsOutput> {
-    return this._t.call(OPS.regenerateMockStubs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.regenerateMockStubs, input, opts);
   }
   /**
    * Update a mock stub
@@ -1343,7 +1343,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * PUT /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}
    */
   updateMockStub(input: T.UpdateMockStubInput, opts?: RequestOptions): Promise<T.UpdateMockStubOutput> {
-    return this._t.call(OPS.updateMockStub, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateMockStub, input, opts);
   }
   /**
    * Delete a mock stub
@@ -1351,7 +1351,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * DELETE /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}
    */
   deleteMockStub(input: T.DeleteMockStubInput, opts?: RequestOptions): Promise<T.DeleteMockStubOutput> {
-    return this._t.call(OPS.deleteMockStub, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteMockStub, input, opts);
   }
   /**
    * List a connector's actions by slug
@@ -1359,7 +1359,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v2/connectors/{connector}/actions
    */
   listConnectorActionsBySlug(input: T.ListConnectorActionsBySlugInput, opts?: RequestOptions): Promise<T.ListConnectorActionsBySlugOutput> {
-    return this._t.call(OPS.listConnectorActionsBySlug, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorActionsBySlug, input, opts);
   }
   /**
    * Get an action's input/output contract
@@ -1367,7 +1367,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v2/connectors/{connector}/actions/{action}/schema
    */
   getConnectorActionSchema(input: T.GetConnectorActionSchemaInput, opts?: RequestOptions): Promise<T.GetConnectorActionSchemaOutput> {
-    return this._t.call(OPS.getConnectorActionSchema, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorActionSchema, input, opts);
   }
   /**
    * Discover an MCP connector's tools
@@ -1375,7 +1375,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v2/connectors/{connector}/mcp/discover
    */
   discoverMcpConnectorTools(input: T.DiscoverMcpConnectorToolsInput, opts?: RequestOptions): Promise<T.DiscoverMcpConnectorToolsOutput> {
-    return this._t.call(OPS.discoverMcpConnectorTools, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.discoverMcpConnectorTools, input, opts);
   }
   /**
    * Is this connector connected?
@@ -1383,7 +1383,7 @@ After the response, and unable to affect it, the write emits the `connector_requ
    * GET /v2/connectors/{connector}/connection-status
    */
   getConnectorConnectionStatus(input: T.GetConnectorConnectionStatusInput, opts?: RequestOptions): Promise<T.GetConnectorConnectionStatusOutput> {
-    return this._t.call(OPS.getConnectorConnectionStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorConnectionStatus, input, opts);
   }
 }
 
@@ -1398,7 +1398,7 @@ export class EmbedApi {
    * POST /v1/embed/token
    */
   createEmbedToken(input: T.CreateEmbedTokenInput = {} as T.CreateEmbedTokenInput, opts?: RequestOptions): Promise<T.CreateEmbedTokenOutput> {
-    return this._t.call(OPS.createEmbedToken, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createEmbedToken, input, opts);
   }
   /**
    * Create a setup link for widget installation
@@ -1406,7 +1406,7 @@ export class EmbedApi {
    * POST /v1/setup-links
    */
   createSetupLink(input: T.CreateSetupLinkInput, opts?: RequestOptions): Promise<T.CreateSetupLinkOutput> {
-    return this._t.call(OPS.createSetupLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createSetupLink, input, opts);
   }
   /**
    * Get setup link status and context
@@ -1414,7 +1414,7 @@ export class EmbedApi {
    * GET /v1/setup-links/{id}
    */
   getSetupLink(input: T.GetSetupLinkInput, opts?: RequestOptions): Promise<T.GetSetupLinkOutput> {
-    return this._t.call(OPS.getSetupLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSetupLink, input, opts);
   }
   /**
    * Cancel a setup link
@@ -1422,7 +1422,7 @@ export class EmbedApi {
    * DELETE /v1/setup-links/{id}
    */
   cancelSetupLink(input: T.CancelSetupLinkInput, opts?: RequestOptions): Promise<T.CancelSetupLinkOutput> {
-    return this._t.call(OPS.cancelSetupLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.cancelSetupLink, input, opts);
   }
   /**
    * Complete setup and create installation
@@ -1430,7 +1430,7 @@ export class EmbedApi {
    * POST /v1/setup-links/{id}/complete
    */
   completeSetupLink(input: T.CompleteSetupLinkInput, opts?: RequestOptions): Promise<T.CompleteSetupLinkOutput> {
-    return this._t.call(OPS.completeSetupLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.completeSetupLink, input, opts);
   }
   /**
    * List embed widgets
@@ -1438,7 +1438,7 @@ export class EmbedApi {
    * GET /v1/widgets
    */
   listWidgets(input: T.ListWidgetsInput = {} as T.ListWidgetsInput, opts?: RequestOptions): Promise<T.ListWidgetsOutput> {
-    return this._t.call(OPS.listWidgets, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWidgets, input, opts);
   }
   /**
    * Create an embed widget; unified_refs attaches unified catalog entities (their mapped connectors join the manifest; no config template is created). trigger_categories defines named trigger groups (unique slugs) the installer picks from at activation; trigger_refs[].categories tags each template with those slugs (untagged = core, always provisioned). connector_refs[].connectionScope tags a registered SaaS connector with the connection scope activation must pin (registry-validated).
@@ -1446,7 +1446,7 @@ export class EmbedApi {
    * POST /v1/widgets
    */
   createWidget(input: T.CreateWidgetInput, opts?: RequestOptions): Promise<T.CreateWidgetOutput> {
-    return this._t.call(OPS.createWidget, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWidget, input, opts);
   }
   /**
    * Widget/workflow operational rollup
@@ -1454,7 +1454,7 @@ export class EmbedApi {
    * GET /v1/widgets/insights
    */
   getWidgetInsights(input: T.GetWidgetInsightsInput = {} as T.GetWidgetInsightsInput, opts?: RequestOptions): Promise<T.GetWidgetInsightsOutput> {
-    return this._t.call(OPS.getWidgetInsights, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWidgetInsights, input, opts);
   }
   /**
    * Partner reporting: the same operational metrics as /widgets/insights, totalled across every customer of the calling account plus one row per customer. Workflows labelled Internal or Staging are left out of every number. Totals span all customers and ignore ?q; only the table is filtered. Refused for a tenant-scoped session (an embed token or tenant-pinned API key), whose 'customers' would be its own siblings, and for roles below developer.
@@ -1462,7 +1462,7 @@ export class EmbedApi {
    * GET /v1/widgets/insights/tenants
    */
   getTenantInsights(input: T.GetTenantInsightsInput = {} as T.GetTenantInsightsInput, opts?: RequestOptions): Promise<T.GetTenantInsightsOutput> {
-    return this._t.call(OPS.getTenantInsights, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTenantInsights, input, opts);
   }
   /**
    * Partner reporting, right now: runs processing and queued (with the oldest age of each), and trigger deliveries due another retry, across every customer or one. Not windowed; read from the in-flight rows.
@@ -1470,7 +1470,7 @@ export class EmbedApi {
    * GET /v1/widgets/insights/tenants/live
    */
   getLiveTenantInsights(input: T.GetLiveTenantInsightsInput = {} as T.GetLiveTenantInsightsInput, opts?: RequestOptions): Promise<T.GetLiveTenantInsightsOutput> {
-    return this._t.call(OPS.getLiveTenantInsights, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getLiveTenantInsights, input, opts);
   }
   /**
    * Fork (duplicate) an inherited integration into your own org so you can customise it
@@ -1478,7 +1478,7 @@ export class EmbedApi {
    * POST /v1/integrations/{id}/fork
    */
   forkIntegration(input: T.ForkIntegrationInput, opts?: RequestOptions): Promise<T.ForkIntegrationOutput> {
-    return this._t.call(OPS.forkIntegration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkIntegration, input, opts);
   }
   /**
    * Fork an inherited widget and its config template into your own org
@@ -1486,7 +1486,7 @@ export class EmbedApi {
    * POST /v1/widgets/{id}/fork
    */
   forkWidget(input: T.ForkWidgetInput, opts?: RequestOptions): Promise<T.ForkWidgetOutput> {
-    return this._t.call(OPS.forkWidget, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkWidget, input, opts);
   }
   /**
    * Choose which version of a customised integration your org runs
@@ -1494,7 +1494,7 @@ export class EmbedApi {
    * PUT /v1/widgets/{id}/active-version
    */
   setWidgetActiveVersion(input: T.SetWidgetActiveVersionInput, opts?: RequestOptions): Promise<T.SetWidgetActiveVersionOutput> {
-    return this._t.call(OPS.setWidgetActiveVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setWidgetActiveVersion, input, opts);
   }
   /**
    * What each of your customised copies was copied from
@@ -1502,7 +1502,7 @@ export class EmbedApi {
    * GET /v1/forks/lineage
    */
   getForkLineage(input: T.GetForkLineageInput, opts?: RequestOptions): Promise<T.GetForkLineageOutput> {
-    return this._t.call(OPS.getForkLineage, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getForkLineage, input, opts);
   }
   /**
    * Fork an inherited config template into your own org
@@ -1510,7 +1510,7 @@ export class EmbedApi {
    * POST /v1/configs/{id}/fork
    */
   forkConfig(input: T.ForkConfigInput, opts?: RequestOptions): Promise<T.ForkConfigOutput> {
-    return this._t.call(OPS.forkConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkConfig, input, opts);
   }
   /**
    * Which of your customers have the widget embedded in their product
@@ -1518,7 +1518,7 @@ export class EmbedApi {
    * GET /v1/widgets/embed-status
    */
   getWidgetEmbedStatus(input: T.GetWidgetEmbedStatusInput = {} as T.GetWidgetEmbedStatusInput, opts?: RequestOptions): Promise<T.GetWidgetEmbedStatusOutput> {
-    return this._t.call(OPS.getWidgetEmbedStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWidgetEmbedStatus, input, opts);
   }
   /**
    * Get widget
@@ -1526,7 +1526,7 @@ export class EmbedApi {
    * GET /v1/widgets/{id}
    */
   getWidget(input: T.GetWidgetInput, opts?: RequestOptions): Promise<T.GetWidgetOutput> {
-    return this._t.call(OPS.getWidget, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWidget, input, opts);
   }
   /**
    * Update widget. Shrinking trigger_categories while trigger_refs still tag a removed slug is rejected (400). connector_refs[].connectionScope (SaaS-connector activation pinning) is validated against the org's saas_connectors registry.
@@ -1534,7 +1534,7 @@ export class EmbedApi {
    * PUT /v1/widgets/{id}
    */
   updateWidget(input: T.UpdateWidgetInput, opts?: RequestOptions): Promise<T.UpdateWidgetOutput> {
-    return this._t.call(OPS.updateWidget, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWidget, input, opts);
   }
   /**
    * Delete widget
@@ -1542,7 +1542,7 @@ export class EmbedApi {
    * DELETE /v1/widgets/{id}
    */
   deleteWidget(input: T.DeleteWidgetInput, opts?: RequestOptions): Promise<T.DeleteWidgetOutput> {
-    return this._t.call(OPS.deleteWidget, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWidget, input, opts);
   }
   /**
    * Fetch dynamic options for a configuration form field
@@ -1550,7 +1550,7 @@ export class EmbedApi {
    * POST /v1/configs/{id}/options
    */
   getConfigFieldOptions(input: T.GetConfigFieldOptionsInput, opts?: RequestOptions): Promise<T.GetConfigFieldOptionsOutput> {
-    return this._t.call(OPS.getConfigFieldOptions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConfigFieldOptions, input, opts);
   }
   /**
    * List the rows of an array-typed configuration
@@ -1558,7 +1558,7 @@ export class EmbedApi {
    * GET /v1/configs/{id}/entries
    */
   listConfigEntries(input: T.ListConfigEntriesInput, opts?: RequestOptions): Promise<T.ListConfigEntriesOutput> {
-    return this._t.call(OPS.listConfigEntries, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConfigEntries, input, opts);
   }
   /**
    * Create a configuration row
@@ -1566,7 +1566,7 @@ export class EmbedApi {
    * POST /v1/configs/{id}/entries
    */
   createConfigEntry(input: T.CreateConfigEntryInput, opts?: RequestOptions): Promise<T.CreateConfigEntryOutput> {
-    return this._t.call(OPS.createConfigEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConfigEntry, input, opts);
   }
   /**
    * Get one configuration row
@@ -1574,7 +1574,7 @@ export class EmbedApi {
    * GET /v1/configs/{id}/entries/{entryId}
    */
   getConfigEntry(input: T.GetConfigEntryInput, opts?: RequestOptions): Promise<T.GetConfigEntryOutput> {
-    return this._t.call(OPS.getConfigEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConfigEntry, input, opts);
   }
   /**
    * Replace one configuration row
@@ -1582,7 +1582,7 @@ export class EmbedApi {
    * PUT /v1/configs/{id}/entries/{entryId}
    */
   updateConfigEntry(input: T.UpdateConfigEntryInput, opts?: RequestOptions): Promise<T.UpdateConfigEntryOutput> {
-    return this._t.call(OPS.updateConfigEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConfigEntry, input, opts);
   }
   /**
    * Delete one configuration row
@@ -1590,7 +1590,7 @@ export class EmbedApi {
    * DELETE /v1/configs/{id}/entries/{entryId}
    */
   deleteConfigEntry(input: T.DeleteConfigEntryInput, opts?: RequestOptions): Promise<T.DeleteConfigEntryOutput> {
-    return this._t.call(OPS.deleteConfigEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConfigEntry, input, opts);
   }
   /**
    * Revoke an embed share link
@@ -1598,7 +1598,7 @@ export class EmbedApi {
    * DELETE /v1/embed/share-links/{id}
    */
   revokeEmbedShareLink(input: T.RevokeEmbedShareLinkInput, opts?: RequestOptions): Promise<T.RevokeEmbedShareLinkOutput> {
-    return this._t.call(OPS.revokeEmbedShareLink, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.revokeEmbedShareLink, input, opts);
   }
   /**
    * List configs
@@ -1606,7 +1606,7 @@ export class EmbedApi {
    * GET /v1/configs
    */
   listConfigs(input: T.ListConfigsInput = {} as T.ListConfigsInput, opts?: RequestOptions): Promise<T.ListConfigsOutput> {
-    return this._t.call(OPS.listConfigs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConfigs, input, opts);
   }
   /**
    * Create a config
@@ -1614,7 +1614,7 @@ export class EmbedApi {
    * POST /v1/configs
    */
   createConfig(input: T.CreateConfigInput = {} as T.CreateConfigInput, opts?: RequestOptions): Promise<T.CreateConfigOutput> {
-    return this._t.call(OPS.createConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConfig, input, opts);
   }
   /**
    * Get a config
@@ -1622,7 +1622,7 @@ export class EmbedApi {
    * GET /v1/configs/{id}
    */
   getConfig(input: T.GetConfigInput, opts?: RequestOptions): Promise<T.GetConfigOutput> {
-    return this._t.call(OPS.getConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConfig, input, opts);
   }
   /**
    * Update a config
@@ -1630,7 +1630,7 @@ export class EmbedApi {
    * PUT /v1/configs/{id}
    */
   updateConfig(input: T.UpdateConfigInput, opts?: RequestOptions): Promise<T.UpdateConfigOutput> {
-    return this._t.call(OPS.updateConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConfig, input, opts);
   }
   /**
    * Delete a config
@@ -1638,7 +1638,7 @@ export class EmbedApi {
    * DELETE /v1/configs/{id}
    */
   deleteConfig(input: T.DeleteConfigInput, opts?: RequestOptions): Promise<T.DeleteConfigOutput> {
-    return this._t.call(OPS.deleteConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteConfig, input, opts);
   }
   /**
    * Set configuration decisions
@@ -1646,7 +1646,7 @@ export class EmbedApi {
    * PATCH /v1/configs/{id}/decisions
    */
   updateConfigDecisions(input: T.UpdateConfigDecisionsInput, opts?: RequestOptions): Promise<T.UpdateConfigDecisionsOutput> {
-    return this._t.call(OPS.updateConfigDecisions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateConfigDecisions, input, opts);
   }
   /**
    * Upgrade a config clone from its template
@@ -1654,7 +1654,7 @@ export class EmbedApi {
    * POST /v1/configs/{id}/upgrade
    */
   upgradeConfig(input: T.UpgradeConfigInput, opts?: RequestOptions): Promise<T.UpgradeConfigOutput> {
-    return this._t.call(OPS.upgradeConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.upgradeConfig, input, opts);
   }
   /**
    * List workflows that use a config
@@ -1662,7 +1662,7 @@ export class EmbedApi {
    * GET /v1/configs/{id}/workflows
    */
   listConfigWorkflows(input: T.ListConfigWorkflowsInput, opts?: RequestOptions): Promise<T.ListConfigWorkflowsOutput> {
-    return this._t.call(OPS.listConfigWorkflows, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConfigWorkflows, input, opts);
   }
   /**
    * Create a config draft for review
@@ -1670,7 +1670,7 @@ export class EmbedApi {
    * POST /v1/config-drafts
    */
   createConfigDraft(input: T.CreateConfigDraftInput, opts?: RequestOptions): Promise<T.CreateConfigDraftOutput> {
-    return this._t.call(OPS.createConfigDraft, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createConfigDraft, input, opts);
   }
   /**
    * Propose a configuration from probes
@@ -1678,7 +1678,7 @@ export class EmbedApi {
    * POST /v1/config-drafts/propose
    */
   proposeConfiguration(input: T.ProposeConfigurationInput, opts?: RequestOptions): Promise<T.ProposeConfigurationOutput> {
-    return this._t.call(OPS.proposeConfiguration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.proposeConfiguration, input, opts);
   }
   /**
    * Get a config draft
@@ -1686,7 +1686,7 @@ export class EmbedApi {
    * GET /v1/config-drafts/{id}
    */
   getConfigDraft(input: T.GetConfigDraftInput, opts?: RequestOptions): Promise<T.GetConfigDraftOutput> {
-    return this._t.call(OPS.getConfigDraft, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConfigDraft, input, opts);
   }
   /**
    * List installations
@@ -1694,7 +1694,7 @@ export class EmbedApi {
    * GET /v1/installations
    */
   listInstallations(input: T.ListInstallationsInput = {} as T.ListInstallationsInput, opts?: RequestOptions): Promise<T.ListInstallationsOutput> {
-    return this._t.call(OPS.listInstallations, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listInstallations, input, opts);
   }
   /**
    * Create an installation
@@ -1702,7 +1702,7 @@ export class EmbedApi {
    * POST /v1/installations
    */
   createInstallation(input: T.CreateInstallationInput, opts?: RequestOptions): Promise<T.CreateInstallationOutput> {
-    return this._t.call(OPS.createInstallation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createInstallation, input, opts);
   }
   /**
    * Get an installation
@@ -1710,7 +1710,7 @@ export class EmbedApi {
    * GET /v1/installations/{id}
    */
   getInstallation(input: T.GetInstallationInput, opts?: RequestOptions): Promise<T.GetInstallationOutput> {
-    return this._t.call(OPS.getInstallation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getInstallation, input, opts);
   }
   /**
    * Update an installation
@@ -1718,7 +1718,7 @@ export class EmbedApi {
    * PUT /v1/installations/{id}
    */
   updateInstallation(input: T.UpdateInstallationInput, opts?: RequestOptions): Promise<T.UpdateInstallationOutput> {
-    return this._t.call(OPS.updateInstallation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateInstallation, input, opts);
   }
   /**
    * Delete an installation
@@ -1726,7 +1726,7 @@ export class EmbedApi {
    * DELETE /v1/installations/{id}
    */
   deleteInstallation(input: T.DeleteInstallationInput, opts?: RequestOptions): Promise<T.DeleteInstallationOutput> {
-    return this._t.call(OPS.deleteInstallation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteInstallation, input, opts);
   }
   /**
    * Get an installation's resolved config
@@ -1734,7 +1734,7 @@ export class EmbedApi {
    * GET /v1/installations/{id}/resolved-config
    */
   getInstallationResolvedConfig(input: T.GetInstallationResolvedConfigInput, opts?: RequestOptions): Promise<T.GetInstallationResolvedConfigOutput> {
-    return this._t.call(OPS.getInstallationResolvedConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getInstallationResolvedConfig, input, opts);
   }
   /**
    * Setup link status (public)
@@ -1742,7 +1742,7 @@ export class EmbedApi {
    * GET /v1/setup-links/{id}/status
    */
   getSetupLinkStatus(input: T.GetSetupLinkStatusInput, opts?: RequestOptions): Promise<T.GetSetupLinkStatusOutput> {
-    return this._t.call(OPS.getSetupLinkStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSetupLinkStatus, input, opts);
   }
   /**
    * Widget insights, right now: runs processing and queued and trigger deliveries due another retry, in the insights panel's scope
@@ -1750,7 +1750,7 @@ export class EmbedApi {
    * GET /v1/widgets/insights/live
    */
   getLiveWidgetInsights(input: T.GetLiveWidgetInsightsInput = {} as T.GetLiveWidgetInsightsInput, opts?: RequestOptions): Promise<T.GetLiveWidgetInsightsOutput> {
-    return this._t.call(OPS.getLiveWidgetInsights, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getLiveWidgetInsights, input, opts);
   }
 }
 
@@ -1765,7 +1765,7 @@ export class EnvironmentsApi {
    * GET /v1/environments
    */
   listEnvironments(input: T.ListEnvironmentsInput = {} as T.ListEnvironmentsInput, opts?: RequestOptions): Promise<T.ListEnvironmentsOutput> {
-    return this._t.call(OPS.listEnvironments, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listEnvironments, input, opts);
   }
   /**
    * Create workflow environment
@@ -1773,7 +1773,7 @@ export class EnvironmentsApi {
    * POST /v1/environments
    */
   createEnvironment(input: T.CreateEnvironmentInput, opts?: RequestOptions): Promise<T.CreateEnvironmentOutput> {
-    return this._t.call(OPS.createEnvironment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createEnvironment, input, opts);
   }
   /**
    * Delete workflow environment
@@ -1781,7 +1781,7 @@ export class EnvironmentsApi {
    * DELETE /v1/environments/{id}
    */
   deleteEnvironment(input: T.DeleteEnvironmentInput, opts?: RequestOptions): Promise<T.DeleteEnvironmentOutput> {
-    return this._t.call(OPS.deleteEnvironment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteEnvironment, input, opts);
   }
   /**
    * Toggle review gating for an environment
@@ -1789,7 +1789,7 @@ export class EnvironmentsApi {
    * PATCH /v1/environments/{id}
    */
   setEnvironmentReviewRequirement(input: T.SetEnvironmentReviewRequirementInput, opts?: RequestOptions): Promise<T.SetEnvironmentReviewRequirementOutput> {
-    return this._t.call(OPS.setEnvironmentReviewRequirement, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setEnvironmentReviewRequirement, input, opts);
   }
   /**
    * List environment configs
@@ -1797,7 +1797,7 @@ export class EnvironmentsApi {
    * GET /v1/env-configs
    */
   listEnvironmentConfigs(input: T.ListEnvironmentConfigsInput = {} as T.ListEnvironmentConfigsInput, opts?: RequestOptions): Promise<T.ListEnvironmentConfigsOutput> {
-    return this._t.call(OPS.listEnvironmentConfigs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listEnvironmentConfigs, input, opts);
   }
   /**
    * Bulk upsert environment configs
@@ -1805,7 +1805,7 @@ export class EnvironmentsApi {
    * PUT /v1/env-configs
    */
   bulkUpsertEnvironmentConfigs(input: T.BulkUpsertEnvironmentConfigsInput, opts?: RequestOptions): Promise<T.BulkUpsertEnvironmentConfigsOutput> {
-    return this._t.call(OPS.bulkUpsertEnvironmentConfigs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.bulkUpsertEnvironmentConfigs, input, opts);
   }
   /**
    * Get environment config
@@ -1813,7 +1813,7 @@ export class EnvironmentsApi {
    * GET /v1/env-configs/{key}
    */
   getEnvConfig(input: T.GetEnvConfigInput, opts?: RequestOptions): Promise<T.GetEnvConfigOutput> {
-    return this._t.call(OPS.getEnvConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getEnvConfig, input, opts);
   }
   /**
    * Upsert environment config
@@ -1821,7 +1821,7 @@ export class EnvironmentsApi {
    * PUT /v1/env-configs/{key}
    */
   upsertEnvironmentConfig(input: T.UpsertEnvironmentConfigInput, opts?: RequestOptions): Promise<T.UpsertEnvironmentConfigOutput> {
-    return this._t.call(OPS.upsertEnvironmentConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.upsertEnvironmentConfig, input, opts);
   }
   /**
    * Create environment config
@@ -1829,7 +1829,7 @@ export class EnvironmentsApi {
    * POST /v1/env-configs/{key}
    */
   createEnvironmentConfig(input: T.CreateEnvironmentConfigInput, opts?: RequestOptions): Promise<T.CreateEnvironmentConfigOutput> {
-    return this._t.call(OPS.createEnvironmentConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createEnvironmentConfig, input, opts);
   }
   /**
    * Delete environment config
@@ -1837,7 +1837,7 @@ export class EnvironmentsApi {
    * DELETE /v1/env-configs/{key}
    */
   removeEnvironmentConfigKey(input: T.RemoveEnvironmentConfigKeyInput, opts?: RequestOptions): Promise<T.RemoveEnvironmentConfigKeyOutput> {
-    return this._t.call(OPS.removeEnvironmentConfigKey, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.removeEnvironmentConfigKey, input, opts);
   }
 }
 
@@ -1852,7 +1852,7 @@ export class EventsApi {
    * GET /v1/installations/{id}/triggers
    */
   getInstallationTriggers(input: T.GetInstallationTriggersInput, opts?: RequestOptions): Promise<T.GetInstallationTriggersOutput> {
-    return this._t.call(OPS.getInstallationTriggers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getInstallationTriggers, input, opts);
   }
   /**
    * Create one trigger instance from a widget template trigger (one instance per template per installation). The created trigger is partner-org-owned, stamped with end_org_id + installation_id, and its route bindings carry installationId plus x-installation-id / x-end-org-id headers. APP_EVENT templates subscribe with the end user's connection pinned on the installation. Fires the widget's beforeTriggerCreated (can veto/mutate settings) or onTriggerCreated hook per its lifecycle_hooks config.
@@ -1860,7 +1860,7 @@ export class EventsApi {
    * POST /v1/installations/{id}/triggers
    */
   createInstallationTrigger(input: T.CreateInstallationTriggerInput, opts?: RequestOptions): Promise<T.CreateInstallationTriggerOutput> {
-    return this._t.call(OPS.createInstallationTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createInstallationTrigger, input, opts);
   }
   /**
    * Update a trigger instance within the template's editableFields (preset membership enforced unless allowCustom). Fires onTriggerUpdated.
@@ -1868,7 +1868,7 @@ export class EventsApi {
    * PUT /v1/installations/{id}/triggers/{triggerId}
    */
   updateInstallationTrigger(input: T.UpdateInstallationTriggerInput, opts?: RequestOptions): Promise<T.UpdateInstallationTriggerOutput> {
-    return this._t.call(OPS.updateInstallationTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateInstallationTrigger, input, opts);
   }
   /**
    * Delete one trigger instance (unregisters schedules / third-party subscriptions via the event service). Fires onTriggerDeleted.
@@ -1876,7 +1876,7 @@ export class EventsApi {
    * DELETE /v1/installations/{id}/triggers/{triggerId}
    */
   deleteInstallationTrigger(input: T.DeleteInstallationTriggerInput, opts?: RequestOptions): Promise<T.DeleteInstallationTriggerOutput> {
-    return this._t.call(OPS.deleteInstallationTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteInstallationTrigger, input, opts);
   }
   /**
    * List app-event triggers
@@ -1884,7 +1884,7 @@ export class EventsApi {
    * GET /v1/app-triggers
    */
   listAppEventTriggers(input: T.ListAppEventTriggersInput = {} as T.ListAppEventTriggersInput, opts?: RequestOptions): Promise<T.ListAppEventTriggersOutput> {
-    return this._t.call(OPS.listAppEventTriggers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAppEventTriggers, input, opts);
   }
   /**
    * Create an app-event trigger
@@ -1892,7 +1892,7 @@ export class EventsApi {
    * POST /v1/app-triggers
    */
   createAppEventTrigger(input: T.CreateAppEventTriggerInput, opts?: RequestOptions): Promise<T.CreateAppEventTriggerOutput> {
-    return this._t.call(OPS.createAppEventTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAppEventTrigger, input, opts);
   }
   /**
    * Get app-event trigger
@@ -1900,7 +1900,7 @@ export class EventsApi {
    * GET /v1/app-triggers/{id}
    */
   getAppEventTrigger(input: T.GetAppEventTriggerInput, opts?: RequestOptions): Promise<T.GetAppEventTriggerOutput> {
-    return this._t.call(OPS.getAppEventTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAppEventTrigger, input, opts);
   }
   /**
    * Update an app-event trigger
@@ -1908,7 +1908,7 @@ export class EventsApi {
    * PUT /v1/app-triggers/{id}
    */
   updateAppEventTrigger(input: T.UpdateAppEventTriggerInput, opts?: RequestOptions): Promise<T.UpdateAppEventTriggerOutput> {
-    return this._t.call(OPS.updateAppEventTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAppEventTrigger, input, opts);
   }
   /**
    * Delete an app-event trigger
@@ -1916,7 +1916,7 @@ export class EventsApi {
    * DELETE /v1/app-triggers/{id}
    */
   deleteAppEventTrigger(input: T.DeleteAppEventTriggerInput, opts?: RequestOptions): Promise<T.DeleteAppEventTriggerOutput> {
-    return this._t.call(OPS.deleteAppEventTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAppEventTrigger, input, opts);
   }
   /**
    * Retry upstream subscription
@@ -1924,7 +1924,7 @@ export class EventsApi {
    * POST /v1/app-triggers/{id}/retry-subscription
    */
   retryTriggerSubscription(input: T.RetryTriggerSubscriptionInput, opts?: RequestOptions): Promise<T.RetryTriggerSubscriptionOutput> {
-    return this._t.call(OPS.retryTriggerSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.retryTriggerSubscription, input, opts);
   }
   /**
    * Fire scheduler now
@@ -1932,7 +1932,7 @@ export class EventsApi {
    * POST /v1/schedulers/{id}/trigger
    */
   triggerSchedulerNow(input: T.TriggerSchedulerNowInput, opts?: RequestOptions): Promise<T.TriggerSchedulerNowOutput> {
-    return this._t.call(OPS.triggerSchedulerNow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.triggerSchedulerNow, input, opts);
   }
   /**
    * Org-wide trigger health
@@ -1940,7 +1940,7 @@ export class EventsApi {
    * GET /v1/triggers/monitoring
    */
   getTriggersMonitoring(input: T.GetTriggersMonitoringInput = {} as T.GetTriggersMonitoringInput, opts?: RequestOptions): Promise<T.GetTriggersMonitoringOutput> {
-    return this._t.call(OPS.getTriggersMonitoring, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTriggersMonitoring, input, opts);
   }
   /**
    * Per-trigger health
@@ -1948,7 +1948,7 @@ export class EventsApi {
    * GET /v1/triggers/{id}/monitoring
    */
   getTriggerMonitoring(input: T.GetTriggerMonitoringInput, opts?: RequestOptions): Promise<T.GetTriggerMonitoringOutput> {
-    return this._t.call(OPS.getTriggerMonitoring, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTriggerMonitoring, input, opts);
   }
   /**
    * What happened to a trigger's events, end to end
@@ -1956,7 +1956,7 @@ export class EventsApi {
    * GET /v1/triggers/{id}/outcomes
    */
   getTriggerOutcomes(input: T.GetTriggerOutcomesInput, opts?: RequestOptions): Promise<T.GetTriggerOutcomesOutput> {
-    return this._t.call(OPS.getTriggerOutcomes, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTriggerOutcomes, input, opts);
   }
   /**
    * Pause or resume a trigger
@@ -1964,7 +1964,7 @@ export class EventsApi {
    * PATCH /v1/triggers/{id}/status
    */
   setTriggerStatus(input: T.SetTriggerStatusInput, opts?: RequestOptions): Promise<T.SetTriggerStatusOutput> {
-    return this._t.call(OPS.setTriggerStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setTriggerStatus, input, opts);
   }
   /**
    * Choose which events Reporting counts
@@ -1972,7 +1972,7 @@ export class EventsApi {
    * PUT /v1/triggers/{id}/reporting
    */
   setTriggerReporting(input: T.SetTriggerReportingInput, opts?: RequestOptions): Promise<T.SetTriggerReportingOutput> {
-    return this._t.call(OPS.setTriggerReporting, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setTriggerReporting, input, opts);
   }
   /**
    * Reset circuit breaker
@@ -1980,7 +1980,7 @@ export class EventsApi {
    * POST /v1/triggers/{id}/circuit-breaker/reset
    */
   resetCircuitBreaker(input: T.ResetCircuitBreakerInput, opts?: RequestOptions): Promise<T.ResetCircuitBreakerOutput> {
-    return this._t.call(OPS.resetCircuitBreaker, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.resetCircuitBreaker, input, opts);
   }
   /**
    * List dead-letter entries
@@ -1988,7 +1988,7 @@ export class EventsApi {
    * GET /v1/dlq
    */
   listDlq(input: T.ListDlqInput = {} as T.ListDlqInput, opts?: RequestOptions): Promise<T.ListDlqOutput> {
-    return this._t.call(OPS.listDlq, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listDlq, input, opts);
   }
   /**
    * Replay DLQ entry
@@ -1996,7 +1996,7 @@ export class EventsApi {
    * POST /v1/dlq/{id}/replay
    */
   replayDlqEntry(input: T.ReplayDlqEntryInput, opts?: RequestOptions): Promise<T.ReplayDlqEntryOutput> {
-    return this._t.call(OPS.replayDlqEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.replayDlqEntry, input, opts);
   }
   /**
    * List received events
@@ -2004,7 +2004,7 @@ export class EventsApi {
    * GET /v1/events
    */
   listEvents(input: T.ListEventsInput = {} as T.ListEventsInput, opts?: RequestOptions): Promise<T.ListEventsOutput> {
-    return this._t.call(OPS.listEvents, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listEvents, input, opts);
   }
   /**
    * Per-type event totals
@@ -2012,7 +2012,7 @@ export class EventsApi {
    * GET /v1/events/counts
    */
   eventCounts(input: T.EventCountsInput = {} as T.EventCountsInput, opts?: RequestOptions): Promise<T.EventCountsOutput> {
-    return this._t.call(OPS.eventCounts, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.eventCounts, input, opts);
   }
   /**
    * Count received events
@@ -2020,7 +2020,7 @@ export class EventsApi {
    * GET /v1/events/count
    */
   countEvents(input: T.CountEventsInput = {} as T.CountEventsInput, opts?: RequestOptions): Promise<T.CountEventsOutput> {
-    return this._t.call(OPS.countEvents, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.countEvents, input, opts);
   }
   /**
    * Get one received event
@@ -2028,7 +2028,7 @@ export class EventsApi {
    * GET /v1/events/{id}
    */
   getEvent(input: T.GetEventInput, opts?: RequestOptions): Promise<T.GetEventOutput> {
-    return this._t.call(OPS.getEvent, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getEvent, input, opts);
   }
   /**
    * Failed deliveries of one event
@@ -2036,7 +2036,7 @@ export class EventsApi {
    * GET /v1/events/{id}/attempts
    */
   getEventAttempts(input: T.GetEventAttemptsInput, opts?: RequestOptions): Promise<T.GetEventAttemptsOutput> {
-    return this._t.call(OPS.getEventAttempts, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getEventAttempts, input, opts);
   }
   /**
    * Replay a received event
@@ -2044,7 +2044,7 @@ export class EventsApi {
    * POST /v1/events/{id}/replay
    */
   replayEvent(input: T.ReplayEventInput, opts?: RequestOptions): Promise<T.ReplayEventOutput> {
-    return this._t.call(OPS.replayEvent, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.replayEvent, input, opts);
   }
   /**
    * Fork an inherited trigger template (and the workflows it routes to) into your own org
@@ -2052,7 +2052,7 @@ export class EventsApi {
    * POST /v1/triggers/{id}/fork
    */
   forkTrigger(input: T.ForkTriggerInput, opts?: RequestOptions): Promise<T.ForkTriggerOutput> {
-    return this._t.call(OPS.forkTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkTrigger, input, opts);
   }
   /**
    * List event subscriptions
@@ -2060,7 +2060,7 @@ export class EventsApi {
    * GET /v1/event-subscriptions
    */
   listEventSubscriptions(input: T.ListEventSubscriptionsInput = {} as T.ListEventSubscriptionsInput, opts?: RequestOptions): Promise<T.ListEventSubscriptionsOutput> {
-    return this._t.call(OPS.listEventSubscriptions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listEventSubscriptions, input, opts);
   }
   /**
    * Create an event subscription
@@ -2068,7 +2068,7 @@ export class EventsApi {
    * POST /v1/event-subscriptions
    */
   createEventSubscription(input: T.CreateEventSubscriptionInput, opts?: RequestOptions): Promise<T.CreateEventSubscriptionOutput> {
-    return this._t.call(OPS.createEventSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createEventSubscription, input, opts);
   }
   /**
    * Get an event subscription
@@ -2076,7 +2076,7 @@ export class EventsApi {
    * GET /v1/event-subscriptions/{id}
    */
   getEventSubscription(input: T.GetEventSubscriptionInput, opts?: RequestOptions): Promise<T.GetEventSubscriptionOutput> {
-    return this._t.call(OPS.getEventSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getEventSubscription, input, opts);
   }
   /**
    * Delete an event subscription
@@ -2084,7 +2084,7 @@ export class EventsApi {
    * DELETE /v1/event-subscriptions/{id}
    */
   deleteEventSubscription(input: T.DeleteEventSubscriptionInput, opts?: RequestOptions): Promise<T.DeleteEventSubscriptionOutput> {
-    return this._t.call(OPS.deleteEventSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteEventSubscription, input, opts);
   }
   /**
    * Update an event subscription
@@ -2092,7 +2092,7 @@ export class EventsApi {
    * PATCH /v1/event-subscriptions/{id}
    */
   updateEventSubscription(input: T.UpdateEventSubscriptionInput, opts?: RequestOptions): Promise<T.UpdateEventSubscriptionOutput> {
-    return this._t.call(OPS.updateEventSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateEventSubscription, input, opts);
   }
   /**
    * Rotate a subscription's signing secret
@@ -2100,7 +2100,7 @@ export class EventsApi {
    * POST /v1/event-subscriptions/{id}/rotate-secret
    */
   rotateEventSubscriptionSecret(input: T.RotateEventSubscriptionSecretInput, opts?: RequestOptions): Promise<T.RotateEventSubscriptionSecretOutput> {
-    return this._t.call(OPS.rotateEventSubscriptionSecret, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.rotateEventSubscriptionSecret, input, opts);
   }
   /**
    * Send a test event
@@ -2108,7 +2108,7 @@ export class EventsApi {
    * POST /v1/event-subscriptions/{id}/test
    */
   testEventSubscription(input: T.TestEventSubscriptionInput, opts?: RequestOptions): Promise<T.TestEventSubscriptionOutput> {
-    return this._t.call(OPS.testEventSubscription, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.testEventSubscription, input, opts);
   }
   /**
    * List deliveries
@@ -2116,7 +2116,7 @@ export class EventsApi {
    * GET /v1/event-subscriptions/{id}/deliveries
    */
   listEventDeliveries(input: T.ListEventDeliveriesInput, opts?: RequestOptions): Promise<T.ListEventDeliveriesOutput> {
-    return this._t.call(OPS.listEventDeliveries, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listEventDeliveries, input, opts);
   }
   /**
    * Replay a delivery
@@ -2124,7 +2124,7 @@ export class EventsApi {
    * POST /v1/event-subscriptions/deliveries/{id}/replay
    */
   replayEventDelivery(input: T.ReplayEventDeliveryInput, opts?: RequestOptions): Promise<T.ReplayEventDeliveryOutput> {
-    return this._t.call(OPS.replayEventDelivery, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.replayEventDelivery, input, opts);
   }
   /**
    * List webhook triggers
@@ -2132,7 +2132,7 @@ export class EventsApi {
    * GET /v1/webhooks
    */
   listWebhookTriggers(input: T.ListWebhookTriggersInput = {} as T.ListWebhookTriggersInput, opts?: RequestOptions): Promise<T.ListWebhookTriggersOutput> {
-    return this._t.call(OPS.listWebhookTriggers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWebhookTriggers, input, opts);
   }
   /**
    * Create a webhook trigger
@@ -2140,7 +2140,7 @@ export class EventsApi {
    * POST /v1/webhooks
    */
   createWebhookTrigger(input: T.CreateWebhookTriggerInput, opts?: RequestOptions): Promise<T.CreateWebhookTriggerOutput> {
-    return this._t.call(OPS.createWebhookTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWebhookTrigger, input, opts);
   }
   /**
    * Delete webhook triggers in bulk
@@ -2148,7 +2148,7 @@ export class EventsApi {
    * POST /v1/webhooks/bulk-delete
    */
   bulkDeleteWebhookTriggers(input: T.BulkDeleteWebhookTriggersInput, opts?: RequestOptions): Promise<T.BulkDeleteWebhookTriggersOutput> {
-    return this._t.call(OPS.bulkDeleteWebhookTriggers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.bulkDeleteWebhookTriggers, input, opts);
   }
   /**
    * Webhook trigger route stats
@@ -2156,7 +2156,7 @@ export class EventsApi {
    * GET /v1/webhooks/{id}/stats
    */
   getWebhookTriggerStats(input: T.GetWebhookTriggerStatsInput, opts?: RequestOptions): Promise<T.GetWebhookTriggerStatsOutput> {
-    return this._t.call(OPS.getWebhookTriggerStats, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWebhookTriggerStats, input, opts);
   }
   /**
    * Get a webhook trigger
@@ -2164,7 +2164,7 @@ export class EventsApi {
    * GET /v1/webhooks/{id}
    */
   getWebhookTrigger(input: T.GetWebhookTriggerInput, opts?: RequestOptions): Promise<T.GetWebhookTriggerOutput> {
-    return this._t.call(OPS.getWebhookTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWebhookTrigger, input, opts);
   }
   /**
    * Update a webhook trigger
@@ -2172,7 +2172,7 @@ export class EventsApi {
    * PUT /v1/webhooks/{id}
    */
   updateWebhookTrigger(input: T.UpdateWebhookTriggerInput, opts?: RequestOptions): Promise<T.UpdateWebhookTriggerOutput> {
-    return this._t.call(OPS.updateWebhookTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWebhookTrigger, input, opts);
   }
   /**
    * Delete a webhook trigger
@@ -2180,7 +2180,7 @@ export class EventsApi {
    * DELETE /v1/webhooks/{id}
    */
   deleteWebhookTrigger(input: T.DeleteWebhookTriggerInput, opts?: RequestOptions): Promise<T.DeleteWebhookTriggerOutput> {
-    return this._t.call(OPS.deleteWebhookTrigger, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWebhookTrigger, input, opts);
   }
   /**
    * List schedulers
@@ -2188,7 +2188,7 @@ export class EventsApi {
    * GET /v1/schedulers
    */
   listSchedulers(input: T.ListSchedulersInput = {} as T.ListSchedulersInput, opts?: RequestOptions): Promise<T.ListSchedulersOutput> {
-    return this._t.call(OPS.listSchedulers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSchedulers, input, opts);
   }
   /**
    * Create a scheduler
@@ -2196,7 +2196,7 @@ export class EventsApi {
    * POST /v1/schedulers
    */
   createScheduler(input: T.CreateSchedulerInput, opts?: RequestOptions): Promise<T.CreateSchedulerOutput> {
-    return this._t.call(OPS.createScheduler, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createScheduler, input, opts);
   }
   /**
    * Delete schedulers in bulk
@@ -2204,7 +2204,7 @@ export class EventsApi {
    * POST /v1/schedulers/bulk-delete
    */
   bulkDeleteSchedulers(input: T.BulkDeleteSchedulersInput, opts?: RequestOptions): Promise<T.BulkDeleteSchedulersOutput> {
-    return this._t.call(OPS.bulkDeleteSchedulers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.bulkDeleteSchedulers, input, opts);
   }
   /**
    * Disable every scheduler bound to a workflow
@@ -2212,7 +2212,7 @@ export class EventsApi {
    * POST /v1/schedulers/disable-by-route
    */
   disableSchedulersByRoute(input: T.DisableSchedulersByRouteInput, opts?: RequestOptions): Promise<T.DisableSchedulersByRouteOutput> {
-    return this._t.call(OPS.disableSchedulersByRoute, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.disableSchedulersByRoute, input, opts);
   }
   /**
    * Scheduler route stats
@@ -2220,7 +2220,7 @@ export class EventsApi {
    * GET /v1/schedulers/{id}/stats
    */
   getSchedulerStats(input: T.GetSchedulerStatsInput, opts?: RequestOptions): Promise<T.GetSchedulerStatsOutput> {
-    return this._t.call(OPS.getSchedulerStats, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSchedulerStats, input, opts);
   }
   /**
    * Get a scheduler
@@ -2228,7 +2228,7 @@ export class EventsApi {
    * GET /v1/schedulers/{id}
    */
   getScheduler(input: T.GetSchedulerInput, opts?: RequestOptions): Promise<T.GetSchedulerOutput> {
-    return this._t.call(OPS.getScheduler, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getScheduler, input, opts);
   }
   /**
    * Update a scheduler
@@ -2236,7 +2236,7 @@ export class EventsApi {
    * PUT /v1/schedulers/{id}
    */
   updateScheduler(input: T.UpdateSchedulerInput, opts?: RequestOptions): Promise<T.UpdateSchedulerOutput> {
-    return this._t.call(OPS.updateScheduler, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateScheduler, input, opts);
   }
   /**
    * Delete a scheduler
@@ -2244,7 +2244,7 @@ export class EventsApi {
    * DELETE /v1/schedulers/{id}
    */
   deleteScheduler(input: T.DeleteSchedulerInput, opts?: RequestOptions): Promise<T.DeleteSchedulerOutput> {
-    return this._t.call(OPS.deleteScheduler, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteScheduler, input, opts);
   }
   /**
    * Delete app-event triggers in bulk
@@ -2252,7 +2252,7 @@ export class EventsApi {
    * POST /v1/app-triggers/bulk-delete
    */
   bulkDeleteAppEventTriggers(input: T.BulkDeleteAppEventTriggersInput, opts?: RequestOptions): Promise<T.BulkDeleteAppEventTriggersOutput> {
-    return this._t.call(OPS.bulkDeleteAppEventTriggers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.bulkDeleteAppEventTriggers, input, opts);
   }
   /**
    * List a connector's subscribable events
@@ -2260,7 +2260,7 @@ export class EventsApi {
    * GET /v1/app-triggers/connectors/{connectorId}/events
    */
   listConnectorEvents(input: T.ListConnectorEventsInput, opts?: RequestOptions): Promise<T.ListConnectorEventsOutput> {
-    return this._t.call(OPS.listConnectorEvents, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorEvents, input, opts);
   }
   /**
    * List a connector's webhook-config events
@@ -2268,7 +2268,7 @@ export class EventsApi {
    * GET /v1/app-triggers/connectors/{connectorId}/webhook-config-events
    */
   listConnectorWebhookConfigEvents(input: T.ListConnectorWebhookConfigEventsInput, opts?: RequestOptions): Promise<T.ListConnectorWebhookConfigEventsOutput> {
-    return this._t.call(OPS.listConnectorWebhookConfigEvents, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorWebhookConfigEvents, input, opts);
   }
   /**
    * App-event trigger route stats
@@ -2276,7 +2276,7 @@ export class EventsApi {
    * GET /v1/app-triggers/{id}/stats
    */
   getAppEventTriggerStats(input: T.GetAppEventTriggerStatsInput, opts?: RequestOptions): Promise<T.GetAppEventTriggerStatsOutput> {
-    return this._t.call(OPS.getAppEventTriggerStats, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAppEventTriggerStats, input, opts);
   }
   /**
    * List app webhook registrations
@@ -2284,7 +2284,7 @@ export class EventsApi {
    * GET /v1/app-webhooks
    */
   listAppWebhookRegistrations(input: T.ListAppWebhookRegistrationsInput = {} as T.ListAppWebhookRegistrationsInput, opts?: RequestOptions): Promise<T.ListAppWebhookRegistrationsOutput> {
-    return this._t.call(OPS.listAppWebhookRegistrations, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAppWebhookRegistrations, input, opts);
   }
   /**
    * Register a connector's app webhook
@@ -2292,7 +2292,7 @@ export class EventsApi {
    * POST /v1/app-webhooks
    */
   createAppWebhookRegistration(input: T.CreateAppWebhookRegistrationInput, opts?: RequestOptions): Promise<T.CreateAppWebhookRegistrationOutput> {
-    return this._t.call(OPS.createAppWebhookRegistration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAppWebhookRegistration, input, opts);
   }
   /**
    * App webhook registration stats
@@ -2300,7 +2300,7 @@ export class EventsApi {
    * GET /v1/app-webhooks/stats
    */
   listAppWebhookRegistrationStats(input: T.ListAppWebhookRegistrationStatsInput = {} as T.ListAppWebhookRegistrationStatsInput, opts?: RequestOptions): Promise<T.ListAppWebhookRegistrationStatsOutput> {
-    return this._t.call(OPS.listAppWebhookRegistrationStats, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAppWebhookRegistrationStats, input, opts);
   }
   /**
    * Generate a registration's ingest URL
@@ -2308,7 +2308,7 @@ export class EventsApi {
    * POST /v1/app-webhooks/{id}/generate-url
    */
   generateAppWebhookRegistrationUrl(input: T.GenerateAppWebhookRegistrationUrlInput, opts?: RequestOptions): Promise<T.GenerateAppWebhookRegistrationUrlOutput> {
-    return this._t.call(OPS.generateAppWebhookRegistrationUrl, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.generateAppWebhookRegistrationUrl, input, opts);
   }
   /**
    * One registration's stats
@@ -2316,7 +2316,7 @@ export class EventsApi {
    * GET /v1/app-webhooks/{id}/stats
    */
   getAppWebhookRegistrationStats(input: T.GetAppWebhookRegistrationStatsInput, opts?: RequestOptions): Promise<T.GetAppWebhookRegistrationStatsOutput> {
-    return this._t.call(OPS.getAppWebhookRegistrationStats, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAppWebhookRegistrationStats, input, opts);
   }
   /**
    * Get an app webhook registration
@@ -2324,7 +2324,7 @@ export class EventsApi {
    * GET /v1/app-webhooks/{id}
    */
   getAppWebhookRegistration(input: T.GetAppWebhookRegistrationInput, opts?: RequestOptions): Promise<T.GetAppWebhookRegistrationOutput> {
-    return this._t.call(OPS.getAppWebhookRegistration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAppWebhookRegistration, input, opts);
   }
   /**
    * Update an app webhook registration
@@ -2332,7 +2332,7 @@ export class EventsApi {
    * PUT /v1/app-webhooks/{id}
    */
   updateAppWebhookRegistration(input: T.UpdateAppWebhookRegistrationInput, opts?: RequestOptions): Promise<T.UpdateAppWebhookRegistrationOutput> {
-    return this._t.call(OPS.updateAppWebhookRegistration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAppWebhookRegistration, input, opts);
   }
   /**
    * Delete an app webhook registration
@@ -2340,7 +2340,7 @@ export class EventsApi {
    * DELETE /v1/app-webhooks/{id}
    */
   deleteAppWebhookRegistration(input: T.DeleteAppWebhookRegistrationInput, opts?: RequestOptions): Promise<T.DeleteAppWebhookRegistrationOutput> {
-    return this._t.call(OPS.deleteAppWebhookRegistration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAppWebhookRegistration, input, opts);
   }
   /**
    * Replay a trigger's whole DLQ
@@ -2348,7 +2348,7 @@ export class EventsApi {
    * POST /v1/triggers/{id}/dlq/replay-all
    */
   replayAllTriggerDlq(input: T.ReplayAllTriggerDlqInput, opts?: RequestOptions): Promise<T.ReplayAllTriggerDlqOutput> {
-    return this._t.call(OPS.replayAllTriggerDlq, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.replayAllTriggerDlq, input, opts);
   }
   /**
    * Delete a DLQ entry
@@ -2356,7 +2356,7 @@ export class EventsApi {
    * DELETE /v1/dlq/{id}
    */
   deleteDlqEntry(input: T.DeleteDlqEntryInput, opts?: RequestOptions): Promise<T.DeleteDlqEntryOutput> {
-    return this._t.call(OPS.deleteDlqEntry, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteDlqEntry, input, opts);
   }
   /**
    * Alert delivery limits
@@ -2364,7 +2364,7 @@ export class EventsApi {
    * GET /v1/events/alerts/limits
    */
   getAlertLimits(input: T.GetAlertLimitsInput = {} as T.GetAlertLimitsInput, opts?: RequestOptions): Promise<T.GetAlertLimitsOutput> {
-    return this._t.call(OPS.getAlertLimits, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAlertLimits, input, opts);
   }
   /**
    * Send a test alert
@@ -2372,7 +2372,7 @@ export class EventsApi {
    * POST /v1/events/alerts/{id}/test
    */
   testAlert(input: T.TestAlertInput, opts?: RequestOptions): Promise<T.TestAlertOutput> {
-    return this._t.call(OPS.testAlert, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.testAlert, input, opts);
   }
   /**
    * List alert delivery targets
@@ -2380,7 +2380,7 @@ export class EventsApi {
    * GET /v1/events/alerts/channels/{connectionId}/targets
    */
   listAlertChannelTargets(input: T.ListAlertChannelTargetsInput, opts?: RequestOptions): Promise<T.ListAlertChannelTargetsOutput> {
-    return this._t.call(OPS.listAlertChannelTargets, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAlertChannelTargets, input, opts);
   }
   /**
    * Send an app event to a connector's ingest URL
@@ -2388,7 +2388,7 @@ export class EventsApi {
    * POST /v1/triggers/{orgId}/{connectorId}/events
    */
   sendTestAppEvent(input: T.SendTestAppEventInput, opts?: RequestOptions): Promise<T.SendTestAppEventOutput> {
-    return this._t.call(OPS.sendTestAppEvent, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.sendTestAppEvent, input, opts);
   }
 }
 
@@ -2403,7 +2403,7 @@ export class ExecutionApi {
    * POST /v1/execute
    */
   executeRequest(input: T.ExecuteRequestInput, opts?: RequestOptions): Promise<T.ExecuteRequestOutput> {
-    return this._t.call(OPS.executeRequest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeRequest, input, opts);
   }
   /**
    * List executions
@@ -2411,7 +2411,7 @@ export class ExecutionApi {
    * GET /v1/executions
    */
   listConnectorExecutions(input: T.ListConnectorExecutionsInput = {} as T.ListConnectorExecutionsInput, opts?: RequestOptions): Promise<T.ListConnectorExecutionsOutput> {
-    return this._t.call(OPS.listConnectorExecutions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listConnectorExecutions, input, opts);
   }
   /**
    * Get execution
@@ -2419,7 +2419,7 @@ export class ExecutionApi {
    * GET /v1/executions/{id}
    */
   getConnectorExecution(input: T.GetConnectorExecutionInput, opts?: RequestOptions): Promise<T.GetConnectorExecutionOutput> {
-    return this._t.call(OPS.getConnectorExecution, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getConnectorExecution, input, opts);
   }
   /**
    * Execute a connector action by slug
@@ -2427,7 +2427,7 @@ export class ExecutionApi {
    * POST /v2/connectors/{connector}/actions/{action}/execute
    */
   executeConnectorActionBySlug(input: T.ExecuteConnectorActionBySlugInput, opts?: RequestOptions): Promise<T.ExecuteConnectorActionBySlugOutput> {
-    return this._t.call(OPS.executeConnectorActionBySlug, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeConnectorActionBySlug, input, opts);
   }
   /**
    * Execute an action against its mock stubs
@@ -2435,7 +2435,7 @@ export class ExecutionApi {
    * POST /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/execute
    */
   executeMockAction(input: T.ExecuteMockActionInput, opts?: RequestOptions): Promise<T.ExecuteMockActionOutput> {
-    return this._t.call(OPS.executeMockAction, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeMockAction, input, opts);
   }
 }
 
@@ -2450,7 +2450,7 @@ export class ObserveApi {
    * GET /v1/traces
    */
   listTraces(input: T.ListTracesInput = {} as T.ListTracesInput, opts?: RequestOptions): Promise<T.ListTracesOutput> {
-    return this._t.call(OPS.listTraces, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listTraces, input, opts);
   }
   /**
    * Get trace
@@ -2458,7 +2458,7 @@ export class ObserveApi {
    * GET /v1/traces/{id}
    */
   getTrace(input: T.GetTraceInput, opts?: RequestOptions): Promise<T.GetTraceOutput> {
-    return this._t.call(OPS.getTrace, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTrace, input, opts);
   }
   /**
    * List alert rules
@@ -2466,7 +2466,7 @@ export class ObserveApi {
    * GET /v1/alerts
    */
   listAlerts(input: T.ListAlertsInput = {} as T.ListAlertsInput, opts?: RequestOptions): Promise<T.ListAlertsOutput> {
-    return this._t.call(OPS.listAlerts, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAlerts, input, opts);
   }
   /**
    * Create alert rule
@@ -2474,7 +2474,7 @@ export class ObserveApi {
    * POST /v1/alerts
    */
   createAlert(input: T.CreateAlertInput, opts?: RequestOptions): Promise<T.CreateAlertOutput> {
-    return this._t.call(OPS.createAlert, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createAlert, input, opts);
   }
   /**
    * Enable starter alerts (one click)
@@ -2482,7 +2482,7 @@ export class ObserveApi {
    * POST /v1/alerts/defaults
    */
   enableDefaultAlerts(input: T.EnableDefaultAlertsInput = {} as T.EnableDefaultAlertsInput, opts?: RequestOptions): Promise<T.EnableDefaultAlertsOutput> {
-    return this._t.call(OPS.enableDefaultAlerts, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.enableDefaultAlerts, input, opts);
   }
   /**
    * Update alert rule
@@ -2490,7 +2490,7 @@ export class ObserveApi {
    * PUT /v1/alerts/{id}
    */
   updateAlert(input: T.UpdateAlertInput, opts?: RequestOptions): Promise<T.UpdateAlertOutput> {
-    return this._t.call(OPS.updateAlert, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAlert, input, opts);
   }
   /**
    * Delete alert rule
@@ -2498,7 +2498,7 @@ export class ObserveApi {
    * DELETE /v1/alerts/{id}
    */
   deleteAlert(input: T.DeleteAlertInput, opts?: RequestOptions): Promise<T.DeleteAlertOutput> {
-    return this._t.call(OPS.deleteAlert, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteAlert, input, opts);
   }
   /**
    * List audit log entries
@@ -2506,7 +2506,7 @@ export class ObserveApi {
    * GET /v1/audit-log
    */
   listAuditLog(input: T.ListAuditLogInput = {} as T.ListAuditLogInput, opts?: RequestOptions): Promise<T.ListAuditLogOutput> {
-    return this._t.call(OPS.listAuditLog, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuditLog, input, opts);
   }
   /**
    * List distinct audit log action types
@@ -2514,7 +2514,7 @@ export class ObserveApi {
    * GET /v1/audit-log/actions
    */
   listAuditLogActions(input: T.ListAuditLogActionsInput = {} as T.ListAuditLogActionsInput, opts?: RequestOptions): Promise<T.ListAuditLogActionsOutput> {
-    return this._t.call(OPS.listAuditLogActions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuditLogActions, input, opts);
   }
   /**
    * Alert rule catalog
@@ -2522,7 +2522,7 @@ export class ObserveApi {
    * GET /v1/alerts/metrics
    */
   getAlertCatalog(input: T.GetAlertCatalogInput = {} as T.GetAlertCatalogInput, opts?: RequestOptions): Promise<T.GetAlertCatalogOutput> {
-    return this._t.call(OPS.getAlertCatalog, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAlertCatalog, input, opts);
   }
   /**
    * List alert delivery channels
@@ -2530,7 +2530,7 @@ export class ObserveApi {
    * GET /v1/alerts/channels
    */
   listAlertChannels(input: T.ListAlertChannelsInput = {} as T.ListAlertChannelsInput, opts?: RequestOptions): Promise<T.ListAlertChannelsOutput> {
-    return this._t.call(OPS.listAlertChannels, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAlertChannels, input, opts);
   }
   /**
    * List an alert rule's firings
@@ -2538,7 +2538,7 @@ export class ObserveApi {
    * GET /v1/alerts/{id}/events
    */
   listAlertEvents(input: T.ListAlertEventsInput, opts?: RequestOptions): Promise<T.ListAlertEventsOutput> {
-    return this._t.call(OPS.listAlertEvents, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAlertEvents, input, opts);
   }
   /**
    * List distinct audit log resource types
@@ -2546,7 +2546,7 @@ export class ObserveApi {
    * GET /v1/audit-log/resource-types
    */
   listAuditLogResourceTypes(input: T.ListAuditLogResourceTypesInput = {} as T.ListAuditLogResourceTypesInput, opts?: RequestOptions): Promise<T.ListAuditLogResourceTypesOutput> {
-    return this._t.call(OPS.listAuditLogResourceTypes, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuditLogResourceTypes, input, opts);
   }
   /**
    * List distinct audit log actors
@@ -2554,7 +2554,7 @@ export class ObserveApi {
    * GET /v1/audit-log/users
    */
   listAuditLogUsers(input: T.ListAuditLogUsersInput = {} as T.ListAuditLogUsersInput, opts?: RequestOptions): Promise<T.ListAuditLogUsersOutput> {
-    return this._t.call(OPS.listAuditLogUsers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listAuditLogUsers, input, opts);
   }
 }
 
@@ -2569,7 +2569,7 @@ export class OnboardingApi {
    * GET /v1/onboarding/status
    */
   getOnboardingStatus(input: T.GetOnboardingStatusInput = {} as T.GetOnboardingStatusInput, opts?: RequestOptions): Promise<T.GetOnboardingStatusOutput> {
-    return this._t.call(OPS.getOnboardingStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getOnboardingStatus, input, opts);
   }
   /**
    * Get current user's onboarding form data
@@ -2577,7 +2577,7 @@ export class OnboardingApi {
    * GET /v1/onboarding
    */
   getOnboarding(input: T.GetOnboardingInput = {} as T.GetOnboardingInput, opts?: RequestOptions): Promise<T.GetOnboardingOutput> {
-    return this._t.call(OPS.getOnboarding, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getOnboarding, input, opts);
   }
   /**
    * Submit onboarding form (attribution + role)
@@ -2585,7 +2585,7 @@ export class OnboardingApi {
    * POST /v1/onboarding
    */
   submitOnboarding(input: T.SubmitOnboardingInput, opts?: RequestOptions): Promise<T.SubmitOnboardingOutput> {
-    return this._t.call(OPS.submitOnboarding, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.submitOnboarding, input, opts);
   }
   /**
    * Save partial onboarding answers
@@ -2593,7 +2593,7 @@ export class OnboardingApi {
    * PATCH /v1/onboarding
    */
   updateOnboarding(input: T.UpdateOnboardingInput = {} as T.UpdateOnboardingInput, opts?: RequestOptions): Promise<T.UpdateOnboardingOutput> {
-    return this._t.call(OPS.updateOnboarding, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateOnboarding, input, opts);
   }
   /**
    * Set agent domain during onboarding
@@ -2601,7 +2601,7 @@ export class OnboardingApi {
    * POST /v1/onboarding/agent-domain
    */
   setOnboardingAgentDomain(input: T.SetOnboardingAgentDomainInput, opts?: RequestOptions): Promise<T.SetOnboardingAgentDomainOutput> {
-    return this._t.call(OPS.setOnboardingAgentDomain, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setOnboardingAgentDomain, input, opts);
   }
   /**
    * Clear the confirmed agent-onboarding domain
@@ -2609,7 +2609,7 @@ export class OnboardingApi {
    * DELETE /v1/onboarding/agent-domain
    */
   clearOnboardingAgentDomain(input: T.ClearOnboardingAgentDomainInput = {} as T.ClearOnboardingAgentDomainInput, opts?: RequestOptions): Promise<T.ClearOnboardingAgentDomainOutput> {
-    return this._t.call(OPS.clearOnboardingAgentDomain, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.clearOnboardingAgentDomain, input, opts);
   }
   /**
    * Get the org's confirmed product profile
@@ -2617,7 +2617,7 @@ export class OnboardingApi {
    * GET /v1/onboarding/product-profile
    */
   getOnboardingProductProfile(input: T.GetOnboardingProductProfileInput = {} as T.GetOnboardingProductProfileInput, opts?: RequestOptions): Promise<T.GetOnboardingProductProfileOutput> {
-    return this._t.call(OPS.getOnboardingProductProfile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getOnboardingProductProfile, input, opts);
   }
   /**
    * Save the org's confirmed product profile
@@ -2625,7 +2625,7 @@ export class OnboardingApi {
    * PUT /v1/onboarding/product-profile
    */
   saveOnboardingProductProfile(input: T.SaveOnboardingProductProfileInput, opts?: RequestOptions): Promise<T.SaveOnboardingProductProfileOutput> {
-    return this._t.call(OPS.saveOnboardingProductProfile, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.saveOnboardingProductProfile, input, opts);
   }
   /**
    * Get the setup journey state
@@ -2633,7 +2633,7 @@ export class OnboardingApi {
    * GET /v1/onboarding/setup
    */
   getSetupJourney(input: T.GetSetupJourneyInput = {} as T.GetSetupJourneyInput, opts?: RequestOptions): Promise<T.GetSetupJourneyOutput> {
-    return this._t.call(OPS.getSetupJourney, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSetupJourney, input, opts);
   }
   /**
    * Update the setup journey state
@@ -2641,7 +2641,7 @@ export class OnboardingApi {
    * PUT /v1/onboarding/setup
    */
   updateSetupJourney(input: T.UpdateSetupJourneyInput = {} as T.UpdateSetupJourneyInput, opts?: RequestOptions): Promise<T.UpdateSetupJourneyOutput> {
-    return this._t.call(OPS.updateSetupJourney, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateSetupJourney, input, opts);
   }
   /**
    * Grant the AI credits of finished setup steps
@@ -2649,7 +2649,7 @@ export class OnboardingApi {
    * POST /v1/onboarding/credits/claim
    */
   claimOnboardingCredits(input: T.ClaimOnboardingCreditsInput = {} as T.ClaimOnboardingCreditsInput, opts?: RequestOptions): Promise<T.ClaimOnboardingCreditsOutput> {
-    return this._t.call(OPS.claimOnboardingCredits, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.claimOnboardingCredits, input, opts);
   }
   /**
    * Join an existing org by email domain
@@ -2657,7 +2657,7 @@ export class OnboardingApi {
    * POST /v1/onboarding/join-org
    */
   joinOnboardingOrg(input: T.JoinOnboardingOrgInput, opts?: RequestOptions): Promise<T.JoinOnboardingOrgOutput> {
-    return this._t.call(OPS.joinOnboardingOrg, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.joinOnboardingOrg, input, opts);
   }
 }
 
@@ -2672,7 +2672,7 @@ export class OrgsApi {
    * GET /v1/orgs
    */
   listOrgs(input: T.ListOrgsInput = {} as T.ListOrgsInput, opts?: RequestOptions): Promise<T.ListOrgsOutput> {
-    return this._t.call(OPS.listOrgs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listOrgs, input, opts);
   }
   /**
    * Create customer organization
@@ -2680,7 +2680,7 @@ export class OrgsApi {
    * POST /v1/orgs
    */
   createTenant(input: T.CreateTenantInput, opts?: RequestOptions): Promise<T.CreateTenantOutput> {
-    return this._t.call(OPS.createTenant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createTenant, input, opts);
   }
   /**
    * Get tenant
@@ -2688,7 +2688,7 @@ export class OrgsApi {
    * GET /v1/orgs/{id}
    */
   getTenant(input: T.GetTenantInput, opts?: RequestOptions): Promise<T.GetTenantOutput> {
-    return this._t.call(OPS.getTenant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTenant, input, opts);
   }
   /**
    * Update tenant
@@ -2696,7 +2696,7 @@ export class OrgsApi {
    * PUT /v1/orgs/{id}
    */
   updateTenant(input: T.UpdateTenantInput, opts?: RequestOptions): Promise<T.UpdateTenantOutput> {
-    return this._t.call(OPS.updateTenant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateTenant, input, opts);
   }
   /**
    * Delete tenant (suspended only)
@@ -2704,7 +2704,7 @@ export class OrgsApi {
    * DELETE /v1/orgs/{id}
    */
   deleteTenant(input: T.DeleteTenantInput, opts?: RequestOptions): Promise<T.DeleteTenantOutput> {
-    return this._t.call(OPS.deleteTenant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteTenant, input, opts);
   }
   /**
    * Get org config document
@@ -2712,7 +2712,7 @@ export class OrgsApi {
    * GET /v1/orgs/{id}/config
    */
   getOrgConfig(input: T.GetOrgConfigInput, opts?: RequestOptions): Promise<T.GetOrgConfigOutput> {
-    return this._t.call(OPS.getOrgConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getOrgConfig, input, opts);
   }
   /**
    * Update org config document
@@ -2720,7 +2720,7 @@ export class OrgsApi {
    * PUT /v1/orgs/{id}/config
    */
   updateOrgConfig(input: T.UpdateOrgConfigInput, opts?: RequestOptions): Promise<T.UpdateOrgConfigOutput> {
-    return this._t.call(OPS.updateOrgConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateOrgConfig, input, opts);
   }
   /**
    * Get account domain/access settings
@@ -2728,7 +2728,7 @@ export class OrgsApi {
    * GET /v1/orgs/{id}/settings
    */
   getAccountSettings(input: T.GetAccountSettingsInput, opts?: RequestOptions): Promise<T.GetAccountSettingsOutput> {
-    return this._t.call(OPS.getAccountSettings, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getAccountSettings, input, opts);
   }
   /**
    * Update account domain/access settings
@@ -2736,7 +2736,7 @@ export class OrgsApi {
    * PUT /v1/orgs/{id}/settings
    */
   updateAccountSettings(input: T.UpdateAccountSettingsInput, opts?: RequestOptions): Promise<T.UpdateAccountSettingsOutput> {
-    return this._t.call(OPS.updateAccountSettings, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateAccountSettings, input, opts);
   }
   /**
    * Get hub (embed) settings for the account
@@ -2744,7 +2744,7 @@ export class OrgsApi {
    * GET /v1/hub-settings
    */
   getHubSettings(input: T.GetHubSettingsInput = {} as T.GetHubSettingsInput, opts?: RequestOptions): Promise<T.GetHubSettingsOutput> {
-    return this._t.call(OPS.getHubSettings, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getHubSettings, input, opts);
   }
   /**
    * Update hub (embed) settings
@@ -2752,7 +2752,7 @@ export class OrgsApi {
    * PUT /v1/hub-settings
    */
   updateHubSettings(input: T.UpdateHubSettingsInput, opts?: RequestOptions): Promise<T.UpdateHubSettingsOutput> {
-    return this._t.call(OPS.updateHubSettings, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateHubSettings, input, opts);
   }
   /**
    * List org secrets (names only, values masked)
@@ -2760,7 +2760,7 @@ export class OrgsApi {
    * GET /v1/secrets
    */
   listSecrets(input: T.ListSecretsInput = {} as T.ListSecretsInput, opts?: RequestOptions): Promise<T.ListSecretsOutput> {
-    return this._t.call(OPS.listSecrets, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSecrets, input, opts);
   }
   /**
    * Create a secret
@@ -2768,7 +2768,7 @@ export class OrgsApi {
    * POST /v1/secrets
    */
   createSecret(input: T.CreateSecretInput, opts?: RequestOptions): Promise<T.CreateSecretOutput> {
-    return this._t.call(OPS.createSecret, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createSecret, input, opts);
   }
   /**
    * Update a secret value
@@ -2776,7 +2776,7 @@ export class OrgsApi {
    * PUT /v1/secrets/{id}
    */
   updateSecret(input: T.UpdateSecretInput, opts?: RequestOptions): Promise<T.UpdateSecretOutput> {
-    return this._t.call(OPS.updateSecret, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateSecret, input, opts);
   }
   /**
    * Delete a secret
@@ -2784,7 +2784,7 @@ export class OrgsApi {
    * DELETE /v1/secrets/{id}
    */
   deleteSecret(input: T.DeleteSecretInput, opts?: RequestOptions): Promise<T.DeleteSecretOutput> {
-    return this._t.call(OPS.deleteSecret, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteSecret, input, opts);
   }
   /**
    * Assign an org admin
@@ -2792,7 +2792,7 @@ export class OrgsApi {
    * POST /v1/orgs/{id}/admin
    */
   assignOrgAdmin(input: T.AssignOrgAdminInput, opts?: RequestOptions): Promise<T.AssignOrgAdminOutput> {
-    return this._t.call(OPS.assignOrgAdmin, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.assignOrgAdmin, input, opts);
   }
   /**
    * Get the org's database config
@@ -2800,7 +2800,7 @@ export class OrgsApi {
    * GET /v1/orgs/{id}/db-config
    */
   getOrgDbConfig(input: T.GetOrgDbConfigInput, opts?: RequestOptions): Promise<T.GetOrgDbConfigOutput> {
-    return this._t.call(OPS.getOrgDbConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getOrgDbConfig, input, opts);
   }
   /**
    * Revert to the shared database
@@ -2808,7 +2808,7 @@ export class OrgsApi {
    * DELETE /v1/orgs/{id}/db-config
    */
   deleteOrgDbConfig(input: T.DeleteOrgDbConfigInput, opts?: RequestOptions): Promise<T.DeleteOrgDbConfigOutput> {
-    return this._t.call(OPS.deleteOrgDbConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteOrgDbConfig, input, opts);
   }
   /**
    * List workspace database overrides
@@ -2816,7 +2816,7 @@ export class OrgsApi {
    * GET /v1/orgs/{id}/db-config/overrides
    */
   listOrgDbConfigOverrides(input: T.ListOrgDbConfigOverridesInput, opts?: RequestOptions): Promise<T.ListOrgDbConfigOverridesOutput> {
-    return this._t.call(OPS.listOrgDbConfigOverrides, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listOrgDbConfigOverrides, input, opts);
   }
   /**
    * Enable the external database
@@ -2824,7 +2824,7 @@ export class OrgsApi {
    * POST /v1/orgs/{id}/db-config/enable
    */
   enableOrgDbConfig(input: T.EnableOrgDbConfigInput, opts?: RequestOptions): Promise<T.EnableOrgDbConfigOutput> {
-    return this._t.call(OPS.enableOrgDbConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.enableOrgDbConfig, input, opts);
   }
   /**
    * Disable the external database
@@ -2832,7 +2832,7 @@ export class OrgsApi {
    * POST /v1/orgs/{id}/db-config/disable
    */
   disableOrgDbConfig(input: T.DisableOrgDbConfigInput, opts?: RequestOptions): Promise<T.DisableOrgDbConfigOutput> {
-    return this._t.call(OPS.disableOrgDbConfig, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.disableOrgDbConfig, input, opts);
   }
   /**
    * Update the V1 bridge
@@ -2840,7 +2840,7 @@ export class OrgsApi {
    * PUT /v1/orgs/{id}/db-config/v1-bridge
    */
   updateOrgV1Bridge(input: T.UpdateOrgV1BridgeInput, opts?: RequestOptions): Promise<T.UpdateOrgV1BridgeOutput> {
-    return this._t.call(OPS.updateOrgV1Bridge, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateOrgV1Bridge, input, opts);
   }
 }
 
@@ -2855,7 +2855,7 @@ export class SyncApi {
    * GET /v1/sync/jobs
    */
   listSyncJobs(input: T.ListSyncJobsInput = {} as T.ListSyncJobsInput, opts?: RequestOptions): Promise<T.ListSyncJobsOutput> {
-    return this._t.call(OPS.listSyncJobs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSyncJobs, input, opts);
   }
   /**
    * Create sync job
@@ -2863,7 +2863,7 @@ export class SyncApi {
    * POST /v1/sync/jobs
    */
   createSyncJob(input: T.CreateSyncJobInput, opts?: RequestOptions): Promise<T.CreateSyncJobOutput> {
-    return this._t.call(OPS.createSyncJob, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createSyncJob, input, opts);
   }
   /**
    * Get sync job
@@ -2871,7 +2871,7 @@ export class SyncApi {
    * GET /v1/sync/jobs/{id}
    */
   getSyncJob(input: T.GetSyncJobInput, opts?: RequestOptions): Promise<T.GetSyncJobOutput> {
-    return this._t.call(OPS.getSyncJob, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getSyncJob, input, opts);
   }
   /**
    * Delete sync job
@@ -2879,7 +2879,7 @@ export class SyncApi {
    * DELETE /v1/sync/jobs/{id}
    */
   deleteSyncJob(input: T.DeleteSyncJobInput, opts?: RequestOptions): Promise<T.DeleteSyncJobOutput> {
-    return this._t.call(OPS.deleteSyncJob, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteSyncJob, input, opts);
   }
   /**
    * Trigger sync (legacy alias for /run)
@@ -2888,7 +2888,7 @@ export class SyncApi {
    * @deprecated
    */
   triggerSync(input: T.TriggerSyncInput, opts?: RequestOptions): Promise<T.TriggerSyncOutput> {
-    return this._t.call(OPS.triggerSync, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.triggerSync, input, opts);
   }
 }
 
@@ -2902,35 +2902,35 @@ export class TeamsApi {
    * GET /v1/grants/system
    */
   listSystemGrants(input: T.ListSystemGrantsInput = {} as T.ListSystemGrantsInput, opts?: RequestOptions): Promise<T.ListSystemGrantsOutput> {
-    return this._t.call(OPS.listSystemGrants, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listSystemGrants, input, opts);
   }
   /**
    * List custom grants
    * GET /v1/grants
    */
   listGrants(input: T.ListGrantsInput = {} as T.ListGrantsInput, opts?: RequestOptions): Promise<T.ListGrantsOutput> {
-    return this._t.call(OPS.listGrants, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listGrants, input, opts);
   }
   /**
    * Create custom grant
    * POST /v1/grants
    */
   createGrant(input: T.CreateGrantInput, opts?: RequestOptions): Promise<T.CreateGrantOutput> {
-    return this._t.call(OPS.createGrant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createGrant, input, opts);
   }
   /**
    * Update grant
    * PUT /v1/grants/{id}
    */
   updateGrant(input: T.UpdateGrantInput, opts?: RequestOptions): Promise<T.UpdateGrantOutput> {
-    return this._t.call(OPS.updateGrant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateGrant, input, opts);
   }
   /**
    * Delete grant
    * DELETE /v1/grants/{id}
    */
   deleteGrant(input: T.DeleteGrantInput, opts?: RequestOptions): Promise<T.DeleteGrantOutput> {
-    return this._t.call(OPS.deleteGrant, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteGrant, input, opts);
   }
 }
 
@@ -2945,7 +2945,7 @@ export class UnifiedApi {
    * GET /v1/unified/categories
    */
   listUnifiedCategories(input: T.ListUnifiedCategoriesInput = {} as T.ListUnifiedCategoriesInput, opts?: RequestOptions): Promise<T.ListUnifiedCategoriesOutput> {
-    return this._t.call(OPS.listUnifiedCategories, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedCategories, input, opts);
   }
   /**
    * What unified did for one of your own request ids
@@ -2953,7 +2953,7 @@ export class UnifiedApi {
    * GET /v1/unified/calls
    */
   listUnifiedCalls(input: T.ListUnifiedCallsInput, opts?: RequestOptions): Promise<T.ListUnifiedCallsOutput> {
-    return this._t.call(OPS.listUnifiedCalls, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedCalls, input, opts);
   }
   /**
    * List mapped providers and the caller's connection state
@@ -2961,7 +2961,7 @@ export class UnifiedApi {
    * GET /v1/unified/{category}/{entity}/providers
    */
   listUnifiedEntityProviders(input: T.ListUnifiedEntityProvidersInput, opts?: RequestOptions): Promise<T.ListUnifiedEntityProvidersOutput> {
-    return this._t.call(OPS.listUnifiedEntityProviders, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedEntityProviders, input, opts);
   }
   /**
    * List canonical records; fans out over every connected provider unless ?provider= or a cursor pins one
@@ -2969,7 +2969,7 @@ export class UnifiedApi {
    * GET /v1/unified/{category}/{entity}
    */
   listUnifiedRecords(input: T.ListUnifiedRecordsInput, opts?: RequestOptions): Promise<T.ListUnifiedRecordsOutput> {
-    return this._t.call(OPS.listUnifiedRecords, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedRecords, input, opts);
   }
   /**
    * Create a record from a canonical body via one provider
@@ -2978,7 +2978,7 @@ export class UnifiedApi {
    * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   createUnifiedRecord(input: T.CreateUnifiedRecordInput, opts?: RequestOptions): Promise<T.CreateUnifiedRecordOutput> {
-    return this._t.call(OPS.createUnifiedRecord, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createUnifiedRecord, input, opts);
   }
   /**
    * Search records by filters via one provider
@@ -2986,7 +2986,7 @@ export class UnifiedApi {
    * POST /v1/unified/{category}/{entity}/search
    */
   searchUnifiedRecords(input: T.SearchUnifiedRecordsInput, opts?: RequestOptions): Promise<T.SearchUnifiedRecordsOutput> {
-    return this._t.call(OPS.searchUnifiedRecords, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.searchUnifiedRecords, input, opts);
   }
   /**
    * Get one canonical record by remote id
@@ -2994,7 +2994,7 @@ export class UnifiedApi {
    * GET /v1/unified/{category}/{entity}/{id}
    */
   getUnifiedRecord(input: T.GetUnifiedRecordInput, opts?: RequestOptions): Promise<T.GetUnifiedRecordOutput> {
-    return this._t.call(OPS.getUnifiedRecord, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getUnifiedRecord, input, opts);
   }
   /**
    * Delete a record via one provider
@@ -3003,7 +3003,7 @@ export class UnifiedApi {
    * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   deleteUnifiedRecord(input: T.DeleteUnifiedRecordInput, opts?: RequestOptions): Promise<T.DeleteUnifiedRecordOutput> {
-    return this._t.call(OPS.deleteUnifiedRecord, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteUnifiedRecord, input, opts);
   }
   /**
    * Update a record (partial canonical body) via one provider
@@ -3012,7 +3012,7 @@ export class UnifiedApi {
    * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   updateUnifiedRecord(input: T.UpdateUnifiedRecordInput, opts?: RequestOptions): Promise<T.UpdateUnifiedRecordOutput> {
-    return this._t.call(OPS.updateUnifiedRecord, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateUnifiedRecord, input, opts);
   }
   /**
    * Load select options for a widget's unified config field by executing the snippet stored on the widget (never client-supplied code); params become ctx.input for cascading selects
@@ -3020,7 +3020,7 @@ export class UnifiedApi {
    * POST /v1/widgets/{widgetId}/unified-config/options
    */
   loadUnifiedConfigFieldOptions(input: T.LoadUnifiedConfigFieldOptionsInput, opts?: RequestOptions): Promise<T.LoadUnifiedConfigFieldOptionsOutput> {
-    return this._t.call(OPS.loadUnifiedConfigFieldOptions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.loadUnifiedConfigFieldOptions, input, opts);
   }
   /**
    * Merge per-customer unified config values into an installation's inline config (end_user-callable; scoped by org_id or end_org_id)
@@ -3028,7 +3028,7 @@ export class UnifiedApi {
    * PUT /v1/installations/{id}/unified-values
    */
   updateInstallationUnifiedValues(input: T.UpdateInstallationUnifiedValuesInput, opts?: RequestOptions): Promise<T.UpdateInstallationUnifiedValuesOutput> {
-    return this._t.call(OPS.updateInstallationUnifiedValues, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateInstallationUnifiedValues, input, opts);
   }
   /**
    * List catalog categories (admin view)
@@ -3036,7 +3036,7 @@ export class UnifiedApi {
    * GET /v1/unified-catalog/categories
    */
   listUnifiedCatalogCategories(input: T.ListUnifiedCatalogCategoriesInput = {} as T.ListUnifiedCatalogCategoriesInput, opts?: RequestOptions): Promise<T.ListUnifiedCatalogCategoriesOutput> {
-    return this._t.call(OPS.listUnifiedCatalogCategories, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedCatalogCategories, input, opts);
   }
   /**
    * List catalog entities
@@ -3044,7 +3044,7 @@ export class UnifiedApi {
    * GET /v1/unified-catalog/entities
    */
   listUnifiedCatalogEntities(input: T.ListUnifiedCatalogEntitiesInput = {} as T.ListUnifiedCatalogEntitiesInput, opts?: RequestOptions): Promise<T.ListUnifiedCatalogEntitiesOutput> {
-    return this._t.call(OPS.listUnifiedCatalogEntities, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedCatalogEntities, input, opts);
   }
   /**
    * Get an entity with its connector mappings
@@ -3052,7 +3052,7 @@ export class UnifiedApi {
    * GET /v1/unified-catalog/entities/{id}
    */
   getUnifiedCatalogEntity(input: T.GetUnifiedCatalogEntityInput, opts?: RequestOptions): Promise<T.GetUnifiedCatalogEntityOutput> {
-    return this._t.call(OPS.getUnifiedCatalogEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getUnifiedCatalogEntity, input, opts);
   }
   /**
    * The caller's catalog orgs' own entities (with mappings) and extensions of platform entities. editable marks rows the caller's org owns.
@@ -3060,7 +3060,7 @@ export class UnifiedApi {
    * GET /v1/unified-custom
    */
   listUnifiedCustom(input: T.ListUnifiedCustomInput = {} as T.ListUnifiedCustomInput, opts?: RequestOptions): Promise<T.ListUnifiedCustomOutput> {
-    return this._t.call(OPS.listUnifiedCustom, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUnifiedCustom, input, opts);
   }
   /**
    * Create an entity owned by the caller's org in a platform category (unified.customize). fromEntityId copies a visible entity's schema and enabled mappings, with the caller's extensions merged in.
@@ -3068,7 +3068,7 @@ export class UnifiedApi {
    * POST /v1/unified-custom/entities
    */
   createUnifiedCustomEntity(input: T.CreateUnifiedCustomEntityInput, opts?: RequestOptions): Promise<T.CreateUnifiedCustomEntityOutput> {
-    return this._t.call(OPS.createUnifiedCustomEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createUnifiedCustomEntity, input, opts);
   }
   /**
    * Update one of the caller org's entities (unified.customize)
@@ -3076,7 +3076,7 @@ export class UnifiedApi {
    * PUT /v1/unified-custom/entities/{id}
    */
   updateUnifiedCustomEntity(input: T.UpdateUnifiedCustomEntityInput, opts?: RequestOptions): Promise<T.UpdateUnifiedCustomEntityOutput> {
-    return this._t.call(OPS.updateUnifiedCustomEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateUnifiedCustomEntity, input, opts);
   }
   /**
    * Delete one of the caller org's entities and its mappings (unified.customize)
@@ -3084,7 +3084,7 @@ export class UnifiedApi {
    * DELETE /v1/unified-custom/entities/{id}
    */
   deleteUnifiedCustomEntity(input: T.DeleteUnifiedCustomEntityInput, opts?: RequestOptions): Promise<T.DeleteUnifiedCustomEntityOutput> {
-    return this._t.call(OPS.deleteUnifiedCustomEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteUnifiedCustomEntity, input, opts);
   }
   /**
    * Bind a connector mapping to one of the caller org's entities (unified.customize); same body as the platform catalog mapping
@@ -3092,7 +3092,7 @@ export class UnifiedApi {
    * POST /v1/unified-custom/entities/{id}/mappings
    */
   createUnifiedCustomMapping(input: T.CreateUnifiedCustomMappingInput, opts?: RequestOptions): Promise<T.CreateUnifiedCustomMappingOutput> {
-    return this._t.call(OPS.createUnifiedCustomMapping, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createUnifiedCustomMapping, input, opts);
   }
   /**
    * Update a mapping on one of the caller org's entities (unified.customize)
@@ -3100,7 +3100,7 @@ export class UnifiedApi {
    * PUT /v1/unified-custom/mappings/{id}
    */
   updateUnifiedCustomMapping(input: T.UpdateUnifiedCustomMappingInput, opts?: RequestOptions): Promise<T.UpdateUnifiedCustomMappingOutput> {
-    return this._t.call(OPS.updateUnifiedCustomMapping, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateUnifiedCustomMapping, input, opts);
   }
   /**
    * Delete a mapping on one of the caller org's entities (unified.customize)
@@ -3108,7 +3108,7 @@ export class UnifiedApi {
    * DELETE /v1/unified-custom/mappings/{id}
    */
   deleteUnifiedCustomMapping(input: T.DeleteUnifiedCustomMappingInput, opts?: RequestOptions): Promise<T.DeleteUnifiedCustomMappingOutput> {
-    return this._t.call(OPS.deleteUnifiedCustomMapping, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteUnifiedCustomMapping, input, opts);
   }
   /**
    * Create or replace the caller org's extension of a platform entity: extra canonical fields plus, per mapped connector, field mappings and staticInput values to append (e.g. HubSpot properties). Visible to the org and its tenants only (unified.customize).
@@ -3116,7 +3116,7 @@ export class UnifiedApi {
    * PUT /v1/unified-custom/extensions/{entityId}
    */
   upsertUnifiedExtension(input: T.UpsertUnifiedExtensionInput, opts?: RequestOptions): Promise<T.UpsertUnifiedExtensionOutput> {
-    return this._t.call(OPS.upsertUnifiedExtension, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.upsertUnifiedExtension, input, opts);
   }
   /**
    * Remove the caller org's extension of a platform entity (unified.customize)
@@ -3124,7 +3124,7 @@ export class UnifiedApi {
    * DELETE /v1/unified-custom/extensions/{entityId}
    */
   deleteUnifiedExtension(input: T.DeleteUnifiedExtensionInput, opts?: RequestOptions): Promise<T.DeleteUnifiedExtensionOutput> {
-    return this._t.call(OPS.deleteUnifiedExtension, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteUnifiedExtension, input, opts);
   }
   /**
    * Test-execute an entity the caller can see (own, ancestor's, or platform with the caller's extensions) against the caller's own connections (unified.customize)
@@ -3132,7 +3132,7 @@ export class UnifiedApi {
    * POST /v1/unified-custom/entities/{id}/test
    */
   testUnifiedCustomEntity(input: T.TestUnifiedCustomEntityInput, opts?: RequestOptions): Promise<T.TestUnifiedCustomEntityOutput> {
-    return this._t.call(OPS.testUnifiedCustomEntity, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.testUnifiedCustomEntity, input, opts);
   }
 }
 
@@ -3147,7 +3147,7 @@ export class UsersApi {
    * GET /v1/users/me/memberships
    */
   getMyMemberships(input: T.GetMyMembershipsInput = {} as T.GetMyMembershipsInput, opts?: RequestOptions): Promise<T.GetMyMembershipsOutput> {
-    return this._t.call(OPS.getMyMemberships, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyMemberships, input, opts);
   }
   /**
    * List users in account/tenant
@@ -3155,7 +3155,7 @@ export class UsersApi {
    * GET /v1/users
    */
   listUsers(input: T.ListUsersInput = {} as T.ListUsersInput, opts?: RequestOptions): Promise<T.ListUsersOutput> {
-    return this._t.call(OPS.listUsers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUsers, input, opts);
   }
   /**
    * Invite user to account
@@ -3163,7 +3163,7 @@ export class UsersApi {
    * POST /v1/users/invite
    */
   inviteUser(input: T.InviteUserInput, opts?: RequestOptions): Promise<T.InviteUserOutput> {
-    return this._t.call(OPS.inviteUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.inviteUser, input, opts);
   }
   /**
    * Get user details
@@ -3171,7 +3171,7 @@ export class UsersApi {
    * GET /v1/users/{userId}
    */
   getUser(input: T.GetUserInput, opts?: RequestOptions): Promise<T.GetUserOutput> {
-    return this._t.call(OPS.getUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getUser, input, opts);
   }
   /**
    * Remove user from account
@@ -3179,7 +3179,7 @@ export class UsersApi {
    * DELETE /v1/users/{userId}
    */
   removeUser(input: T.RemoveUserInput, opts?: RequestOptions): Promise<T.RemoveUserOutput> {
-    return this._t.call(OPS.removeUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.removeUser, input, opts);
   }
   /**
    * Update user role
@@ -3187,7 +3187,7 @@ export class UsersApi {
    * PUT /v1/users/{userId}/role
    */
   updateUserRole(input: T.UpdateUserRoleInput, opts?: RequestOptions): Promise<T.UpdateUserRoleOutput> {
-    return this._t.call(OPS.updateUserRole, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateUserRole, input, opts);
   }
   /**
    * List pending membership requests
@@ -3195,7 +3195,7 @@ export class UsersApi {
    * GET /v1/users/pending
    */
   listPendingUsers(input: T.ListPendingUsersInput = {} as T.ListPendingUsersInput, opts?: RequestOptions): Promise<T.ListPendingUsersOutput> {
-    return this._t.call(OPS.listPendingUsers, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listPendingUsers, input, opts);
   }
   /**
    * Approve pending membership
@@ -3203,7 +3203,7 @@ export class UsersApi {
    * POST /v1/users/memberships/{id}/approve
    */
   approvePendingUser(input: T.ApprovePendingUserInput, opts?: RequestOptions): Promise<T.ApprovePendingUserOutput> {
-    return this._t.call(OPS.approvePendingUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.approvePendingUser, input, opts);
   }
   /**
    * Reject pending membership
@@ -3211,7 +3211,7 @@ export class UsersApi {
    * POST /v1/users/memberships/{id}/reject
    */
   rejectPendingUser(input: T.RejectPendingUserInput, opts?: RequestOptions): Promise<T.RejectPendingUserOutput> {
-    return this._t.call(OPS.rejectPendingUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.rejectPendingUser, input, opts);
   }
   /**
    * List custom roles for the account
@@ -3219,7 +3219,7 @@ export class UsersApi {
    * GET /v1/roles
    */
   listRoles(input: T.ListRolesInput = {} as T.ListRolesInput, opts?: RequestOptions): Promise<T.ListRolesOutput> {
-    return this._t.call(OPS.listRoles, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listRoles, input, opts);
   }
   /**
    * Create a custom role
@@ -3227,7 +3227,7 @@ export class UsersApi {
    * POST /v1/roles
    */
   createRole(input: T.CreateRoleInput, opts?: RequestOptions): Promise<T.CreateRoleOutput> {
-    return this._t.call(OPS.createRole, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createRole, input, opts);
   }
   /**
    * Get a role
@@ -3235,7 +3235,7 @@ export class UsersApi {
    * GET /v1/roles/{id}
    */
   getRole(input: T.GetRoleInput, opts?: RequestOptions): Promise<T.GetRoleOutput> {
-    return this._t.call(OPS.getRole, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getRole, input, opts);
   }
   /**
    * Update a custom role
@@ -3243,7 +3243,7 @@ export class UsersApi {
    * PUT /v1/roles/{id}
    */
   updateRole(input: T.UpdateRoleInput, opts?: RequestOptions): Promise<T.UpdateRoleOutput> {
-    return this._t.call(OPS.updateRole, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateRole, input, opts);
   }
   /**
    * Delete a custom role
@@ -3251,7 +3251,7 @@ export class UsersApi {
    * DELETE /v1/roles/{id}
    */
   deleteRole(input: T.DeleteRoleInput, opts?: RequestOptions): Promise<T.DeleteRoleOutput> {
-    return this._t.call(OPS.deleteRole, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteRole, input, opts);
   }
   /**
    * Get the caller's resolved identity
@@ -3259,7 +3259,7 @@ export class UsersApi {
    * GET /v1/me
    */
   whoami(input: T.WhoamiInput = {} as T.WhoamiInput, opts?: RequestOptions): Promise<T.WhoamiOutput> {
-    return this._t.call(OPS.whoami, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.whoami, input, opts);
   }
   /**
    * Get the caller's own org/SaaS domain
@@ -3267,7 +3267,7 @@ export class UsersApi {
    * GET /v1/me/org-domain
    */
   getMyOrgDomain(input: T.GetMyOrgDomainInput = {} as T.GetMyOrgDomainInput, opts?: RequestOptions): Promise<T.GetMyOrgDomainOutput> {
-    return this._t.call(OPS.getMyOrgDomain, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyOrgDomain, input, opts);
   }
   /**
    * Personalized home-screen suggestions for the caller's org
@@ -3275,7 +3275,7 @@ export class UsersApi {
    * GET /v1/me/suggestions
    */
   getMySuggestions(input: T.GetMySuggestionsInput = {} as T.GetMySuggestionsInput, opts?: RequestOptions): Promise<T.GetMySuggestionsOutput> {
-    return this._t.call(OPS.getMySuggestions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMySuggestions, input, opts);
   }
   /**
    * Get the caller's UI preferences
@@ -3283,7 +3283,7 @@ export class UsersApi {
    * GET /v1/users/me/preferences
    */
   getMyPreferences(input: T.GetMyPreferencesInput = {} as T.GetMyPreferencesInput, opts?: RequestOptions): Promise<T.GetMyPreferencesOutput> {
-    return this._t.call(OPS.getMyPreferences, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getMyPreferences, input, opts);
   }
   /**
    * Merge-update the caller's UI preferences
@@ -3291,7 +3291,7 @@ export class UsersApi {
    * PATCH /v1/users/me/preferences
    */
   updateMyPreferences(input: T.UpdateMyPreferencesInput = {} as T.UpdateMyPreferencesInput, opts?: RequestOptions): Promise<T.UpdateMyPreferencesOutput> {
-    return this._t.call(OPS.updateMyPreferences, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateMyPreferences, input, opts);
   }
   /**
    * Resend a member's invite email
@@ -3299,7 +3299,7 @@ export class UsersApi {
    * POST /v1/users/{userId}/resend-invite
    */
   resendInvite(input: T.ResendInviteInput, opts?: RequestOptions): Promise<T.ResendInviteOutput> {
-    return this._t.call(OPS.resendInvite, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.resendInvite, input, opts);
   }
   /**
    * List a user's memberships
@@ -3307,7 +3307,7 @@ export class UsersApi {
    * GET /v1/users/{userId}/memberships
    */
   listUserMemberships(input: T.ListUserMembershipsInput, opts?: RequestOptions): Promise<T.ListUserMembershipsOutput> {
-    return this._t.call(OPS.listUserMemberships, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listUserMemberships, input, opts);
   }
   /**
    * Remove a user's membership
@@ -3315,7 +3315,7 @@ export class UsersApi {
    * DELETE /v1/users/{userId}/memberships/{membershipId}
    */
   removeUserMembership(input: T.RemoveUserMembershipInput, opts?: RequestOptions): Promise<T.RemoveUserMembershipOutput> {
-    return this._t.call(OPS.removeUserMembership, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.removeUserMembership, input, opts);
   }
   /**
    * Get a user's permission overrides
@@ -3323,7 +3323,7 @@ export class UsersApi {
    * GET /v1/users/{userId}/permissions
    */
   getUserPermissions(input: T.GetUserPermissionsInput, opts?: RequestOptions): Promise<T.GetUserPermissionsOutput> {
-    return this._t.call(OPS.getUserPermissions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getUserPermissions, input, opts);
   }
   /**
    * Set a user's permission overrides
@@ -3331,7 +3331,7 @@ export class UsersApi {
    * PUT /v1/users/{userId}/permissions
    */
   updateUserPermissions(input: T.UpdateUserPermissionsInput, opts?: RequestOptions): Promise<T.UpdateUserPermissionsOutput> {
-    return this._t.call(OPS.updateUserPermissions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateUserPermissions, input, opts);
   }
   /**
    * Reactivate a suspended user
@@ -3339,7 +3339,7 @@ export class UsersApi {
    * POST /v1/users/{userId}/reactivate
    */
   reactivateUser(input: T.ReactivateUserInput, opts?: RequestOptions): Promise<T.ReactivateUserOutput> {
-    return this._t.call(OPS.reactivateUser, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.reactivateUser, input, opts);
   }
 }
 
@@ -3354,7 +3354,7 @@ export class WorkflowsApi {
    * GET /v1/workflows
    */
   listWorkflows(input: T.ListWorkflowsInput = {} as T.ListWorkflowsInput, opts?: RequestOptions): Promise<T.ListWorkflowsOutput> {
-    return this._t.call(OPS.listWorkflows, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflows, input, opts);
   }
   /**
    * Create workflow
@@ -3362,7 +3362,7 @@ export class WorkflowsApi {
    * POST /v1/workflows
    */
   createWorkflow(input: T.CreateWorkflowInput, opts?: RequestOptions): Promise<T.CreateWorkflowOutput> {
-    return this._t.call(OPS.createWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWorkflow, input, opts);
   }
   /**
    * List workflow categories
@@ -3370,7 +3370,7 @@ export class WorkflowsApi {
    * GET /v1/workflow-categories
    */
   listWorkflowCategories(input: T.ListWorkflowCategoriesInput = {} as T.ListWorkflowCategoriesInput, opts?: RequestOptions): Promise<T.ListWorkflowCategoriesOutput> {
-    return this._t.call(OPS.listWorkflowCategories, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowCategories, input, opts);
   }
   /**
    * Create workflow category
@@ -3378,7 +3378,7 @@ export class WorkflowsApi {
    * POST /v1/workflow-categories
    */
   createWorkflowCategory(input: T.CreateWorkflowCategoryInput, opts?: RequestOptions): Promise<T.CreateWorkflowCategoryOutput> {
-    return this._t.call(OPS.createWorkflowCategory, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWorkflowCategory, input, opts);
   }
   /**
    * Delete workflow category
@@ -3386,7 +3386,7 @@ export class WorkflowsApi {
    * DELETE /v1/workflow-categories/{id}
    */
   deleteWorkflowCategory(input: T.DeleteWorkflowCategoryInput, opts?: RequestOptions): Promise<T.DeleteWorkflowCategoryOutput> {
-    return this._t.call(OPS.deleteWorkflowCategory, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWorkflowCategory, input, opts);
   }
   /**
    * Update workflow category
@@ -3394,7 +3394,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflow-categories/{id}
    */
   updateWorkflowCategory(input: T.UpdateWorkflowCategoryInput, opts?: RequestOptions): Promise<T.UpdateWorkflowCategoryOutput> {
-    return this._t.call(OPS.updateWorkflowCategory, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWorkflowCategory, input, opts);
   }
   /**
    * List workflow labels
@@ -3402,7 +3402,7 @@ export class WorkflowsApi {
    * GET /v1/workflow-labels
    */
   listWorkflowLabels(input: T.ListWorkflowLabelsInput = {} as T.ListWorkflowLabelsInput, opts?: RequestOptions): Promise<T.ListWorkflowLabelsOutput> {
-    return this._t.call(OPS.listWorkflowLabels, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowLabels, input, opts);
   }
   /**
    * Create workflow label
@@ -3410,7 +3410,7 @@ export class WorkflowsApi {
    * POST /v1/workflow-labels
    */
   createWorkflowLabel(input: T.CreateWorkflowLabelInput, opts?: RequestOptions): Promise<T.CreateWorkflowLabelOutput> {
-    return this._t.call(OPS.createWorkflowLabel, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createWorkflowLabel, input, opts);
   }
   /**
    * Delete workflow label
@@ -3418,7 +3418,7 @@ export class WorkflowsApi {
    * DELETE /v1/workflow-labels/{id}
    */
   deleteWorkflowLabel(input: T.DeleteWorkflowLabelInput, opts?: RequestOptions): Promise<T.DeleteWorkflowLabelOutput> {
-    return this._t.call(OPS.deleteWorkflowLabel, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWorkflowLabel, input, opts);
   }
   /**
    * Update workflow label
@@ -3426,7 +3426,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflow-labels/{id}
    */
   updateWorkflowLabel(input: T.UpdateWorkflowLabelInput, opts?: RequestOptions): Promise<T.UpdateWorkflowLabelOutput> {
-    return this._t.call(OPS.updateWorkflowLabel, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWorkflowLabel, input, opts);
   }
   /**
    * Set a workflow's labels
@@ -3434,7 +3434,7 @@ export class WorkflowsApi {
    * PUT /v1/workflows/{id}/labels
    */
   setWorkflowLabels(input: T.SetWorkflowLabelsInput, opts?: RequestOptions): Promise<T.SetWorkflowLabelsOutput> {
-    return this._t.call(OPS.setWorkflowLabels, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setWorkflowLabels, input, opts);
   }
   /**
    * Test workflow code (scratch-pad)
@@ -3442,7 +3442,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/test
    */
   runWorkflowCode(input: T.RunWorkflowCodeInput, opts?: RequestOptions): Promise<T.RunWorkflowCodeOutput> {
-    return this._t.call(OPS.runWorkflowCode, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.runWorkflowCode, input, opts);
   }
   /**
    * Test saved workflow
@@ -3450,7 +3450,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/test
    */
   testSavedWorkflow(input: T.TestSavedWorkflowInput, opts?: RequestOptions): Promise<T.TestSavedWorkflowOutput> {
-    return this._t.call(OPS.testSavedWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.testSavedWorkflow, input, opts);
   }
   /**
    * List fastn.state keys
@@ -3458,7 +3458,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/state-keys
    */
   listWorkflowStateKeys(input: T.ListWorkflowStateKeysInput = {} as T.ListWorkflowStateKeysInput, opts?: RequestOptions): Promise<T.ListWorkflowStateKeysOutput> {
-    return this._t.call(OPS.listWorkflowStateKeys, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowStateKeys, input, opts);
   }
   /**
    * List workspace DB tables
@@ -3466,7 +3466,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/tables
    */
   listWorkflowTables(input: T.ListWorkflowTablesInput = {} as T.ListWorkflowTablesInput, opts?: RequestOptions): Promise<T.ListWorkflowTablesOutput> {
-    return this._t.call(OPS.listWorkflowTables, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowTables, input, opts);
   }
   /**
    * Get workflow
@@ -3474,7 +3474,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}
    */
   getWorkflow(input: T.GetWorkflowInput, opts?: RequestOptions): Promise<T.GetWorkflowOutput> {
-    return this._t.call(OPS.getWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflow, input, opts);
   }
   /**
    * Update workflow
@@ -3482,7 +3482,7 @@ export class WorkflowsApi {
    * PUT /v1/workflows/{id}
    */
   updateWorkflow(input: T.UpdateWorkflowInput, opts?: RequestOptions): Promise<T.UpdateWorkflowOutput> {
-    return this._t.call(OPS.updateWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.updateWorkflow, input, opts);
   }
   /**
    * Delete workflow
@@ -3490,7 +3490,7 @@ export class WorkflowsApi {
    * DELETE /v1/workflows/{id}
    */
   deleteWorkflow(input: T.DeleteWorkflowInput, opts?: RequestOptions): Promise<T.DeleteWorkflowOutput> {
-    return this._t.call(OPS.deleteWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deleteWorkflow, input, opts);
   }
   /**
    * Restore a soft-deleted workflow
@@ -3498,7 +3498,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/restore
    */
   restoreWorkflow(input: T.RestoreWorkflowInput, opts?: RequestOptions): Promise<T.RestoreWorkflowOutput> {
-    return this._t.call(OPS.restoreWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.restoreWorkflow, input, opts);
   }
   /**
    * Get connector manifest
@@ -3506,7 +3506,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/manifest
    */
   getWorkflowConnectorManifest(input: T.GetWorkflowConnectorManifestInput, opts?: RequestOptions): Promise<T.GetWorkflowConnectorManifestOutput> {
-    return this._t.call(OPS.getWorkflowConnectorManifest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowConnectorManifest, input, opts);
   }
   /**
    * Patch one connector manifest entry
@@ -3514,7 +3514,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflows/{id}/manifest/{slug}
    */
   setWorkflowConnectorScope(input: T.SetWorkflowConnectorScopeInput, opts?: RequestOptions): Promise<T.SetWorkflowConnectorScopeOutput> {
-    return this._t.call(OPS.setWorkflowConnectorScope, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setWorkflowConnectorScope, input, opts);
   }
   /**
    * Get workflow documentation
@@ -3522,7 +3522,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/docs
    */
   getWorkflowDocs(input: T.GetWorkflowDocsInput, opts?: RequestOptions): Promise<T.GetWorkflowDocsOutput> {
-    return this._t.call(OPS.getWorkflowDocs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowDocs, input, opts);
   }
   /**
    * List saved documentation versions
@@ -3530,7 +3530,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/docs/history
    */
   listWorkflowDocVersions(input: T.ListWorkflowDocVersionsInput, opts?: RequestOptions): Promise<T.ListWorkflowDocVersionsOutput> {
-    return this._t.call(OPS.listWorkflowDocVersions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowDocVersions, input, opts);
   }
   /**
    * Get one saved documentation version
@@ -3538,7 +3538,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/docs/history/{versionId}
    */
   getWorkflowDocVersion(input: T.GetWorkflowDocVersionInput, opts?: RequestOptions): Promise<T.GetWorkflowDocVersionOutput> {
-    return this._t.call(OPS.getWorkflowDocVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowDocVersion, input, opts);
   }
   /**
    * Regenerate workflow documentation
@@ -3546,7 +3546,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/generate-docs
    */
   generateWorkflowDocs(input: T.GenerateWorkflowDocsInput, opts?: RequestOptions): Promise<T.GenerateWorkflowDocsOutput> {
-    return this._t.call(OPS.generateWorkflowDocs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.generateWorkflowDocs, input, opts);
   }
   /**
    * Execute workflow
@@ -3555,7 +3555,7 @@ export class WorkflowsApi {
    * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   executeWorkflow(input: T.ExecuteWorkflowInput, opts?: RequestOptions): Promise<T.ExecuteWorkflowOutput> {
-    return this._t.call(OPS.executeWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.executeWorkflow, input, opts);
   }
   /**
    * List executions across all workflows
@@ -3563,7 +3563,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/executions
    */
   listWorkflowExecutions(input: T.ListWorkflowExecutionsInput = {} as T.ListWorkflowExecutionsInput, opts?: RequestOptions): Promise<T.ListWorkflowExecutionsOutput> {
-    return this._t.call(OPS.listWorkflowExecutions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowExecutions, input, opts);
   }
   /**
    * Search log lines across executions
@@ -3571,7 +3571,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/executions/logs
    */
   searchExecutionLogs(input: T.SearchExecutionLogsInput = {} as T.SearchExecutionLogsInput, opts?: RequestOptions): Promise<T.SearchExecutionLogsOutput> {
-    return this._t.call(OPS.searchExecutionLogs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.searchExecutionLogs, input, opts);
   }
   /**
    * List workflow executions
@@ -3579,7 +3579,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/executions
    */
   listExecutions(input: T.ListExecutionsInput, opts?: RequestOptions): Promise<T.ListExecutionsOutput> {
-    return this._t.call(OPS.listExecutions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listExecutions, input, opts);
   }
   /**
    * Get execution with steps
@@ -3587,7 +3587,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/executions/{executionId}
    */
   getWorkflowExecution(input: T.GetWorkflowExecutionInput, opts?: RequestOptions): Promise<T.GetWorkflowExecutionOutput> {
-    return this._t.call(OPS.getWorkflowExecution, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowExecution, input, opts);
   }
   /**
    * Cancel a running execution
@@ -3595,7 +3595,7 @@ export class WorkflowsApi {
    * DELETE /v1/workflows/{id}/executions/{executionId}
    */
   cancelWorkflowExecution(input: T.CancelWorkflowExecutionInput, opts?: RequestOptions): Promise<T.CancelWorkflowExecutionOutput> {
-    return this._t.call(OPS.cancelWorkflowExecution, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.cancelWorkflowExecution, input, opts);
   }
   /**
    * Get an execution's log lines from Loki
@@ -3603,7 +3603,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/executions/{executionId}/logs
    */
   getExecutionLogs(input: T.GetExecutionLogsInput, opts?: RequestOptions): Promise<T.GetExecutionLogsOutput> {
-    return this._t.call(OPS.getExecutionLogs, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getExecutionLogs, input, opts);
   }
   /**
    * Replay a finished execution
@@ -3611,7 +3611,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/executions/{executionId}/replay
    */
   replayExecution(input: T.ReplayExecutionInput, opts?: RequestOptions): Promise<T.ReplayExecutionOutput> {
-    return this._t.call(OPS.replayExecution, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.replayExecution, input, opts);
   }
   /**
    * List diff-engine run reports
@@ -3619,7 +3619,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/diff-reports
    */
   listWorkflowDiffReports(input: T.ListWorkflowDiffReportsInput = {} as T.ListWorkflowDiffReportsInput, opts?: RequestOptions): Promise<T.ListWorkflowDiffReportsOutput> {
-    return this._t.call(OPS.listWorkflowDiffReports, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowDiffReports, input, opts);
   }
   /**
    * Get one published version, with its code
@@ -3627,7 +3627,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/versions/{versionId}
    */
   getWorkflowVersion(input: T.GetWorkflowVersionInput, opts?: RequestOptions): Promise<T.GetWorkflowVersionOutput> {
-    return this._t.call(OPS.getWorkflowVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowVersion, input, opts);
   }
   /**
    * Deploy a published version to an environment
@@ -3635,7 +3635,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/deploy
    */
   deployWorkflowVersion(input: T.DeployWorkflowVersionInput, opts?: RequestOptions): Promise<T.DeployWorkflowVersionOutput> {
-    return this._t.call(OPS.deployWorkflowVersion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.deployWorkflowVersion, input, opts);
   }
   /**
    * Promote a version through review
@@ -3643,7 +3643,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/promote
    */
   promoteWorkflow(input: T.PromoteWorkflowInput, opts?: RequestOptions): Promise<T.PromoteWorkflowOutput> {
-    return this._t.call(OPS.promoteWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.promoteWorkflow, input, opts);
   }
   /**
    * Fork an inherited workflow (and the sub-flows it calls) into your own org
@@ -3651,7 +3651,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/fork
    */
   forkWorkflow(input: T.ForkWorkflowInput, opts?: RequestOptions): Promise<T.ForkWorkflowOutput> {
-    return this._t.call(OPS.forkWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.forkWorkflow, input, opts);
   }
   /**
    * Get the GitHub integration status
@@ -3659,7 +3659,7 @@ export class WorkflowsApi {
    * GET /v1/integrations/github/status
    */
   getGithubIntegrationStatus(input: T.GetGithubIntegrationStatusInput = {} as T.GetGithubIntegrationStatusInput, opts?: RequestOptions): Promise<T.GetGithubIntegrationStatusOutput> {
-    return this._t.call(OPS.getGithubIntegrationStatus, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getGithubIntegrationStatus, input, opts);
   }
   /**
    * Start the GitHub App install
@@ -3667,7 +3667,7 @@ export class WorkflowsApi {
    * POST /v1/integrations/github/install
    */
   startGithubInstallation(input: T.StartGithubInstallationInput = {} as T.StartGithubInstallationInput, opts?: RequestOptions): Promise<T.StartGithubInstallationOutput> {
-    return this._t.call(OPS.startGithubInstallation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.startGithubInstallation, input, opts);
   }
   /**
    * Disconnect the GitHub integration
@@ -3675,7 +3675,7 @@ export class WorkflowsApi {
    * DELETE /v1/integrations/github
    */
   disconnectGithubIntegration(input: T.DisconnectGithubIntegrationInput = {} as T.DisconnectGithubIntegrationInput, opts?: RequestOptions): Promise<T.DisconnectGithubIntegrationOutput> {
-    return this._t.call(OPS.disconnectGithubIntegration, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.disconnectGithubIntegration, input, opts);
   }
   /**
    * Choose the repo or toggle the publish gate
@@ -3683,7 +3683,7 @@ export class WorkflowsApi {
    * PATCH /v1/integrations/github
    */
   setGithubPublishGate(input: T.SetGithubPublishGateInput = {} as T.SetGithubPublishGateInput, opts?: RequestOptions): Promise<T.SetGithubPublishGateOutput> {
-    return this._t.call(OPS.setGithubPublishGate, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.setGithubPublishGate, input, opts);
   }
   /**
    * List repositories shared with the GitHub App
@@ -3691,7 +3691,7 @@ export class WorkflowsApi {
    * GET /v1/integrations/github/repositories
    */
   listGithubRepositories(input: T.ListGithubRepositoriesInput = {} as T.ListGithubRepositoriesInput, opts?: RequestOptions): Promise<T.ListGithubRepositoriesOutput> {
-    return this._t.call(OPS.listGithubRepositories, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listGithubRepositories, input, opts);
   }
   /**
    * Mirror workflows to GitHub
@@ -3699,7 +3699,7 @@ export class WorkflowsApi {
    * POST /v1/integrations/github/sync
    */
   syncWorkflowsToGithub(input: T.SyncWorkflowsToGithubInput = {} as T.SyncWorkflowsToGithubInput, opts?: RequestOptions): Promise<T.SyncWorkflowsToGithubOutput> {
-    return this._t.call(OPS.syncWorkflowsToGithub, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.syncWorkflowsToGithub, input, opts);
   }
   /**
    * Abandon a pending GitHub sync
@@ -3707,7 +3707,7 @@ export class WorkflowsApi {
    * DELETE /v1/integrations/github/sync/{syncId}
    */
   cancelGithubSync(input: T.CancelGithubSyncInput, opts?: RequestOptions): Promise<T.CancelGithubSyncOutput> {
-    return this._t.call(OPS.cancelGithubSync, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.cancelGithubSync, input, opts);
   }
   /**
    * List pending GitHub reviews
@@ -3715,7 +3715,7 @@ export class WorkflowsApi {
    * GET /v1/integrations/github/reviews
    */
   listGithubReviews(input: T.ListGithubReviewsInput = {} as T.ListGithubReviewsInput, opts?: RequestOptions): Promise<T.ListGithubReviewsOutput> {
-    return this._t.call(OPS.listGithubReviews, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listGithubReviews, input, opts);
   }
   /**
    * Create a test-case draft for human review
@@ -3723,7 +3723,7 @@ export class WorkflowsApi {
    * POST /v1/test-case-drafts
    */
   createTestCaseDraft(input: T.CreateTestCaseDraftInput, opts?: RequestOptions): Promise<T.CreateTestCaseDraftOutput> {
-    return this._t.call(OPS.createTestCaseDraft, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.createTestCaseDraft, input, opts);
   }
   /**
    * Get a test-case draft
@@ -3731,7 +3731,7 @@ export class WorkflowsApi {
    * GET /v1/test-case-drafts/{id}
    */
   getTestCaseDraft(input: T.GetTestCaseDraftInput, opts?: RequestOptions): Promise<T.GetTestCaseDraftOutput> {
-    return this._t.call(OPS.getTestCaseDraft, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getTestCaseDraft, input, opts);
   }
   /**
    * Count executions by status
@@ -3739,7 +3739,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/executions/counts
    */
   getWorkflowExecutionCounts(input: T.GetWorkflowExecutionCountsInput = {} as T.GetWorkflowExecutionCountsInput, opts?: RequestOptions): Promise<T.GetWorkflowExecutionCountsOutput> {
-    return this._t.call(OPS.getWorkflowExecutionCounts, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.getWorkflowExecutionCounts, input, opts);
   }
   /**
    * Rate an execution's error diagnosis
@@ -3747,7 +3747,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/executions/{executionId}/feedback
    */
   submitWorkflowExecutionFeedback(input: T.SubmitWorkflowExecutionFeedbackInput, opts?: RequestOptions): Promise<T.SubmitWorkflowExecutionFeedbackOutput> {
-    return this._t.call(OPS.submitWorkflowExecutionFeedback, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.submitWorkflowExecutionFeedback, input, opts);
   }
   /**
    * Refresh workflow connector manifest
@@ -3755,7 +3755,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/manifest/refresh
    */
   refreshWorkflowManifest(input: T.RefreshWorkflowManifestInput, opts?: RequestOptions): Promise<T.RefreshWorkflowManifestOutput> {
-    return this._t.call(OPS.refreshWorkflowManifest, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.refreshWorkflowManifest, input, opts);
   }
   /**
    * Save workflow validation results
@@ -3763,7 +3763,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflows/{id}/validation
    */
   saveWorkflowValidation(input: T.SaveWorkflowValidationInput, opts?: RequestOptions): Promise<T.SaveWorkflowValidationOutput> {
-    return this._t.call(OPS.saveWorkflowValidation, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.saveWorkflowValidation, input, opts);
   }
   /**
    * Save workflow draft code
@@ -3771,7 +3771,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflows/{id}/draft
    */
   saveWorkflowDraft(input: T.SaveWorkflowDraftInput, opts?: RequestOptions): Promise<T.SaveWorkflowDraftOutput> {
-    return this._t.call(OPS.saveWorkflowDraft, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.saveWorkflowDraft, input, opts);
   }
   /**
    * Edit workflow code by exact string replacement
@@ -3779,7 +3779,7 @@ export class WorkflowsApi {
    * PATCH /v1/workflows/{id}/code
    */
   editWorkflowCode(input: T.EditWorkflowCodeInput, opts?: RequestOptions): Promise<T.EditWorkflowCodeOutput> {
-    return this._t.call(OPS.editWorkflowCode, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.editWorkflowCode, input, opts);
   }
   /**
    * Publish workflow
@@ -3787,7 +3787,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/publish
    */
   publishWorkflow(input: T.PublishWorkflowInput, opts?: RequestOptions): Promise<T.PublishWorkflowOutput> {
-    return this._t.call(OPS.publishWorkflow, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.publishWorkflow, input, opts);
   }
   /**
    * Roll back an environment deployment
@@ -3795,7 +3795,7 @@ export class WorkflowsApi {
    * POST /v1/workflows/{id}/rollback
    */
   rollbackWorkflowDeployment(input: T.RollbackWorkflowDeploymentInput, opts?: RequestOptions): Promise<T.RollbackWorkflowDeploymentOutput> {
-    return this._t.call(OPS.rollbackWorkflowDeployment, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.rollbackWorkflowDeployment, input, opts);
   }
   /**
    * List workflow deployments
@@ -3803,7 +3803,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/deployments
    */
   listWorkflowDeployments(input: T.ListWorkflowDeploymentsInput, opts?: RequestOptions): Promise<T.ListWorkflowDeploymentsOutput> {
-    return this._t.call(OPS.listWorkflowDeployments, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowDeployments, input, opts);
   }
   /**
    * List workflow promotions
@@ -3811,7 +3811,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/promotions
    */
   listWorkflowPromotions(input: T.ListWorkflowPromotionsInput, opts?: RequestOptions): Promise<T.ListWorkflowPromotionsOutput> {
-    return this._t.call(OPS.listWorkflowPromotions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowPromotions, input, opts);
   }
   /**
    * Cancel a pending promotion
@@ -3819,7 +3819,7 @@ export class WorkflowsApi {
    * DELETE /v1/workflows/{id}/promotions/{promotionId}
    */
   cancelWorkflowPromotion(input: T.CancelWorkflowPromotionInput, opts?: RequestOptions): Promise<T.CancelWorkflowPromotionOutput> {
-    return this._t.call(OPS.cancelWorkflowPromotion, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.cancelWorkflowPromotion, input, opts);
   }
   /**
    * List workflow versions
@@ -3827,7 +3827,7 @@ export class WorkflowsApi {
    * GET /v1/workflows/{id}/versions
    */
   listWorkflowVersions(input: T.ListWorkflowVersionsInput, opts?: RequestOptions): Promise<T.ListWorkflowVersionsOutput> {
-    return this._t.call(OPS.listWorkflowVersions, input as Record<string, unknown>, opts);
+    return this._t.call(OPS.listWorkflowVersions, input, opts);
   }
 }
 

@@ -12,6 +12,8 @@ import { buildPlan, type Step, type Ctx } from "./plan.js";
 const { OPS } = unstable;
 const env = (k: string, d?: string) => process.env[k] ?? d;
 const BASE = env("FASTN_BASE_URL", "https://api.fastn-test.dev")!;
+// Same guard as the live suites: this sweep creates and deletes real objects on whatever FASTN_BASE_URL names.
+if (/api\.fastn\.dev/.test(BASE) && process.env.LIVE_PROD !== "1") { console.error("FASTN_BASE_URL points at production; set LIVE_PROD=1 to sweep there"); process.exit(2); }
 const KEY = env("FASTN_API_KEY");
 if (!KEY) { console.error("FASTN_API_KEY is required"); process.exit(2); }
 const args = Object.fromEntries(process.argv.slice(2).filter((a) => a.startsWith("--")).map((a) => { const [k, v] = a.slice(2).split("="); return [k, v ?? "1"]; }));

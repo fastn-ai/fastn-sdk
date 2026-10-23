@@ -17,7 +17,7 @@ export function readEventHeaders(headers: Record<string, string | string[] | und
   const get = (name: string): string | undefined => {
     if (typeof (headers as Headers).get === "function") return (headers as Headers).get(name) ?? undefined;
     const bag = headers as Record<string, string | string[] | undefined>;
-    const v = bag[name] ?? bag[name.toLowerCase()] ?? bag[Object.keys(bag).find((k) => k.toLowerCase() === name.toLowerCase()) ?? ""];
+    const v = bag[name] ?? bag[Object.keys(bag).find((k) => k.toLowerCase() === name) ?? ""];
     return Array.isArray(v) ? v[0] : v;
   };
   return {
@@ -27,6 +27,8 @@ export function readEventHeaders(headers: Record<string, string | string[] | und
     redelivery: (get("x-fastn-redelivery") ?? "").toLowerCase() === "true",
   };
 }
+
+const isEventHeaders = (h: unknown): h is EventHeaders => typeof h === "object" && h !== null && typeof (h as EventHeaders).signature === "string" && typeof (h as EventHeaders).timestamp === "string";
 
 export function signEventBody(secret: string, timestamp: string | number, rawBody: string | Buffer): string {
   return "sha256=" + createHmac("sha256", secret).update(`${timestamp}.`).update(rawBody).digest("hex");
@@ -44,7 +46,7 @@ export interface VerifyOptions {
  * never a re-serialised object: any whitespace change breaks the HMAC.
  */
 export function verifyEventSignature(secret: string, headers: EventHeaders | Record<string, string | string[] | undefined> | Headers, rawBody: string | Buffer, opts: VerifyOptions = {}): boolean {
-  const h = "signature" in headers && "timestamp" in headers && typeof (headers as EventHeaders).signature === "string" ? (headers as EventHeaders) : readEventHeaders(headers as Record<string, string>);
+  const h = isEventHeaders(headers) ? headers : readEventHeaders(headers);
   if (!h.signature || !h.timestamp || !secret) return false;
   const tol = opts.toleranceSeconds ?? 300;
   if (tol > 0) {

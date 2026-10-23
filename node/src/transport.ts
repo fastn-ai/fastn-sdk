@@ -1,4 +1,5 @@
 import { FastnApiError, FastnNetworkError } from "./errors.js";
+import { RETRY_STATUS, errorInfo, mergeOptions, parseLoose, requestSignal, retryDelay, sleep, backoff } from "./http.js";
 
 export interface ParamDef { key: string; name: string; in: "path" | "query" | "header"; required?: boolean }
 export interface BodyDef {
@@ -11,6 +12,8 @@ export interface BodyDef {
   required?: boolean;
   /** fields: the spec allows extra body fields (additionalProperties); unknown input keys are sent as given. */
   open?: boolean;
+  /** fields: the input keys the spec marks required (recorded for the surface lock; the platform enforces them). */
+  requiredKeys?: string[];
   contentType: string;
 }
 export interface OpDef {
@@ -76,15 +79,15 @@ export interface RequestLog {
   opId: string; method: string; url: string; status: number; durationMs: number; attempt: number; requestId?: string; correlationId?: string;
 }
 
-const RETRY_STATUS = new Set([429, 502, 503, 504]);
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** Options the SDK turns into headers on every call; the same header set per operation by an input field wins. */
+const CROSS_HEADERS: [keyof RequestOptions, string][] = [["idempotencyKey", "idempotency-key"], ["correlationId", "x-fastn-correlation-id"], ["installationId", "x-installation-id"], ["targetOrg", "x-fastn-target-org"]];
 
 export class FetchTransport implements Transport {
   constructor(private readonly cfg: FetchTransportConfig) {}
 
   /** Builds the request without sending it. Exposed for tests and for debugging what the SDK sends. */
   prepare(op: OpDef, input: Record<string, unknown>, opts: RequestOptions = {}): { url: string; init: RequestInit & { headers: Record<string, string> } } {
-    const o = { ...this.cfg.defaultOptions, ...opts, headers: { ...this.cfg.defaultOptions?.headers, ...opts.headers } };
+    const o = mergeOptions(this.cfg.defaultOptions, opts);
     let path = op.path;
     const query = new URLSearchParams();
     const headers: Record<string, string> = { accept: "application/json", "x-api-key": this.cfg.apiKey };
@@ -103,8 +106,7 @@ export class FetchTransport implements Transport {
     }
     const missing = path.match(/\{[^}]+\}/g);
     if (missing) throw new TypeError(`${op.id}: path parameter ${missing.join(", ")} not filled`);
-    const cross: [keyof RequestOptions, string][] = [["idempotencyKey", "idempotency-key"], ["correlationId", "x-fastn-correlation-id"], ["installationId", "x-installation-id"], ["targetOrg", "x-fastn-target-org"]];
-    for (const [k, h] of cross) if (typeof o[k] === "string" && o[k] && headers[h] === undefined) headers[h] = o[k] as string;
+    for (const [k, h] of CROSS_HEADERS) if (typeof o[k] === "string" && o[k] && headers[h] === undefined) headers[h] = o[k] as string;
     if (o.customer) {
       if ("ref" in o.customer && o.customer.ref) headers["x-end-org-ref"] ??= o.customer.ref;
       else if ("id" in o.customer && o.customer.id) headers["x-end-org-id"] ??= o.customer.id;
@@ -159,34 +161,25 @@ export class FetchTransport implements Transport {
     for (let attempt = 0; ; attempt++) {
       const t0 = Date.now();
       let res: Response;
+      const { signal, release } = requestSignal(timeoutMs, opts.signal);
       try {
-        const signals = [AbortSignal.timeout(timeoutMs), ...(opts.signal ? [opts.signal] : [])];
-        res = await f(url, { ...init, signal: signals.length > 1 && "any" in AbortSignal ? (AbortSignal as any).any(signals) : signals[0] });
+        res = await f(url, { ...init, signal });
       } catch (err) {
         this.cfg.onRequest?.({ opId: op.id, method: op.method, url, status: 0, durationMs: Date.now() - t0, attempt, correlationId: init.headers["x-fastn-correlation-id"] });
         if (attempt < maxRetries && !opts.signal?.aborted) { await sleep(backoff(attempt)); continue; }
         throw new FastnNetworkError(`${op.method} ${op.path}: ${(err as Error)?.message ?? String(err)}`, op.method, op.path, err);
+      } finally {
+        release();
       }
       const requestId = res.headers.get("x-request-id") ?? undefined;
       this.cfg.onRequest?.({ opId: op.id, method: op.method, url, status: res.status, durationMs: Date.now() - t0, attempt, requestId, correlationId: init.headers["x-fastn-correlation-id"] });
       const text = await res.text();
-      let parsed: unknown = text;
-      const ct = res.headers.get("content-type") ?? "";
-      if (text && (ct.includes("json") || /^[\[{]/.test(text.trim()))) { try { parsed = JSON.parse(text); } catch { /* keep text */ } }
+      const parsed = parseLoose(text, res.headers.get("content-type") ?? "");
       if (res.ok) return text === "" ? undefined : parsed;
-      if (attempt < maxRetries && RETRY_STATUS.has(res.status)) {
-        const ra = Number(res.headers.get("retry-after"));
-        await sleep(Number.isFinite(ra) && ra > 0 ? Math.min(ra * 1000, 30_000) : backoff(attempt));
-        continue;
-      }
-      const e = (parsed as any)?.error;
-      const message = typeof e === "string" ? e : e?.message ?? (parsed as any)?.message ?? `HTTP ${res.status}`;
-      const code = typeof e === "object" && e ? e.code : (parsed as any)?.code;
-      throw new FastnApiError(`${op.method} ${op.path} -> ${res.status}${code ? ` ${code}` : ""}: ${message}`, res.status, code, e?.details, op.method, op.path, requestId, parsed);
+      if (attempt < maxRetries && RETRY_STATUS.has(res.status)) { await sleep(retryDelay(res, attempt)); continue; }
+      const info = errorInfo(parsed, `HTTP ${res.status}`);
+      const code = info.code === undefined ? undefined : String(info.code);
+      throw new FastnApiError(`${op.method} ${op.path} -> ${res.status}${code ? ` ${code}` : ""}: ${info.message}`, { status: res.status, code, details: info.details, method: op.method, path: op.path, requestId, body: parsed });
     }
   }
-}
-
-function backoff(attempt: number): number {
-  return Math.min(500 * 2 ** attempt, 8000) + Math.floor(Math.random() * 200);
 }

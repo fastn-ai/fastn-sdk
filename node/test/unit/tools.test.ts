@@ -1,18 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { FastnClient, ToolsClient, ToolError, FastnNetworkError, parseMessages } from "../../src/index.js";
 
-type Reply = { status?: number; body?: unknown; sse?: boolean } | Error;
-function mockFetch(replies: Reply[]) {
-  const calls: { url: string; init: any; json: any }[] = [];
-  const fetch = vi.fn(async (url: string, init: any) => {
-    calls.push({ url, init, json: JSON.parse(init.body) });
-    const r = replies.shift() ?? { body: { jsonrpc: "2.0", id: 1, result: {} } };
-    if (r instanceof Error) throw r;
-    const text = r.sse ? `event: message\ndata: ${JSON.stringify(r.body)}\n\n` : typeof r.body === "string" ? r.body : JSON.stringify(r.body);
-    return new Response(text, { status: r.status ?? 200, headers: { "content-type": r.sse ? "text/event-stream" : "application/json" } });
-  });
-  return { fetch: fetch as unknown as typeof globalThis.fetch, calls };
-}
+import { mockFetch as sharedMock, type Reply } from "../helpers.js";
+const mockFetch = (replies: Reply[]) => sharedMock(replies, { body: { jsonrpc: "2.0", id: 1, result: {} } });
 const rpcOk = (id: number, result: unknown) => ({ jsonrpc: "2.0", id, result });
 const toolOk = (id: number, text: string, isError = false) => rpcOk(id, { content: [{ type: "text", text }], isError });
 const ucl = (m: ReturnType<typeof mockFetch>, extra = {}) => new ToolsClient({ key: "ucl_test", url: "https://mcp.fastn.dev/acme", fetch: m.fetch, ...extra });

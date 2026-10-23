@@ -8,7 +8,7 @@
 //
 // Which tools exist is decided in the workspace, not here: turn a connector on in the workspace and it shows up in tools().
 import { FastnNetworkError } from "./errors.js";
-import { VERSION } from "./version.js";
+import { RETRY_STATUS, backoff, defaultUserAgent, errorInfo, mergeOptions, parseLoose, requestSignal, sleep } from "./http.js";
 
 export interface ToolsClientConfig {
   /** The workspace's key (connect.fastn.dev > Settings > API keys). Sent as Authorization: Bearer. */
@@ -34,8 +34,9 @@ export interface ToolCallOptions {
   timeoutMs?: number;
   signal?: AbortSignal;
   /**
-   * Retries for a gateway hiccup (HTTP 502/503/504, or a tool answer that is only "error code: 50x"). Default 0:
-   * the SDK cannot know whether a tool is safe to repeat, so turn this on for reads.
+   * Retries for a gateway hiccup (HTTP 429/502/503/504, or a tool answer that is only "error code: 50x"), with the
+   * same backoff as the REST client. Default 0: the SDK cannot know whether a tool is safe to repeat, so turn this on
+   * for reads.
    */
   retries?: number;
 }
@@ -122,10 +123,26 @@ export class ToolsClient {
     return out;
   }
 
-  /** The tools of one connector, e.g. tools for "googleCalendar". */
-  async toolsOf(connector: string, opts?: ToolCallOptions): Promise<Tool[]> {
+  /**
+   * The tools of one connector, e.g. tools for "googleCalendar". Pass `from` (a list from tools()) to filter without
+   * another listing; otherwise the list is fetched once and reused for `cacheMs` (default 60s) on this client.
+   */
+  async toolsOf(connector: string, opts: ToolCallOptions & { from?: Tool[]; cacheMs?: number } = {}): Promise<Tool[]> {
     const prefix = `${connector}__`;
-    return (await this.tools(opts)).filter((t) => t.name.startsWith(prefix));
+    const { from, cacheMs = 60_000, ...callOpts } = opts;
+    const list = from ?? await this.cachedTools(callOpts, cacheMs);
+    return list.filter((t) => t.name.startsWith(prefix));
+  }
+
+  private listCache?: { key: string; at: number; list: Promise<Tool[]> };
+  private cachedTools(opts: ToolCallOptions, cacheMs: number): Promise<Tool[]> {
+    const key = JSON.stringify([opts.customer?.ref ?? this.cfg.defaults?.customer?.ref, opts.userId ?? this.cfg.defaults?.userId]);
+    const c = this.listCache;
+    if (c && c.key === key && Date.now() - c.at < cacheMs) return c.list;
+    const list = this.tools(opts);
+    this.listCache = { key, at: Date.now(), list };
+    list.catch(() => { if (this.listCache?.list === list) this.listCache = undefined; });
+    return list;
   }
 
   /** Runs one tool by its listed name. Throws ToolError when the tool answers isError. */
@@ -137,7 +154,7 @@ export class ToolsClient {
         return await this.callOnce<T>(name, args, opts);
       } catch (e) {
         if (attempt >= retries || !isGatewayHiccup(e)) throw e;
-        await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
+        await sleep(backoff(attempt));
       }
     }
   }
@@ -151,42 +168,41 @@ export class ToolsClient {
       if (data && typeof data === "object" && (data as any).authRequired === true && typeof (data as any).authorizeUrl === "string") {
         throw new ToolError(`${name}: ${(data as any).connector ?? "the app"} is not connected for this customer; connect it at ${(data as any).authorizeUrl}`, "auth", 200, "AUTH_REQUIRED", name, data);
       }
-      throw new ToolError(summarize(data, text) || `${name} failed`, "tool", 200, undefined, name, data);
+      throw new ToolError(errorInfo(data, text).message || `${name} failed`, "tool", 200, undefined, name, data);
     }
     return { data, text, content, structuredContent: res?.structuredContent, isError: false };
   }
 
   /** A raw JSON-RPC call to the workspace; returns the `result`. Use for methods this class does not wrap. */
   async rpc(method: string, params: Record<string, unknown> = {}, opts: ToolCallOptions = {}, tool?: string): Promise<any> {
-    const o = { ...this.cfg.defaults, ...opts, headers: { ...this.cfg.defaults?.headers, ...opts.headers } };
+    const o = mergeOptions(this.cfg.defaults, opts);
     const id = this.nextId++;
     const headers: Record<string, string> = {
       authorization: `Bearer ${this.cfg.key}`,
       "content-type": "application/json",
       accept: "application/json, text/event-stream",
-      "user-agent": this.cfg.userAgent ?? `fastn-ai-sdk/${VERSION} node/${typeof process !== "undefined" ? process.versions?.node ?? "" : ""}`,
+      "user-agent": this.cfg.userAgent ?? defaultUserAgent(),
     };
     if (o.customer?.ref) headers["x-org-id"] = o.customer.ref;
     if (o.userId) headers["x-user-id"] = o.userId;
     for (const [k, v] of Object.entries(o.headers)) if (typeof v === "string") headers[k.toLowerCase()] = v;
 
-    const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(new Error("timeout")), o.timeoutMs ?? this.cfg.timeoutMs ?? 120_000);
-    if (o.signal) o.signal.addEventListener("abort", () => ac.abort(o.signal!.reason), { once: true });
+    const { signal, release } = requestSignal(o.timeoutMs ?? this.cfg.timeoutMs ?? 120_000, o.signal);
     let res: Response, raw: string;
     try {
-      res = await (this.cfg.fetch ?? globalThis.fetch)(this.url, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", id, method, params }), signal: ac.signal });
+      res = await (this.cfg.fetch ?? globalThis.fetch)(this.url, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", id, method, params }), signal });
       raw = await res.text();
     } catch (e) {
       throw new FastnNetworkError(`${method}${tool ? ` ${tool}` : ""}: ${(e as Error)?.message ?? String(e)}`, "POST", this.url, e);
     } finally {
-      clearTimeout(timer);
+      release();
     }
     const msgs = parseMessages(raw);
     const msg = msgs.find((m) => m && m.id === id) ?? msgs.find((m) => m && ("result" in m || "error" in m)) ?? msgs[0];
     if (!res.ok) {
       const body = msg ?? parseLoose(raw);
-      throw new ToolError(`${method}${tool ? ` ${tool}` : ""}: HTTP ${res.status} ${summarize(body, raw)}`.trim(), "http", res.status, errorCode(body), tool, body);
+      const info = errorInfo(body, raw);
+      throw new ToolError(`${method}${tool ? ` ${tool}` : ""}: HTTP ${res.status} ${info.message}`.trim(), "http", res.status, info.code, tool, body);
     }
     if (!msg) throw new ToolError(`${method}: the gateway answered without a JSON-RPC message`, "rpc", res.status, undefined, tool, raw);
     if (msg.error) throw new ToolError(`${method}${tool ? ` ${tool}` : ""}: ${msg.error.message ?? "error"}`, "rpc", res.status, msg.error.code, tool, msg.error);
@@ -194,10 +210,14 @@ export class ToolsClient {
   }
 }
 
-/** A failure that is the gateway's, not the tool's: worth one more try on a read. */
+/**
+ * A failure that is the gateway's, not the tool's: worth one more try on a read. HTTP 429/502/503/504, or a tool
+ * answer that is only "error code: 50x" (the gateway reports an upstream 5xx inside a successful result today;
+ * platform ticket KAT-8586 moves that to a real error, after which this text match can go).
+ */
 export function isGatewayHiccup(e: unknown): boolean {
   if (!(e instanceof ToolError)) return false;
-  if (e.kind === "http") return e.status === 502 || e.status === 503 || e.status === 504;
+  if (e.kind === "http") return RETRY_STATUS.has(e.status);
   return /^error code: 50[234]$/i.test(e.message.trim());
 }
 
@@ -219,23 +239,5 @@ export function parseMessages(raw: string): any[] {
   return out;
 }
 
-function parseLoose(text: string): any {
-  const s = text.trim();
-  if (!s) return text;
-  if (s.startsWith("{") || s.startsWith("[")) { try { return JSON.parse(s); } catch { return text; } }
-  return text;
-}
 
-function summarize(body: any, fallback: string): string {
-  if (body && typeof body === "object") {
-    const m = body.error?.message ?? body.message ?? body.error ?? body.detail;
-    if (typeof m === "string") return m;
-    return JSON.stringify(body).slice(0, 300);
-  }
-  return String(fallback ?? "").slice(0, 300);
-}
 
-function errorCode(body: any): string | number | undefined {
-  if (body && typeof body === "object") return body.error?.code ?? body.code;
-  return undefined;
-}

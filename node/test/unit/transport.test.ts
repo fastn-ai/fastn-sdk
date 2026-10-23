@@ -1,18 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { FastnClient, FastnApiError, FastnNetworkError, unstable } from "../../src/index.js";
 const { OPS } = unstable;
 
-function mockFetch(responses: Array<{ status?: number; body?: unknown; headers?: Record<string, string> } | Error>) {
-  const calls: { url: string; init: any }[] = [];
-  const fetch = vi.fn(async (url: string, init: any) => {
-    calls.push({ url, init });
-    const r = responses.shift() ?? { status: 200, body: { data: {} } };
-    if (r instanceof Error) throw r;
-    const text = r.body === undefined ? "" : typeof r.body === "string" ? r.body : JSON.stringify(r.body);
-    return new Response(r.status === 204 ? null : text, { status: r.status ?? 200, headers: { "content-type": "application/json", "x-request-id": "req_1", ...r.headers } });
-  });
-  return { fetch: fetch as unknown as typeof globalThis.fetch, calls };
-}
+import { mockFetch } from "../helpers.js";
 const client = (m: ReturnType<typeof mockFetch>, extra = {}) => new FastnClient({ apiKey: "k_test", fetch: m.fetch, retries: 2, ...extra });
 
 describe("request shape", () => {

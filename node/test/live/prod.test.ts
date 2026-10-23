@@ -2,23 +2,13 @@
 // FASTN_TEST_CUSTOMER is the ref of a customer org that has Google Calendar and HubSpot connected.
 // Creates: one meeting + one HubSpot contact/note in the e2e customer org, and one throw-away customer org; all removed at the end.
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import fs from "node:fs";
 import { FastnClient, FastnApiError, paginate } from "../../src/index.js";
+import { BASE_URL, guardProduction, LIVE_API, E2E, run, evidence, dataOf, dayFromNow, utc } from "./_shared.js";
 
-// Target: FASTN_BASE_URL, default https://api.fastn-test.dev (the development environment). Point it at
-// https://api.fastn.dev only with LIVE_PROD=1: the suite creates and deletes real customers, bookings and CRM records.
-const BASE_URL = process.env.FASTN_BASE_URL ?? "https://api.fastn-test.dev";
-if (/api\.fastn\.dev/.test(BASE_URL) && process.env.LIVE_PROD !== "1") throw new Error("FASTN_BASE_URL points at production; set LIVE_PROD=1 to run the live suite there");
-const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_API_KEY && !!process.env.FASTN_TEST_CUSTOMER;
-const d = describe.skipIf(!LIVE);
-const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
-const mask = (s: string) => s.replace(/(emb_|ucl_|fsk_[a-z]+_|whsec_|stp_tok_|sk_)[A-Za-z0-9_\-]{6,}/g, "$1***").replace(/[A-Za-z0-9_-]{48,}/g, "<tok>");
-const ev = (step: string, data: unknown) => fs.appendFileSync(EV, mask(JSON.stringify({ at: new Date().toISOString(), step, data })).slice(0, 2500) + "\n");
-const run = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-const E2E = process.env.FASTN_TEST_CUSTOMER ?? "";
-const day = new Date(Date.now() + 9 * 86400e3).toISOString().slice(0, 10);
-const utc = (rec: any) => { try { return new Date((rec?.data ?? rec).start_time).toISOString().slice(11, 16); } catch { return undefined; } };
-const dataOf = (r: any) => r?.data ?? r;
+guardProduction();
+const d = describe.skipIf(!LIVE_API);
+const ev = evidence();
+const day = dayFromNow(9);
 
 let fastn: FastnClient; const log: any[] = [];
 beforeAll(() => { fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY!, baseUrl: BASE_URL, onRequest: (i) => log.push(i) }); });

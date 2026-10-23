@@ -3,16 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { OPS } from "../../src/generated/ops.js";
 import { buildApis } from "../../src/generated/api.js";
+import { isHidden, lockInputs, breakingChanges, type LockEntry } from "../../scripts/surface.js";
 
 const specDir = path.resolve(__dirname, "../../spec");
 const specFile = fs.readdirSync(specDir).filter((f) => /^openapi-v.*\.json$/.test(f)).sort().at(-1)!;
 const spec = JSON.parse(fs.readFileSync(path.join(specDir, specFile), "utf8"));
 const METHODS = ["get", "put", "post", "delete", "patch", "head", "options", "trace"];
-
-// Same rule as scripts/generate.ts: platform-admin areas and backend-only routes are left out of the SDK.
-const HIDDEN_TAGS = new Set(["Admin", "Platform Config", "Platform", "Support"]);
-const PUBLIC_INTERNAL = new Set(["createEmbedToken", "getSetupLinkStatus"]);
-const isHidden = (op: any) => HIDDEN_TAGS.has(op.tags?.[0]) || (op["x-mcp"] === false && !PUBLIC_INTERNAL.has(op.operationId));
 
 describe("every partner-facing spec operation is in the SDK, nothing else", () => {
   const specOps: { id: string; method: string; path: string; tag: string }[] = [];
@@ -43,15 +39,31 @@ describe("every partner-facing spec operation is in the SDK, nothing else", () =
     const lock = JSON.parse(fs.readFileSync(path.join(specDir, "surface.lock.json"), "utf8"));
     expect(lock.spec).toBe(specFile);
     expect(Object.keys(lock.operations).sort()).toEqual(Object.keys(OPS).sort());
-    for (const [id, entry] of Object.entries<any>(lock.operations)) {
+    for (const [id, entry] of Object.entries<LockEntry>(lock.operations)) {
       const o = (OPS as any)[id];
       expect(`${o.method} ${o.path}`).toBe(`${entry.method} ${entry.path}`);
-      const inputs: Record<string, string> = {};
-      for (const p of o.params) inputs[p.key] = `${p.in}:${p.name}`;
-      if (o.body?.kind === "fields") for (const [k, n] of Object.entries(o.body.keys ?? {})) inputs[k] = `body:${n}`;
-      else if (o.body?.kind === "whole") inputs[o.body.key] = "body:*";
-      expect(inputs, id).toEqual(entry.inputs);
+      expect(lockInputs(o), id).toEqual(entry.inputs);
+      expect(entry.output, id).toMatch(/^[0-9a-f]{12}$/);
     }
+    // required-ness is recorded: a path parameter is always required, a required body field carries "!"
+    expect(lock.operations.getTenant.inputs.id).toBe("path:id!");
+    expect(lock.operations.createTenant.inputs.name).toBe("body:name!");
+    expect(lock.operations.createTenant.inputs.plan).toBe("body:plan");
+  });
+  it("the lock check catches removed, renamed, moved and newly required inputs and changed Output types", () => {
+    const was: Record<string, LockEntry> = {
+      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "query:q", opt: "body:opt" }, output: "aaaaaaaaaaaa" },
+      gone: { method: "GET", path: "/gone", inputs: {}, output: "bbbbbbbbbbbb" },
+    };
+    const now: Record<string, LockEntry> = {
+      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "header:q", opt: "body:opt!", extra: "query:extra", must: "body:must!" }, output: "cccccccccccc" },
+      added: { method: "POST", path: "/new", inputs: { x: "body:x!" }, output: "dddddddddddd" },
+    };
+    const b = breakingChanges(was, now);
+    expect(b.inputs).toEqual(['a: input "q" moved query:q -> header:q', 'a: input "opt" became required', 'a: new required input "must" (body:must!)', "gone: operation removed"]);
+    expect(b.outputs).toEqual(["a: Output type changed (aaaaaaaaaaaa -> cccccccccccc)"]);
+    // additive: a new optional input, a new operation, required -> optional
+    expect(breakingChanges({ a: { method: "GET", path: "/a", inputs: { id: "path:id!" }, output: "aaaaaaaaaaaa" } }, { a: { method: "GET", path: "/a", inputs: { id: "path:id", n: "query:n" }, output: "aaaaaaaaaaaa" }, b: now.added })).toEqual({ inputs: [], outputs: [] });
   });
   it("every path parameter has an input", () => {
     for (const o of Object.values(OPS)) for (const m of o.path.matchAll(/\{([^}]+)\}/g)) expect(o.params.some((p) => p.in === "path" && p.name === m[1]), `${o.id} ${m[1]}`).toBe(true);

@@ -4,29 +4,32 @@
   "listUnifiedCategories": {
    "method": "GET",
    "path": "/v1/unified/categories",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listUnifiedCalls": {
    "method": "GET",
    "path": "/v1/unified/calls",
    "inputs": {
-    "correlation_id": "query:correlation_id"
-   }
+    "correlation_id": "query:correlation_id!"
+   },
+   "output": "9d59bd447759"
   },
   "listUnifiedEntityProviders": {
    "method": "GET",
    "path": "/v1/unified/{category}/{entity}/providers",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity"
-   }
+    "category": "path:category!",
+    "entity": "path:entity!"
+   },
+   "output": "9d59bd447759"
   },
   "listUnifiedRecords": {
    "method": "GET",
    "path": "/v1/unified/{category}/{entity}",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
+    "category": "path:category!",
+    "entity": "path:entity!",
     "provider": "query:provider",
     "cursor": "query:cursor",
     "connection_id": "query:connection_id",
@@ -36,44 +39,47 @@
     "installationId": "header:x-installation-id",
     "endOrgId": "header:x-end-org-id",
     "endOrgRef": "header:x-end-org-ref"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createUnifiedRecord": {
    "method": "POST",
    "path": "/v1/unified/{category}/{entity}",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
+    "category": "path:category!",
+    "entity": "path:entity!",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
     "widget_id": "query:widget_id",
     "installationId": "header:x-installation-id",
     "endOrgId": "header:x-end-org-id",
     "endOrgRef": "header:x-end-org-ref",
-    "record": "body:*"
-   }
+    "record": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "searchUnifiedRecords": {
    "method": "POST",
    "path": "/v1/unified/{category}/{entity}/search",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
+    "category": "path:category!",
+    "entity": "path:entity!",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
     "page_size": "query:page_size",
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id",
-    "filters": "body:*"
-   }
+    "filters": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "getUnifiedRecord": {
    "method": "GET",
    "path": "/v1/unified/{category}/{entity}/{id}",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
-    "id": "path:id",
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
     "include_remote_data": "query:include_remote_data",
@@ -81,212 +87,235 @@
     "installationId": "header:x-installation-id",
     "endOrgId": "header:x-end-org-id",
     "endOrgRef": "header:x-end-org-ref"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteUnifiedRecord": {
    "method": "DELETE",
    "path": "/v1/unified/{category}/{entity}/{id}",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
-    "id": "path:id",
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateUnifiedRecord": {
    "method": "PATCH",
    "path": "/v1/unified/{category}/{entity}/{id}",
    "inputs": {
-    "category": "path:category",
-    "entity": "path:entity",
-    "id": "path:id",
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id",
-    "record": "body:*"
-   }
+    "record": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "loadUnifiedConfigFieldOptions": {
    "method": "POST",
    "path": "/v1/widgets/{widgetId}/unified-config/options",
    "inputs": {
-    "widgetId": "path:widgetId",
-    "entityId": "body:entityId",
-    "connectorSlug": "body:connectorSlug",
-    "fieldKey": "body:fieldKey",
+    "widgetId": "path:widgetId!",
+    "entityId": "body:entityId!",
+    "connectorSlug": "body:connectorSlug!",
+    "fieldKey": "body:fieldKey!",
     "params": "body:params",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId",
     "offset": "body:offset",
     "limit": "body:limit",
     "query": "body:query"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateInstallationUnifiedValues": {
    "method": "PUT",
    "path": "/v1/installations/{id}/unified-values",
    "inputs": {
-    "id": "path:id",
-    "unifiedValues": "body:unifiedValues"
-   }
+    "id": "path:id!",
+    "unifiedValues": "body:unifiedValues!"
+   },
+   "output": "9d59bd447759"
   },
   "getInstallationTriggers": {
    "method": "GET",
    "path": "/v1/installations/{id}/triggers",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "createInstallationTrigger": {
    "method": "POST",
    "path": "/v1/installations/{id}/triggers",
    "inputs": {
-    "id": "path:id",
-    "templateTriggerId": "body:templateTriggerId",
+    "id": "path:id!",
+    "templateTriggerId": "body:templateTriggerId!",
     "settings": "body:settings",
     "headers": "body:headers"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateInstallationTrigger": {
    "method": "PUT",
    "path": "/v1/installations/{id}/triggers/{triggerId}",
    "inputs": {
-    "id": "path:id",
-    "triggerId": "path:triggerId",
+    "id": "path:id!",
+    "triggerId": "path:triggerId!",
     "settings": "body:settings",
     "headers": "body:headers"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteInstallationTrigger": {
    "method": "DELETE",
    "path": "/v1/installations/{id}/triggers/{triggerId}",
    "inputs": {
-    "id": "path:id",
-    "triggerId": "path:triggerId"
-   }
+    "id": "path:id!",
+    "triggerId": "path:triggerId!"
+   },
+   "output": "9d59bd447759"
   },
   "listUnifiedCatalogCategories": {
    "method": "GET",
    "path": "/v1/unified-catalog/categories",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listUnifiedCatalogEntities": {
    "method": "GET",
    "path": "/v1/unified-catalog/entities",
    "inputs": {
     "category": "query:category"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getUnifiedCatalogEntity": {
    "method": "GET",
    "path": "/v1/unified-catalog/entities/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listUnifiedCustom": {
    "method": "GET",
    "path": "/v1/unified-custom",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "createUnifiedCustomEntity": {
    "method": "POST",
    "path": "/v1/unified-custom/entities",
    "inputs": {
-    "categoryId": "body:categoryId",
-    "slug": "body:slug",
-    "name": "body:name",
+    "categoryId": "body:categoryId!",
+    "slug": "body:slug!",
+    "name": "body:name!",
     "description": "body:description",
     "schema": "body:schema",
     "fromEntityId": "body:fromEntityId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateUnifiedCustomEntity": {
    "method": "PUT",
    "path": "/v1/unified-custom/entities/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description",
     "schema": "body:schema"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteUnifiedCustomEntity": {
    "method": "DELETE",
    "path": "/v1/unified-custom/entities/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "createUnifiedCustomMapping": {
    "method": "POST",
    "path": "/v1/unified-custom/entities/{id}/mappings",
    "inputs": {
-    "id": "path:id",
-    "connectorSlug": "body:connectorSlug",
+    "id": "path:id!",
+    "connectorSlug": "body:connectorSlug!",
     "enabled": "body:enabled",
     "events": "body:events",
     "operations": "body:operations",
     "fieldMappings": "body:fieldMappings",
     "enrichActions": "body:enrichActions",
     "conditions": "body:conditions"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateUnifiedCustomMapping": {
    "method": "PUT",
    "path": "/v1/unified-custom/mappings/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "enabled": "body:enabled",
     "events": "body:events",
     "operations": "body:operations",
     "fieldMappings": "body:fieldMappings",
     "enrichActions": "body:enrichActions",
     "conditions": "body:conditions"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteUnifiedCustomMapping": {
    "method": "DELETE",
    "path": "/v1/unified-custom/mappings/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "upsertUnifiedExtension": {
    "method": "PUT",
    "path": "/v1/unified-custom/extensions/{entityId}",
    "inputs": {
-    "entityId": "path:entityId",
+    "entityId": "path:entityId!",
     "schema": "body:schema",
     "connectorOverrides": "body:connectorOverrides"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteUnifiedExtension": {
    "method": "DELETE",
    "path": "/v1/unified-custom/extensions/{entityId}",
    "inputs": {
-    "entityId": "path:entityId"
-   }
+    "entityId": "path:entityId!"
+   },
+   "output": "9d59bd447759"
   },
   "testUnifiedCustomEntity": {
    "method": "POST",
    "path": "/v1/unified-custom/entities/{id}/test",
    "inputs": {
-    "id": "path:id",
-    "op": "body:op",
-    "provider": "body:provider",
+    "id": "path:id!",
+    "op": "body:op!",
+    "provider": "body:provider!",
     "connectionId": "body:connectionId",
     "params": "body:params"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getProfile": {
    "method": "GET",
    "path": "/v1/profile",
-   "inputs": {}
+   "inputs": {},
+   "output": "0c94a487e1db"
   },
   "updateProfile": {
    "method": "PUT",
@@ -296,17 +325,20 @@
     "lastName": "body:lastName",
     "jobTitle": "body:jobTitle",
     "timezone": "body:timezone"
-   }
+   },
+   "output": "5be8131e0d3c"
   },
   "getProfileSecurity": {
    "method": "GET",
    "path": "/v1/profile/security",
-   "inputs": {}
+   "inputs": {},
+   "output": "e5423e3b0b90"
   },
   "getMyMemberships": {
    "method": "GET",
    "path": "/v1/users/me/memberships",
-   "inputs": {}
+   "inputs": {},
+   "output": "ec01801dd4ea"
   },
   "listUsers": {
    "method": "GET",
@@ -316,62 +348,70 @@
     "offset": "query:offset",
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "919b333f47ed"
   },
   "inviteUser": {
    "method": "POST",
    "path": "/v1/users/invite",
    "inputs": {
-    "email": "body:email",
+    "email": "body:email!",
     "firstName": "body:firstName",
     "lastName": "body:lastName",
     "role": "body:role",
     "orgId": "body:orgId",
     "endOrgId": "body:endOrgId",
     "expiresAt": "body:expiresAt"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getUser": {
    "method": "GET",
    "path": "/v1/users/{userId}",
    "inputs": {
-    "userId": "path:userId"
-   }
+    "userId": "path:userId!"
+   },
+   "output": "9d59bd447759"
   },
   "removeUser": {
    "method": "DELETE",
    "path": "/v1/users/{userId}",
    "inputs": {
-    "userId": "path:userId"
-   }
+    "userId": "path:userId!"
+   },
+   "output": "9d59bd447759"
   },
   "updateUserRole": {
    "method": "PUT",
    "path": "/v1/users/{userId}/role",
    "inputs": {
-    "userId": "path:userId",
-    "role": "body:role",
+    "userId": "path:userId!",
+    "role": "body:role!",
     "orgId": "body:orgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listPendingUsers": {
    "method": "GET",
    "path": "/v1/users/pending",
-   "inputs": {}
+   "inputs": {},
+   "output": "60a64442752a"
   },
   "approvePendingUser": {
    "method": "POST",
    "path": "/v1/users/memberships/{id}/approve",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "rejectPendingUser": {
    "method": "POST",
    "path": "/v1/users/memberships/{id}/reject",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listOrgs": {
    "method": "GET",
@@ -381,13 +421,14 @@
     "tier": "query:tier",
     "parent_id": "query:parent_id",
     "include_usage": "query:include_usage"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createTenant": {
    "method": "POST",
    "path": "/v1/orgs",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "orgId": "body:orgId",
     "external_ref": "body:external_ref",
     "externalRef": "body:externalRef",
@@ -400,20 +441,22 @@
     "domain": "body:domain",
     "ownerEmail": "body:ownerEmail",
     "owner_email": "body:owner_email"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getTenant": {
    "method": "GET",
    "path": "/v1/orgs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateTenant": {
    "method": "PUT",
    "path": "/v1/orgs/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "plan": "body:plan",
     "status": "body:status",
@@ -421,46 +464,52 @@
     "adminUserId": "body:adminUserId",
     "external_ref": "body:external_ref",
     "externalRef": "body:externalRef"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteTenant": {
    "method": "DELETE",
    "path": "/v1/orgs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getOrgConfig": {
    "method": "GET",
    "path": "/v1/orgs/{id}/config",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateOrgConfig": {
    "method": "PUT",
    "path": "/v1/orgs/{id}/config",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "orgName": "body:orgName"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAccountSettings": {
    "method": "GET",
    "path": "/v1/orgs/{id}/settings",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAccountSettings": {
    "method": "PUT",
    "path": "/v1/orgs/{id}/settings",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "domain": "body:domain",
     "autoApproveDomain": "body:autoApproveDomain",
     "defaultMemberRole": "body:defaultMemberRole"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectors": {
    "method": "GET",
@@ -479,20 +528,21 @@
     "limit": "query:limit",
     "offset": "query:offset",
     "cursor": "query:cursor"
-   }
+   },
+   "output": "0b5127b92894"
   },
   "createConnector": {
    "method": "POST",
    "path": "/v1/connectors",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "slug": "body:slug",
     "description": "body:description",
     "icon": "body:icon",
     "domain": "body:domain",
     "visibility": "body:visibility",
     "ownerLevel": "body:ownerLevel",
-    "authMethods": "body:authMethods",
+    "authMethods": "body:authMethods!",
     "labels": "body:labels",
     "category": "body:category",
     "isMultiConnection": "body:isMultiConnection",
@@ -506,7 +556,8 @@
     "ftpConnectionConfig": "body:ftpConnectionConfig",
     "redisConnectionConfig": "body:redisConnectionConfig",
     "connectionVerifyActionId": "body:connectionVerifyActionId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorRequests": {
    "method": "GET",
@@ -515,39 +566,43 @@
     "status": "query:status",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "7982c183dbeb"
   },
   "createConnectorRequest": {
    "method": "POST",
    "path": "/v1/connector-requests",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "websiteUrl": "body:websiteUrl",
     "useCase": "body:useCase",
     "note": "body:note",
     "source": "body:source"
-   }
+   },
+   "output": "fabc8cb21417"
   },
   "updateConnectorRequest": {
    "method": "PATCH",
    "path": "/v1/connector-requests/{id}",
    "inputs": {
-    "id": "path:id",
-    "status": "body:status"
-   }
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnector": {
    "method": "GET",
    "path": "/v1/connectors/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateConnector": {
    "method": "PUT",
    "path": "/v1/connectors/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "version": "body:version",
     "description": "body:description",
@@ -575,37 +630,42 @@
     "generateKeyPair": "body:generateKeyPair",
     "connectionVerifyActionId": "body:connectionVerifyActionId",
     "verifySuccessPath": "body:verifySuccessPath"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConnector": {
    "method": "DELETE",
    "path": "/v1/connectors/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "hard": "query:hard"
-   }
+   },
+   "output": "4ce639c77305"
   },
   "restoreConnector": {
    "method": "POST",
    "path": "/v1/connectors/{id}/restore",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "5cb59ac8d103"
   },
   "restoreAction": {
    "method": "POST",
    "path": "/v1/actions/{id}/restore",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "activateConnector": {
    "method": "POST",
    "path": "/v1/connectors/{id}/activate",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "body:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnections": {
    "method": "GET",
@@ -619,7 +679,8 @@
     "groupBy": "query:groupBy",
     "includePartnerPool": "query:includePartnerPool",
     "allOrgs": "query:allOrgs"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "storeConnections": {
    "method": "POST",
@@ -628,10 +689,10 @@
     "headerOrgId": "header:x-org-id",
     "headerUserId": "header:x-user-id",
     "identityHmac": "header:x-identity-hmac",
-    "connectorId": "body:connectorId",
-    "authMethodId": "body:authMethodId",
+    "connectorId": "body:connectorId!",
+    "authMethodId": "body:authMethodId!",
     "authType": "body:authType",
-    "credentials": "body:credentials",
+    "credentials": "body:credentials!",
     "name": "body:name",
     "expiresAt": "body:expiresAt",
     "userId": "body:userId",
@@ -641,63 +702,71 @@
     "orgId": "body:orgId",
     "authProvider": "body:authProvider",
     "connectionScope": "body:connectionScope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConnection": {
    "method": "GET",
    "path": "/v1/connections/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateConnection": {
    "method": "PUT",
    "path": "/v1/connections/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "credentials": "body:credentials",
     "authType": "body:authType",
     "expiresAt": "body:expiresAt",
     "isDefault": "body:isDefault",
     "connectionScope": "body:connectionScope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConnections": {
    "method": "DELETE",
    "path": "/v1/connections/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listSaasConnectors": {
    "method": "GET",
    "path": "/v1/saas-connectors",
-   "inputs": {}
+   "inputs": {},
+   "output": "a65358f6f3ec"
   },
   "listSaasConnectorConnections": {
    "method": "GET",
    "path": "/v1/saas-connectors/{connectorId}/connections",
    "inputs": {
-    "connectorId": "path:connectorId",
+    "connectorId": "path:connectorId!",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "346d08290a87"
   },
   "upsertSaasConnector": {
    "method": "PUT",
    "path": "/v1/saas-connectors/{connectorId}",
    "inputs": {
-    "connectorId": "path:connectorId",
-    "scopes": "body:scopes"
-   }
+    "connectorId": "path:connectorId!",
+    "scopes": "body:scopes!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteSaasConnector": {
    "method": "DELETE",
    "path": "/v1/saas-connectors/{connectorId}",
    "inputs": {
-    "connectorId": "path:connectorId"
-   }
+    "connectorId": "path:connectorId!"
+   },
+   "output": "9d59bd447759"
   },
   "listAppEventTriggers": {
    "method": "GET",
@@ -710,39 +779,42 @@
     "connectorId": "query:connectorId",
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createAppEventTrigger": {
    "method": "POST",
    "path": "/v1/app-triggers",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "status": "body:status",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId",
-    "connectorId": "body:connectorId",
-    "connectorName": "body:connectorName",
+    "connectorId": "body:connectorId!",
+    "connectorName": "body:connectorName!",
     "type": "body:type",
-    "events": "body:events",
+    "events": "body:events!",
     "routes": "body:routes",
     "dlqConfiguration": "body:dlqConfiguration",
     "additionalConfig": "body:additionalConfig",
     "accountId": "body:accountId",
     "connectionId": "body:connectionId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAppEventTrigger": {
    "method": "GET",
    "path": "/v1/app-triggers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAppEventTrigger": {
    "method": "PUT",
    "path": "/v1/app-triggers/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "status": "body:status",
     "events": "body:events",
@@ -750,28 +822,32 @@
     "dlqConfiguration": "body:dlqConfiguration",
     "additionalConfig": "body:additionalConfig",
     "accountId": "body:accountId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteAppEventTrigger": {
    "method": "DELETE",
    "path": "/v1/app-triggers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "retryTriggerSubscription": {
    "method": "POST",
    "path": "/v1/app-triggers/{id}/retry-subscription",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "triggerSchedulerNow": {
    "method": "POST",
    "path": "/v1/schedulers/{id}/trigger",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getTriggersMonitoring": {
    "method": "GET",
@@ -784,47 +860,53 @@
     "limit": "query:limit",
     "order": "query:order",
     "cursor": "query:cursor"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getTriggerMonitoring": {
    "method": "GET",
    "path": "/v1/triggers/{id}/monitoring",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "dlqLimit": "query:dlqLimit",
     "dlqCursor": "query:dlqCursor"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getTriggerOutcomes": {
    "method": "GET",
    "path": "/v1/triggers/{id}/outcomes",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "days": "query:days"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setTriggerStatus": {
    "method": "PATCH",
    "path": "/v1/triggers/{id}/status",
    "inputs": {
-    "id": "path:id",
-    "status": "body:status"
-   }
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": "9d59bd447759"
   },
   "setTriggerReporting": {
    "method": "PUT",
    "path": "/v1/triggers/{id}/reporting",
    "inputs": {
-    "id": "path:id",
-    "countOnlyField": "body:countOnlyField"
-   }
+    "id": "path:id!",
+    "countOnlyField": "body:countOnlyField!"
+   },
+   "output": "9d59bd447759"
   },
   "resetCircuitBreaker": {
    "method": "POST",
    "path": "/v1/triggers/{id}/circuit-breaker/reset",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listDlq": {
    "method": "GET",
@@ -833,14 +915,16 @@
     "limit": "query:limit",
     "cursor": "query:cursor",
     "triggerId": "query:triggerId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "replayDlqEntry": {
    "method": "POST",
    "path": "/v1/dlq/{id}/replay",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listEvents": {
    "method": "GET",
@@ -857,7 +941,8 @@
     "outcome": "query:outcome",
     "until": "query:until",
     "customer": "query:customer"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "eventCounts": {
    "method": "GET",
@@ -871,7 +956,8 @@
     "outcome": "query:outcome",
     "until": "query:until",
     "customer": "query:customer"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "countEvents": {
    "method": "GET",
@@ -882,28 +968,32 @@
     "type": "query:type",
     "env": "query:env",
     "search": "query:search"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getEvent": {
    "method": "GET",
    "path": "/v1/events/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getEventAttempts": {
    "method": "GET",
    "path": "/v1/events/{id}/attempts",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "replayEvent": {
    "method": "POST",
    "path": "/v1/events/{id}/replay",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflows": {
    "method": "GET",
@@ -920,17 +1010,18 @@
     "search": "query:search",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "58763738da53"
   },
   "createWorkflow": {
    "method": "POST",
    "path": "/v1/workflows",
    "inputs": {
     "categoryId": "body:categoryId",
-    "slug": "body:slug",
-    "name": "body:name",
+    "slug": "body:slug!",
+    "name": "body:name!",
     "description": "body:description",
-    "code": "body:code",
+    "code": "body:code!",
     "inputSchema": "body:inputSchema",
     "outputSchema": "body:outputSchema",
     "inputExample": "body:inputExample",
@@ -945,79 +1036,89 @@
     "testInput": "body:testInput",
     "testHeaders": "body:testHeaders",
     "connectorManifest": "body:connectorManifest"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowCategories": {
    "method": "GET",
    "path": "/v1/workflow-categories",
-   "inputs": {}
+   "inputs": {},
+   "output": "e2c1ae0ab062"
   },
   "createWorkflowCategory": {
    "method": "POST",
    "path": "/v1/workflow-categories",
    "inputs": {
-    "name": "body:name",
-    "colour": "body:colour"
-   }
+    "name": "body:name!",
+    "colour": "body:colour!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteWorkflowCategory": {
    "method": "DELETE",
    "path": "/v1/workflow-categories/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateWorkflowCategory": {
    "method": "PATCH",
    "path": "/v1/workflow-categories/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "colour": "body:colour"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowLabels": {
    "method": "GET",
    "path": "/v1/workflow-labels",
-   "inputs": {}
+   "inputs": {},
+   "output": "70248946acd3"
   },
   "createWorkflowLabel": {
    "method": "POST",
    "path": "/v1/workflow-labels",
    "inputs": {
-    "name": "body:name",
-    "colour": "body:colour"
-   }
+    "name": "body:name!",
+    "colour": "body:colour!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteWorkflowLabel": {
    "method": "DELETE",
    "path": "/v1/workflow-labels/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateWorkflowLabel": {
    "method": "PATCH",
    "path": "/v1/workflow-labels/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "colour": "body:colour"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setWorkflowLabels": {
    "method": "PUT",
    "path": "/v1/workflows/{id}/labels",
    "inputs": {
-    "id": "path:id",
-    "labelIds": "body:labelIds"
-   }
+    "id": "path:id!",
+    "labelIds": "body:labelIds!"
+   },
+   "output": "9d59bd447759"
   },
   "runWorkflowCode": {
    "method": "POST",
    "path": "/v1/workflows/test",
    "inputs": {
-    "code": "body:code",
+    "code": "body:code!",
     "input": "body:input",
     "headers": "body:headers",
     "mockMode": "body:mockMode",
@@ -1026,19 +1127,21 @@
     "timeoutMs": "body:timeoutMs",
     "workflowId": "body:workflowId",
     "verification": "body:verification"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "testSavedWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/test",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "input": "body:input",
     "headers": "body:headers",
     "mockMode": "body:mockMode",
     "partialMock": "body:partialMock",
     "mockScenarios": "body:mockScenarios"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowStateKeys": {
    "method": "GET",
@@ -1046,27 +1149,30 @@
    "inputs": {
     "prefix": "query:prefix",
     "limit": "query:limit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowTables": {
    "method": "GET",
    "path": "/v1/workflows/tables",
    "inputs": {
     "tableName": "query:tableName"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getWorkflow": {
    "method": "GET",
    "path": "/v1/workflows/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateWorkflow": {
    "method": "PUT",
    "path": "/v1/workflows/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "categoryId": "body:categoryId",
     "name": "body:name",
     "description": "body:description",
@@ -1086,86 +1192,96 @@
     "testInput": "body:testInput",
     "testHeaders": "body:testHeaders",
     "connectorManifest": "body:connectorManifest"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteWorkflow": {
    "method": "DELETE",
    "path": "/v1/workflows/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "permanent": "query:permanent"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "restoreWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/restore",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "ab3d95be837f"
   },
   "getWorkflowConnectorManifest": {
    "method": "GET",
    "path": "/v1/workflows/{id}/manifest",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "d450146026c9"
   },
   "setWorkflowConnectorScope": {
    "method": "PATCH",
    "path": "/v1/workflows/{id}/manifest/{slug}",
    "inputs": {
-    "id": "path:id",
-    "slug": "path:slug",
+    "id": "path:id!",
+    "slug": "path:slug!",
     "scope": "body:scope",
     "connectionId": "body:connectionId",
     "retryPolicy": "body:retryPolicy",
     "timeoutMs": "body:timeoutMs",
     "actions": "body:actions"
-   }
+   },
+   "output": "e5eb88aaf3d8"
   },
   "getWorkflowDocs": {
    "method": "GET",
    "path": "/v1/workflows/{id}/docs",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "audience": "query:audience",
     "format": "query:format"
-   }
+   },
+   "output": "efacde27f099"
   },
   "listWorkflowDocVersions": {
    "method": "GET",
    "path": "/v1/workflows/{id}/docs/history",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "audience": "query:audience",
     "kind": "query:kind",
     "limit": "query:limit"
-   }
+   },
+   "output": "6788528ec1a0"
   },
   "getWorkflowDocVersion": {
    "method": "GET",
    "path": "/v1/workflows/{id}/docs/history/{versionId}",
    "inputs": {
-    "id": "path:id",
-    "versionId": "path:versionId"
-   }
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": "9d59bd447759"
   },
   "generateWorkflowDocs": {
    "method": "POST",
    "path": "/v1/workflows/{id}/generate-docs",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "audience": "body:audience"
-   }
+   },
+   "output": "31f6fe2d8164"
   },
   "executeWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/execute",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "fastnEnv": "header:x-fastn-env",
     "input": "body:input"
-   }
+   },
+   "output": "799ba53d5322"
   },
   "listWorkflowExecutions": {
    "method": "GET",
@@ -1184,7 +1300,8 @@
     "search": "query:search",
     "searchIn": "query:searchIn",
     "sort": "query:sort"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "searchExecutionLogs": {
    "method": "GET",
@@ -1197,52 +1314,58 @@
     "dateTo": "query:dateTo",
     "since": "query:since",
     "limit": "query:limit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listExecutions": {
    "method": "GET",
    "path": "/v1/workflows/{id}/executions",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "limit": "query:limit",
     "offset": "query:offset",
     "status": "query:status",
     "status_code": "query:status_code"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getWorkflowExecution": {
    "method": "GET",
    "path": "/v1/workflows/{id}/executions/{executionId}",
    "inputs": {
-    "id": "path:id",
-    "executionId": "path:executionId"
-   }
+    "id": "path:id!",
+    "executionId": "path:executionId!"
+   },
+   "output": "9d59bd447759"
   },
   "cancelWorkflowExecution": {
    "method": "DELETE",
    "path": "/v1/workflows/{id}/executions/{executionId}",
    "inputs": {
-    "id": "path:id",
-    "executionId": "path:executionId"
-   }
+    "id": "path:id!",
+    "executionId": "path:executionId!"
+   },
+   "output": "9d59bd447759"
   },
   "getExecutionLogs": {
    "method": "GET",
    "path": "/v1/workflows/{id}/executions/{executionId}/logs",
    "inputs": {
-    "id": "path:id",
-    "executionId": "path:executionId",
+    "id": "path:id!",
+    "executionId": "path:executionId!",
     "limit": "query:limit"
-   }
+   },
+   "output": "5831626be45f"
   },
   "replayExecution": {
    "method": "POST",
    "path": "/v1/workflows/{id}/executions/{executionId}/replay",
    "inputs": {
-    "id": "path:id",
-    "executionId": "path:executionId",
+    "id": "path:id!",
+    "executionId": "path:executionId!",
     "env": "query:env"
-   }
+   },
+   "output": "db7a67ffbc81"
   },
   "listWorkflowDiffReports": {
    "method": "GET",
@@ -1253,109 +1376,123 @@
     "workflow_id": "query:workflow_id",
     "limit": "query:limit",
     "before": "query:before"
-   }
+   },
+   "output": "76cadd3b6d42"
   },
   "listEnvironments": {
    "method": "GET",
    "path": "/v1/environments",
-   "inputs": {}
+   "inputs": {},
+   "output": "aa031a427ebb"
   },
   "createEnvironment": {
    "method": "POST",
    "path": "/v1/environments",
    "inputs": {
-    "name": "body:name",
-    "slug": "body:slug"
-   }
+    "name": "body:name!",
+    "slug": "body:slug!"
+   },
+   "output": "3da31a4852ff"
   },
   "deleteEnvironment": {
    "method": "DELETE",
    "path": "/v1/environments/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "setEnvironmentReviewRequirement": {
    "method": "PATCH",
    "path": "/v1/environments/{id}",
    "inputs": {
-    "id": "path:id",
-    "requiresReview": "body:requiresReview"
-   }
+    "id": "path:id!",
+    "requiresReview": "body:requiresReview!"
+   },
+   "output": "3da31a4852ff"
   },
   "getWorkflowVersion": {
    "method": "GET",
    "path": "/v1/workflows/{id}/versions/{versionId}",
    "inputs": {
-    "id": "path:id",
-    "versionId": "path:versionId"
-   }
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": "cb1581b8884e"
   },
   "deployWorkflowVersion": {
    "method": "POST",
    "path": "/v1/workflows/{id}/deploy",
    "inputs": {
-    "id": "path:id",
-    "env_id": "body:env_id",
-    "version_id": "body:version_id"
-   }
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "version_id": "body:version_id!"
+   },
+   "output": "b9c15a83e37a"
   },
   "promoteWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/promote",
    "inputs": {
-    "id": "path:id",
-    "env_id": "body:env_id",
-    "version_id": "body:version_id",
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "version_id": "body:version_id!",
     "message": "body:message"
-   }
+   },
+   "output": "0496af454186"
   },
   "listSyncJobs": {
    "method": "GET",
    "path": "/v1/sync/jobs",
-   "inputs": {}
+   "inputs": {},
+   "output": "6af5a1c9028c"
   },
   "createSyncJob": {
    "method": "POST",
    "path": "/v1/sync/jobs",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "entity": "body:entity",
+    "connectorId": "body:connectorId!",
+    "entity": "body:entity!",
     "direction": "body:direction"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getSyncJob": {
    "method": "GET",
    "path": "/v1/sync/jobs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteSyncJob": {
    "method": "DELETE",
    "path": "/v1/sync/jobs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "triggerSync": {
    "method": "POST",
    "path": "/v1/sync/jobs/{id}/trigger",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "executeRequest": {
    "method": "POST",
    "path": "/v1/execute",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "path": "body:path",
+    "connectorId": "body:connectorId!",
+    "path": "body:path!",
     "method": "body:method",
     "headers": "body:headers",
     "body": "body:body",
     "connectionId": "body:connectionId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorExecutions": {
    "method": "GET",
@@ -1367,82 +1504,91 @@
     "userId": "query:userId",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorExecution": {
    "method": "GET",
    "path": "/v1/executions/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "agentListOrchestratorSessions": {
    "method": "GET",
    "path": "/v1/agent/orchestrator/sessions",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "agentCreateOrchestratorSession": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/sessions",
    "inputs": {
     "title": "body:title"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentGetOrchestratorMessages": {
    "method": "GET",
    "path": "/v1/agent/orchestrator/sessions/{id}/messages",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "agentUploadOrchestratorAttachment": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/sessions/{id}/attachments",
    "inputs": {
-    "id": "path:id",
-    "mediaType": "body:mediaType",
-    "base64": "body:base64",
+    "id": "path:id!",
+    "mediaType": "body:mediaType!",
+    "base64": "body:base64!",
     "filename": "body:filename",
     "width": "body:width",
     "height": "body:height"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentGetOrchestratorAttachment": {
    "method": "GET",
    "path": "/v1/agent/orchestrator/sessions/{id}/attachments/{attachmentId}",
    "inputs": {
-    "id": "path:id",
-    "attachmentId": "path:attachmentId"
-   }
+    "id": "path:id!",
+    "attachmentId": "path:attachmentId!"
+   },
+   "output": "9d59bd447759"
   },
   "agentOrchestratorStream": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/stream",
    "inputs": {
-    "threadId": "body:threadId",
-    "messages": "body:messages",
+    "threadId": "body:threadId!",
+    "messages": "body:messages!",
     "trigger": "body:trigger",
     "messageId": "body:messageId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentErrorDiagnosis": {
    "method": "POST",
    "path": "/v1/agent/error-diagnosis",
    "inputs": {
-    "error": "body:error",
+    "error": "body:error!",
     "errorCategory": "body:errorCategory",
     "errorSummary": "body:errorSummary",
     "workflowCode": "body:workflowCode",
     "inputData": "body:inputData",
     "trace": "body:trace",
     "stack": "body:stack"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentGenerateWorkflowDocs": {
    "method": "POST",
    "path": "/v1/agent/workflow/generate-docs",
    "inputs": {
-    "code": "body:code",
+    "code": "body:code!",
     "name": "body:name",
     "slug": "body:slug",
     "description": "body:description",
@@ -1454,7 +1600,8 @@
     "outputSchema": "body:outputSchema",
     "inputExample": "body:inputExample",
     "connectorActions": "body:connectorActions"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listTraces": {
    "method": "GET",
@@ -1462,28 +1609,31 @@
    "inputs": {
     "connectorId": "query:connectorId",
     "status": "query:status"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getTrace": {
    "method": "GET",
    "path": "/v1/traces/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAlerts": {
    "method": "GET",
    "path": "/v1/alerts",
    "inputs": {
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "bf7f94310a6b"
   },
   "createAlert": {
    "method": "POST",
    "path": "/v1/alerts",
    "inputs": {
     "endOrgId": "query:endOrgId",
-    "name": "body:name",
+    "name": "body:name!",
     "mode": "body:mode",
     "metric": "body:metric",
     "condition": "body:condition",
@@ -1493,7 +1643,8 @@
     "deliveries": "body:deliveries",
     "enabled": "body:enabled",
     "throttle": "body:throttle"
-   }
+   },
+   "output": "2a89b68a5444"
   },
   "enableDefaultAlerts": {
    "method": "POST",
@@ -1501,13 +1652,14 @@
    "inputs": {
     "endOrgId": "query:endOrgId",
     "email": "body:email"
-   }
+   },
+   "output": "0e07154a9fdd"
   },
   "updateAlert": {
    "method": "PUT",
    "path": "/v1/alerts/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "name": "body:name",
     "mode": "body:mode",
@@ -1519,15 +1671,17 @@
     "deliveries": "body:deliveries",
     "enabled": "body:enabled",
     "throttle": "body:throttle"
-   }
+   },
+   "output": "2a89b68a5444"
   },
   "deleteAlert": {
    "method": "DELETE",
    "path": "/v1/alerts/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listAuditLog": {
    "method": "GET",
@@ -1543,24 +1697,28 @@
     "to": "query:to",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "c626b33c6caa"
   },
   "listAuditLogActions": {
    "method": "GET",
    "path": "/v1/audit-log/actions",
-   "inputs": {}
+   "inputs": {},
+   "output": "073e637b4c4b"
   },
   "listPlans": {
    "method": "GET",
    "path": "/v1/plans",
-   "inputs": {}
+   "inputs": {},
+   "output": "e27a50e95da0"
   },
   "getPlan": {
    "method": "GET",
    "path": "/v1/plans/{tier}",
    "inputs": {
-    "tier": "path:tier"
-   }
+    "tier": "path:tier!"
+   },
+   "output": "9d59bd447759"
   },
   "getUsage": {
    "method": "GET",
@@ -1569,7 +1727,8 @@
     "end_org_id": "query:end_org_id",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setQuotaLimit": {
    "method": "PUT",
@@ -1577,17 +1736,19 @@
    "inputs": {
     "orgId": "body:orgId",
     "endOrgId": "body:endOrgId",
-    "limits": "body:limits"
-   }
+    "limits": "body:limits!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteQuotaLimit": {
    "method": "DELETE",
    "path": "/v1/quotas/limits",
    "inputs": {
-    "dimension": "body:dimension",
+    "dimension": "body:dimension!",
     "orgId": "body:orgId",
     "endOrgId": "body:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getQuotaUsage": {
    "method": "GET",
@@ -1595,42 +1756,47 @@
    "inputs": {
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listApiKeys": {
    "method": "GET",
    "path": "/v1/api-keys",
    "inputs": {
     "mode": "query:mode"
-   }
+   },
+   "output": "da8c6cfa7b11"
   },
   "getApiKey": {
    "method": "GET",
    "path": "/v1/api-keys/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateApiKey": {
    "method": "PUT",
    "path": "/v1/api-keys/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "permissions": "body:permissions",
     "ipWhitelist": "body:ipWhitelist",
     "rateLimit": "body:rateLimit",
     "expiresAt": "body:expiresAt",
     "allowedOrigins": "body:allowedOrigins"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "revokeApiKey": {
    "method": "DELETE",
    "path": "/v1/api-keys/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "permanent": "query:permanent"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getThrottle": {
    "method": "GET",
@@ -1638,13 +1804,14 @@
    "inputs": {
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateThrottle": {
    "method": "PUT",
    "path": "/v1/throttle",
    "inputs": {
-    "resource": "body:resource",
+    "resource": "body:resource!",
     "orgId": "body:orgId",
     "endOrgId": "body:endOrgId",
     "maxPerSecond": "body:maxPerSecond",
@@ -1652,7 +1819,8 @@
     "maxPerHour": "body:maxPerHour",
     "maxConcurrent": "body:maxConcurrent",
     "burstLimit": "body:burstLimit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createEmbedToken": {
    "method": "POST",
@@ -1671,125 +1839,141 @@
     "roleOverride": "body:roleOverride",
     "role": "body:role",
     "metadata": "body:metadata"
-   }
+   },
+   "output": "8a19a3cbd34c"
   },
   "createSetupLink": {
    "method": "POST",
    "path": "/v1/setup-links",
    "inputs": {
-    "widgetId": "body:widgetId",
+    "widgetId": "body:widgetId!",
     "endOrgId": "body:endOrgId",
     "useCallerOrg": "body:useCallerOrg",
     "label": "body:label",
-    "connectionName": "body:connectionName",
+    "connectionName": "body:connectionName!",
     "externalRef": "body:externalRef",
     "createIfMissing": "body:createIfMissing",
     "expiresInMinutes": "body:expiresInMinutes",
     "allowAdditionalConnection": "body:allowAdditionalConnection",
     "metadata": "body:metadata",
     "redirectUrl": "body:redirectUrl"
-   }
+   },
+   "output": "37b76b3ab49d"
   },
   "getSetupLink": {
    "method": "GET",
    "path": "/v1/setup-links/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "fb6f894ec327"
   },
   "cancelSetupLink": {
    "method": "DELETE",
    "path": "/v1/setup-links/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "79c673cbe30e"
   },
   "completeSetupLink": {
    "method": "POST",
    "path": "/v1/setup-links/{id}/complete",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "connections": "body:connections",
     "config": "body:config"
-   }
+   },
+   "output": "22d60093a595"
   },
   "listSystemGrants": {
    "method": "GET",
    "path": "/v1/grants/system",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listGrants": {
    "method": "GET",
    "path": "/v1/grants",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "createGrant": {
    "method": "POST",
    "path": "/v1/grants",
    "inputs": {
-    "body": "body:*"
-   }
+    "body": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "updateGrant": {
    "method": "PUT",
    "path": "/v1/grants/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteGrant": {
    "method": "DELETE",
    "path": "/v1/grants/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "trackActivity": {
    "method": "POST",
    "path": "/v1/activity/track",
    "inputs": {
-    "event": "body:event",
+    "event": "body:event!",
     "source": "body:source",
     "sessionId": "body:sessionId",
     "userAgent": "body:userAgent"
-   }
+   },
+   "output": "8f2ef3384ccf"
   },
   "trackPageActivity": {
    "method": "POST",
    "path": "/v1/activity/page",
    "inputs": {
-    "page": "body:page",
+    "page": "body:page!",
     "referrer": "body:referrer"
-   }
+   },
+   "output": "8f2ef3384ccf"
   },
   "getMyActivity": {
    "method": "GET",
    "path": "/v1/activity/me",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "getOnboardingStatus": {
    "method": "GET",
    "path": "/v1/onboarding/status",
-   "inputs": {}
+   "inputs": {},
+   "output": "1b52a72ef8a6"
   },
   "getOnboarding": {
    "method": "GET",
    "path": "/v1/onboarding",
-   "inputs": {}
+   "inputs": {},
+   "output": "12f7b01868a0"
   },
   "submitOnboarding": {
    "method": "POST",
    "path": "/v1/onboarding",
    "inputs": {
-    "heardFrom": "body:heardFrom",
-    "jobRole": "body:jobRole",
+    "heardFrom": "body:heardFrom!",
+    "jobRole": "body:jobRole!",
     "companyName": "body:companyName",
     "useCase": "body:useCase",
     "useCaseCategory": "body:useCaseCategory",
     "classification": "body:classification",
     "needsReview": "body:needsReview",
     "enrichment": "body:enrichment"
-   }
+   },
+   "output": "acdbeb463fc9"
   },
   "updateOnboarding": {
    "method": "PATCH",
@@ -1802,70 +1986,79 @@
     "useCaseCategory": "body:useCaseCategory",
     "currentStep": "body:currentStep",
     "chatHistory": "body:chatHistory"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setOnboardingAgentDomain": {
    "method": "POST",
    "path": "/v1/onboarding/agent-domain",
    "inputs": {
-    "domain": "body:domain"
-   }
+    "domain": "body:domain!"
+   },
+   "output": "acdbeb463fc9"
   },
   "clearOnboardingAgentDomain": {
    "method": "DELETE",
    "path": "/v1/onboarding/agent-domain",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "getHubSettings": {
    "method": "GET",
    "path": "/v1/hub-settings",
-   "inputs": {}
+   "inputs": {},
+   "output": "9bedacbde9df"
   },
   "updateHubSettings": {
    "method": "PUT",
    "path": "/v1/hub-settings",
    "inputs": {
-    "config": "body:config",
+    "config": "body:config!",
     "baseUpdatedAt": "body:baseUpdatedAt"
-   }
+   },
+   "output": "e5423e3b0b90"
   },
   "listSecrets": {
    "method": "GET",
    "path": "/v1/secrets",
    "inputs": {
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "3dd19ce7a359"
   },
   "createSecret": {
    "method": "POST",
    "path": "/v1/secrets",
    "inputs": {
-    "name": "body:name",
-    "value": "body:value",
+    "name": "body:name!",
+    "value": "body:value!",
     "type": "body:type",
     "endOrgId": "body:endOrgId",
     "environment": "body:environment"
-   }
+   },
+   "output": "48a488d7c6c0"
   },
   "updateSecret": {
    "method": "PUT",
    "path": "/v1/secrets/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "end_org_id": "query:end_org_id",
     "environment": "query:environment",
-    "value": "body:value",
+    "value": "body:value!",
     "type": "body:type"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteSecret": {
    "method": "DELETE",
    "path": "/v1/secrets/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "end_org_id": "query:end_org_id",
     "environment": "query:environment"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWidgets": {
    "method": "GET",
@@ -1873,13 +2066,14 @@
    "inputs": {
     "include": "query:include",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "be83c63a6020"
   },
   "createWidget": {
    "method": "POST",
    "path": "/v1/widgets",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "description": "body:description",
     "connector_ids": "body:connector_ids",
     "connector_refs": "body:connector_refs",
@@ -1899,7 +2093,8 @@
     "activation_mode": "body:activation_mode",
     "enabled": "body:enabled",
     "allowed_end_org_ids": "body:allowed_end_org_ids"
-   }
+   },
+   "output": "a9cda95af320"
   },
   "getWidgetInsights": {
    "method": "GET",
@@ -1911,7 +2106,8 @@
     "to": "query:to",
     "tz": "query:tz",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getTenantInsights": {
    "method": "GET",
@@ -1929,105 +2125,117 @@
     "to": "query:to",
     "health": "query:health",
     "customer": "query:customer"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getLiveTenantInsights": {
    "method": "GET",
    "path": "/v1/widgets/insights/tenants/live",
    "inputs": {
     "customer": "query:customer"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkIntegration": {
    "method": "POST",
    "path": "/v1/integrations/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "name": "body:name"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkWidget": {
    "method": "POST",
    "path": "/v1/widgets/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "name": "body:name"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setWidgetActiveVersion": {
    "method": "PUT",
    "path": "/v1/widgets/{id}/active-version",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
-    "activeWidgetId": "body:activeWidgetId"
-   }
+    "activeWidgetId": "body:activeWidgetId!"
+   },
+   "output": "9d59bd447759"
   },
   "getForkLineage": {
    "method": "GET",
    "path": "/v1/forks/lineage",
    "inputs": {
-    "ids": "query:ids",
+    "ids": "query:ids!",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "name": "body:name"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkTrigger": {
    "method": "POST",
    "path": "/v1/triggers/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "name": "body:name"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkConfig": {
    "method": "POST",
    "path": "/v1/configs/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId",
     "widgetId": "body:widgetId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "forkConnector": {
    "method": "POST",
    "path": "/v1/connectors/{id}/fork",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getWidgetEmbedStatus": {
    "method": "GET",
    "path": "/v1/widgets/embed-status",
    "inputs": {
     "widgetId": "query:widgetId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getWidget": {
    "method": "GET",
    "path": "/v1/widgets/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "include": "query:include"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateWidget": {
    "method": "PUT",
    "path": "/v1/widgets/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description",
     "connector_ids": "body:connector_ids",
@@ -2048,21 +2256,23 @@
     "activation_mode": "body:activation_mode",
     "enabled": "body:enabled",
     "allowed_end_org_ids": "body:allowed_end_org_ids"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteWidget": {
    "method": "DELETE",
    "path": "/v1/widgets/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConfigFieldOptions": {
    "method": "POST",
    "path": "/v1/configs/{id}/options",
    "inputs": {
-    "id": "path:id",
-    "fieldId": "query:fieldId",
+    "id": "path:id!",
+    "fieldId": "query:fieldId!",
     "side": "query:side",
     "installationId": "query:installationId",
     "data": "body:data",
@@ -2070,140 +2280,158 @@
     "limit": "body:limit",
     "cursor": "body:cursor",
     "query": "body:query"
-   }
+   },
+   "output": "ca017d67b8ca"
   },
   "listConfigEntries": {
    "method": "GET",
    "path": "/v1/configs/{id}/entries",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "17e0515a8020"
   },
   "createConfigEntry": {
    "method": "POST",
    "path": "/v1/configs/{id}/entries",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "entityId": "body:entityId",
     "bodyId": "body:id",
     "connectorId": "body:connectorId",
     "values": "body:values"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConfigEntry": {
    "method": "GET",
    "path": "/v1/configs/{id}/entries/{entryId}",
    "inputs": {
-    "id": "path:id",
-    "entryId": "path:entryId",
+    "id": "path:id!",
+    "entryId": "path:entryId!",
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateConfigEntry": {
    "method": "PUT",
    "path": "/v1/configs/{id}/entries/{entryId}",
    "inputs": {
-    "id": "path:id",
-    "entryId": "path:entryId",
+    "id": "path:id!",
+    "entryId": "path:entryId!",
     "connectorId": "query:connectorId",
     "entityId": "body:entityId",
     "bodyId": "body:id",
     "bodyConnectorId": "body:connectorId",
     "values": "body:values"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConfigEntry": {
    "method": "DELETE",
    "path": "/v1/configs/{id}/entries/{entryId}",
    "inputs": {
-    "id": "path:id",
-    "entryId": "path:entryId",
+    "id": "path:id!",
+    "entryId": "path:entryId!",
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listRoles": {
    "method": "GET",
    "path": "/v1/roles",
-   "inputs": {}
+   "inputs": {},
+   "output": "bf3a271a02c7"
   },
   "createRole": {
    "method": "POST",
    "path": "/v1/roles",
    "inputs": {
-    "name": "body:name",
+    "name": "body:name!",
     "description": "body:description",
-    "permissions": "body:permissions",
+    "permissions": "body:permissions!",
     "baseRole": "body:baseRole"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getRole": {
    "method": "GET",
    "path": "/v1/roles/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateRole": {
    "method": "PUT",
    "path": "/v1/roles/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description",
     "permissions": "body:permissions",
     "baseRole": "body:baseRole"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteRole": {
    "method": "DELETE",
    "path": "/v1/roles/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "whoami": {
    "method": "GET",
    "path": "/v1/me",
-   "inputs": {}
+   "inputs": {},
+   "output": "8bdfb2176808"
   },
   "getMyEntitlements": {
    "method": "GET",
    "path": "/v1/me/entitlements",
-   "inputs": {}
+   "inputs": {},
+   "output": "18103a0ebcf5"
   },
   "getMyOrgDomain": {
    "method": "GET",
    "path": "/v1/me/org-domain",
-   "inputs": {}
+   "inputs": {},
+   "output": "c284a3bf0ef0"
   },
   "getMySuggestions": {
    "method": "GET",
    "path": "/v1/me/suggestions",
-   "inputs": {}
+   "inputs": {},
+   "output": "6bd80c7988b5"
   },
   "getMyPlanChangeRequest": {
    "method": "GET",
    "path": "/v1/plan-change-requests/me",
-   "inputs": {}
+   "inputs": {},
+   "output": "e88f24472992"
   },
   "refreshConnection": {
    "method": "POST",
    "path": "/v1/connections/{id}/refresh",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorVersion": {
    "method": "GET",
    "path": "/v1/connectors/{id}/versions/{versionId}",
    "inputs": {
-    "id": "path:id",
-    "versionId": "path:versionId"
-   }
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorVersionPins": {
    "method": "GET",
@@ -2211,45 +2439,50 @@
    "inputs": {
     "connectorSlug": "query:connectorSlug",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "upsertConnectorVersionPin": {
    "method": "POST",
    "path": "/v1/connector-version-pins",
    "inputs": {
-    "connectorSlug": "body:connectorSlug",
-    "endOrgId": "body:endOrgId",
+    "connectorSlug": "body:connectorSlug!",
+    "endOrgId": "body:endOrgId!",
     "externalVersion": "body:externalVersion",
     "apiVersion": "body:apiVersion",
     "versionMajor": "body:versionMajor"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConnectorVersionPin": {
    "method": "DELETE",
    "path": "/v1/connector-version-pins/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorVersionUsage": {
    "method": "GET",
    "path": "/v1/connectors/{id}/version-usage",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "externalVersion": "query:externalVersion"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getActionVersionDiff": {
    "method": "GET",
    "path": "/v1/connectors/{id}/actions/{actionSlug}/version-diff",
    "inputs": {
-    "id": "path:id",
-    "actionSlug": "path:actionSlug",
+    "id": "path:id!",
+    "actionSlug": "path:actionSlug!",
     "from": "query:from",
     "to": "query:to",
     "fromMajor": "query:fromMajor",
     "toMajor": "query:toMajor"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorHealth": {
    "method": "GET",
@@ -2258,7 +2491,8 @@
     "connectorSlug": "query:connectorSlug",
     "status": "query:status",
     "atRisk": "query:atRisk"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorChanges": {
    "method": "GET",
@@ -2268,29 +2502,33 @@
     "connectorSlug": "query:connectorSlug",
     "openOnly": "query:openOnly",
     "limit": "query:limit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorChangeConsumers": {
    "method": "GET",
    "path": "/v1/connector-changes/{id}/consumers",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "setConnectorChangeStatus": {
    "method": "PUT",
    "path": "/v1/connector-changes/{id}/status",
    "inputs": {
-    "id": "path:id",
-    "status": "body:status"
-   }
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": "9d59bd447759"
   },
   "proposeConnectorChangeFix": {
    "method": "POST",
    "path": "/v1/connector-changes/{id}/propose",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorUpdateProposals": {
    "method": "GET",
@@ -2302,74 +2540,84 @@
     "connectorSlug": "query:connectorSlug",
     "changeEventId": "query:changeEventId",
     "limit": "query:limit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorUpdateProposal": {
    "method": "GET",
    "path": "/v1/connector-update-proposals/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "scope": "query:scope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "decideConnectorUpdateProposalItem": {
    "method": "PUT",
    "path": "/v1/connector-update-proposals/{id}/items/{itemId}",
    "inputs": {
-    "id": "path:id",
-    "itemId": "path:itemId",
-    "decision": "body:decision",
+    "id": "path:id!",
+    "itemId": "path:itemId!",
+    "decision": "body:decision!",
     "note": "body:note",
     "overrideReason": "body:overrideReason"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "applyConnectorUpdateProposal": {
    "method": "POST",
    "path": "/v1/connector-update-proposals/{id}/apply",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "runConnectorUpdateAgent": {
    "method": "POST",
    "path": "/v1/connector-update-proposals/{id}/agent-run",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "scanConnectorStaleness": {
    "method": "POST",
    "path": "/v1/connector-staleness/scan",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listConnectorStaleness": {
    "method": "GET",
    "path": "/v1/connector-staleness",
    "inputs": {
     "status": "query:status"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setConnectorStalenessStatus": {
    "method": "PUT",
    "path": "/v1/connector-staleness/{id}/status",
    "inputs": {
-    "id": "path:id",
-    "status": "body:status"
-   }
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": "9d59bd447759"
   },
   "getPlatformProviderBySlug": {
    "method": "GET",
    "path": "/v1/platform-providers/by-slug/{platformSlug}",
    "inputs": {
-    "platformSlug": "path:platformSlug"
-   }
+    "platformSlug": "path:platformSlug!"
+   },
+   "output": "9d59bd447759"
   },
   "getPlatformProvider": {
    "method": "GET",
    "path": "/v1/platform-providers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAuthProviders": {
    "method": "GET",
@@ -2379,14 +2627,15 @@
     "includeDeleted": "query:includeDeleted",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createAuthProvider": {
    "method": "POST",
    "path": "/v1/auth-providers",
    "inputs": {
     "connectorId": "body:connectorId",
-    "name": "body:name",
+    "name": "body:name!",
     "slug": "body:slug",
     "description": "body:description",
     "clientId": "body:clientId",
@@ -2400,20 +2649,22 @@
     "isDefault": "body:isDefault",
     "platformProviderId": "body:platformProviderId",
     "pkce": "body:pkce"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAuthProvider": {
    "method": "GET",
    "path": "/v1/auth-providers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAuthProvider": {
    "method": "PUT",
    "path": "/v1/auth-providers/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description",
     "clientId": "body:clientId",
@@ -2426,21 +2677,24 @@
     "scopeConfig": "body:scopeConfig",
     "oauthVariables": "body:oauthVariables",
     "isDefault": "body:isDefault"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteAuthProvider": {
    "method": "DELETE",
    "path": "/v1/auth-providers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAuthProviderScopes": {
    "method": "GET",
    "path": "/v1/auth-providers/{id}/scopes",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAuthMethods": {
    "method": "GET",
@@ -2449,34 +2703,37 @@
     "connectorId": "query:connectorId",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createAuthMethod": {
    "method": "POST",
    "path": "/v1/auth-methods",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "type": "body:type",
-    "title": "body:title",
+    "connectorId": "body:connectorId!",
+    "type": "body:type!",
+    "title": "body:title!",
     "isDefault": "body:isDefault",
     "inputContract": "body:inputContract",
     "authConfig": "body:authConfig",
     "authProviderId": "body:authProviderId",
     "docsUrl": "body:docsUrl"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAuthMethod": {
    "method": "GET",
    "path": "/v1/auth-methods/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAuthMethod": {
    "method": "PUT",
    "path": "/v1/auth-methods/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "bodyId": "body:id",
     "type": "body:type",
     "title": "body:title",
@@ -2485,14 +2742,16 @@
     "authConfig": "body:authConfig",
     "authProviderId": "body:authProviderId",
     "docsUrl": "body:docsUrl"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteAuthMethod": {
    "method": "DELETE",
    "path": "/v1/auth-methods/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorEntities": {
    "method": "GET",
@@ -2501,54 +2760,61 @@
     "connectorId": "query:connectorId",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createConnectorEntity": {
    "method": "POST",
    "path": "/v1/entities",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "name": "body:name",
-    "slug": "body:slug",
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
+    "slug": "body:slug!",
     "description": "body:description"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorEntity": {
    "method": "GET",
    "path": "/v1/entities/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateConnectorEntity": {
    "method": "PUT",
    "path": "/v1/entities/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConnectorEntity": {
    "method": "DELETE",
    "path": "/v1/entities/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorEntities": {
    "method": "GET",
    "path": "/v1/connectors/{id}/entities",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorMethods": {
    "method": "GET",
    "path": "/v1/connectors/{id}/methods",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listActions": {
    "method": "GET",
@@ -2563,17 +2829,18 @@
     "deleted": "query:deleted",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createAction": {
    "method": "POST",
    "path": "/v1/actions",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "name": "body:name",
-    "slug": "body:slug",
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
+    "slug": "body:slug!",
     "description": "body:description",
-    "type": "body:type",
+    "type": "body:type!",
     "method": "body:method",
     "path": "body:path",
     "headers": "body:headers",
@@ -2598,22 +2865,24 @@
     "isDefaultExternalVersion": "body:isDefaultExternalVersion",
     "versionMajor": "body:versionMajor",
     "submissionNote": "body:submissionNote"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAction": {
    "method": "GET",
    "path": "/v1/actions/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAction": {
    "method": "PUT",
    "path": "/v1/actions/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
-    "description": "body:description",
+    "description": "body:description!",
     "authMethodId": "body:authMethodId",
     "authConfig": "body:authConfig",
     "inputContract": "body:inputContract",
@@ -2636,35 +2905,38 @@
     "deprecated": "body:deprecated",
     "sunsetAt": "body:sunsetAt",
     "successorActionId": "body:successorActionId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteAction": {
    "method": "DELETE",
    "path": "/v1/actions/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "hard": "query:hard"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createActionVersion": {
    "method": "POST",
    "path": "/v1/actions/{id}/new-version",
    "inputs": {
-    "id": "path:id",
-    "bump": "body:bump",
+    "id": "path:id!",
+    "bump": "body:bump!",
     "externalVersion": "body:externalVersion",
     "makeDefault": "body:makeDefault",
     "deprecatePrevious": "body:deprecatePrevious",
     "sunsetAt": "body:sunsetAt"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "proposeActionUpdate": {
    "method": "POST",
    "path": "/v1/actions/{id}/propose-update",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
-    "description": "body:description",
+    "description": "body:description!",
     "authMethodId": "body:authMethodId",
     "authConfig": "body:authConfig",
     "inputContract": "body:inputContract",
@@ -2679,74 +2951,82 @@
     "code": "body:code",
     "rateLimit": "body:rateLimit",
     "submissionNote": "body:submissionNote"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getActionReview": {
    "method": "GET",
    "path": "/v1/actions/{id}/review",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "createActionReviewComment": {
    "method": "POST",
    "path": "/v1/actions/{id}/review/comments",
    "inputs": {
-    "id": "path:id",
-    "body": "body:body"
-   }
+    "id": "path:id!",
+    "body": "body:body!"
+   },
+   "output": "9d59bd447759"
   },
   "setActionTestResult": {
    "method": "PATCH",
    "path": "/v1/actions/{id}/test-result",
    "inputs": {
-    "id": "path:id",
-    "testStatus": "body:testStatus",
+    "id": "path:id!",
+    "testStatus": "body:testStatus!",
     "lastTestEvidence": "body:lastTestEvidence"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "saveActionMockStub": {
    "method": "POST",
    "path": "/v1/actions/{id}/mock-stub",
    "inputs": {
-    "id": "path:id",
-    "connectorId": "body:connectorId",
+    "id": "path:id!",
+    "connectorId": "body:connectorId!",
     "method": "body:method",
     "requestBody": "body:requestBody",
-    "responseStatus": "body:responseStatus",
+    "responseStatus": "body:responseStatus!",
     "responseBody": "body:responseBody"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listActionVersions": {
    "method": "GET",
    "path": "/v1/actions/{id}/versions",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getActionVersion": {
    "method": "GET",
    "path": "/v1/actions/{id}/versions/{versionId}",
    "inputs": {
-    "id": "path:id",
-    "versionId": "path:versionId"
-   }
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": "9d59bd447759"
   },
   "promoteAction": {
    "method": "POST",
    "path": "/v1/actions/{id}/promote",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "initiateOauthConnection": {
    "method": "POST",
    "path": "/v1/oauth/initiate",
    "inputs": {
-    "connectorId": "body:connectorId",
+    "connectorId": "body:connectorId!",
     "authMethodId": "body:authMethodId",
     "authProviderId": "body:authProviderId",
-    "connectionName": "body:connectionName",
+    "connectionName": "body:connectionName!",
     "connectionId": "body:connectionId",
     "setupLinkId": "body:setupLinkId",
     "scopes": "body:scopes",
@@ -2757,14 +3037,16 @@
     "endOrgId": "body:endOrgId",
     "source": "body:source",
     "connectionScope": "body:connectionScope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "syncMcpTools": {
    "method": "POST",
    "path": "/v1/connectors/{id}/sync-mcp-tools",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listWebhookConfigConnectors": {
    "method": "GET",
@@ -2774,23 +3056,25 @@
     "search": "query:search",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWebhookConfigs": {
    "method": "GET",
    "path": "/v1/connectors/{id}/webhook-config",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createWebhookConfig": {
    "method": "POST",
    "path": "/v1/connectors/{id}/webhook-config",
    "inputs": {
-    "id": "path:id",
-    "type": "body:type",
+    "id": "path:id!",
+    "type": "body:type!",
     "subscription": "body:subscription",
     "unsubscription": "body:unsubscription",
     "resubscription": "body:resubscription",
@@ -2804,20 +3088,22 @@
     "enabled": "body:enabled",
     "endOrgRouting": "body:endOrgRouting",
     "requireApiKey": "body:requireApiKey"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getWebhookConfig": {
    "method": "GET",
    "path": "/v1/webhook-configs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateWebhookConfig": {
    "method": "PUT",
    "path": "/v1/webhook-configs/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "type": "body:type",
     "subscription": "body:subscription",
     "unsubscription": "body:unsubscription",
@@ -2834,24 +3120,27 @@
     "enabled": "body:enabled",
     "endOrgRouting": "body:endOrgRouting",
     "requireApiKey": "body:requireApiKey"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteWebhookConfig": {
    "method": "DELETE",
    "path": "/v1/webhook-configs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "executeWebhookSubscription": {
    "method": "POST",
    "path": "/v1/webhook-configs/{id}/execute-subscription",
    "inputs": {
-    "id": "path:id",
-    "eventId": "body:eventId",
-    "webhookUrl": "body:webhookUrl",
+    "id": "path:id!",
+    "eventId": "body:eventId!",
+    "webhookUrl": "body:webhookUrl!",
     "additionalInputs": "body:additionalInputs"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "importConnectors": {
    "method": "POST",
@@ -2865,50 +3154,56 @@
     "slug": "body:slug",
     "name": "body:name",
     "ownerLevel": "body:ownerLevel"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "setDefaultConnection": {
    "method": "PATCH",
    "path": "/v1/connections/{id}/default",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectionByName": {
    "method": "GET",
    "path": "/v1/connections/by-name/{connectorId}/{name}",
    "inputs": {
-    "connectorId": "path:connectorId",
-    "name": "path:name"
-   }
+    "connectorId": "path:connectorId!",
+    "name": "path:name!"
+   },
+   "output": "9d59bd447759"
   },
   "batchDeleteActions": {
    "method": "POST",
    "path": "/v1/actions/batch-delete",
    "inputs": {
     "hard": "query:hard",
-    "ids": "body:ids"
-   }
+    "ids": "body:ids!"
+   },
+   "output": "9d59bd447759"
   },
   "exportActions": {
    "method": "GET",
    "path": "/v1/actions/export",
    "inputs": {
-    "connectorId": "query:connectorId"
-   }
+    "connectorId": "query:connectorId!"
+   },
+   "output": "9d59bd447759"
   },
   "exportAction": {
    "method": "GET",
    "path": "/v1/actions/{id}/export",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "importActions": {
    "method": "POST",
    "path": "/v1/actions/import",
    "inputs": {
-    "connectorId": "body:connectorId",
+    "connectorId": "body:connectorId!",
     "url": "body:url",
     "content": "body:content",
     "format": "body:format",
@@ -2916,58 +3211,65 @@
     "conflictResolution": "body:conflictResolution",
     "preview": "body:preview",
     "selectedSlugs": "body:selectedSlugs"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "mockAction": {
    "method": "POST",
    "path": "/v1/actions/{id}/mock",
    "inputs": {
-    "id": "path:id",
-    "body": "body:*"
-   }
+    "id": "path:id!",
+    "body": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorVersions": {
    "method": "GET",
    "path": "/v1/connectors/{id}/versions",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "stage": "query:stage",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "promoteConnector": {
    "method": "POST",
    "path": "/v1/connectors/{id}/promote",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "stage": "body:stage",
     "commit": "body:commit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "publishConnectorVersion": {
    "method": "POST",
    "path": "/v1/connectors/{id}/publish-version",
    "inputs": {
-    "id": "path:id",
-    "versionId": "body:versionId",
+    "id": "path:id!",
+    "versionId": "body:versionId!",
     "commit": "body:commit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "revertConnector": {
    "method": "POST",
    "path": "/v1/connectors/{id}/revert",
    "inputs": {
-    "id": "path:id",
-    "versionId": "body:versionId"
-   }
+    "id": "path:id!",
+    "versionId": "body:versionId!"
+   },
+   "output": "9d59bd447759"
   },
   "revokeEmbedShareLink": {
    "method": "DELETE",
    "path": "/v1/embed/share-links/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listConfigs": {
    "method": "GET",
@@ -2975,7 +3277,8 @@
    "inputs": {
     "widget_id": "query:widget_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createConfig": {
    "method": "POST",
@@ -2988,92 +3291,102 @@
     "installation_id": "body:installation_id",
     "config": "body:config",
     "plan": "body:plan"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConfig": {
    "method": "GET",
    "path": "/v1/configs/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateConfig": {
    "method": "PUT",
    "path": "/v1/configs/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "widget_id": "body:widget_id",
     "end_org_id": "body:end_org_id",
     "template_config_id": "body:template_config_id",
     "config": "body:config",
     "plan": "body:plan",
     "baseUpdatedAt": "body:baseUpdatedAt"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteConfig": {
    "method": "DELETE",
    "path": "/v1/configs/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "force": "query:force"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateConfigDecisions": {
    "method": "PATCH",
    "path": "/v1/configs/{id}/decisions",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "decisions": "body:decisions",
     "matching": "body:matching"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "upgradeConfig": {
    "method": "POST",
    "path": "/v1/configs/{id}/upgrade",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listConfigWorkflows": {
    "method": "GET",
    "path": "/v1/configs/{id}/workflows",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "createConfigDraft": {
    "method": "POST",
    "path": "/v1/config-drafts",
    "inputs": {
-    "proposal": "body:proposal",
+    "proposal": "body:proposal!",
     "plan": "body:plan",
     "widget_id": "body:widget_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "proposeConfiguration": {
    "method": "POST",
    "path": "/v1/config-drafts/propose",
    "inputs": {
-    "directions": "body:directions",
+    "directions": "body:directions!",
     "matchingStrategy": "body:matchingStrategy",
     "settings": "body:settings",
     "plan": "body:plan",
     "widget_id": "body:widget_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getConfigDraft": {
    "method": "GET",
    "path": "/v1/config-drafts/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "include": "query:include"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "executeAction": {
    "method": "POST",
    "path": "/v1/actions/{id}/execute",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "connectorId": "body:connectorId",
     "connectionName": "body:connectionName",
     "connectionId": "body:connectionId",
@@ -3083,53 +3396,60 @@
     "externalVersion": "body:externalVersion",
     "versionMajor": "body:versionMajor",
     "mockMode": "body:mockMode"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listActionFolders": {
    "method": "GET",
    "path": "/v1/action-folders",
    "inputs": {
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createActionFolder": {
    "method": "POST",
    "path": "/v1/action-folders",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "name": "body:name",
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
     "description": "body:description",
     "parentId": "body:parentId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getActionFolder": {
    "method": "GET",
    "path": "/v1/action-folders/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateActionFolder": {
    "method": "PUT",
    "path": "/v1/action-folders/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "description": "body:description",
     "parentId": "body:parentId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteActionFolder": {
    "method": "DELETE",
    "path": "/v1/action-folders/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getGithubIntegrationStatus": {
    "method": "GET",
    "path": "/v1/integrations/github/status",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "startGithubInstallation": {
    "method": "POST",
@@ -3137,12 +3457,14 @@
    "inputs": {
     "returnUrl": "body:returnUrl",
     "dashboardOrigin": "body:dashboardOrigin"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "disconnectGithubIntegration": {
    "method": "DELETE",
    "path": "/v1/integrations/github",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "setGithubPublishGate": {
    "method": "PATCH",
@@ -3151,38 +3473,44 @@
     "gatePublish": "body:gatePublish",
     "repoOwner": "body:repoOwner",
     "repoName": "body:repoName"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listGithubRepositories": {
    "method": "GET",
    "path": "/v1/integrations/github/repositories",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "syncWorkflowsToGithub": {
    "method": "POST",
    "path": "/v1/integrations/github/sync",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "cancelGithubSync": {
    "method": "DELETE",
    "path": "/v1/integrations/github/sync/{syncId}",
    "inputs": {
-    "syncId": "path:syncId"
-   }
+    "syncId": "path:syncId!"
+   },
+   "output": "9d59bd447759"
   },
   "listGithubReviews": {
    "method": "GET",
    "path": "/v1/integrations/github/reviews",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "createConnectLink": {
    "method": "POST",
    "path": "/v1/connect-links",
    "inputs": {
-    "connectorId": "body:connectorId",
+    "connectorId": "body:connectorId!",
     "connectionName": "body:connectionName",
     "expiresInMinutes": "body:expiresInMinutes"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listInstallations": {
    "method": "GET",
@@ -3192,19 +3520,20 @@
     "target_id": "query:target_id",
     "end_org_id": "query:end_org_id",
     "widget_id": "query:widget_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createInstallation": {
    "method": "POST",
    "path": "/v1/installations",
    "inputs": {
-    "target_type": "body:target_type",
-    "target_id": "body:target_id",
+    "target_type": "body:target_type!",
+    "target_id": "body:target_id!",
     "target_version": "body:target_version",
-    "end_org_id": "body:end_org_id",
+    "end_org_id": "body:end_org_id!",
     "widget_id": "body:widget_id",
     "source_template_id": "body:source_template_id",
-    "label": "body:label",
+    "label": "body:label!",
     "slug": "body:slug",
     "user_id": "body:user_id",
     "connections": "body:connections",
@@ -3215,20 +3544,22 @@
     "rationale": "body:rationale",
     "defer_config": "body:defer_config",
     "selected_trigger_categories": "body:selected_trigger_categories"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getInstallation": {
    "method": "GET",
    "path": "/v1/installations/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateInstallation": {
    "method": "PUT",
    "path": "/v1/installations/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "target_version": "body:target_version",
     "widget_id": "body:widget_id",
     "label": "body:label",
@@ -3240,32 +3571,36 @@
     "health_status": "body:health_status",
     "rationale": "body:rationale",
     "selected_trigger_categories": "body:selected_trigger_categories"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteInstallation": {
    "method": "DELETE",
    "path": "/v1/installations/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getInstallationResolvedConfig": {
    "method": "GET",
    "path": "/v1/installations/{id}/resolved-config",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listEventSubscriptions": {
    "method": "GET",
    "path": "/v1/event-subscriptions",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "createEventSubscription": {
    "method": "POST",
    "path": "/v1/event-subscriptions",
    "inputs": {
-    "url": "body:url",
+    "url": "body:url!",
     "eventTypes": "body:eventTypes",
     "connectors": "body:connectors",
     "providerEvents": "body:providerEvents",
@@ -3273,27 +3608,30 @@
     "endOrgId": "body:endOrgId",
     "description": "body:description",
     "enabled": "body:enabled"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getEventSubscription": {
    "method": "GET",
    "path": "/v1/event-subscriptions/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteEventSubscription": {
    "method": "DELETE",
    "path": "/v1/event-subscriptions/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateEventSubscription": {
    "method": "PATCH",
    "path": "/v1/event-subscriptions/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "url": "body:url",
     "eventTypes": "body:eventTypes",
     "connectors": "body:connectors",
@@ -3301,155 +3639,176 @@
     "entities": "body:entities",
     "description": "body:description",
     "enabled": "body:enabled"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "rotateEventSubscriptionSecret": {
    "method": "POST",
    "path": "/v1/event-subscriptions/{id}/rotate-secret",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "testEventSubscription": {
    "method": "POST",
    "path": "/v1/event-subscriptions/{id}/test",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listEventDeliveries": {
    "method": "GET",
    "path": "/v1/event-subscriptions/{id}/deliveries",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "status": "query:status",
     "limit": "query:limit"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "replayEventDelivery": {
    "method": "POST",
    "path": "/v1/event-subscriptions/deliveries/{id}/replay",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getSetupLinkStatus": {
    "method": "GET",
    "path": "/v1/setup-links/{id}/status",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "assignOrgAdmin": {
    "method": "POST",
    "path": "/v1/orgs/{id}/admin",
    "inputs": {
-    "id": "path:id",
-    "email": "body:email"
-   }
+    "id": "path:id!",
+    "email": "body:email!"
+   },
+   "output": "9d59bd447759"
   },
   "getOrgDbConfig": {
    "method": "GET",
    "path": "/v1/orgs/{id}/db-config",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteOrgDbConfig": {
    "method": "DELETE",
    "path": "/v1/orgs/{id}/db-config",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listOrgDbConfigOverrides": {
    "method": "GET",
    "path": "/v1/orgs/{id}/db-config/overrides",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "enableOrgDbConfig": {
    "method": "POST",
    "path": "/v1/orgs/{id}/db-config/enable",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "disableOrgDbConfig": {
    "method": "POST",
    "path": "/v1/orgs/{id}/db-config/disable",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateOrgV1Bridge": {
    "method": "PUT",
    "path": "/v1/orgs/{id}/db-config/v1-bridge",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "queryTimeoutMs": "body:queryTimeoutMs",
     "connection": "body:connection",
     "workspaceId": "body:workspaceId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getMyPreferences": {
    "method": "GET",
    "path": "/v1/users/me/preferences",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "updateMyPreferences": {
    "method": "PATCH",
    "path": "/v1/users/me/preferences",
    "inputs": {
     "nav_layout": "body:nav_layout"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "resendInvite": {
    "method": "POST",
    "path": "/v1/users/{userId}/resend-invite",
    "inputs": {
-    "userId": "path:userId"
-   }
+    "userId": "path:userId!"
+   },
+   "output": "9d59bd447759"
   },
   "listUserMemberships": {
    "method": "GET",
    "path": "/v1/users/{userId}/memberships",
    "inputs": {
-    "userId": "path:userId",
+    "userId": "path:userId!",
     "limit": "query:limit",
     "offset": "query:offset"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "removeUserMembership": {
    "method": "DELETE",
    "path": "/v1/users/{userId}/memberships/{membershipId}",
    "inputs": {
-    "userId": "path:userId",
-    "membershipId": "path:membershipId"
-   }
+    "userId": "path:userId!",
+    "membershipId": "path:membershipId!"
+   },
+   "output": "9d59bd447759"
   },
   "getUserPermissions": {
    "method": "GET",
    "path": "/v1/users/{userId}/permissions",
    "inputs": {
-    "userId": "path:userId"
-   }
+    "userId": "path:userId!"
+   },
+   "output": "9d59bd447759"
   },
   "updateUserPermissions": {
    "method": "PUT",
    "path": "/v1/users/{userId}/permissions",
    "inputs": {
-    "userId": "path:userId",
+    "userId": "path:userId!",
     "permissions": "body:permissions"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "reactivateUser": {
    "method": "POST",
    "path": "/v1/users/{userId}/reactivate",
    "inputs": {
-    "userId": "path:userId"
-   }
+    "userId": "path:userId!"
+   },
+   "output": "9d59bd447759"
   },
   "getLiveWidgetInsights": {
    "method": "GET",
@@ -3457,52 +3816,58 @@
    "inputs": {
     "endOrgId": "query:endOrgId",
     "range": "query:range"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAlertCatalog": {
    "method": "GET",
    "path": "/v1/alerts/metrics",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listAlertChannels": {
    "method": "GET",
    "path": "/v1/alerts/channels",
    "inputs": {
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listAlertEvents": {
    "method": "GET",
    "path": "/v1/alerts/{id}/events",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "endOrgId": "query:endOrgId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listAuditLogResourceTypes": {
    "method": "GET",
    "path": "/v1/audit-log/resource-types",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listAuditLogUsers": {
    "method": "GET",
    "path": "/v1/audit-log/users",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "submitOrchestratorFeedback": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/feedback",
    "inputs": {
-    "threadId": "body:threadId",
-    "messageIndex": "body:messageIndex",
+    "threadId": "body:threadId!",
+    "messageIndex": "body:messageIndex!",
     "messageId": "body:messageId",
     "runId": "body:runId",
-    "agentId": "body:agentId",
-    "result": "body:result",
+    "agentId": "body:agentId!",
+    "result": "body:result!",
     "category": "body:category",
     "subcategory": "body:subcategory",
     "feedback": "body:feedback",
-    "messageText": "body:messageText",
+    "messageText": "body:messageText!",
     "userPrompt": "body:userPrompt",
     "model": "body:model",
     "promptTokens": "body:promptTokens",
@@ -3511,23 +3876,26 @@
     "latencyMs": "body:latencyMs",
     "toolCallsCount": "body:toolCallsCount",
     "dashboardUrl": "body:dashboardUrl"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createTestCaseDraft": {
    "method": "POST",
    "path": "/v1/test-case-drafts",
    "inputs": {
-    "scope": "body:scope",
-    "testCases": "body:testCases"
-   }
+    "scope": "body:scope!",
+    "testCases": "body:testCases!"
+   },
+   "output": "9d59bd447759"
   },
   "getTestCaseDraft": {
    "method": "GET",
    "path": "/v1/test-case-drafts/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "include": "query:include"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listQuotas": {
    "method": "GET",
@@ -3535,53 +3903,61 @@
    "inputs": {
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "checkQuota": {
    "method": "GET",
    "path": "/v1/quotas/check/{dimension}",
    "inputs": {
-    "dimension": "path:dimension",
+    "dimension": "path:dimension!",
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getBillingSubscription": {
    "method": "GET",
    "path": "/v1/billing/subscription",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "listBillingInvoices": {
    "method": "GET",
    "path": "/v1/billing/invoices",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "getBillingPaymentMethod": {
    "method": "GET",
    "path": "/v1/billing/payment-method",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "getOnboardingProductProfile": {
    "method": "GET",
    "path": "/v1/onboarding/product-profile",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "saveOnboardingProductProfile": {
    "method": "PUT",
    "path": "/v1/onboarding/product-profile",
    "inputs": {
-    "domain": "body:domain",
+    "domain": "body:domain!",
     "company": "body:company",
     "api": "body:api",
     "entities": "body:entities",
     "webhooks": "body:webhooks",
     "confirmed": "body:confirmed"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getSetupJourney": {
    "method": "GET",
    "path": "/v1/onboarding/setup",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "updateSetupJourney": {
    "method": "PUT",
@@ -3600,151 +3976,168 @@
     "productThreadId": "body:productThreadId",
     "integrationThreadId": "body:integrationThreadId",
     "integrationChoice": "body:integrationChoice"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "claimOnboardingCredits": {
    "method": "POST",
    "path": "/v1/onboarding/credits/claim",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "joinOnboardingOrg": {
    "method": "POST",
    "path": "/v1/onboarding/join-org",
    "inputs": {
-    "orgId": "body:orgId"
-   }
+    "orgId": "body:orgId!"
+   },
+   "output": "9d59bd447759"
   },
   "createPlanChangeRequest": {
    "method": "POST",
    "path": "/v1/plan-change-requests",
    "inputs": {
-    "requestedPlan": "body:requestedPlan"
-   }
+    "requestedPlan": "body:requestedPlan!"
+   },
+   "output": "9d59bd447759"
   },
   "cancelMyPlanChangeRequest": {
    "method": "POST",
    "path": "/v1/plan-change-requests/me/cancel",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "probeConnector": {
    "method": "POST",
    "path": "/v1/probes",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "actionSlug": "body:actionSlug",
+    "connectorId": "body:connectorId!",
+    "actionSlug": "body:actionSlug!",
     "params": "body:params",
     "connectionId": "body:connectionId",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "probeConnectorValues": {
    "method": "POST",
    "path": "/v1/probes/values",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "actionSlug": "body:actionSlug",
+    "connectorId": "body:connectorId!",
+    "actionSlug": "body:actionSlug!",
     "params": "body:params",
     "connectionId": "body:connectionId",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "mergeProbes": {
    "method": "POST",
    "path": "/v1/probes/merge",
    "inputs": {
-    "parentProbeId": "body:parentProbeId",
-    "subProbes": "body:subProbes"
-   }
+    "parentProbeId": "body:parentProbeId!",
+    "subProbes": "body:subProbes!"
+   },
+   "output": "9d59bd447759"
   },
   "searchWeb": {
    "method": "POST",
    "path": "/v1/web/search",
    "inputs": {
-    "query": "body:query",
+    "query": "body:query!",
     "platform": "body:platform",
     "maxResults": "body:maxResults"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "fetchWebPage": {
    "method": "POST",
    "path": "/v1/web/fetch",
    "inputs": {
-    "url": "body:url",
+    "url": "body:url!",
     "maxChars": "body:maxChars"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getAiUsage": {
    "method": "GET",
    "path": "/v1/usage/ai",
    "inputs": {
     "scope": "query:scope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "generateActionMock": {
    "method": "GET",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listMockStubs": {
    "method": "GET",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createMockStub": {
    "method": "POST",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId",
-    "name": "body:name",
+    "name": "body:name!",
     "description": "body:description",
     "inputMatchers": "body:inputMatchers",
-    "response": "body:response"
-   }
+    "response": "body:response!"
+   },
+   "output": "9d59bd447759"
   },
   "regenerateMockStubs": {
    "method": "POST",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/regenerate",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "updateMockStub": {
    "method": "PUT",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId",
-    "stubId": "path:stubId",
+    "stubId": "path:stubId!",
     "name": "body:name",
     "description": "body:description",
     "inputMatchers": "body:inputMatchers",
     "response": "body:response"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteMockStub": {
    "method": "DELETE",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId",
-    "stubId": "path:stubId"
-   }
+    "stubId": "path:stubId!"
+   },
+   "output": "9d59bd447759"
   },
   "getWorkflowExecutionCounts": {
    "method": "GET",
@@ -3755,144 +4148,162 @@
     "dateTo": "query:dateTo",
     "search": "query:search",
     "searchIn": "query:searchIn"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "submitWorkflowExecutionFeedback": {
    "method": "POST",
    "path": "/v1/workflows/executions/{executionId}/feedback",
    "inputs": {
-    "executionId": "path:executionId",
-    "helpful": "body:helpful",
+    "executionId": "path:executionId!",
+    "helpful": "body:helpful!",
     "rating": "body:rating",
     "comment": "body:comment"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "refreshWorkflowManifest": {
    "method": "POST",
    "path": "/v1/workflows/{id}/manifest/refresh",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "saveWorkflowValidation": {
    "method": "PATCH",
    "path": "/v1/workflows/{id}/validation",
    "inputs": {
-    "id": "path:id",
-    "status": "body:status",
-    "mode": "body:mode",
-    "results": "body:results",
+    "id": "path:id!",
+    "status": "body:status!",
+    "mode": "body:mode!",
+    "results": "body:results!",
     "cleanup": "body:cleanup"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "saveWorkflowDraft": {
    "method": "PATCH",
    "path": "/v1/workflows/{id}/draft",
    "inputs": {
-    "id": "path:id",
-    "code": "body:code"
-   }
+    "id": "path:id!",
+    "code": "body:code!"
+   },
+   "output": "9d59bd447759"
   },
   "editWorkflowCode": {
    "method": "PATCH",
    "path": "/v1/workflows/{id}/code",
    "inputs": {
-    "id": "path:id",
-    "oldString": "body:oldString",
+    "id": "path:id!",
+    "oldString": "body:oldString!",
     "newString": "body:newString",
     "replaceAll": "body:replaceAll"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "publishWorkflow": {
    "method": "POST",
    "path": "/v1/workflows/{id}/publish",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "message": "body:message"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "rollbackWorkflowDeployment": {
    "method": "POST",
    "path": "/v1/workflows/{id}/rollback",
    "inputs": {
-    "id": "path:id",
-    "env_id": "body:env_id",
-    "env_version": "body:env_version"
-   }
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "env_version": "body:env_version!"
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowDeployments": {
    "method": "GET",
    "path": "/v1/workflows/{id}/deployments",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowPromotions": {
    "method": "GET",
    "path": "/v1/workflows/{id}/promotions",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "cancelWorkflowPromotion": {
    "method": "DELETE",
    "path": "/v1/workflows/{id}/promotions/{promotionId}",
    "inputs": {
-    "id": "path:id",
-    "promotionId": "path:promotionId"
-   }
+    "id": "path:id!",
+    "promotionId": "path:promotionId!"
+   },
+   "output": "9d59bd447759"
   },
   "listWorkflowVersions": {
    "method": "GET",
    "path": "/v1/workflows/{id}/versions",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "include": "query:include"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listEnvironmentConfigs": {
    "method": "GET",
    "path": "/v1/env-configs",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "bulkUpsertEnvironmentConfigs": {
    "method": "PUT",
    "path": "/v1/env-configs",
    "inputs": {
     "environments": "body:environments",
-    "items": "body:items"
-   }
+    "items": "body:items!"
+   },
+   "output": "9d59bd447759"
   },
   "getEnvConfig": {
    "method": "GET",
    "path": "/v1/env-configs/{key}",
    "inputs": {
-    "key": "path:key"
-   }
+    "key": "path:key!"
+   },
+   "output": "9d59bd447759"
   },
   "upsertEnvironmentConfig": {
    "method": "PUT",
    "path": "/v1/env-configs/{key}",
    "inputs": {
-    "key": "path:key",
-    "values": "body:values"
-   }
+    "key": "path:key!",
+    "values": "body:values!"
+   },
+   "output": "9d59bd447759"
   },
   "createEnvironmentConfig": {
    "method": "POST",
    "path": "/v1/env-configs/{key}",
    "inputs": {
-    "key": "path:key",
-    "values": "body:values"
-   }
+    "key": "path:key!",
+    "values": "body:values!"
+   },
+   "output": "9d59bd447759"
   },
   "removeEnvironmentConfigKey": {
    "method": "DELETE",
    "path": "/v1/env-configs/{key}",
    "inputs": {
-    "key": "path:key",
+    "key": "path:key!",
     "env": "query:env"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listWebhookTriggers": {
    "method": "GET",
@@ -3904,14 +4315,15 @@
     "status": "query:status",
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createWebhookTrigger": {
    "method": "POST",
    "path": "/v1/webhooks",
    "inputs": {
     "id": "body:id",
-    "name": "body:name",
+    "name": "body:name!",
     "status": "body:status",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId",
@@ -3920,34 +4332,38 @@
     "dlqConfiguration": "body:dlqConfiguration",
     "additionalConfig": "body:additionalConfig",
     "routes": "body:routes"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "bulkDeleteWebhookTriggers": {
    "method": "POST",
    "path": "/v1/webhooks/bulk-delete",
    "inputs": {
-    "ids": "body:ids"
-   }
+    "ids": "body:ids!"
+   },
+   "output": "9d59bd447759"
   },
   "getWebhookTriggerStats": {
    "method": "GET",
    "path": "/v1/webhooks/{id}/stats",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getWebhookTrigger": {
    "method": "GET",
    "path": "/v1/webhooks/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateWebhookTrigger": {
    "method": "PUT",
    "path": "/v1/webhooks/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "status": "body:status",
     "authMethod": "body:authMethod",
@@ -3955,14 +4371,16 @@
     "dlqConfiguration": "body:dlqConfiguration",
     "additionalConfig": "body:additionalConfig",
     "routes": "body:routes"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteWebhookTrigger": {
    "method": "DELETE",
    "path": "/v1/webhooks/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listSchedulers": {
    "method": "GET",
@@ -3974,14 +4392,15 @@
     "status": "query:status",
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "createScheduler": {
    "method": "POST",
    "path": "/v1/schedulers",
    "inputs": {
     "id": "body:id",
-    "name": "body:name",
+    "name": "body:name!",
     "status": "body:status",
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId",
@@ -3995,41 +4414,46 @@
     "routes": "body:routes",
     "reenableAfterMinutes": "body:reenableAfterMinutes",
     "runOnCreate": "body:runOnCreate"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "bulkDeleteSchedulers": {
    "method": "POST",
    "path": "/v1/schedulers/bulk-delete",
    "inputs": {
-    "ids": "body:ids"
-   }
+    "ids": "body:ids!"
+   },
+   "output": "9d59bd447759"
   },
   "disableSchedulersByRoute": {
    "method": "POST",
    "path": "/v1/schedulers/disable-by-route",
    "inputs": {
-    "routeIds": "body:routeIds"
-   }
+    "routeIds": "body:routeIds!"
+   },
+   "output": "9d59bd447759"
   },
   "getSchedulerStats": {
    "method": "GET",
    "path": "/v1/schedulers/{id}/stats",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getScheduler": {
    "method": "GET",
    "path": "/v1/schedulers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateScheduler": {
    "method": "PUT",
    "path": "/v1/schedulers/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "name": "body:name",
     "status": "body:status",
     "cron": "body:cron",
@@ -4041,54 +4465,61 @@
     "additionalConfig": "body:additionalConfig",
     "routes": "body:routes",
     "reenableAfterMinutes": "body:reenableAfterMinutes"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteScheduler": {
    "method": "DELETE",
    "path": "/v1/schedulers/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "bulkDeleteAppEventTriggers": {
    "method": "POST",
    "path": "/v1/app-triggers/bulk-delete",
    "inputs": {
-    "ids": "body:ids"
-   }
+    "ids": "body:ids!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorEvents": {
    "method": "GET",
    "path": "/v1/app-triggers/connectors/{connectorId}/events",
    "inputs": {
-    "connectorId": "path:connectorId"
-   }
+    "connectorId": "path:connectorId!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorWebhookConfigEvents": {
    "method": "GET",
    "path": "/v1/app-triggers/connectors/{connectorId}/webhook-config-events",
    "inputs": {
-    "connectorId": "path:connectorId"
-   }
+    "connectorId": "path:connectorId!"
+   },
+   "output": "9d59bd447759"
   },
   "getAppEventTriggerStats": {
    "method": "GET",
    "path": "/v1/app-triggers/{id}/stats",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAppWebhookRegistrations": {
    "method": "GET",
    "path": "/v1/app-webhooks",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "createAppWebhookRegistration": {
    "method": "POST",
    "path": "/v1/app-webhooks",
    "inputs": {
-    "connectorId": "body:connectorId",
-    "connectorName": "body:connectorName",
+    "connectorId": "body:connectorId!",
+    "connectorName": "body:connectorName!",
     "verificationType": "body:verificationType",
     "events": "body:events",
     "verification": "body:verification",
@@ -4098,39 +4529,44 @@
     "subscriptionBodyMapping": "body:subscriptionBodyMapping",
     "unsubscriptionActionId": "body:unsubscriptionActionId",
     "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "listAppWebhookRegistrationStats": {
    "method": "GET",
    "path": "/v1/app-webhooks/stats",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "generateAppWebhookRegistrationUrl": {
    "method": "POST",
    "path": "/v1/app-webhooks/{id}/generate-url",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getAppWebhookRegistrationStats": {
    "method": "GET",
    "path": "/v1/app-webhooks/{id}/stats",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getAppWebhookRegistration": {
    "method": "GET",
    "path": "/v1/app-webhooks/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "updateAppWebhookRegistration": {
    "method": "PUT",
    "path": "/v1/app-webhooks/{id}",
    "inputs": {
-    "id": "path:id",
+    "id": "path:id!",
     "status": "body:status",
     "connectorName": "body:connectorName",
     "events": "body:events",
@@ -4141,95 +4577,107 @@
     "subscriptionBodyMapping": "body:subscriptionBodyMapping",
     "unsubscriptionActionId": "body:unsubscriptionActionId",
     "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "deleteAppWebhookRegistration": {
    "method": "DELETE",
    "path": "/v1/app-webhooks/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "replayAllTriggerDlq": {
    "method": "POST",
    "path": "/v1/triggers/{id}/dlq/replay-all",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "deleteDlqEntry": {
    "method": "DELETE",
    "path": "/v1/dlq/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "getAlertLimits": {
    "method": "GET",
    "path": "/v1/events/alerts/limits",
-   "inputs": {}
+   "inputs": {},
+   "output": "9d59bd447759"
   },
   "testAlert": {
    "method": "POST",
    "path": "/v1/events/alerts/{id}/test",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "listAlertChannelTargets": {
    "method": "GET",
    "path": "/v1/events/alerts/channels/{connectionId}/targets",
    "inputs": {
-    "connectionId": "path:connectionId",
-    "connectorSlug": "query:connectorSlug",
+    "connectionId": "path:connectionId!",
+    "connectorSlug": "query:connectorSlug!",
     "teamId": "query:teamId"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "sendTestAppEvent": {
    "method": "POST",
    "path": "/v1/triggers/{orgId}/{connectorId}/events",
    "inputs": {
-    "orgId": "path:orgId",
-    "connectorId": "path:connectorId",
+    "orgId": "path:orgId!",
+    "connectorId": "path:connectorId!",
     "triggerId": "query:triggerId",
-    "payload": "body:*"
-   }
+    "payload": "body:*!"
+   },
+   "output": "9d59bd447759"
   },
   "listConnectorActionsBySlug": {
    "method": "GET",
    "path": "/v2/connectors/{connector}/actions",
    "inputs": {
-    "connector": "path:connector"
-   }
+    "connector": "path:connector!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorActionSchema": {
    "method": "GET",
    "path": "/v2/connectors/{connector}/actions/{action}/schema",
    "inputs": {
-    "connector": "path:connector",
-    "action": "path:action"
-   }
+    "connector": "path:connector!",
+    "action": "path:action!"
+   },
+   "output": "9d59bd447759"
   },
   "discoverMcpConnectorTools": {
    "method": "GET",
    "path": "/v2/connectors/{connector}/mcp/discover",
    "inputs": {
-    "connector": "path:connector"
-   }
+    "connector": "path:connector!"
+   },
+   "output": "9d59bd447759"
   },
   "getConnectorConnectionStatus": {
    "method": "GET",
    "path": "/v2/connectors/{connector}/connection-status",
    "inputs": {
-    "connector": "path:connector"
-   }
+    "connector": "path:connector!"
+   },
+   "output": "9d59bd447759"
   },
   "executeConnectorActionBySlug": {
    "method": "POST",
    "path": "/v2/connectors/{connector}/actions/{action}/execute",
    "inputs": {
-    "connector": "path:connector",
-    "action": "path:action",
+    "connector": "path:connector!",
+    "action": "path:action!",
     "input": "body:input",
     "connectionId": "body:connectionId",
     "installationId": "body:installationId",
@@ -4240,107 +4688,120 @@
     "externalVersion": "body:externalVersion",
     "versionMajor": "body:versionMajor",
     "orgScope": "body:orgScope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "executeMockAction": {
    "method": "POST",
    "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/execute",
    "inputs": {
-    "connectorSlug": "path:connectorSlug",
-    "actionSlug": "path:actionSlug",
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
     "input": "body:input",
     "mockStubId": "body:mockStubId",
     "scenario": "body:scenario",
     "version": "body:version",
     "orgScope": "body:orgScope"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentBuildPlan": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/build-plan",
    "inputs": {
-    "prompt": "body:prompt",
+    "prompt": "body:prompt!",
     "company": "body:company"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "agentSuggestConnectors": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/suggest-connectors",
    "inputs": {
-    "useCase": "body:useCase"
-   }
+    "useCase": "body:useCase!"
+   },
+   "output": "9d59bd447759"
   },
   "agentDeleteOrchestratorSession": {
    "method": "DELETE",
    "path": "/v1/agent/orchestrator/sessions/{id}",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "agentRenameOrchestratorSession": {
    "method": "PATCH",
    "path": "/v1/agent/orchestrator/sessions/{id}",
    "inputs": {
-    "id": "path:id",
-    "title": "body:title"
-   }
+    "id": "path:id!",
+    "title": "body:title!"
+   },
+   "output": "9d59bd447759"
   },
   "agentGetOrchestratorFile": {
    "method": "GET",
    "path": "/v1/agent/orchestrator/sessions/{id}/files",
    "inputs": {
-    "id": "path:id",
-    "path": "query:path"
-   }
+    "id": "path:id!",
+    "path": "query:path!"
+   },
+   "output": "9d59bd447759"
   },
   "agentStopOrchestratorSession": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/sessions/{id}/stop",
    "inputs": {
-    "id": "path:id"
-   }
+    "id": "path:id!"
+   },
+   "output": "9d59bd447759"
   },
   "agentInjectOrchestratorMessage": {
    "method": "POST",
    "path": "/v1/agent/orchestrator/sessions/{id}/inject",
    "inputs": {
-    "id": "path:id",
-    "message": "body:message"
-   }
+    "id": "path:id!",
+    "message": "body:message!"
+   },
+   "output": "9d59bd447759"
   },
   "researchSaas": {
    "method": "POST",
    "path": "/v1/agent/research/saas",
    "inputs": {
-    "domain": "body:domain",
+    "domain": "body:domain!",
     "refresh": "body:refresh"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "getSaasResearch": {
    "method": "GET",
    "path": "/v1/agent/research/saas/{domain}",
    "inputs": {
-    "domain": "path:domain"
-   }
+    "domain": "path:domain!"
+   },
+   "output": "9d59bd447759"
   },
   "matchProductConnector": {
    "method": "POST",
    "path": "/v1/agent/research/product/match",
    "inputs": {
-    "domain": "body:domain",
+    "domain": "body:domain!",
     "productName": "body:productName"
-   }
+   },
+   "output": "9d59bd447759"
   },
   "reviseProductProfile": {
    "method": "POST",
    "path": "/v1/agent/research/product/revise",
    "inputs": {
     "domain": "body:domain",
-    "field": "body:field",
-    "instruction": "body:instruction",
-    "product": "body:product",
+    "field": "body:field!",
+    "instruction": "body:instruction!",
+    "product": "body:product!",
     "history": "body:history"
-   }
+   },
+   "output": "9d59bd447759"
   }
  }
 }

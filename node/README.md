@@ -88,7 +88,8 @@ and workflow execute routes; without the body field those calls would silently r
 const { data } = await customer.connect({ connectorId: "googleCalendar", returnUrl: "https://app.acme.com/connected" });
 redirect(data.authorizationUrl);                                      // the connection lands on the customer org
 
-// Typed-in credentials (API key, basic auth): the fields come from the connector's auth method.
+// Typed-in credentials (API key, basic auth): the fields come from the connector's auth method. The platform checks
+// them; an incomplete set answers 400 CREDENTIALS_INCOMPLETE with the missing names (err.body.missing).
 const fields = await customer.authFields("acme-crm");                 // { names, required, schema, authMethodId }
 await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { apiKey: "..." }, name: "Acme CRM" });
 ```
@@ -203,10 +204,13 @@ npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a pla
 ### What stays compatible
 
 - The hand-written layer (`FastnClient`, `customer(...)`, `records(...)`, `ToolsClient`, `parseEvent`, `paginate`,
-  the error classes) follows semver: breaking changes only in a major version.
+  the error classes) follows semver: breaking changes only in a major version. Until 1.0 they can still land in a
+  minor and are listed under Changed in the CHANGELOG.
 - The generated methods mirror the REST API 1:1. `spec/surface.lock.json` records every operation with its input
-  keys; `npm run generate` refuses a spec that removes an operation, renames an input or moves it (path, query, body,
-  header) unless run with `--accept-breaking`, which goes with a major version bump. Additions pass.
+  keys (where each goes on the wire and whether it is required) and a hash of its output type; `npm run generate`
+  refuses a spec that removes an operation, renames or moves an input, makes an optional input required, adds a
+  required input, or changes an output type, unless run with `--accept-breaking`, which goes with a major version
+  bump. New operations and new optional inputs pass.
 - Everything under `unstable` (the wire manifest `OPS`, `FetchTransport`) has no compatibility promise.
 
 ## Releasing

@@ -27,12 +27,13 @@ const defaultNext = (res: any): string | undefined => res?.nextCursor ?? res?.da
 /**
  * `for await (const org of paginate((i) => client.orgs.listOrgs(i), { type: "end_org" })) ...`
  * Stops when a page comes back shorter than `pageSize` (offset lists) or without a next cursor (cursor lists).
+ * The key names are options because the spec does not say how each list pages yet (limit+offset, limit only,
+ * cursor, page+pageSize all exist); once it does, the generator can fill them in per operation.
  */
-export async function* paginate<I extends Record<string, any>, R>(fn: (input: I) => Promise<R>, input: I, opts: PaginateOptions = {}): AsyncGenerator<any, void, undefined> {
-  const pageSize = opts.pageSize ?? 100, limitKey = opts.limitKey ?? "limit", offsetKey = opts.offsetKey === undefined ? "offset" : opts.offsetKey, cursorKey = opts.cursorKey ?? "cursor";
-  const rowsOf = opts.rows ?? defaultRows, nextOf = opts.nextCursor ?? defaultNext;
+export async function* paginate<I extends Record<string, any>>(fn: (input: I) => Promise<any>, input: I, opts: PaginateOptions = {}): AsyncGenerator<any, void, undefined> {
+  const { pageSize = 100, limitKey = "limit", offsetKey = "offset", cursorKey = "cursor", rows: rowsOf = defaultRows, nextCursor: nextOf = defaultNext, maxPages = 1000 } = opts;
   let offset = 0, cursor: string | undefined, pages = 0, lastPage: string | undefined;
-  while (pages++ < (opts.maxPages ?? 1000)) {
+  while (pages++ < maxPages) {
     const page: Record<string, any> = { ...input, [limitKey]: pageSize };
     if (cursor) page[cursorKey] = cursor; else if (offsetKey) page[offsetKey] = offset;
     const res = await fn(page as I);

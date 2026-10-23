@@ -1,18 +1,13 @@
 // Live run against a fastn Connect workspace. Skipped unless LIVE=1, FASTN_TOOLS_KEY, FASTN_TOOLS_URL and FASTN_TEST_CUSTOMER are set.
 // Creates one Google Calendar event (sdk-live-<run>) on the workspace's shared account and deletes it at the end.
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import fs from "node:fs";
 import { FastnClient, ToolsClient, ToolError, unstable } from "../../src/index.js";
+import { LIVE_TOOLS, E2E, run, evidence, dayFromNow } from "./_shared.js";
 
-const LIVE = process.env.LIVE === "1" && !!process.env.FASTN_TOOLS_KEY && !!process.env.FASTN_TOOLS_URL && !!process.env.FASTN_TEST_CUSTOMER;
-const d = describe.skipIf(!LIVE);
+const d = describe.skipIf(!LIVE_TOOLS);
 const URL_ = process.env.FASTN_TOOLS_URL ?? "";
-const EV = new URL("./evidence.jsonl", import.meta.url).pathname;
-const mask = (s: string) => s.replace(/(emb_|ucl_|fsk_[a-z]+_|whsec_|stp_tok_|sk_)[A-Za-z0-9_\-]{6,}/g, "$1***").replace(/[A-Za-z0-9_-]{48,}/g, "<tok>");
-const ev = (step: string, data: unknown) => fs.appendFileSync(EV, mask(JSON.stringify({ at: new Date().toISOString(), step: `tools ${step}`, data })).slice(0, 2500) + "\n");
-const run = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-const E2E = process.env.FASTN_TEST_CUSTOMER ?? "";
-const day = new Date(Date.now() + 10 * 86400e3).toISOString().slice(0, 10);
+const ev = evidence("tools");
+const day = dayFromNow(10);
 
 let ucl: ToolsClient; let eventId: string | undefined;
 // A delegated workspace key requires X-Org-Id on every call, so the client defaults to the test customer.

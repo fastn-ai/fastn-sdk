@@ -13,9 +13,10 @@
 import { buildApis, type FastnApis } from "./generated/api.js";
 import { FetchTransport, type RequestOptions, type RequestLog, type Transport } from "./transport.js";
 import { Customer, type CustomerContext } from "./customer.js";
-import { SPEC_VERSION, SPEC_FILE, OPS } from "./generated/ops.js";
+import { OPS } from "./generated/ops.js";
 import { ToolsClient, type ToolsClientConfig } from "./tools.js";
 import { VERSION } from "./version.js";
+import { defaultUserAgent } from "./http.js";
 
 export interface FastnClientConfig {
   /** Your fastn API key (Settings > API keys). Sent as x-api-key. */
@@ -55,12 +56,12 @@ export class FastnClient {
     this.baseUrl = (cfg.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.transport = new FetchTransport({
       apiKey: cfg.apiKey, baseUrl: this.baseUrl, timeoutMs: cfg.timeoutMs ?? 60_000, retries: cfg.retries ?? 2,
-      fetch: cfg.fetch, onRequest: cfg.onRequest, defaultOptions: cfg.defaults, userAgent: cfg.userAgent ?? `fastn-ai-sdk/${VERSION} node/${typeof process !== "undefined" ? process.versions?.node ?? "" : ""}`,
+      fetch: cfg.fetch, onRequest: cfg.onRequest, defaultOptions: cfg.defaults, userAgent: cfg.userAgent ?? defaultUserAgent(),
     });
     this.api = buildApis(this.transport);
     Object.assign(this, this.api);
     if (cfg.tools) this.tools = new ToolsClient({ ...cfg.tools, fetch: cfg.fetch, userAgent: cfg.userAgent });
-    this.customers = { ids: new Map(), callerOrgId: async () => { const me = await this.me(); const id = me?.org?.id; if (typeof id !== "string" || !id) throw new TypeError("whoami did not answer the caller's org id"); return id; } };
+    this.customers = { ids: new Map(), lookups: new Map(), callerOrgId: async () => { const me = await this.me(); const id = me?.org?.id; if (typeof id !== "string" || !id) throw new TypeError("whoami did not answer the caller's org id"); return id; } };
   }
 
   /** Who this API key is (GET /v1/me): actor, role, org, parentOrg. Cached for the life of the client. */
@@ -82,20 +83,18 @@ export class FastnClient {
     return this.transport.call(op, input, opts);
   }
 
-  /** The OpenAPI version this SDK was generated from. */
-  static readonly specVersion = SPEC_VERSION;
-  static readonly specFile = SPEC_FILE;
 }
 // Every API area is also reachable directly: fastn.orgs.listOrgs(...) === fastn.api.orgs.listOrgs(...)
 export interface FastnClient extends FastnApis {}
 
-export { Customer, Records, type RecordScope } from "./customer.js";
-export { FastnApiError, FastnNetworkError } from "./errors.js";
+export { Customer, Records, type RecordScope, type CustomerRow } from "./customer.js";
+export { FastnApiError, FastnNetworkError, type FastnApiErrorInfo } from "./errors.js";
 export { verifyEventSignature, signEventBody, parseEvent, readEventHeaders, type EventHeaders, type FastnEvent, type VerifyOptions } from "./events.js";
 export { paginate, type PaginateOptions } from "./paginate.js";
 export { ToolsClient, ToolError, parseMessages, type ToolsClientConfig, type ToolCallOptions, type Tool, type ToolResult } from "./tools.js";
 export { type Transport, type RequestOptions, type RequestLog } from "./transport.js";
-export { SPEC_VERSION, type OperationId } from "./generated/ops.js";
+/** The OpenAPI version (and spec file) this SDK was generated from. */
+export { SPEC_VERSION, SPEC_FILE, type OperationId } from "./generated/ops.js";
 export type { FastnApis } from "./generated/api.js";
 // One Input and one Output type per operation, named after the operationId, plus the spec's named schemas.
 export type * from "./generated/types.js";
