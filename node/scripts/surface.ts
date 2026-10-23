@@ -18,12 +18,13 @@ export const isHidden = (op: { tags?: string[]; operationId?: string; "x-mcp"?: 
 
 /**
  * One operation in the lock: method, path, every input key with where it goes on the wire ("path:id", "query:limit",
- * "header:x-end-org-ref", "body:name", "body:*" for a whole-body input) and a "!" suffix when it is required, plus a
- * short hash of the generated Output type. A spec refresh may add operations and optional inputs; it may not remove
- * an operation, rename or move an input, make an optional input required, add a required input, or change an Output
- * type without `--accept-breaking`.
+ * "header:x-end-org-ref", "body:name", "body:*" for a whole-body input) and a "!" suffix when it is required, plus
+ * the output's field paths with their structural type ("data.org.id": "string!", "data.items[].name": "string"),
+ * no descriptions. A spec refresh may add operations, optional inputs and output fields; it may not remove an
+ * operation, rename or move an input, make an optional input required, add a required input, remove an output
+ * field, change its type, or make a required output field optional, without `--accept-breaking`.
  */
-export interface LockEntry { method: string; path: string; inputs: Record<string, string>; output?: string }
+export interface LockEntry { method: string; path: string; inputs: Record<string, string>; output?: Record<string, string> | string }
 
 export function lockInputs(op: OpDef): Record<string, string> {
   const inputs: Record<string, string> = {};
@@ -35,6 +36,7 @@ export function lockInputs(op: OpDef): Record<string, string> {
   return inputs;
 }
 
+/** Kept for locks written before outputs were recorded as fields; no longer used by the generator. */
 export const typeHash = (ts: string): string => createHash("sha256").update(ts).digest("hex").slice(0, 12);
 
 /** What changed between two locks that a partner's code could feel. */
@@ -51,7 +53,16 @@ export function breakingChanges(prev: Record<string, LockEntry>, next: Record<st
       else if (nowWhere.endsWith("!") && !where.endsWith("!")) inputs.push(`${id}: input "${k}" became required`);
     }
     for (const [k, where] of Object.entries(now.inputs)) if (!(k in was.inputs) && where.endsWith("!")) inputs.push(`${id}: new required input "${k}" (${where})`);
-    if (was.output && now.output && was.output !== now.output) outputs.push(`${id}: Output type changed (${was.output} -> ${now.output})`);
+    // Outputs: a field a partner reads may not disappear, change type, or stop being guaranteed. New fields are free.
+    // (A lock written before outputs were recorded as fields holds a hash string there; nothing to compare.)
+    if (typeof was.output === "object" && typeof now.output === "object") {
+      for (const [field, type] of Object.entries(was.output)) {
+        const nowType = now.output[field];
+        if (nowType === undefined) outputs.push(`${id}: output field "${field}" removed`);
+        else if (nowType.replace(/!$/, "") !== type.replace(/!$/, "")) outputs.push(`${id}: output field "${field}" type changed ${type} -> ${nowType}`);
+        else if (type.endsWith("!") && !nowType.endsWith("!")) outputs.push(`${id}: output field "${field}" is no longer always present`);
+      }
+    }
   }
   return { inputs, outputs };
 }

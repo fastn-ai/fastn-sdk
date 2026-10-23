@@ -5,7 +5,7 @@
    "method": "GET",
    "path": "/v1/unified/categories",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedCalls": {
    "method": "GET",
@@ -13,7 +13,7 @@
    "inputs": {
     "correlation_id": "query:correlation_id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedEntityProviders": {
    "method": "GET",
@@ -22,7 +22,7 @@
     "category": "path:category!",
     "entity": "path:entity!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedRecords": {
    "method": "GET",
@@ -40,7 +40,7 @@
     "endOrgId": "header:x-end-org-id",
     "endOrgRef": "header:x-end-org-ref"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createUnifiedRecord": {
    "method": "POST",
@@ -56,7 +56,7 @@
     "endOrgRef": "header:x-end-org-ref",
     "record": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "searchUnifiedRecords": {
    "method": "POST",
@@ -71,7 +71,7 @@
     "installationId": "header:x-installation-id",
     "filters": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getUnifiedRecord": {
    "method": "GET",
@@ -88,7 +88,7 @@
     "endOrgId": "header:x-end-org-id",
     "endOrgRef": "header:x-end-org-ref"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteUnifiedRecord": {
    "method": "DELETE",
@@ -102,7 +102,7 @@
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateUnifiedRecord": {
    "method": "PATCH",
@@ -117,7 +117,7 @@
     "installationId": "header:x-installation-id",
     "record": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "loadUnifiedConfigFieldOptions": {
    "method": "POST",
@@ -134,7 +134,7 @@
     "limit": "body:limit",
     "query": "body:query"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateInstallationUnifiedValues": {
    "method": "PUT",
@@ -143,7 +143,7 @@
     "id": "path:id!",
     "unifiedValues": "body:unifiedValues!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getInstallationTriggers": {
    "method": "GET",
@@ -151,7 +151,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createInstallationTrigger": {
    "method": "POST",
@@ -162,7 +162,7 @@
     "settings": "body:settings",
     "headers": "body:headers"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateInstallationTrigger": {
    "method": "PUT",
@@ -173,7 +173,7 @@
     "settings": "body:settings",
     "headers": "body:headers"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteInstallationTrigger": {
    "method": "DELETE",
@@ -182,13 +182,13 @@
     "id": "path:id!",
     "triggerId": "path:triggerId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedCatalogCategories": {
    "method": "GET",
    "path": "/v1/unified-catalog/categories",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedCatalogEntities": {
    "method": "GET",
@@ -196,7 +196,7 @@
    "inputs": {
     "category": "query:category"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getUnifiedCatalogEntity": {
    "method": "GET",
@@ -204,13 +204,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUnifiedCustom": {
    "method": "GET",
    "path": "/v1/unified-custom",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createUnifiedCustomEntity": {
    "method": "POST",
@@ -223,7 +223,7 @@
     "schema": "body:schema",
     "fromEntityId": "body:fromEntityId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateUnifiedCustomEntity": {
    "method": "PUT",
@@ -234,7 +234,7 @@
     "description": "body:description",
     "schema": "body:schema"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteUnifiedCustomEntity": {
    "method": "DELETE",
@@ -242,7 +242,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createUnifiedCustomMapping": {
    "method": "POST",
@@ -257,7 +257,7 @@
     "enrichActions": "body:enrichActions",
     "conditions": "body:conditions"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateUnifiedCustomMapping": {
    "method": "PUT",
@@ -271,7 +271,7 @@
     "enrichActions": "body:enrichActions",
     "conditions": "body:conditions"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteUnifiedCustomMapping": {
    "method": "DELETE",
@@ -279,7 +279,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "upsertUnifiedExtension": {
    "method": "PUT",
@@ -289,7 +289,7 @@
     "schema": "body:schema",
     "connectorOverrides": "body:connectorOverrides"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteUnifiedExtension": {
    "method": "DELETE",
@@ -297,7 +297,7 @@
    "inputs": {
     "entityId": "path:entityId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "testUnifiedCustomEntity": {
    "method": "POST",
@@ -309,13 +309,21 @@
     "connectionId": "body:connectionId",
     "params": "body:params"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getProfile": {
    "method": "GET",
    "path": "/v1/profile",
    "inputs": {},
-   "output": "0c94a487e1db"
+   "output": {
+    "data": "object",
+    "data.firstName": "string",
+    "data.lastName": "string",
+    "data.email": "string",
+    "data.emailVerified": "boolean",
+    "data.jobTitle": "string",
+    "data.timezone": "string"
+   }
   },
   "updateProfile": {
    "method": "PUT",
@@ -326,19 +334,53 @@
     "jobTitle": "body:jobTitle",
     "timezone": "body:timezone"
    },
-   "output": "5be8131e0d3c"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.email": "string",
+    "data.firstName": "string",
+    "data.lastName": "string"
+   }
   },
   "getProfileSecurity": {
    "method": "GET",
    "path": "/v1/profile/security",
    "inputs": {},
-   "output": "e5423e3b0b90"
+   "output": {
+    "data": "Record<string, any>"
+   }
   },
   "getMyMemberships": {
    "method": "GET",
    "path": "/v1/users/me/memberships",
    "inputs": {},
-   "output": "ec01801dd4ea"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].orgName": "string",
+    "data[].orgSlug": "string",
+    "data[].orgType": "string",
+    "data[].orgDomain": "string | null",
+    "data[].parentOrgId": "string | null",
+    "data[].role": "string",
+    "data[].isDefault": "boolean",
+    "data[].status": "\"active\" | \"pending\"",
+    "data[].createdAt": "string",
+    "pending": "object[]",
+    "pending[].id": "string",
+    "pending[].orgId": "string",
+    "pending[].orgName": "string",
+    "pending[].orgSlug": "string",
+    "pending[].orgType": "string",
+    "pending[].orgDomain": "string | null",
+    "pending[].parentOrgId": "string | null",
+    "pending[].role": "string",
+    "pending[].isDefault": "boolean",
+    "pending[].status": "\"active\" | \"pending\"",
+    "pending[].createdAt": "string",
+    "activeOrgId": "string | null"
+   }
   },
   "listUsers": {
    "method": "GET",
@@ -349,7 +391,20 @@
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "919b333f47ed"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].email": "string",
+    "data[].firstName": "string",
+    "data[].lastName": "string",
+    "data[].role": "string",
+    "data[].status": "string",
+    "data[].emailVerified": "boolean",
+    "data[].inviteStatus": "\"pending\" | \"accepted\" | \"unknown\"",
+    "data[].createdAt": "string",
+    "data[].expiresAt": "string | null",
+    "total": "number"
+   }
   },
   "inviteUser": {
    "method": "POST",
@@ -363,7 +418,7 @@
     "endOrgId": "body:endOrgId",
     "expiresAt": "body:expiresAt"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getUser": {
    "method": "GET",
@@ -371,7 +426,7 @@
    "inputs": {
     "userId": "path:userId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "removeUser": {
    "method": "DELETE",
@@ -379,7 +434,7 @@
    "inputs": {
     "userId": "path:userId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateUserRole": {
    "method": "PUT",
@@ -389,13 +444,18 @@
     "role": "body:role!",
     "orgId": "body:orgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listPendingUsers": {
    "method": "GET",
    "path": "/v1/users/pending",
    "inputs": {},
-   "output": "60a64442752a"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].email": "string",
+    "data[].requestedAt": "string"
+   }
   },
   "approvePendingUser": {
    "method": "POST",
@@ -403,7 +463,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "rejectPendingUser": {
    "method": "POST",
@@ -411,7 +471,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listOrgs": {
    "method": "GET",
@@ -422,7 +482,7 @@
     "parent_id": "query:parent_id",
     "include_usage": "query:include_usage"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createTenant": {
    "method": "POST",
@@ -442,7 +502,7 @@
     "ownerEmail": "body:ownerEmail",
     "owner_email": "body:owner_email"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTenant": {
    "method": "GET",
@@ -450,7 +510,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateTenant": {
    "method": "PUT",
@@ -465,7 +525,7 @@
     "external_ref": "body:external_ref",
     "externalRef": "body:externalRef"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteTenant": {
    "method": "DELETE",
@@ -473,7 +533,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getOrgConfig": {
    "method": "GET",
@@ -481,7 +541,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateOrgConfig": {
    "method": "PUT",
@@ -490,7 +550,7 @@
     "id": "path:id!",
     "orgName": "body:orgName"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAccountSettings": {
    "method": "GET",
@@ -498,7 +558,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAccountSettings": {
    "method": "PUT",
@@ -509,7 +569,7 @@
     "autoApproveDomain": "body:autoApproveDomain",
     "defaultMemberRole": "body:defaultMemberRole"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectors": {
    "method": "GET",
@@ -529,7 +589,25 @@
     "offset": "query:offset",
     "cursor": "query:cursor"
    },
-   "output": "0b5127b92894"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].description": "string",
+    "data[].category": "string",
+    "data[].categoryKey": "string",
+    "data[].icon": "string",
+    "data[].authType": "string",
+    "data[].status": "\"active\" | \"beta\" | \"deprecated\"",
+    "data[].version": "string",
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "categories": "object[]",
+    "categories[].key": "string",
+    "categories[].count": "number"
+   }
   },
   "createConnector": {
    "method": "POST",
@@ -557,7 +635,7 @@
     "redisConnectionConfig": "body:redisConnectionConfig",
     "connectionVerifyActionId": "body:connectionVerifyActionId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorRequests": {
    "method": "GET",
@@ -567,7 +645,23 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "7982c183dbeb"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].endOrgId": "string | null",
+    "data[].requestedBy": "string",
+    "data[].requestedByEmail": "string | null",
+    "data[].name": "string",
+    "data[].websiteUrl": "string | null",
+    "data[].useCase": "string | null",
+    "data[].source": "\"connectors_page\" | \"hub_search\" | \"onboarding\" | \"api\"",
+    "data[].note": "string | null",
+    "data[].status": "\"open\" | \"planned\" | \"declined\" | \"shipped\"",
+    "data[].requestCount": "number",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
   },
   "createConnectorRequest": {
    "method": "POST",
@@ -579,7 +673,23 @@
     "note": "body:note",
     "source": "body:source"
    },
-   "output": "fabc8cb21417"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.orgId": "string",
+    "data.endOrgId": "string | null",
+    "data.requestedBy": "string",
+    "data.requestedByEmail": "string | null",
+    "data.name": "string",
+    "data.websiteUrl": "string | null",
+    "data.useCase": "string | null",
+    "data.source": "\"connectors_page\" | \"hub_search\" | \"onboarding\" | \"api\"",
+    "data.note": "string | null",
+    "data.status": "\"open\" | \"planned\" | \"declined\" | \"shipped\"",
+    "data.requestCount": "number",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
   },
   "updateConnectorRequest": {
    "method": "PATCH",
@@ -588,7 +698,7 @@
     "id": "path:id!",
     "status": "body:status!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnector": {
    "method": "GET",
@@ -596,7 +706,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConnector": {
    "method": "PUT",
@@ -631,7 +741,7 @@
     "connectionVerifyActionId": "body:connectionVerifyActionId",
     "verifySuccessPath": "body:verifySuccessPath"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConnector": {
    "method": "DELETE",
@@ -640,7 +750,12 @@
     "id": "path:id!",
     "hard": "query:hard"
    },
-   "output": "4ce639c77305"
+   "output": {
+    "data": "object",
+    "data.deleted": "boolean",
+    "data.hard": "boolean",
+    "data.deletedConnections": "number"
+   }
   },
   "restoreConnector": {
    "method": "POST",
@@ -648,7 +763,11 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "5cb59ac8d103"
+   "output": {
+    "data": "object",
+    "data.restored": "boolean",
+    "data.restoredActions": "number"
+   }
   },
   "restoreAction": {
    "method": "POST",
@@ -656,7 +775,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "activateConnector": {
    "method": "POST",
@@ -665,7 +784,7 @@
     "id": "path:id!",
     "endOrgId": "body:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnections": {
    "method": "GET",
@@ -680,7 +799,7 @@
     "includePartnerPool": "query:includePartnerPool",
     "allOrgs": "query:allOrgs"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "storeConnections": {
    "method": "POST",
@@ -703,7 +822,7 @@
     "authProvider": "body:authProvider",
     "connectionScope": "body:connectionScope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnection": {
    "method": "GET",
@@ -711,7 +830,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConnection": {
    "method": "PUT",
@@ -725,7 +844,7 @@
     "isDefault": "body:isDefault",
     "connectionScope": "body:connectionScope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConnections": {
    "method": "DELETE",
@@ -733,13 +852,23 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listSaasConnectors": {
    "method": "GET",
    "path": "/v1/saas-connectors",
    "inputs": {},
-   "output": "a65358f6f3ec"
+   "output": {
+    "saasConnectors": "object[]",
+    "saasConnectors[].id": "string",
+    "saasConnectors[].connectorId": "string",
+    "saasConnectors[].connectorSlug": "string",
+    "saasConnectors[].connectorName": "string",
+    "saasConnectors[].connectorIcon": "string | null",
+    "saasConnectors[].scopes": "string[]",
+    "saasConnectors[].createdAt": "string",
+    "saasConnectors[].updatedAt": "string"
+   }
   },
   "listSaasConnectorConnections": {
    "method": "GET",
@@ -749,7 +878,24 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "346d08290a87"
+   "output": {
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "connections": "object[]",
+    "connections[].id": "string",
+    "connections[].name": "string",
+    "connections[].connectionScope": "string",
+    "connections[].status": "string",
+    "connections[].verifyStatus": "string | null",
+    "connections[].endOrgId": "string",
+    "connections[].endOrgName": "string | null",
+    "connections[].endOrgSlug": "string | null",
+    "connections[].pinnedInstallations": "number",
+    "connections[].createdAt": "string",
+    "connections[].updatedAt": "string"
+   }
   },
   "upsertSaasConnector": {
    "method": "PUT",
@@ -758,7 +904,7 @@
     "connectorId": "path:connectorId!",
     "scopes": "body:scopes!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteSaasConnector": {
    "method": "DELETE",
@@ -766,7 +912,7 @@
    "inputs": {
     "connectorId": "path:connectorId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAppEventTriggers": {
    "method": "GET",
@@ -780,7 +926,7 @@
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createAppEventTrigger": {
    "method": "POST",
@@ -800,7 +946,7 @@
     "accountId": "body:accountId",
     "connectionId": "body:connectionId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAppEventTrigger": {
    "method": "GET",
@@ -808,7 +954,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAppEventTrigger": {
    "method": "PUT",
@@ -823,7 +969,7 @@
     "additionalConfig": "body:additionalConfig",
     "accountId": "body:accountId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteAppEventTrigger": {
    "method": "DELETE",
@@ -831,7 +977,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "retryTriggerSubscription": {
    "method": "POST",
@@ -839,7 +985,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "triggerSchedulerNow": {
    "method": "POST",
@@ -847,7 +993,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTriggersMonitoring": {
    "method": "GET",
@@ -861,7 +1007,7 @@
     "order": "query:order",
     "cursor": "query:cursor"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTriggerMonitoring": {
    "method": "GET",
@@ -871,7 +1017,7 @@
     "dlqLimit": "query:dlqLimit",
     "dlqCursor": "query:dlqCursor"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTriggerOutcomes": {
    "method": "GET",
@@ -880,7 +1026,7 @@
     "id": "path:id!",
     "days": "query:days"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setTriggerStatus": {
    "method": "PATCH",
@@ -889,7 +1035,7 @@
     "id": "path:id!",
     "status": "body:status!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setTriggerReporting": {
    "method": "PUT",
@@ -898,7 +1044,7 @@
     "id": "path:id!",
     "countOnlyField": "body:countOnlyField!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "resetCircuitBreaker": {
    "method": "POST",
@@ -906,7 +1052,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listDlq": {
    "method": "GET",
@@ -916,7 +1062,7 @@
     "cursor": "query:cursor",
     "triggerId": "query:triggerId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "replayDlqEntry": {
    "method": "POST",
@@ -924,7 +1070,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listEvents": {
    "method": "GET",
@@ -942,7 +1088,7 @@
     "until": "query:until",
     "customer": "query:customer"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "eventCounts": {
    "method": "GET",
@@ -957,7 +1103,7 @@
     "until": "query:until",
     "customer": "query:customer"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "countEvents": {
    "method": "GET",
@@ -969,7 +1115,7 @@
     "env": "query:env",
     "search": "query:search"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getEvent": {
    "method": "GET",
@@ -977,7 +1123,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getEventAttempts": {
    "method": "GET",
@@ -985,7 +1131,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "replayEvent": {
    "method": "POST",
@@ -993,7 +1139,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflows": {
    "method": "GET",
@@ -1011,7 +1157,17 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "58763738da53"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].description": "string",
+    "data[].status": "string",
+    "data[].trigger": "Record<string, any>",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string",
+    "total": "number"
+   }
   },
   "createWorkflow": {
    "method": "POST",
@@ -1037,13 +1193,22 @@
     "testHeaders": "body:testHeaders",
     "connectorManifest": "body:connectorManifest"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowCategories": {
    "method": "GET",
    "path": "/v1/workflow-categories",
    "inputs": {},
-   "output": "e2c1ae0ab062"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].colour": "string",
+    "data[].workflowCount": "number",
+    "data[].createdAt": "string | null",
+    "data[].updatedAt": "string | null",
+    "limit": "number"
+   }
   },
   "createWorkflowCategory": {
    "method": "POST",
@@ -1052,7 +1217,7 @@
     "name": "body:name!",
     "colour": "body:colour!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWorkflowCategory": {
    "method": "DELETE",
@@ -1060,7 +1225,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWorkflowCategory": {
    "method": "PATCH",
@@ -1070,13 +1235,22 @@
     "name": "body:name",
     "colour": "body:colour"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowLabels": {
    "method": "GET",
    "path": "/v1/workflow-labels",
    "inputs": {},
-   "output": "70248946acd3"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].colour": "string",
+    "data[].usageCount": "number",
+    "data[].createdAt": "string | null",
+    "data[].updatedAt": "string | null",
+    "limit": "number"
+   }
   },
   "createWorkflowLabel": {
    "method": "POST",
@@ -1085,7 +1259,7 @@
     "name": "body:name!",
     "colour": "body:colour!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWorkflowLabel": {
    "method": "DELETE",
@@ -1093,7 +1267,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWorkflowLabel": {
    "method": "PATCH",
@@ -1103,7 +1277,7 @@
     "name": "body:name",
     "colour": "body:colour"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setWorkflowLabels": {
    "method": "PUT",
@@ -1112,7 +1286,7 @@
     "id": "path:id!",
     "labelIds": "body:labelIds!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "runWorkflowCode": {
    "method": "POST",
@@ -1128,7 +1302,7 @@
     "workflowId": "body:workflowId",
     "verification": "body:verification"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "testSavedWorkflow": {
    "method": "POST",
@@ -1141,7 +1315,7 @@
     "partialMock": "body:partialMock",
     "mockScenarios": "body:mockScenarios"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowStateKeys": {
    "method": "GET",
@@ -1150,7 +1324,7 @@
     "prefix": "query:prefix",
     "limit": "query:limit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowTables": {
    "method": "GET",
@@ -1158,7 +1332,7 @@
    "inputs": {
     "tableName": "query:tableName"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWorkflow": {
    "method": "GET",
@@ -1166,7 +1340,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWorkflow": {
    "method": "PUT",
@@ -1193,7 +1367,7 @@
     "testHeaders": "body:testHeaders",
     "connectorManifest": "body:connectorManifest"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWorkflow": {
    "method": "DELETE",
@@ -1202,7 +1376,7 @@
     "id": "path:id!",
     "permanent": "query:permanent"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "restoreWorkflow": {
    "method": "POST",
@@ -1210,7 +1384,11 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "ab3d95be837f"
+   "output": {
+    "data": "object",
+    "data.restored": "boolean",
+    "data.reason": "string"
+   }
   },
   "getWorkflowConnectorManifest": {
    "method": "GET",
@@ -1218,7 +1396,28 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "d450146026c9"
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.connectorManifest": "object[]",
+    "data.connectorManifest[].slug": "string",
+    "data.connectorManifest[].connectorId": "string",
+    "data.connectorManifest[].orgId": "string",
+    "data.connectorManifest[].scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest[].connectionId": "string | null",
+    "data.connectorManifest[].retryPolicy": "object | null",
+    "data.connectorManifest[].timeoutMs": "number | null",
+    "data.connectorManifest[].stale": "boolean",
+    "data.connectorManifest[].actions": "object[]",
+    "data.connectorManifest[].actions[].slug": "string",
+    "data.connectorManifest[].actions[].id": "string",
+    "data.connectorManifest[].actions[].version": "string",
+    "data.connectorManifest[].actions[].externalVersion": "string",
+    "data.connectorManifest[].actions[].versionMajor": "number",
+    "data.connectorManifest[].actions[].manual": "boolean",
+    "data.connectorManifest[].actions[].retryPolicy": "object | null",
+    "data.connectorManifest[].actions[].timeoutMs": "number | null"
+   }
   },
   "setWorkflowConnectorScope": {
    "method": "PATCH",
@@ -1232,7 +1431,30 @@
     "timeoutMs": "body:timeoutMs",
     "actions": "body:actions"
    },
-   "output": "e5eb88aaf3d8"
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.slug": "string",
+    "data.scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest": "object[]",
+    "data.connectorManifest[].slug": "string",
+    "data.connectorManifest[].connectorId": "string",
+    "data.connectorManifest[].orgId": "string",
+    "data.connectorManifest[].scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest[].connectionId": "string | null",
+    "data.connectorManifest[].retryPolicy": "object | null",
+    "data.connectorManifest[].timeoutMs": "number | null",
+    "data.connectorManifest[].stale": "boolean",
+    "data.connectorManifest[].actions": "object[]",
+    "data.connectorManifest[].actions[].slug": "string",
+    "data.connectorManifest[].actions[].id": "string",
+    "data.connectorManifest[].actions[].version": "string",
+    "data.connectorManifest[].actions[].externalVersion": "string",
+    "data.connectorManifest[].actions[].versionMajor": "number",
+    "data.connectorManifest[].actions[].manual": "boolean",
+    "data.connectorManifest[].actions[].retryPolicy": "object | null",
+    "data.connectorManifest[].actions[].timeoutMs": "number | null"
+   }
   },
   "getWorkflowDocs": {
    "method": "GET",
@@ -1242,7 +1464,38 @@
     "audience": "query:audience",
     "format": "query:format"
    },
-   "output": "efacde27f099"
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.audience": "string",
+    "data.generatedAt": "string | null",
+    "data.stale": "boolean",
+    "data.workflowUpdatedAt": "string | null",
+    "data.workflowVersion": "number",
+    "data.markdown": "string",
+    "data.sections": "object[]",
+    "data.sections[].heading": "string | null",
+    "data.sections[].markdown": "string",
+    "data.fieldMappings": "object[]",
+    "data.fieldMappings[].source": "string",
+    "data.fieldMappings[].destination": "string",
+    "data.fieldMappings[].notes": "string",
+    "data.slug": "string",
+    "data.name": "string",
+    "data.description": "string | null",
+    "data.flowSteps": "Record<string, any>[]",
+    "data.sequencePhases": "Record<string, any> | null",
+    "data.sequenceMermaid": "string | null",
+    "data.triggers": "Record<string, any>[]",
+    "data.connectorActions": "object[]",
+    "data.connectorActions[].slug": "string",
+    "data.connectorActions[].actions": "string[]",
+    "data.inputSchema": "Record<string, any> | null",
+    "data.outputSchema": "Record<string, any> | null",
+    "data.inputExample": "any | null",
+    "data.executionTier": "string",
+    "data.timeoutMs": "number"
+   }
   },
   "listWorkflowDocVersions": {
    "method": "GET",
@@ -1253,7 +1506,15 @@
     "kind": "query:kind",
     "limit": "query:limit"
    },
-   "output": "6788528ec1a0"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].audience": "string",
+    "data[].kind": "string",
+    "data[].createdBy": "string | null",
+    "data[].createdAt": "string",
+    "data[].markdownLength": "number"
+   }
   },
   "getWorkflowDocVersion": {
    "method": "GET",
@@ -1262,7 +1523,7 @@
     "id": "path:id!",
     "versionId": "path:versionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "generateWorkflowDocs": {
    "method": "POST",
@@ -1271,7 +1532,11 @@
     "id": "path:id!",
     "audience": "body:audience"
    },
-   "output": "31f6fe2d8164"
+   "output": {
+    "data": "object",
+    "data.generating": "boolean",
+    "data.audience": "string"
+   }
   },
   "executeWorkflow": {
    "method": "POST",
@@ -1281,7 +1546,7 @@
     "fastnEnv": "header:x-fastn-env",
     "input": "body:input"
    },
-   "output": "799ba53d5322"
+   "output": {}
   },
   "listWorkflowExecutions": {
    "method": "GET",
@@ -1301,7 +1566,7 @@
     "searchIn": "query:searchIn",
     "sort": "query:sort"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "searchExecutionLogs": {
    "method": "GET",
@@ -1315,7 +1580,7 @@
     "since": "query:since",
     "limit": "query:limit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listExecutions": {
    "method": "GET",
@@ -1327,7 +1592,7 @@
     "status": "query:status",
     "status_code": "query:status_code"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWorkflowExecution": {
    "method": "GET",
@@ -1336,7 +1601,7 @@
     "id": "path:id!",
     "executionId": "path:executionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "cancelWorkflowExecution": {
    "method": "DELETE",
@@ -1345,7 +1610,7 @@
     "id": "path:id!",
     "executionId": "path:executionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getExecutionLogs": {
    "method": "GET",
@@ -1355,7 +1620,20 @@
     "executionId": "path:executionId!",
     "limit": "query:limit"
    },
-   "output": "5831626be45f"
+   "output": {
+    "data": "object",
+    "data.source": "\"loki\"",
+    "data.available": "boolean",
+    "data.reason": "\"not_configured\" | \"query_failed\" | \"redacted\"",
+    "data.truncated": "boolean",
+    "data.lines": "object[]",
+    "data.lines[].ts": "string",
+    "data.lines[].level": "\"debug\" | \"info\" | \"warn\" | \"error\"",
+    "data.lines[].source": "\"fastn.loki\" | \"console\"",
+    "data.lines[].message": "string",
+    "data.lines[].executionId": "string | null",
+    "data.lines[].data": "any"
+   }
   },
   "replayExecution": {
    "method": "POST",
@@ -1365,7 +1643,19 @@
     "executionId": "path:executionId!",
     "env": "query:env"
    },
-   "output": "db7a67ffbc81"
+   "output": {
+    "data": "object",
+    "data.executionId": "string",
+    "data.replayedFrom": "string",
+    "data.tier": "\"instant\" | \"standard\" | \"long\"",
+    "data.status": "string",
+    "data.statusCode": "number",
+    "data.durationMs": "number",
+    "data.output": "any",
+    "data.error": "string | null",
+    "data.errorCategory": "string | null",
+    "data.fixSuggestion": "string | null"
+   }
   },
   "listWorkflowDiffReports": {
    "method": "GET",
@@ -1377,13 +1667,33 @@
     "limit": "query:limit",
     "before": "query:before"
    },
-   "output": "76cadd3b6d42"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].scope": "string",
+    "data[].entity": "string",
+    "data[].runId": "string | null",
+    "data[].executionId": "string | null",
+    "data[].workflowId": "string | null",
+    "data[].stats": "Record<string, any>",
+    "data[].details": "Record<string, any>[] | null",
+    "data[].createdAt": "string"
+   }
   },
   "listEnvironments": {
    "method": "GET",
    "path": "/v1/environments",
    "inputs": {},
-   "output": "aa031a427ebb"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].slug": "string",
+    "data[].isDefault": "boolean",
+    "data[].isDeletable": "boolean",
+    "data[].requiresReview": "boolean",
+    "data[].createdAt": "string"
+   }
   },
   "createEnvironment": {
    "method": "POST",
@@ -1392,7 +1702,16 @@
     "name": "body:name!",
     "slug": "body:slug!"
    },
-   "output": "3da31a4852ff"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.slug": "string",
+    "data.isDefault": "boolean",
+    "data.isDeletable": "boolean",
+    "data.requiresReview": "boolean",
+    "data.createdAt": "string"
+   }
   },
   "deleteEnvironment": {
    "method": "DELETE",
@@ -1400,7 +1719,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setEnvironmentReviewRequirement": {
    "method": "PATCH",
@@ -1409,7 +1728,16 @@
     "id": "path:id!",
     "requiresReview": "body:requiresReview!"
    },
-   "output": "3da31a4852ff"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.slug": "string",
+    "data.isDefault": "boolean",
+    "data.isDeletable": "boolean",
+    "data.requiresReview": "boolean",
+    "data.createdAt": "string"
+   }
   },
   "getWorkflowVersion": {
    "method": "GET",
@@ -1418,7 +1746,19 @@
     "id": "path:id!",
     "versionId": "path:versionId!"
    },
-   "output": "cb1581b8884e"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.versionNumber": "number",
+    "data.message": "string | null",
+    "data.publishedBy": "string",
+    "data.publishedAt": "string",
+    "data.gitCommitSha": "string | null",
+    "data.githubPrNumber": "number | null",
+    "data.githubReleaseId": "string | null",
+    "data.githubReleaseUrl": "string | null",
+    "data.code": "string"
+   }
   },
   "deployWorkflowVersion": {
    "method": "POST",
@@ -1428,7 +1768,15 @@
     "env_id": "body:env_id!",
     "version_id": "body:version_id!"
    },
-   "output": "b9c15a83e37a"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.envId": "string",
+    "data.envSlug": "string",
+    "data.versionId": "string",
+    "data.envVersion": "number",
+    "data.deployedAt": "string"
+   }
   },
   "promoteWorkflow": {
    "method": "POST",
@@ -1439,13 +1787,28 @@
     "version_id": "body:version_id!",
     "message": "body:message"
    },
-   "output": "0496af454186"
+   "output": {
+    "data": "object | object"
+   }
   },
   "listSyncJobs": {
    "method": "GET",
    "path": "/v1/sync/jobs",
    "inputs": {},
-   "output": "6af5a1c9028c"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].connectorId": "string",
+    "data[].direction": "\"inbound\" | \"outbound\" | \"bidirectional\"",
+    "data[].entity": "string",
+    "data[].status": "\"active\" | \"paused\" | \"running\" | \"error\"",
+    "data[].lastSyncAt": "string | null",
+    "data[].recordsSynced": "number",
+    "data[].recordsProcessed": "number",
+    "data[].recordsFailed": "number",
+    "data[].recordsSkipped": "number",
+    "total": "number"
+   }
   },
   "createSyncJob": {
    "method": "POST",
@@ -1455,7 +1818,7 @@
     "entity": "body:entity!",
     "direction": "body:direction"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getSyncJob": {
    "method": "GET",
@@ -1463,7 +1826,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteSyncJob": {
    "method": "DELETE",
@@ -1471,7 +1834,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "triggerSync": {
    "method": "POST",
@@ -1479,7 +1842,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "executeRequest": {
    "method": "POST",
@@ -1492,7 +1855,7 @@
     "body": "body:body",
     "connectionId": "body:connectionId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorExecutions": {
    "method": "GET",
@@ -1505,7 +1868,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorExecution": {
    "method": "GET",
@@ -1513,13 +1876,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentListOrchestratorSessions": {
    "method": "GET",
    "path": "/v1/agent/orchestrator/sessions",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentCreateOrchestratorSession": {
    "method": "POST",
@@ -1527,7 +1890,7 @@
    "inputs": {
     "title": "body:title"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentGetOrchestratorMessages": {
    "method": "GET",
@@ -1535,7 +1898,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentUploadOrchestratorAttachment": {
    "method": "POST",
@@ -1548,7 +1911,7 @@
     "width": "body:width",
     "height": "body:height"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentGetOrchestratorAttachment": {
    "method": "GET",
@@ -1557,7 +1920,7 @@
     "id": "path:id!",
     "attachmentId": "path:attachmentId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentOrchestratorStream": {
    "method": "POST",
@@ -1568,7 +1931,7 @@
     "trigger": "body:trigger",
     "messageId": "body:messageId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentErrorDiagnosis": {
    "method": "POST",
@@ -1582,7 +1945,7 @@
     "trace": "body:trace",
     "stack": "body:stack"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentGenerateWorkflowDocs": {
    "method": "POST",
@@ -1601,7 +1964,7 @@
     "inputExample": "body:inputExample",
     "connectorActions": "body:connectorActions"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listTraces": {
    "method": "GET",
@@ -1610,7 +1973,7 @@
     "connectorId": "query:connectorId",
     "status": "query:status"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTrace": {
    "method": "GET",
@@ -1618,7 +1981,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAlerts": {
    "method": "GET",
@@ -1626,7 +1989,31 @@
    "inputs": {
     "endOrgId": "query:endOrgId"
    },
-   "output": "bf7f94310a6b"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data[].metric": "string",
+    "data[].condition": "\"gt\" | \"lt\"",
+    "data[].threshold": "number",
+    "data[].window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data[].workflowIds": "string[] | null",
+    "data[].workflowNames": "string[] | null",
+    "data[].deliveries": "object[]",
+    "data[].deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data[].deliveries[].to": "string",
+    "data[].deliveries[].url": "string",
+    "data[].deliveries[].connectionId": "string",
+    "data[].deliveries[].connectorSlug": "string",
+    "data[].deliveries[].target": "string",
+    "data[].enabled": "boolean",
+    "data[].throttle": "boolean",
+    "data[].endOrgId": "string | null",
+    "data[].lastFiredAt": "string | null",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
   },
   "createAlert": {
    "method": "POST",
@@ -1644,7 +2031,31 @@
     "enabled": "body:enabled",
     "throttle": "body:throttle"
    },
-   "output": "2a89b68a5444"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data.metric": "string",
+    "data.condition": "\"gt\" | \"lt\"",
+    "data.threshold": "number",
+    "data.window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data.workflowIds": "string[] | null",
+    "data.workflowNames": "string[] | null",
+    "data.deliveries": "object[]",
+    "data.deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data.deliveries[].to": "string",
+    "data.deliveries[].url": "string",
+    "data.deliveries[].connectionId": "string",
+    "data.deliveries[].connectorSlug": "string",
+    "data.deliveries[].target": "string",
+    "data.enabled": "boolean",
+    "data.throttle": "boolean",
+    "data.endOrgId": "string | null",
+    "data.lastFiredAt": "string | null",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
   },
   "enableDefaultAlerts": {
    "method": "POST",
@@ -1653,7 +2064,11 @@
     "endOrgId": "query:endOrgId",
     "email": "body:email"
    },
-   "output": "0e07154a9fdd"
+   "output": {
+    "data": "object",
+    "data.created": "Record<string, any>[]",
+    "data.alreadyConfigured": "boolean"
+   }
   },
   "updateAlert": {
    "method": "PUT",
@@ -1672,7 +2087,31 @@
     "enabled": "body:enabled",
     "throttle": "body:throttle"
    },
-   "output": "2a89b68a5444"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data.metric": "string",
+    "data.condition": "\"gt\" | \"lt\"",
+    "data.threshold": "number",
+    "data.window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data.workflowIds": "string[] | null",
+    "data.workflowNames": "string[] | null",
+    "data.deliveries": "object[]",
+    "data.deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data.deliveries[].to": "string",
+    "data.deliveries[].url": "string",
+    "data.deliveries[].connectionId": "string",
+    "data.deliveries[].connectorSlug": "string",
+    "data.deliveries[].target": "string",
+    "data.enabled": "boolean",
+    "data.throttle": "boolean",
+    "data.endOrgId": "string | null",
+    "data.lastFiredAt": "string | null",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
   },
   "deleteAlert": {
    "method": "DELETE",
@@ -1681,7 +2120,7 @@
     "id": "path:id!",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuditLog": {
    "method": "GET",
@@ -1698,19 +2137,48 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "c626b33c6caa"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].action": "string",
+    "data[].userId": "string",
+    "data[].userName": "string",
+    "data[].resourceType": "string",
+    "data[].resource": "string",
+    "data[].targetName": "string",
+    "data[].outcome": "string",
+    "data[].details": "Record<string, any>",
+    "data[].orgId": "string",
+    "data[].endOrgId": "string | null",
+    "data[].createdAt": "string",
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "pagination.totalIsLowerBound": "boolean",
+    "pagination.nextCursor": "string | null"
+   }
   },
   "listAuditLogActions": {
    "method": "GET",
    "path": "/v1/audit-log/actions",
    "inputs": {},
-   "output": "073e637b4c4b"
+   "output": {
+    "data": "string[]"
+   }
   },
   "listPlans": {
    "method": "GET",
    "path": "/v1/plans",
    "inputs": {},
-   "output": "e27a50e95da0"
+   "output": {
+    "data": "object[]",
+    "data[].tier": "string",
+    "data[].name": "string",
+    "data[].price": "number",
+    "data[].features": "string[]",
+    "data[].limits": "Record<string, any>"
+   }
   },
   "getPlan": {
    "method": "GET",
@@ -1718,7 +2186,7 @@
    "inputs": {
     "tier": "path:tier!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getUsage": {
    "method": "GET",
@@ -1728,7 +2196,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setQuotaLimit": {
    "method": "PUT",
@@ -1738,7 +2206,7 @@
     "endOrgId": "body:endOrgId",
     "limits": "body:limits!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteQuotaLimit": {
    "method": "DELETE",
@@ -1748,7 +2216,7 @@
     "orgId": "body:orgId",
     "endOrgId": "body:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getQuotaUsage": {
    "method": "GET",
@@ -1757,7 +2225,7 @@
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listApiKeys": {
    "method": "GET",
@@ -1765,7 +2233,22 @@
    "inputs": {
     "mode": "query:mode"
    },
-   "output": "da8c6cfa7b11"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].prefix": "string",
+    "data[].workflowEnvId": "string | null",
+    "data[].workflowEnvironment": "object | null",
+    "data[].workflowEnvironment.id": "string",
+    "data[].workflowEnvironment.name": "string",
+    "data[].workflowEnvironment.slug": "string",
+    "data[].envReach": "\"test\" | \"pinned\" | \"all\"",
+    "data[].permissions": "string[]",
+    "data[].expiresAt": "string | null",
+    "data[].lastUsedAt": "string | null",
+    "data[].createdAt": "string"
+   }
   },
   "getApiKey": {
    "method": "GET",
@@ -1773,7 +2256,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateApiKey": {
    "method": "PUT",
@@ -1787,7 +2270,7 @@
     "expiresAt": "body:expiresAt",
     "allowedOrigins": "body:allowedOrigins"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "revokeApiKey": {
    "method": "DELETE",
@@ -1796,7 +2279,7 @@
     "id": "path:id!",
     "permanent": "query:permanent"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getThrottle": {
    "method": "GET",
@@ -1805,7 +2288,7 @@
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateThrottle": {
    "method": "PUT",
@@ -1820,7 +2303,7 @@
     "maxConcurrent": "body:maxConcurrent",
     "burstLimit": "body:burstLimit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createEmbedToken": {
    "method": "POST",
@@ -1840,7 +2323,16 @@
     "role": "body:role",
     "metadata": "body:metadata"
    },
-   "output": "8a19a3cbd34c"
+   "output": {
+    "data": "object",
+    "data.token": "string",
+    "data.endOrgId": "string",
+    "data.userId": "string",
+    "data.role": "string",
+    "data.tierId": "string | null",
+    "data.expiresAt": "string",
+    "data.expiresIn": "number"
+   }
   },
   "createSetupLink": {
    "method": "POST",
@@ -1858,7 +2350,17 @@
     "metadata": "body:metadata",
     "redirectUrl": "body:redirectUrl"
    },
-   "output": "37b76b3ab49d"
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.setupUrl": "string",
+    "data.status": "\"pending\"",
+    "data.expiresAt": "string",
+    "data.endOrgId": "string",
+    "data.metadata": "Record<string, any>",
+    "data.redirectUrl": "string",
+    "data.allowAdditionalConnection": "boolean"
+   }
   },
   "getSetupLink": {
    "method": "GET",
@@ -1866,7 +2368,29 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "fb6f894ec327"
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.status": "\"pending\" | \"complete\" | \"revoked\"",
+    "data.widgetId": "string",
+    "data.endOrgId": "string",
+    "data.label": "string",
+    "data.installationId": "string | null",
+    "data.expiresAt": "string",
+    "data.redirectUrl": "string",
+    "data.metadata": "Record<string, any>",
+    "data.allowAdditionalConnection": "boolean",
+    "data.widget": "object | null",
+    "data.widget.id": "string",
+    "data.widget.name": "string",
+    "data.widget.slug": "string",
+    "data.widget.connectorRefs": "Record<string, any>[]",
+    "data.widget.connectorIds": "string[]",
+    "data.widget.unifiedRefs": "Record<string, any>[]",
+    "data.configTemplate": "object | null",
+    "data.configTemplate.id": "string",
+    "data.configTemplate.config": "Record<string, any>"
+   }
   },
   "cancelSetupLink": {
    "method": "DELETE",
@@ -1874,7 +2398,11 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "79c673cbe30e"
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.status": "\"revoked\""
+   }
   },
   "completeSetupLink": {
    "method": "POST",
@@ -1884,19 +2412,24 @@
     "connections": "body:connections",
     "config": "body:config"
    },
-   "output": "22d60093a595"
+   "output": {
+    "data": "object",
+    "data.installationId": "string",
+    "data.status": "\"complete\"",
+    "data.reused": "boolean"
+   }
   },
   "listSystemGrants": {
    "method": "GET",
    "path": "/v1/grants/system",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listGrants": {
    "method": "GET",
    "path": "/v1/grants",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createGrant": {
    "method": "POST",
@@ -1904,7 +2437,7 @@
    "inputs": {
     "body": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateGrant": {
    "method": "PUT",
@@ -1912,7 +2445,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteGrant": {
    "method": "DELETE",
@@ -1920,7 +2453,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "trackActivity": {
    "method": "POST",
@@ -1931,7 +2464,10 @@
     "sessionId": "body:sessionId",
     "userAgent": "body:userAgent"
    },
-   "output": "8f2ef3384ccf"
+   "output": {
+    "data": "object",
+    "data.recorded": "boolean"
+   }
   },
   "trackPageActivity": {
    "method": "POST",
@@ -1940,25 +2476,37 @@
     "page": "body:page!",
     "referrer": "body:referrer"
    },
-   "output": "8f2ef3384ccf"
+   "output": {
+    "data": "object",
+    "data.recorded": "boolean"
+   }
   },
   "getMyActivity": {
    "method": "GET",
    "path": "/v1/activity/me",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getOnboardingStatus": {
    "method": "GET",
    "path": "/v1/onboarding/status",
    "inputs": {},
-   "output": "1b52a72ef8a6"
+   "output": {
+    "data": "object",
+    "data.isComplete": "boolean",
+    "data.completedAt": "string | null"
+   }
   },
   "getOnboarding": {
    "method": "GET",
    "path": "/v1/onboarding",
    "inputs": {},
-   "output": "12f7b01868a0"
+   "output": {
+    "data": "object",
+    "data.heardFrom": "string",
+    "data.jobRole": "string",
+    "data.completedAt": "string | null"
+   }
   },
   "submitOnboarding": {
    "method": "POST",
@@ -1973,7 +2521,10 @@
     "needsReview": "body:needsReview",
     "enrichment": "body:enrichment"
    },
-   "output": "acdbeb463fc9"
+   "output": {
+    "data": "object",
+    "data.saved": "boolean"
+   }
   },
   "updateOnboarding": {
    "method": "PATCH",
@@ -1987,7 +2538,7 @@
     "currentStep": "body:currentStep",
     "chatHistory": "body:chatHistory"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setOnboardingAgentDomain": {
    "method": "POST",
@@ -1995,19 +2546,28 @@
    "inputs": {
     "domain": "body:domain!"
    },
-   "output": "acdbeb463fc9"
+   "output": {
+    "data": "object",
+    "data.saved": "boolean"
+   }
   },
   "clearOnboardingAgentDomain": {
    "method": "DELETE",
    "path": "/v1/onboarding/agent-domain",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getHubSettings": {
    "method": "GET",
    "path": "/v1/hub-settings",
    "inputs": {},
-   "output": "9bedacbde9df"
+   "output": {
+    "data": "object",
+    "data.primaryColor": "string",
+    "data.logoUrl": "string",
+    "data.welcomeMessage": "string",
+    "data.allowedConnectors": "string[]"
+   }
   },
   "updateHubSettings": {
    "method": "PUT",
@@ -2016,7 +2576,9 @@
     "config": "body:config!",
     "baseUpdatedAt": "body:baseUpdatedAt"
    },
-   "output": "e5423e3b0b90"
+   "output": {
+    "data": "Record<string, any>"
+   }
   },
   "listSecrets": {
    "method": "GET",
@@ -2024,7 +2586,14 @@
    "inputs": {
     "end_org_id": "query:end_org_id"
    },
-   "output": "3dd19ce7a359"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].type": "\"text\" | \"json\"",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
   },
   "createSecret": {
    "method": "POST",
@@ -2036,7 +2605,13 @@
     "endOrgId": "body:endOrgId",
     "environment": "body:environment"
    },
-   "output": "48a488d7c6c0"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.type": "\"text\" | \"json\"",
+    "data.createdAt": "string"
+   }
   },
   "updateSecret": {
    "method": "PUT",
@@ -2048,7 +2623,7 @@
     "value": "body:value!",
     "type": "body:type"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteSecret": {
    "method": "DELETE",
@@ -2058,7 +2633,7 @@
     "end_org_id": "query:end_org_id",
     "environment": "query:environment"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWidgets": {
    "method": "GET",
@@ -2067,7 +2642,20 @@
     "include": "query:include",
     "endOrgId": "query:endOrgId"
    },
-   "output": "be83c63a6020"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].forkedFromWidgetId": "string | null",
+    "data[].inheritedFrom": "Record<string, any> | null",
+    "data[].customisedFrom": "Record<string, any> | null",
+    "data[].version": "Record<string, any> | null",
+    "data[].name": "string",
+    "data[].type": "string",
+    "data[].config": "Record<string, any>",
+    "data[].createdAt": "string",
+    "total": "number"
+   }
   },
   "createWidget": {
    "method": "POST",
@@ -2094,7 +2682,13 @@
     "enabled": "body:enabled",
     "allowed_end_org_ids": "body:allowed_end_org_ids"
    },
-   "output": "a9cda95af320"
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.type": "string",
+    "data.createdAt": "string"
+   }
   },
   "getWidgetInsights": {
    "method": "GET",
@@ -2107,7 +2701,7 @@
     "tz": "query:tz",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTenantInsights": {
    "method": "GET",
@@ -2126,7 +2720,7 @@
     "health": "query:health",
     "customer": "query:customer"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getLiveTenantInsights": {
    "method": "GET",
@@ -2134,7 +2728,7 @@
    "inputs": {
     "customer": "query:customer"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkIntegration": {
    "method": "POST",
@@ -2144,7 +2738,7 @@
     "endOrgId": "query:endOrgId",
     "name": "body:name"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkWidget": {
    "method": "POST",
@@ -2154,7 +2748,7 @@
     "endOrgId": "query:endOrgId",
     "name": "body:name"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setWidgetActiveVersion": {
    "method": "PUT",
@@ -2164,7 +2758,7 @@
     "endOrgId": "query:endOrgId",
     "activeWidgetId": "body:activeWidgetId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getForkLineage": {
    "method": "GET",
@@ -2173,7 +2767,7 @@
     "ids": "query:ids!",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkWorkflow": {
    "method": "POST",
@@ -2183,7 +2777,7 @@
     "endOrgId": "query:endOrgId",
     "name": "body:name"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkTrigger": {
    "method": "POST",
@@ -2193,7 +2787,7 @@
     "endOrgId": "query:endOrgId",
     "name": "body:name"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkConfig": {
    "method": "POST",
@@ -2203,7 +2797,7 @@
     "endOrgId": "query:endOrgId",
     "widgetId": "body:widgetId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "forkConnector": {
    "method": "POST",
@@ -2212,7 +2806,7 @@
     "id": "path:id!",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWidgetEmbedStatus": {
    "method": "GET",
@@ -2220,7 +2814,7 @@
    "inputs": {
     "widgetId": "query:widgetId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWidget": {
    "method": "GET",
@@ -2229,7 +2823,7 @@
     "id": "path:id!",
     "include": "query:include"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWidget": {
    "method": "PUT",
@@ -2257,7 +2851,7 @@
     "enabled": "body:enabled",
     "allowed_end_org_ids": "body:allowed_end_org_ids"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWidget": {
    "method": "DELETE",
@@ -2265,7 +2859,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConfigFieldOptions": {
    "method": "POST",
@@ -2281,7 +2875,18 @@
     "cursor": "body:cursor",
     "query": "body:query"
    },
-   "output": "ca017d67b8ca"
+   "output": {
+    "data": "object",
+    "data.options": "object[]",
+    "data.options[].value": "string",
+    "data.options[].label": "string",
+    "data.pageInfo": "object",
+    "data.pageInfo.hasNextPage": "boolean",
+    "data.pageInfo.offset": "number",
+    "data.pageInfo.limit": "number",
+    "data.pageInfo.endCursor": "string | null",
+    "data.pageInfo.total": "number | null"
+   }
   },
   "listConfigEntries": {
    "method": "GET",
@@ -2291,7 +2896,17 @@
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
    },
-   "output": "17e0515a8020"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "meta": "object",
+    "meta.entityId": "string",
+    "meta.entities": "string[]",
+    "meta.total": "number",
+    "meta.totalUnfiltered": "number",
+    "meta.multiConfig": "boolean",
+    "meta.connectorId": "string"
+   }
   },
   "createConfigEntry": {
    "method": "POST",
@@ -2303,7 +2918,7 @@
     "connectorId": "body:connectorId",
     "values": "body:values"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConfigEntry": {
    "method": "GET",
@@ -2314,7 +2929,7 @@
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConfigEntry": {
    "method": "PUT",
@@ -2328,7 +2943,7 @@
     "bodyConnectorId": "body:connectorId",
     "values": "body:values"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConfigEntry": {
    "method": "DELETE",
@@ -2339,13 +2954,19 @@
     "entityId": "query:entityId",
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listRoles": {
    "method": "GET",
    "path": "/v1/roles",
    "inputs": {},
-   "output": "bf3a271a02c7"
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].permissions": "string[]",
+    "data[].createdAt": "string"
+   }
   },
   "createRole": {
    "method": "POST",
@@ -2356,7 +2977,7 @@
     "permissions": "body:permissions!",
     "baseRole": "body:baseRole"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getRole": {
    "method": "GET",
@@ -2364,7 +2985,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateRole": {
    "method": "PUT",
@@ -2376,7 +2997,7 @@
     "permissions": "body:permissions",
     "baseRole": "body:baseRole"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteRole": {
    "method": "DELETE",
@@ -2384,37 +3005,87 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "whoami": {
    "method": "GET",
    "path": "/v1/me",
    "inputs": {},
-   "output": "8bdfb2176808"
+   "output": {
+    "data": "object",
+    "data.actor": "\"user\" | \"api_key\" | \"embed_user\" | \"share_link\"",
+    "data.surface": "\"dashboard\" | \"embed\" | \"api\"",
+    "data.actingAsTenant": "boolean",
+    "data.role": "string",
+    "data.sub": "string",
+    "data.user": "object | null",
+    "data.user.id": "string | null",
+    "data.user.displayName": "string | null",
+    "data.user.email": "string | null",
+    "data.org": "object",
+    "data.org.id": "string",
+    "data.org.name": "string | null",
+    "data.org.type": "string | null",
+    "data.org.externalRef": "string | null",
+    "data.parentOrg": "object | null",
+    "data.parentOrg.id": "string",
+    "data.parentOrg.name": "string | null",
+    "data.parentOrg.type": "string | null",
+    "data.parentOrg.externalRef": "string | null",
+    "data.installationId": "string | null",
+    "data.environment": "string | null",
+    "data.permissions": "object",
+    "data.permissions.role": "string[]",
+    "data.permissions.structured": "Record<string, any> | null",
+    "data.permissions.apiKeyGrant": "string[] | null",
+    "data.capability": "object | null",
+    "data.capability.action": "string",
+    "data.capability.resourceId": "string",
+    "data.apiKey": "object | null",
+    "data.apiKey.mode": "string | null",
+    "data.apiKey.environment": "string | null"
+   }
   },
   "getMyEntitlements": {
    "method": "GET",
    "path": "/v1/me/entitlements",
    "inputs": {},
-   "output": "18103a0ebcf5"
+   "output": {
+    "data": "Record<string, boolean>"
+   }
   },
   "getMyOrgDomain": {
    "method": "GET",
    "path": "/v1/me/org-domain",
    "inputs": {},
-   "output": "c284a3bf0ef0"
+   "output": {
+    "data": "object",
+    "data.domain": "string | null"
+   }
   },
   "getMySuggestions": {
    "method": "GET",
    "path": "/v1/me/suggestions",
    "inputs": {},
-   "output": "6bd80c7988b5"
+   "output": {
+    "data": "object",
+    "data.suggestions": "object[]",
+    "data.suggestions[].label": "string",
+    "data.suggestions[].prompt": "string",
+    "data.writing": "boolean"
+   }
   },
   "getMyPlanChangeRequest": {
    "method": "GET",
    "path": "/v1/plan-change-requests/me",
    "inputs": {},
-   "output": "e88f24472992"
+   "output": {
+    "data": "object | null",
+    "data.id": "string",
+    "data.requestedTier": "string",
+    "data.status": "\"pending\" | \"approved\" | \"rejected\" | \"cancelled\"",
+    "data.createdAt": "string"
+   }
   },
   "refreshConnection": {
    "method": "POST",
@@ -2422,7 +3093,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorVersion": {
    "method": "GET",
@@ -2431,7 +3102,7 @@
     "id": "path:id!",
     "versionId": "path:versionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorVersionPins": {
    "method": "GET",
@@ -2440,7 +3111,7 @@
     "connectorSlug": "query:connectorSlug",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "upsertConnectorVersionPin": {
    "method": "POST",
@@ -2452,7 +3123,7 @@
     "apiVersion": "body:apiVersion",
     "versionMajor": "body:versionMajor"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConnectorVersionPin": {
    "method": "DELETE",
@@ -2460,7 +3131,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorVersionUsage": {
    "method": "GET",
@@ -2469,7 +3140,7 @@
     "id": "path:id!",
     "externalVersion": "query:externalVersion"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getActionVersionDiff": {
    "method": "GET",
@@ -2482,7 +3153,7 @@
     "fromMajor": "query:fromMajor",
     "toMajor": "query:toMajor"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorHealth": {
    "method": "GET",
@@ -2492,7 +3163,7 @@
     "status": "query:status",
     "atRisk": "query:atRisk"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorChanges": {
    "method": "GET",
@@ -2503,7 +3174,7 @@
     "openOnly": "query:openOnly",
     "limit": "query:limit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorChangeConsumers": {
    "method": "GET",
@@ -2511,7 +3182,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setConnectorChangeStatus": {
    "method": "PUT",
@@ -2520,7 +3191,7 @@
     "id": "path:id!",
     "status": "body:status!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "proposeConnectorChangeFix": {
    "method": "POST",
@@ -2528,7 +3199,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorUpdateProposals": {
    "method": "GET",
@@ -2541,7 +3212,7 @@
     "changeEventId": "query:changeEventId",
     "limit": "query:limit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorUpdateProposal": {
    "method": "GET",
@@ -2550,7 +3221,7 @@
     "id": "path:id!",
     "scope": "query:scope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "decideConnectorUpdateProposalItem": {
    "method": "PUT",
@@ -2562,7 +3233,7 @@
     "note": "body:note",
     "overrideReason": "body:overrideReason"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "applyConnectorUpdateProposal": {
    "method": "POST",
@@ -2570,7 +3241,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "runConnectorUpdateAgent": {
    "method": "POST",
@@ -2578,13 +3249,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "scanConnectorStaleness": {
    "method": "POST",
    "path": "/v1/connector-staleness/scan",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorStaleness": {
    "method": "GET",
@@ -2592,7 +3263,7 @@
    "inputs": {
     "status": "query:status"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setConnectorStalenessStatus": {
    "method": "PUT",
@@ -2601,7 +3272,7 @@
     "id": "path:id!",
     "status": "body:status!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getPlatformProviderBySlug": {
    "method": "GET",
@@ -2609,7 +3280,7 @@
    "inputs": {
     "platformSlug": "path:platformSlug!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getPlatformProvider": {
    "method": "GET",
@@ -2617,7 +3288,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuthProviders": {
    "method": "GET",
@@ -2628,7 +3299,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createAuthProvider": {
    "method": "POST",
@@ -2650,7 +3321,7 @@
     "platformProviderId": "body:platformProviderId",
     "pkce": "body:pkce"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAuthProvider": {
    "method": "GET",
@@ -2658,7 +3329,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAuthProvider": {
    "method": "PUT",
@@ -2678,7 +3349,7 @@
     "oauthVariables": "body:oauthVariables",
     "isDefault": "body:isDefault"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteAuthProvider": {
    "method": "DELETE",
@@ -2686,7 +3357,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuthProviderScopes": {
    "method": "GET",
@@ -2694,7 +3365,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuthMethods": {
    "method": "GET",
@@ -2704,7 +3375,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createAuthMethod": {
    "method": "POST",
@@ -2719,7 +3390,7 @@
     "authProviderId": "body:authProviderId",
     "docsUrl": "body:docsUrl"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAuthMethod": {
    "method": "GET",
@@ -2727,7 +3398,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAuthMethod": {
    "method": "PUT",
@@ -2743,7 +3414,7 @@
     "authProviderId": "body:authProviderId",
     "docsUrl": "body:docsUrl"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteAuthMethod": {
    "method": "DELETE",
@@ -2751,7 +3422,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorEntities": {
    "method": "GET",
@@ -2761,7 +3432,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createConnectorEntity": {
    "method": "POST",
@@ -2772,7 +3443,7 @@
     "slug": "body:slug!",
     "description": "body:description"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorEntity": {
    "method": "GET",
@@ -2780,7 +3451,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConnectorEntity": {
    "method": "PUT",
@@ -2790,7 +3461,7 @@
     "name": "body:name",
     "description": "body:description"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConnectorEntity": {
    "method": "DELETE",
@@ -2798,7 +3469,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorEntities": {
    "method": "GET",
@@ -2806,7 +3477,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorMethods": {
    "method": "GET",
@@ -2814,7 +3485,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listActions": {
    "method": "GET",
@@ -2830,7 +3501,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createAction": {
    "method": "POST",
@@ -2866,7 +3537,7 @@
     "versionMajor": "body:versionMajor",
     "submissionNote": "body:submissionNote"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAction": {
    "method": "GET",
@@ -2874,7 +3545,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAction": {
    "method": "PUT",
@@ -2906,7 +3577,7 @@
     "sunsetAt": "body:sunsetAt",
     "successorActionId": "body:successorActionId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteAction": {
    "method": "DELETE",
@@ -2915,7 +3586,7 @@
     "id": "path:id!",
     "hard": "query:hard"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createActionVersion": {
    "method": "POST",
@@ -2928,7 +3599,7 @@
     "deprecatePrevious": "body:deprecatePrevious",
     "sunsetAt": "body:sunsetAt"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "proposeActionUpdate": {
    "method": "POST",
@@ -2952,7 +3623,7 @@
     "rateLimit": "body:rateLimit",
     "submissionNote": "body:submissionNote"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getActionReview": {
    "method": "GET",
@@ -2960,7 +3631,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createActionReviewComment": {
    "method": "POST",
@@ -2969,7 +3640,7 @@
     "id": "path:id!",
     "body": "body:body!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setActionTestResult": {
    "method": "PATCH",
@@ -2979,7 +3650,7 @@
     "testStatus": "body:testStatus!",
     "lastTestEvidence": "body:lastTestEvidence"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "saveActionMockStub": {
    "method": "POST",
@@ -2992,7 +3663,7 @@
     "responseStatus": "body:responseStatus!",
     "responseBody": "body:responseBody"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listActionVersions": {
    "method": "GET",
@@ -3000,7 +3671,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getActionVersion": {
    "method": "GET",
@@ -3009,7 +3680,7 @@
     "id": "path:id!",
     "versionId": "path:versionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "promoteAction": {
    "method": "POST",
@@ -3017,7 +3688,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "initiateOauthConnection": {
    "method": "POST",
@@ -3038,7 +3709,7 @@
     "source": "body:source",
     "connectionScope": "body:connectionScope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "syncMcpTools": {
    "method": "POST",
@@ -3046,7 +3717,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWebhookConfigConnectors": {
    "method": "GET",
@@ -3057,7 +3728,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWebhookConfigs": {
    "method": "GET",
@@ -3067,7 +3738,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createWebhookConfig": {
    "method": "POST",
@@ -3089,7 +3760,7 @@
     "endOrgRouting": "body:endOrgRouting",
     "requireApiKey": "body:requireApiKey"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWebhookConfig": {
    "method": "GET",
@@ -3097,7 +3768,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWebhookConfig": {
    "method": "PUT",
@@ -3121,7 +3792,7 @@
     "endOrgRouting": "body:endOrgRouting",
     "requireApiKey": "body:requireApiKey"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWebhookConfig": {
    "method": "DELETE",
@@ -3129,7 +3800,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "executeWebhookSubscription": {
    "method": "POST",
@@ -3140,7 +3811,7 @@
     "webhookUrl": "body:webhookUrl!",
     "additionalInputs": "body:additionalInputs"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "importConnectors": {
    "method": "POST",
@@ -3155,7 +3826,7 @@
     "name": "body:name",
     "ownerLevel": "body:ownerLevel"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setDefaultConnection": {
    "method": "PATCH",
@@ -3163,7 +3834,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectionByName": {
    "method": "GET",
@@ -3172,7 +3843,7 @@
     "connectorId": "path:connectorId!",
     "name": "path:name!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "batchDeleteActions": {
    "method": "POST",
@@ -3181,7 +3852,7 @@
     "hard": "query:hard",
     "ids": "body:ids!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "exportActions": {
    "method": "GET",
@@ -3189,7 +3860,7 @@
    "inputs": {
     "connectorId": "query:connectorId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "exportAction": {
    "method": "GET",
@@ -3197,7 +3868,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "importActions": {
    "method": "POST",
@@ -3212,7 +3883,7 @@
     "preview": "body:preview",
     "selectedSlugs": "body:selectedSlugs"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "mockAction": {
    "method": "POST",
@@ -3221,7 +3892,7 @@
     "id": "path:id!",
     "body": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorVersions": {
    "method": "GET",
@@ -3232,7 +3903,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "promoteConnector": {
    "method": "POST",
@@ -3242,7 +3913,7 @@
     "stage": "body:stage",
     "commit": "body:commit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "publishConnectorVersion": {
    "method": "POST",
@@ -3252,7 +3923,7 @@
     "versionId": "body:versionId!",
     "commit": "body:commit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "revertConnector": {
    "method": "POST",
@@ -3261,7 +3932,7 @@
     "id": "path:id!",
     "versionId": "body:versionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "revokeEmbedShareLink": {
    "method": "DELETE",
@@ -3269,7 +3940,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConfigs": {
    "method": "GET",
@@ -3278,7 +3949,7 @@
     "widget_id": "query:widget_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createConfig": {
    "method": "POST",
@@ -3292,7 +3963,7 @@
     "config": "body:config",
     "plan": "body:plan"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConfig": {
    "method": "GET",
@@ -3300,7 +3971,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConfig": {
    "method": "PUT",
@@ -3314,7 +3985,7 @@
     "plan": "body:plan",
     "baseUpdatedAt": "body:baseUpdatedAt"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteConfig": {
    "method": "DELETE",
@@ -3323,7 +3994,7 @@
     "id": "path:id!",
     "force": "query:force"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateConfigDecisions": {
    "method": "PATCH",
@@ -3333,7 +4004,7 @@
     "decisions": "body:decisions",
     "matching": "body:matching"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "upgradeConfig": {
    "method": "POST",
@@ -3341,7 +4012,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConfigWorkflows": {
    "method": "GET",
@@ -3349,7 +4020,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createConfigDraft": {
    "method": "POST",
@@ -3359,7 +4030,7 @@
     "plan": "body:plan",
     "widget_id": "body:widget_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "proposeConfiguration": {
    "method": "POST",
@@ -3371,7 +4042,7 @@
     "plan": "body:plan",
     "widget_id": "body:widget_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConfigDraft": {
    "method": "GET",
@@ -3380,7 +4051,7 @@
     "id": "path:id!",
     "include": "query:include"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "executeAction": {
    "method": "POST",
@@ -3397,7 +4068,7 @@
     "versionMajor": "body:versionMajor",
     "mockMode": "body:mockMode"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listActionFolders": {
    "method": "GET",
@@ -3405,7 +4076,7 @@
    "inputs": {
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createActionFolder": {
    "method": "POST",
@@ -3416,7 +4087,7 @@
     "description": "body:description",
     "parentId": "body:parentId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getActionFolder": {
    "method": "GET",
@@ -3424,7 +4095,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateActionFolder": {
    "method": "PUT",
@@ -3435,7 +4106,7 @@
     "description": "body:description",
     "parentId": "body:parentId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteActionFolder": {
    "method": "DELETE",
@@ -3443,13 +4114,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getGithubIntegrationStatus": {
    "method": "GET",
    "path": "/v1/integrations/github/status",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "startGithubInstallation": {
    "method": "POST",
@@ -3458,13 +4129,13 @@
     "returnUrl": "body:returnUrl",
     "dashboardOrigin": "body:dashboardOrigin"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "disconnectGithubIntegration": {
    "method": "DELETE",
    "path": "/v1/integrations/github",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "setGithubPublishGate": {
    "method": "PATCH",
@@ -3474,19 +4145,19 @@
     "repoOwner": "body:repoOwner",
     "repoName": "body:repoName"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listGithubRepositories": {
    "method": "GET",
    "path": "/v1/integrations/github/repositories",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "syncWorkflowsToGithub": {
    "method": "POST",
    "path": "/v1/integrations/github/sync",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "cancelGithubSync": {
    "method": "DELETE",
@@ -3494,13 +4165,13 @@
    "inputs": {
     "syncId": "path:syncId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listGithubReviews": {
    "method": "GET",
    "path": "/v1/integrations/github/reviews",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createConnectLink": {
    "method": "POST",
@@ -3510,7 +4181,7 @@
     "connectionName": "body:connectionName",
     "expiresInMinutes": "body:expiresInMinutes"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listInstallations": {
    "method": "GET",
@@ -3521,7 +4192,7 @@
     "end_org_id": "query:end_org_id",
     "widget_id": "query:widget_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createInstallation": {
    "method": "POST",
@@ -3545,7 +4216,7 @@
     "defer_config": "body:defer_config",
     "selected_trigger_categories": "body:selected_trigger_categories"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getInstallation": {
    "method": "GET",
@@ -3553,7 +4224,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateInstallation": {
    "method": "PUT",
@@ -3572,7 +4243,7 @@
     "rationale": "body:rationale",
     "selected_trigger_categories": "body:selected_trigger_categories"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteInstallation": {
    "method": "DELETE",
@@ -3580,7 +4251,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getInstallationResolvedConfig": {
    "method": "GET",
@@ -3588,13 +4259,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listEventSubscriptions": {
    "method": "GET",
    "path": "/v1/event-subscriptions",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createEventSubscription": {
    "method": "POST",
@@ -3609,7 +4280,7 @@
     "description": "body:description",
     "enabled": "body:enabled"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getEventSubscription": {
    "method": "GET",
@@ -3617,7 +4288,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteEventSubscription": {
    "method": "DELETE",
@@ -3625,7 +4296,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateEventSubscription": {
    "method": "PATCH",
@@ -3640,7 +4311,7 @@
     "description": "body:description",
     "enabled": "body:enabled"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "rotateEventSubscriptionSecret": {
    "method": "POST",
@@ -3648,7 +4319,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "testEventSubscription": {
    "method": "POST",
@@ -3656,7 +4327,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listEventDeliveries": {
    "method": "GET",
@@ -3666,7 +4337,7 @@
     "status": "query:status",
     "limit": "query:limit"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "replayEventDelivery": {
    "method": "POST",
@@ -3674,7 +4345,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getSetupLinkStatus": {
    "method": "GET",
@@ -3682,7 +4353,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "assignOrgAdmin": {
    "method": "POST",
@@ -3691,7 +4362,7 @@
     "id": "path:id!",
     "email": "body:email!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getOrgDbConfig": {
    "method": "GET",
@@ -3699,7 +4370,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteOrgDbConfig": {
    "method": "DELETE",
@@ -3707,7 +4378,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listOrgDbConfigOverrides": {
    "method": "GET",
@@ -3715,7 +4386,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "enableOrgDbConfig": {
    "method": "POST",
@@ -3723,7 +4394,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "disableOrgDbConfig": {
    "method": "POST",
@@ -3731,7 +4402,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateOrgV1Bridge": {
    "method": "PUT",
@@ -3742,13 +4413,13 @@
     "connection": "body:connection",
     "workspaceId": "body:workspaceId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getMyPreferences": {
    "method": "GET",
    "path": "/v1/users/me/preferences",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateMyPreferences": {
    "method": "PATCH",
@@ -3756,7 +4427,7 @@
    "inputs": {
     "nav_layout": "body:nav_layout"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "resendInvite": {
    "method": "POST",
@@ -3764,7 +4435,7 @@
    "inputs": {
     "userId": "path:userId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listUserMemberships": {
    "method": "GET",
@@ -3774,7 +4445,7 @@
     "limit": "query:limit",
     "offset": "query:offset"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "removeUserMembership": {
    "method": "DELETE",
@@ -3783,7 +4454,7 @@
     "userId": "path:userId!",
     "membershipId": "path:membershipId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getUserPermissions": {
    "method": "GET",
@@ -3791,7 +4462,7 @@
    "inputs": {
     "userId": "path:userId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateUserPermissions": {
    "method": "PUT",
@@ -3800,7 +4471,7 @@
     "userId": "path:userId!",
     "permissions": "body:permissions"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "reactivateUser": {
    "method": "POST",
@@ -3808,7 +4479,7 @@
    "inputs": {
     "userId": "path:userId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getLiveWidgetInsights": {
    "method": "GET",
@@ -3817,13 +4488,13 @@
     "endOrgId": "query:endOrgId",
     "range": "query:range"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAlertCatalog": {
    "method": "GET",
    "path": "/v1/alerts/metrics",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAlertChannels": {
    "method": "GET",
@@ -3831,7 +4502,7 @@
    "inputs": {
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAlertEvents": {
    "method": "GET",
@@ -3840,19 +4511,19 @@
     "id": "path:id!",
     "endOrgId": "query:endOrgId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuditLogResourceTypes": {
    "method": "GET",
    "path": "/v1/audit-log/resource-types",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAuditLogUsers": {
    "method": "GET",
    "path": "/v1/audit-log/users",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "submitOrchestratorFeedback": {
    "method": "POST",
@@ -3877,7 +4548,7 @@
     "toolCallsCount": "body:toolCallsCount",
     "dashboardUrl": "body:dashboardUrl"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createTestCaseDraft": {
    "method": "POST",
@@ -3886,7 +4557,7 @@
     "scope": "body:scope!",
     "testCases": "body:testCases!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getTestCaseDraft": {
    "method": "GET",
@@ -3895,7 +4566,7 @@
     "id": "path:id!",
     "include": "query:include"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listQuotas": {
    "method": "GET",
@@ -3904,7 +4575,7 @@
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "checkQuota": {
    "method": "GET",
@@ -3914,31 +4585,31 @@
     "org_id": "query:org_id",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getBillingSubscription": {
    "method": "GET",
    "path": "/v1/billing/subscription",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listBillingInvoices": {
    "method": "GET",
    "path": "/v1/billing/invoices",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getBillingPaymentMethod": {
    "method": "GET",
    "path": "/v1/billing/payment-method",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getOnboardingProductProfile": {
    "method": "GET",
    "path": "/v1/onboarding/product-profile",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "saveOnboardingProductProfile": {
    "method": "PUT",
@@ -3951,13 +4622,13 @@
     "webhooks": "body:webhooks",
     "confirmed": "body:confirmed"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getSetupJourney": {
    "method": "GET",
    "path": "/v1/onboarding/setup",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateSetupJourney": {
    "method": "PUT",
@@ -3977,13 +4648,13 @@
     "integrationThreadId": "body:integrationThreadId",
     "integrationChoice": "body:integrationChoice"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "claimOnboardingCredits": {
    "method": "POST",
    "path": "/v1/onboarding/credits/claim",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "joinOnboardingOrg": {
    "method": "POST",
@@ -3991,7 +4662,7 @@
    "inputs": {
     "orgId": "body:orgId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createPlanChangeRequest": {
    "method": "POST",
@@ -3999,13 +4670,13 @@
    "inputs": {
     "requestedPlan": "body:requestedPlan!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "cancelMyPlanChangeRequest": {
    "method": "POST",
    "path": "/v1/plan-change-requests/me/cancel",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "probeConnector": {
    "method": "POST",
@@ -4018,7 +4689,7 @@
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "probeConnectorValues": {
    "method": "POST",
@@ -4031,7 +4702,7 @@
     "endOrgId": "body:endOrgId",
     "installationId": "body:installationId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "mergeProbes": {
    "method": "POST",
@@ -4040,7 +4711,7 @@
     "parentProbeId": "body:parentProbeId!",
     "subProbes": "body:subProbes!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "searchWeb": {
    "method": "POST",
@@ -4050,7 +4721,7 @@
     "platform": "body:platform",
     "maxResults": "body:maxResults"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "fetchWebPage": {
    "method": "POST",
@@ -4059,7 +4730,7 @@
     "url": "body:url!",
     "maxChars": "body:maxChars"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAiUsage": {
    "method": "GET",
@@ -4067,7 +4738,7 @@
    "inputs": {
     "scope": "query:scope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "generateActionMock": {
    "method": "GET",
@@ -4077,7 +4748,7 @@
     "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listMockStubs": {
    "method": "GET",
@@ -4087,7 +4758,7 @@
     "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createMockStub": {
    "method": "POST",
@@ -4101,7 +4772,7 @@
     "inputMatchers": "body:inputMatchers",
     "response": "body:response!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "regenerateMockStubs": {
    "method": "POST",
@@ -4111,7 +4782,7 @@
     "actionSlug": "path:actionSlug!",
     "connectorId": "query:connectorId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateMockStub": {
    "method": "PUT",
@@ -4126,7 +4797,7 @@
     "inputMatchers": "body:inputMatchers",
     "response": "body:response"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteMockStub": {
    "method": "DELETE",
@@ -4137,7 +4808,7 @@
     "connectorId": "query:connectorId",
     "stubId": "path:stubId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWorkflowExecutionCounts": {
    "method": "GET",
@@ -4149,7 +4820,7 @@
     "search": "query:search",
     "searchIn": "query:searchIn"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "submitWorkflowExecutionFeedback": {
    "method": "POST",
@@ -4160,7 +4831,7 @@
     "rating": "body:rating",
     "comment": "body:comment"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "refreshWorkflowManifest": {
    "method": "POST",
@@ -4168,7 +4839,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "saveWorkflowValidation": {
    "method": "PATCH",
@@ -4180,7 +4851,7 @@
     "results": "body:results!",
     "cleanup": "body:cleanup"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "saveWorkflowDraft": {
    "method": "PATCH",
@@ -4189,7 +4860,7 @@
     "id": "path:id!",
     "code": "body:code!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "editWorkflowCode": {
    "method": "PATCH",
@@ -4200,7 +4871,7 @@
     "newString": "body:newString",
     "replaceAll": "body:replaceAll"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "publishWorkflow": {
    "method": "POST",
@@ -4209,7 +4880,7 @@
     "id": "path:id!",
     "message": "body:message"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "rollbackWorkflowDeployment": {
    "method": "POST",
@@ -4219,7 +4890,7 @@
     "env_id": "body:env_id!",
     "env_version": "body:env_version!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowDeployments": {
    "method": "GET",
@@ -4227,7 +4898,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowPromotions": {
    "method": "GET",
@@ -4235,7 +4906,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "cancelWorkflowPromotion": {
    "method": "DELETE",
@@ -4244,7 +4915,7 @@
     "id": "path:id!",
     "promotionId": "path:promotionId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWorkflowVersions": {
    "method": "GET",
@@ -4253,13 +4924,13 @@
     "id": "path:id!",
     "include": "query:include"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listEnvironmentConfigs": {
    "method": "GET",
    "path": "/v1/env-configs",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "bulkUpsertEnvironmentConfigs": {
    "method": "PUT",
@@ -4268,7 +4939,7 @@
     "environments": "body:environments",
     "items": "body:items!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getEnvConfig": {
    "method": "GET",
@@ -4276,7 +4947,7 @@
    "inputs": {
     "key": "path:key!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "upsertEnvironmentConfig": {
    "method": "PUT",
@@ -4285,7 +4956,7 @@
     "key": "path:key!",
     "values": "body:values!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createEnvironmentConfig": {
    "method": "POST",
@@ -4294,7 +4965,7 @@
     "key": "path:key!",
     "values": "body:values!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "removeEnvironmentConfigKey": {
    "method": "DELETE",
@@ -4303,7 +4974,7 @@
     "key": "path:key!",
     "env": "query:env"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listWebhookTriggers": {
    "method": "GET",
@@ -4316,7 +4987,7 @@
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createWebhookTrigger": {
    "method": "POST",
@@ -4333,7 +5004,7 @@
     "additionalConfig": "body:additionalConfig",
     "routes": "body:routes"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "bulkDeleteWebhookTriggers": {
    "method": "POST",
@@ -4341,7 +5012,7 @@
    "inputs": {
     "ids": "body:ids!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWebhookTriggerStats": {
    "method": "GET",
@@ -4349,7 +5020,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getWebhookTrigger": {
    "method": "GET",
@@ -4357,7 +5028,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateWebhookTrigger": {
    "method": "PUT",
@@ -4372,7 +5043,7 @@
     "additionalConfig": "body:additionalConfig",
     "routes": "body:routes"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteWebhookTrigger": {
    "method": "DELETE",
@@ -4380,7 +5051,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listSchedulers": {
    "method": "GET",
@@ -4393,7 +5064,7 @@
     "include_instances": "query:include_instances",
     "end_org_id": "query:end_org_id"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createScheduler": {
    "method": "POST",
@@ -4415,7 +5086,7 @@
     "reenableAfterMinutes": "body:reenableAfterMinutes",
     "runOnCreate": "body:runOnCreate"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "bulkDeleteSchedulers": {
    "method": "POST",
@@ -4423,7 +5094,7 @@
    "inputs": {
     "ids": "body:ids!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "disableSchedulersByRoute": {
    "method": "POST",
@@ -4431,7 +5102,7 @@
    "inputs": {
     "routeIds": "body:routeIds!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getSchedulerStats": {
    "method": "GET",
@@ -4439,7 +5110,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getScheduler": {
    "method": "GET",
@@ -4447,7 +5118,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateScheduler": {
    "method": "PUT",
@@ -4466,7 +5137,7 @@
     "routes": "body:routes",
     "reenableAfterMinutes": "body:reenableAfterMinutes"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteScheduler": {
    "method": "DELETE",
@@ -4474,7 +5145,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "bulkDeleteAppEventTriggers": {
    "method": "POST",
@@ -4482,7 +5153,7 @@
    "inputs": {
     "ids": "body:ids!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorEvents": {
    "method": "GET",
@@ -4490,7 +5161,7 @@
    "inputs": {
     "connectorId": "path:connectorId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorWebhookConfigEvents": {
    "method": "GET",
@@ -4498,7 +5169,7 @@
    "inputs": {
     "connectorId": "path:connectorId!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAppEventTriggerStats": {
    "method": "GET",
@@ -4506,13 +5177,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAppWebhookRegistrations": {
    "method": "GET",
    "path": "/v1/app-webhooks",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "createAppWebhookRegistration": {
    "method": "POST",
@@ -4530,13 +5201,13 @@
     "unsubscriptionActionId": "body:unsubscriptionActionId",
     "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAppWebhookRegistrationStats": {
    "method": "GET",
    "path": "/v1/app-webhooks/stats",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "generateAppWebhookRegistrationUrl": {
    "method": "POST",
@@ -4544,7 +5215,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAppWebhookRegistrationStats": {
    "method": "GET",
@@ -4552,7 +5223,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAppWebhookRegistration": {
    "method": "GET",
@@ -4560,7 +5231,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "updateAppWebhookRegistration": {
    "method": "PUT",
@@ -4578,7 +5249,7 @@
     "unsubscriptionActionId": "body:unsubscriptionActionId",
     "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteAppWebhookRegistration": {
    "method": "DELETE",
@@ -4586,7 +5257,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "replayAllTriggerDlq": {
    "method": "POST",
@@ -4594,7 +5265,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "deleteDlqEntry": {
    "method": "DELETE",
@@ -4602,13 +5273,13 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getAlertLimits": {
    "method": "GET",
    "path": "/v1/events/alerts/limits",
    "inputs": {},
-   "output": "9d59bd447759"
+   "output": {}
   },
   "testAlert": {
    "method": "POST",
@@ -4616,7 +5287,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listAlertChannelTargets": {
    "method": "GET",
@@ -4626,7 +5297,7 @@
     "connectorSlug": "query:connectorSlug!",
     "teamId": "query:teamId"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "sendTestAppEvent": {
    "method": "POST",
@@ -4637,7 +5308,7 @@
     "triggerId": "query:triggerId",
     "payload": "body:*!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "listConnectorActionsBySlug": {
    "method": "GET",
@@ -4645,7 +5316,7 @@
    "inputs": {
     "connector": "path:connector!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorActionSchema": {
    "method": "GET",
@@ -4654,7 +5325,7 @@
     "connector": "path:connector!",
     "action": "path:action!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "discoverMcpConnectorTools": {
    "method": "GET",
@@ -4662,7 +5333,7 @@
    "inputs": {
     "connector": "path:connector!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getConnectorConnectionStatus": {
    "method": "GET",
@@ -4670,7 +5341,7 @@
    "inputs": {
     "connector": "path:connector!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "executeConnectorActionBySlug": {
    "method": "POST",
@@ -4689,7 +5360,7 @@
     "versionMajor": "body:versionMajor",
     "orgScope": "body:orgScope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "executeMockAction": {
    "method": "POST",
@@ -4703,7 +5374,7 @@
     "version": "body:version",
     "orgScope": "body:orgScope"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentBuildPlan": {
    "method": "POST",
@@ -4712,7 +5383,7 @@
     "prompt": "body:prompt!",
     "company": "body:company"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentSuggestConnectors": {
    "method": "POST",
@@ -4720,7 +5391,7 @@
    "inputs": {
     "useCase": "body:useCase!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentDeleteOrchestratorSession": {
    "method": "DELETE",
@@ -4728,7 +5399,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentRenameOrchestratorSession": {
    "method": "PATCH",
@@ -4737,7 +5408,7 @@
     "id": "path:id!",
     "title": "body:title!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentGetOrchestratorFile": {
    "method": "GET",
@@ -4746,7 +5417,7 @@
     "id": "path:id!",
     "path": "query:path!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentStopOrchestratorSession": {
    "method": "POST",
@@ -4754,7 +5425,7 @@
    "inputs": {
     "id": "path:id!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "agentInjectOrchestratorMessage": {
    "method": "POST",
@@ -4763,7 +5434,7 @@
     "id": "path:id!",
     "message": "body:message!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "researchSaas": {
    "method": "POST",
@@ -4772,7 +5443,7 @@
     "domain": "body:domain!",
     "refresh": "body:refresh"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "getSaasResearch": {
    "method": "GET",
@@ -4780,7 +5451,7 @@
    "inputs": {
     "domain": "path:domain!"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "matchProductConnector": {
    "method": "POST",
@@ -4789,7 +5460,7 @@
     "domain": "body:domain!",
     "productName": "body:productName"
    },
-   "output": "9d59bd447759"
+   "output": {}
   },
   "reviseProductProfile": {
    "method": "POST",
@@ -4801,7 +5472,7 @@
     "product": "body:product!",
     "history": "body:history"
    },
-   "output": "9d59bd447759"
+   "output": {}
   }
  }
 }

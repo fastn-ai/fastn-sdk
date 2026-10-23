@@ -43,27 +43,33 @@ describe("every partner-facing spec operation is in the SDK, nothing else", () =
       const o = (OPS as any)[id];
       expect(`${o.method} ${o.path}`).toBe(`${entry.method} ${entry.path}`);
       expect(lockInputs(o), id).toEqual(entry.inputs);
-      expect(entry.output, id).toMatch(/^[0-9a-f]{12}$/);
+      expect(typeof entry.output, id).toBe("object");
     }
+    // outputs are recorded as field paths with structural types, required marked with "!", no descriptions
+    expect(lock.operations.whoami.output).toMatchObject({ "data": "object", "data.actor": '"user" | "api_key" | "embed_user" | "share_link"', "data.org": expect.any(String) });
+    expect(JSON.stringify(lock.operations.whoami.output)).not.toMatch(/credential the caller/);
+    expect(lock.operations.listOrgs.output).toEqual({});                     // untyped answer: nothing to lock yet
     // required-ness is recorded: a path parameter is always required, a required body field carries "!"
     expect(lock.operations.getTenant.inputs.id).toBe("path:id!");
     expect(lock.operations.createTenant.inputs.name).toBe("body:name!");
     expect(lock.operations.createTenant.inputs.plan).toBe("body:plan");
   });
-  it("the lock check catches removed, renamed, moved and newly required inputs and changed Output types", () => {
+  it("the lock check catches removed, renamed, moved and newly required inputs, and removed, retyped or no-longer-guaranteed output fields", () => {
     const was: Record<string, LockEntry> = {
-      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "query:q", opt: "body:opt" }, output: "aaaaaaaaaaaa" },
-      gone: { method: "GET", path: "/gone", inputs: {}, output: "bbbbbbbbbbbb" },
+      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "query:q", opt: "body:opt" }, output: { data: "object!", "data.id": "string!", "data.count": "number", "data.gone": "string", "data.items[].name": "string!" } },
+      gone: { method: "GET", path: "/gone", inputs: {}, output: {} },
     };
     const now: Record<string, LockEntry> = {
-      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "header:q", opt: "body:opt!", extra: "query:extra", must: "body:must!" }, output: "cccccccccccc" },
-      added: { method: "POST", path: "/new", inputs: { x: "body:x!" }, output: "dddddddddddd" },
+      a: { method: "GET", path: "/a", inputs: { id: "path:id!", q: "header:q", opt: "body:opt!", extra: "query:extra", must: "body:must!" }, output: { data: "object!", "data.id": "string", "data.count": "string", "data.items[].name": "string!", "data.new": "boolean!" } },
+      added: { method: "POST", path: "/new", inputs: { x: "body:x!" }, output: { ok: "boolean!" } },
     };
     const b = breakingChanges(was, now);
     expect(b.inputs).toEqual(['a: input "q" moved query:q -> header:q', 'a: input "opt" became required', 'a: new required input "must" (body:must!)', "gone: operation removed"]);
-    expect(b.outputs).toEqual(["a: Output type changed (aaaaaaaaaaaa -> cccccccccccc)"]);
-    // additive: a new optional input, a new operation, required -> optional
-    expect(breakingChanges({ a: { method: "GET", path: "/a", inputs: { id: "path:id!" }, output: "aaaaaaaaaaaa" } }, { a: { method: "GET", path: "/a", inputs: { id: "path:id", n: "query:n" }, output: "aaaaaaaaaaaa" }, b: now.added })).toEqual({ inputs: [], outputs: [] });
+    expect(b.outputs).toEqual(['a: output field "data.id" is no longer always present', 'a: output field "data.count" type changed number -> string', 'a: output field "data.gone" removed']);
+    // additive: a new optional input, a new operation, required -> optional input, a new output field, a doc-only edit (not in the lock at all)
+    expect(breakingChanges({ a: { method: "GET", path: "/a", inputs: { id: "path:id!" }, output: { "data.id": "string!" } } }, { a: { method: "GET", path: "/a", inputs: { id: "path:id", n: "query:n" }, output: { "data.id": "string!", "data.more": "string" } }, b: now.added })).toEqual({ inputs: [], outputs: [] });
+    // a lock from before outputs were recorded as fields (hash string) is not compared
+    expect(breakingChanges({ a: { method: "GET", path: "/a", inputs: {}, output: "aaaaaaaaaaaa" } }, { a: { method: "GET", path: "/a", inputs: {}, output: { x: "string" } } })).toEqual({ inputs: [], outputs: [] });
   });
   it("every path parameter has an input", () => {
     for (const o of Object.values(OPS)) for (const m of o.path.matchAll(/\{([^}]+)\}/g)) expect(o.params.some((p) => p.in === "path" && p.name === m[1]), `${o.id} ${m[1]}`).toBe(true);

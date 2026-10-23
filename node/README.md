@@ -207,10 +207,12 @@ npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a pla
   the error classes) follows semver: breaking changes only in a major version. Until 1.0 they can still land in a
   minor and are listed under Changed in the CHANGELOG.
 - The generated methods mirror the REST API 1:1. `spec/surface.lock.json` records every operation with its input
-  keys (where each goes on the wire and whether it is required) and a hash of its output type; `npm run generate`
-  refuses a spec that removes an operation, renames or moves an input, makes an optional input required, adds a
-  required input, or changes an output type, unless run with `--accept-breaking`, which goes with a major version
-  bump. New operations and new optional inputs pass.
+  keys (where each goes on the wire and whether it is required) and its output fields (path, structural type,
+  whether always present; no descriptions). `npm run generate` refuses a spec that removes an operation, renames or
+  moves an input, makes an optional input required, adds a required input, removes or retypes an output field, or
+  stops guaranteeing one, unless run with `--accept-breaking`, which goes with a major version bump. New operations,
+  new optional inputs, new output fields and description edits pass. `npm run generate:check -- --spec=<file>`
+  reports what a spec would change without writing anything (exit 1 on a break), for CI and for trying a refresh.
 - Everything under `unstable` (the wire manifest `OPS`, `FetchTransport`) has no compatibility promise.
 
 ## Releasing
