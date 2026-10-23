@@ -1,0 +1,5478 @@
+{
+ "spec": "openapi-v1.8.2.json",
+ "operations": {
+  "listUnifiedCategories": {
+   "method": "GET",
+   "path": "/v1/unified/categories",
+   "inputs": {},
+   "output": {}
+  },
+  "listUnifiedCalls": {
+   "method": "GET",
+   "path": "/v1/unified/calls",
+   "inputs": {
+    "correlation_id": "query:correlation_id!"
+   },
+   "output": {}
+  },
+  "listUnifiedEntityProviders": {
+   "method": "GET",
+   "path": "/v1/unified/{category}/{entity}/providers",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!"
+   },
+   "output": {}
+  },
+  "listUnifiedRecords": {
+   "method": "GET",
+   "path": "/v1/unified/{category}/{entity}",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "provider": "query:provider",
+    "cursor": "query:cursor",
+    "connection_id": "query:connection_id",
+    "page_size": "query:page_size",
+    "include_remote_data": "query:include_remote_data",
+    "widget_id": "query:widget_id",
+    "installationId": "header:x-installation-id",
+    "endOrgId": "header:x-end-org-id",
+    "endOrgRef": "header:x-end-org-ref"
+   },
+   "output": {}
+  },
+  "createUnifiedRecord": {
+   "method": "POST",
+   "path": "/v1/unified/{category}/{entity}",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "provider": "query:provider",
+    "connection_id": "query:connection_id",
+    "widget_id": "query:widget_id",
+    "installationId": "header:x-installation-id",
+    "endOrgId": "header:x-end-org-id",
+    "endOrgRef": "header:x-end-org-ref",
+    "record": "body:*!"
+   },
+   "output": {}
+  },
+  "searchUnifiedRecords": {
+   "method": "POST",
+   "path": "/v1/unified/{category}/{entity}/search",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "provider": "query:provider",
+    "connection_id": "query:connection_id",
+    "page_size": "query:page_size",
+    "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
+    "installationId": "header:x-installation-id",
+    "filters": "body:*!"
+   },
+   "output": {}
+  },
+  "getUnifiedRecord": {
+   "method": "GET",
+   "path": "/v1/unified/{category}/{entity}/{id}",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
+    "provider": "query:provider",
+    "connection_id": "query:connection_id",
+    "include_remote_data": "query:include_remote_data",
+    "widget_id": "query:widget_id",
+    "installationId": "header:x-installation-id",
+    "endOrgId": "header:x-end-org-id",
+    "endOrgRef": "header:x-end-org-ref"
+   },
+   "output": {}
+  },
+  "deleteUnifiedRecord": {
+   "method": "DELETE",
+   "path": "/v1/unified/{category}/{entity}/{id}",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
+    "provider": "query:provider",
+    "connection_id": "query:connection_id",
+    "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
+    "installationId": "header:x-installation-id"
+   },
+   "output": {}
+  },
+  "updateUnifiedRecord": {
+   "method": "PATCH",
+   "path": "/v1/unified/{category}/{entity}/{id}",
+   "inputs": {
+    "category": "path:category!",
+    "entity": "path:entity!",
+    "id": "path:id!",
+    "provider": "query:provider",
+    "connection_id": "query:connection_id",
+    "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
+    "installationId": "header:x-installation-id",
+    "record": "body:*!"
+   },
+   "output": {}
+  },
+  "loadUnifiedConfigFieldOptions": {
+   "method": "POST",
+   "path": "/v1/widgets/{widgetId}/unified-config/options",
+   "inputs": {
+    "widgetId": "path:widgetId!",
+    "entityId": "body:entityId!",
+    "connectorSlug": "body:connectorSlug!",
+    "fieldKey": "body:fieldKey!",
+    "params": "body:params",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId",
+    "offset": "body:offset",
+    "limit": "body:limit",
+    "query": "body:query"
+   },
+   "output": {}
+  },
+  "updateInstallationUnifiedValues": {
+   "method": "PUT",
+   "path": "/v1/installations/{id}/unified-values",
+   "inputs": {
+    "id": "path:id!",
+    "unifiedValues": "body:unifiedValues!"
+   },
+   "output": {}
+  },
+  "getInstallationTriggers": {
+   "method": "GET",
+   "path": "/v1/installations/{id}/triggers",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "createInstallationTrigger": {
+   "method": "POST",
+   "path": "/v1/installations/{id}/triggers",
+   "inputs": {
+    "id": "path:id!",
+    "templateTriggerId": "body:templateTriggerId!",
+    "settings": "body:settings",
+    "headers": "body:headers"
+   },
+   "output": {}
+  },
+  "updateInstallationTrigger": {
+   "method": "PUT",
+   "path": "/v1/installations/{id}/triggers/{triggerId}",
+   "inputs": {
+    "id": "path:id!",
+    "triggerId": "path:triggerId!",
+    "settings": "body:settings",
+    "headers": "body:headers"
+   },
+   "output": {}
+  },
+  "deleteInstallationTrigger": {
+   "method": "DELETE",
+   "path": "/v1/installations/{id}/triggers/{triggerId}",
+   "inputs": {
+    "id": "path:id!",
+    "triggerId": "path:triggerId!"
+   },
+   "output": {}
+  },
+  "listUnifiedCatalogCategories": {
+   "method": "GET",
+   "path": "/v1/unified-catalog/categories",
+   "inputs": {},
+   "output": {}
+  },
+  "listUnifiedCatalogEntities": {
+   "method": "GET",
+   "path": "/v1/unified-catalog/entities",
+   "inputs": {
+    "category": "query:category"
+   },
+   "output": {}
+  },
+  "getUnifiedCatalogEntity": {
+   "method": "GET",
+   "path": "/v1/unified-catalog/entities/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listUnifiedCustom": {
+   "method": "GET",
+   "path": "/v1/unified-custom",
+   "inputs": {},
+   "output": {}
+  },
+  "createUnifiedCustomEntity": {
+   "method": "POST",
+   "path": "/v1/unified-custom/entities",
+   "inputs": {
+    "categoryId": "body:categoryId!",
+    "slug": "body:slug!",
+    "name": "body:name!",
+    "description": "body:description",
+    "schema": "body:schema",
+    "fromEntityId": "body:fromEntityId"
+   },
+   "output": {}
+  },
+  "updateUnifiedCustomEntity": {
+   "method": "PUT",
+   "path": "/v1/unified-custom/entities/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description",
+    "schema": "body:schema"
+   },
+   "output": {}
+  },
+  "deleteUnifiedCustomEntity": {
+   "method": "DELETE",
+   "path": "/v1/unified-custom/entities/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "createUnifiedCustomMapping": {
+   "method": "POST",
+   "path": "/v1/unified-custom/entities/{id}/mappings",
+   "inputs": {
+    "id": "path:id!",
+    "connectorSlug": "body:connectorSlug!",
+    "enabled": "body:enabled",
+    "events": "body:events",
+    "operations": "body:operations",
+    "fieldMappings": "body:fieldMappings",
+    "enrichActions": "body:enrichActions",
+    "conditions": "body:conditions"
+   },
+   "output": {}
+  },
+  "updateUnifiedCustomMapping": {
+   "method": "PUT",
+   "path": "/v1/unified-custom/mappings/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "enabled": "body:enabled",
+    "events": "body:events",
+    "operations": "body:operations",
+    "fieldMappings": "body:fieldMappings",
+    "enrichActions": "body:enrichActions",
+    "conditions": "body:conditions"
+   },
+   "output": {}
+  },
+  "deleteUnifiedCustomMapping": {
+   "method": "DELETE",
+   "path": "/v1/unified-custom/mappings/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "upsertUnifiedExtension": {
+   "method": "PUT",
+   "path": "/v1/unified-custom/extensions/{entityId}",
+   "inputs": {
+    "entityId": "path:entityId!",
+    "schema": "body:schema",
+    "connectorOverrides": "body:connectorOverrides"
+   },
+   "output": {}
+  },
+  "deleteUnifiedExtension": {
+   "method": "DELETE",
+   "path": "/v1/unified-custom/extensions/{entityId}",
+   "inputs": {
+    "entityId": "path:entityId!"
+   },
+   "output": {}
+  },
+  "testUnifiedCustomEntity": {
+   "method": "POST",
+   "path": "/v1/unified-custom/entities/{id}/test",
+   "inputs": {
+    "id": "path:id!",
+    "op": "body:op!",
+    "provider": "body:provider!",
+    "connectionId": "body:connectionId",
+    "params": "body:params"
+   },
+   "output": {}
+  },
+  "getProfile": {
+   "method": "GET",
+   "path": "/v1/profile",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.firstName": "string",
+    "data.lastName": "string",
+    "data.email": "string",
+    "data.emailVerified": "boolean",
+    "data.jobTitle": "string",
+    "data.timezone": "string"
+   }
+  },
+  "updateProfile": {
+   "method": "PUT",
+   "path": "/v1/profile",
+   "inputs": {
+    "firstName": "body:firstName",
+    "lastName": "body:lastName",
+    "jobTitle": "body:jobTitle",
+    "timezone": "body:timezone"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.email": "string",
+    "data.firstName": "string",
+    "data.lastName": "string"
+   }
+  },
+  "getProfileSecurity": {
+   "method": "GET",
+   "path": "/v1/profile/security",
+   "inputs": {},
+   "output": {
+    "data": "Record<string, any>"
+   }
+  },
+  "getMyMemberships": {
+   "method": "GET",
+   "path": "/v1/users/me/memberships",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].orgName": "string",
+    "data[].orgSlug": "string",
+    "data[].orgType": "string",
+    "data[].orgDomain": "string | null",
+    "data[].parentOrgId": "string | null",
+    "data[].role": "string",
+    "data[].isDefault": "boolean",
+    "data[].status": "\"active\" | \"pending\"",
+    "data[].createdAt": "string",
+    "pending": "object[]",
+    "pending[].id": "string",
+    "pending[].orgId": "string",
+    "pending[].orgName": "string",
+    "pending[].orgSlug": "string",
+    "pending[].orgType": "string",
+    "pending[].orgDomain": "string | null",
+    "pending[].parentOrgId": "string | null",
+    "pending[].role": "string",
+    "pending[].isDefault": "boolean",
+    "pending[].status": "\"active\" | \"pending\"",
+    "pending[].createdAt": "string",
+    "activeOrgId": "string | null"
+   }
+  },
+  "listUsers": {
+   "method": "GET",
+   "path": "/v1/users",
+   "inputs": {
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "org_id": "query:org_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].email": "string",
+    "data[].firstName": "string",
+    "data[].lastName": "string",
+    "data[].role": "string",
+    "data[].status": "string",
+    "data[].emailVerified": "boolean",
+    "data[].inviteStatus": "\"pending\" | \"accepted\" | \"unknown\"",
+    "data[].createdAt": "string",
+    "data[].expiresAt": "string | null",
+    "total": "number"
+   }
+  },
+  "inviteUser": {
+   "method": "POST",
+   "path": "/v1/users/invite",
+   "inputs": {
+    "email": "body:email!",
+    "firstName": "body:firstName",
+    "lastName": "body:lastName",
+    "role": "body:role",
+    "orgId": "body:orgId",
+    "endOrgId": "body:endOrgId",
+    "expiresAt": "body:expiresAt"
+   },
+   "output": {}
+  },
+  "getUser": {
+   "method": "GET",
+   "path": "/v1/users/{userId}",
+   "inputs": {
+    "userId": "path:userId!"
+   },
+   "output": {}
+  },
+  "removeUser": {
+   "method": "DELETE",
+   "path": "/v1/users/{userId}",
+   "inputs": {
+    "userId": "path:userId!"
+   },
+   "output": {}
+  },
+  "updateUserRole": {
+   "method": "PUT",
+   "path": "/v1/users/{userId}/role",
+   "inputs": {
+    "userId": "path:userId!",
+    "role": "body:role!",
+    "orgId": "body:orgId"
+   },
+   "output": {}
+  },
+  "listPendingUsers": {
+   "method": "GET",
+   "path": "/v1/users/pending",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].email": "string",
+    "data[].requestedAt": "string"
+   }
+  },
+  "approvePendingUser": {
+   "method": "POST",
+   "path": "/v1/users/memberships/{id}/approve",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "rejectPendingUser": {
+   "method": "POST",
+   "path": "/v1/users/memberships/{id}/reject",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listOrgs": {
+   "method": "GET",
+   "path": "/v1/orgs",
+   "inputs": {
+    "type": "query:type",
+    "tier": "query:tier",
+    "parent_id": "query:parent_id",
+    "include_usage": "query:include_usage"
+   },
+   "output": {}
+  },
+  "createTenant": {
+   "method": "POST",
+   "path": "/v1/orgs",
+   "inputs": {
+    "name": "body:name!",
+    "orgId": "body:orgId",
+    "external_ref": "body:external_ref",
+    "externalRef": "body:externalRef",
+    "tier": "body:tier",
+    "limits": "body:limits",
+    "slug": "body:slug",
+    "plan": "body:plan",
+    "type": "body:type",
+    "parentId": "body:parentId",
+    "domain": "body:domain",
+    "ownerEmail": "body:ownerEmail",
+    "owner_email": "body:owner_email"
+   },
+   "output": {}
+  },
+  "getTenant": {
+   "method": "GET",
+   "path": "/v1/orgs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateTenant": {
+   "method": "PUT",
+   "path": "/v1/orgs/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "plan": "body:plan",
+    "status": "body:status",
+    "adminEmail": "body:adminEmail",
+    "adminUserId": "body:adminUserId",
+    "external_ref": "body:external_ref",
+    "externalRef": "body:externalRef"
+   },
+   "output": {}
+  },
+  "deleteTenant": {
+   "method": "DELETE",
+   "path": "/v1/orgs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getOrgConfig": {
+   "method": "GET",
+   "path": "/v1/orgs/{id}/config",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateOrgConfig": {
+   "method": "PUT",
+   "path": "/v1/orgs/{id}/config",
+   "inputs": {
+    "id": "path:id!",
+    "orgName": "body:orgName"
+   },
+   "output": {}
+  },
+  "getAccountSettings": {
+   "method": "GET",
+   "path": "/v1/orgs/{id}/settings",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAccountSettings": {
+   "method": "PUT",
+   "path": "/v1/orgs/{id}/settings",
+   "inputs": {
+    "id": "path:id!",
+    "domain": "body:domain",
+    "autoApproveDomain": "body:autoApproveDomain",
+    "defaultMemberRole": "body:defaultMemberRole"
+   },
+   "output": {}
+  },
+  "listConnectors": {
+   "method": "GET",
+   "path": "/v1/connectors",
+   "inputs": {
+    "search": "query:search",
+    "slug": "query:slug",
+    "visibility": "query:visibility",
+    "categoryKey": "query:categoryKey",
+    "labels": "query:labels",
+    "addedFrom": "query:addedFrom",
+    "addedTo": "query:addedTo",
+    "includeDeleted": "query:includeDeleted",
+    "deleted": "query:deleted",
+    "orgId": "query:orgId",
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "cursor": "query:cursor"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].description": "string",
+    "data[].category": "string",
+    "data[].categoryKey": "string",
+    "data[].icon": "string",
+    "data[].authType": "string",
+    "data[].status": "\"active\" | \"beta\" | \"deprecated\"",
+    "data[].version": "string",
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "categories": "object[]",
+    "categories[].key": "string",
+    "categories[].count": "number"
+   }
+  },
+  "createConnector": {
+   "method": "POST",
+   "path": "/v1/connectors",
+   "inputs": {
+    "name": "body:name!",
+    "slug": "body:slug",
+    "description": "body:description",
+    "icon": "body:icon",
+    "domain": "body:domain",
+    "visibility": "body:visibility",
+    "ownerLevel": "body:ownerLevel",
+    "authMethods": "body:authMethods!",
+    "labels": "body:labels",
+    "category": "body:category",
+    "isMultiConnection": "body:isMultiConnection",
+    "rateLimit": "body:rateLimit",
+    "retryPolicy": "body:retryPolicy",
+    "timeoutMs": "body:timeoutMs",
+    "additionalFields": "body:additionalFields",
+    "protocol": "body:protocol",
+    "mcpServerUrl": "body:mcpServerUrl",
+    "dbConnectionConfig": "body:dbConnectionConfig",
+    "ftpConnectionConfig": "body:ftpConnectionConfig",
+    "redisConnectionConfig": "body:redisConnectionConfig",
+    "connectionVerifyActionId": "body:connectionVerifyActionId"
+   },
+   "output": {}
+  },
+  "listConnectorRequests": {
+   "method": "GET",
+   "path": "/v1/connector-requests",
+   "inputs": {
+    "status": "query:status",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].endOrgId": "string | null",
+    "data[].requestedBy": "string",
+    "data[].requestedByEmail": "string | null",
+    "data[].name": "string",
+    "data[].websiteUrl": "string | null",
+    "data[].useCase": "string | null",
+    "data[].source": "\"connectors_page\" | \"hub_search\" | \"onboarding\" | \"api\"",
+    "data[].note": "string | null",
+    "data[].status": "\"open\" | \"planned\" | \"declined\" | \"shipped\"",
+    "data[].requestCount": "number",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
+  },
+  "createConnectorRequest": {
+   "method": "POST",
+   "path": "/v1/connector-requests",
+   "inputs": {
+    "name": "body:name!",
+    "websiteUrl": "body:websiteUrl",
+    "useCase": "body:useCase",
+    "note": "body:note",
+    "source": "body:source"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.orgId": "string",
+    "data.endOrgId": "string | null",
+    "data.requestedBy": "string",
+    "data.requestedByEmail": "string | null",
+    "data.name": "string",
+    "data.websiteUrl": "string | null",
+    "data.useCase": "string | null",
+    "data.source": "\"connectors_page\" | \"hub_search\" | \"onboarding\" | \"api\"",
+    "data.note": "string | null",
+    "data.status": "\"open\" | \"planned\" | \"declined\" | \"shipped\"",
+    "data.requestCount": "number",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
+  },
+  "updateConnectorRequest": {
+   "method": "PATCH",
+   "path": "/v1/connector-requests/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": {}
+  },
+  "getConnector": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateConnector": {
+   "method": "PUT",
+   "path": "/v1/connectors/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "version": "body:version",
+    "description": "body:description",
+    "icon": "body:icon",
+    "domain": "body:domain",
+    "visibility": "body:visibility",
+    "featured": "body:featured",
+    "featuredRank": "body:featuredRank",
+    "authMethods": "body:authMethods",
+    "labels": "body:labels",
+    "category": "body:category",
+    "isMultiConnection": "body:isMultiConnection",
+    "rateLimit": "body:rateLimit",
+    "retryPolicy": "body:retryPolicy",
+    "timeoutMs": "body:timeoutMs",
+    "additionalFields": "body:additionalFields",
+    "commit": "body:commit",
+    "protocol": "body:protocol",
+    "mcpServerUrl": "body:mcpServerUrl",
+    "ftpConnectionConfig": "body:ftpConnectionConfig",
+    "dbConnectionConfig": "body:dbConnectionConfig",
+    "redisConnectionConfig": "body:redisConnectionConfig",
+    "connectionInitActionId": "body:connectionInitActionId",
+    "credentialMapping": "body:credentialMapping",
+    "generateKeyPair": "body:generateKeyPair",
+    "connectionVerifyActionId": "body:connectionVerifyActionId",
+    "verifySuccessPath": "body:verifySuccessPath"
+   },
+   "output": {}
+  },
+  "deleteConnector": {
+   "method": "DELETE",
+   "path": "/v1/connectors/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "hard": "query:hard"
+   },
+   "output": {
+    "data": "object",
+    "data.deleted": "boolean",
+    "data.hard": "boolean",
+    "data.deletedConnections": "number"
+   }
+  },
+  "restoreConnector": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/restore",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {
+    "data": "object",
+    "data.restored": "boolean",
+    "data.restoredActions": "number"
+   }
+  },
+  "restoreAction": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/restore",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "activateConnector": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/activate",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "body:endOrgId"
+   },
+   "output": {}
+  },
+  "listConnections": {
+   "method": "GET",
+   "path": "/v1/connections",
+   "inputs": {
+    "endOrgId": "query:endOrgId",
+    "orgId": "query:orgId",
+    "userId": "query:userId",
+    "connectionScope": "query:connectionScope",
+    "scope": "query:scope",
+    "groupBy": "query:groupBy",
+    "includePartnerPool": "query:includePartnerPool",
+    "allOrgs": "query:allOrgs"
+   },
+   "output": {}
+  },
+  "storeConnections": {
+   "method": "POST",
+   "path": "/v1/connections",
+   "inputs": {
+    "headerOrgId": "header:x-org-id",
+    "headerUserId": "header:x-user-id",
+    "identityHmac": "header:x-identity-hmac",
+    "connectorId": "body:connectorId!",
+    "authMethodId": "body:authMethodId!",
+    "authType": "body:authType",
+    "credentials": "body:credentials!",
+    "name": "body:name",
+    "expiresAt": "body:expiresAt",
+    "userId": "body:userId",
+    "userEmail": "body:userEmail",
+    "userName": "body:userName",
+    "endOrgId": "body:endOrgId",
+    "orgId": "body:orgId",
+    "authProvider": "body:authProvider",
+    "connectionScope": "body:connectionScope"
+   },
+   "output": {}
+  },
+  "getConnection": {
+   "method": "GET",
+   "path": "/v1/connections/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateConnection": {
+   "method": "PUT",
+   "path": "/v1/connections/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "credentials": "body:credentials",
+    "authType": "body:authType",
+    "expiresAt": "body:expiresAt",
+    "isDefault": "body:isDefault",
+    "connectionScope": "body:connectionScope"
+   },
+   "output": {}
+  },
+  "deleteConnections": {
+   "method": "DELETE",
+   "path": "/v1/connections/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listSaasConnectors": {
+   "method": "GET",
+   "path": "/v1/saas-connectors",
+   "inputs": {},
+   "output": {
+    "saasConnectors": "object[]",
+    "saasConnectors[].id": "string",
+    "saasConnectors[].connectorId": "string",
+    "saasConnectors[].connectorSlug": "string",
+    "saasConnectors[].connectorName": "string",
+    "saasConnectors[].connectorIcon": "string | null",
+    "saasConnectors[].scopes": "string[]",
+    "saasConnectors[].createdAt": "string",
+    "saasConnectors[].updatedAt": "string"
+   }
+  },
+  "listSaasConnectorConnections": {
+   "method": "GET",
+   "path": "/v1/saas-connectors/{connectorId}/connections",
+   "inputs": {
+    "connectorId": "path:connectorId!",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "connections": "object[]",
+    "connections[].id": "string",
+    "connections[].name": "string",
+    "connections[].connectionScope": "string",
+    "connections[].status": "string",
+    "connections[].verifyStatus": "string | null",
+    "connections[].endOrgId": "string",
+    "connections[].endOrgName": "string | null",
+    "connections[].endOrgSlug": "string | null",
+    "connections[].pinnedInstallations": "number",
+    "connections[].createdAt": "string",
+    "connections[].updatedAt": "string"
+   }
+  },
+  "upsertSaasConnector": {
+   "method": "PUT",
+   "path": "/v1/saas-connectors/{connectorId}",
+   "inputs": {
+    "connectorId": "path:connectorId!",
+    "scopes": "body:scopes!"
+   },
+   "output": {}
+  },
+  "deleteSaasConnector": {
+   "method": "DELETE",
+   "path": "/v1/saas-connectors/{connectorId}",
+   "inputs": {
+    "connectorId": "path:connectorId!"
+   },
+   "output": {}
+  },
+  "listAppEventTriggers": {
+   "method": "GET",
+   "path": "/v1/app-triggers",
+   "inputs": {
+    "limit": "query:limit",
+    "cursor": "query:cursor",
+    "search": "query:search",
+    "status": "query:status",
+    "connectorId": "query:connectorId",
+    "include_instances": "query:include_instances",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "createAppEventTrigger": {
+   "method": "POST",
+   "path": "/v1/app-triggers",
+   "inputs": {
+    "name": "body:name!",
+    "status": "body:status",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId",
+    "connectorId": "body:connectorId!",
+    "connectorName": "body:connectorName!",
+    "type": "body:type",
+    "events": "body:events!",
+    "routes": "body:routes",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "accountId": "body:accountId",
+    "connectionId": "body:connectionId"
+   },
+   "output": {}
+  },
+  "getAppEventTrigger": {
+   "method": "GET",
+   "path": "/v1/app-triggers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAppEventTrigger": {
+   "method": "PUT",
+   "path": "/v1/app-triggers/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "status": "body:status",
+    "events": "body:events",
+    "routes": "body:routes",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "accountId": "body:accountId"
+   },
+   "output": {}
+  },
+  "deleteAppEventTrigger": {
+   "method": "DELETE",
+   "path": "/v1/app-triggers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "retryTriggerSubscription": {
+   "method": "POST",
+   "path": "/v1/app-triggers/{id}/retry-subscription",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "triggerSchedulerNow": {
+   "method": "POST",
+   "path": "/v1/schedulers/{id}/trigger",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getTriggersMonitoring": {
+   "method": "GET",
+   "path": "/v1/triggers/monitoring",
+   "inputs": {
+    "type": "query:type",
+    "status": "query:status",
+    "search": "query:search",
+    "health": "query:health",
+    "limit": "query:limit",
+    "order": "query:order",
+    "cursor": "query:cursor"
+   },
+   "output": {}
+  },
+  "getTriggerMonitoring": {
+   "method": "GET",
+   "path": "/v1/triggers/{id}/monitoring",
+   "inputs": {
+    "id": "path:id!",
+    "dlqLimit": "query:dlqLimit",
+    "dlqCursor": "query:dlqCursor"
+   },
+   "output": {}
+  },
+  "getTriggerOutcomes": {
+   "method": "GET",
+   "path": "/v1/triggers/{id}/outcomes",
+   "inputs": {
+    "id": "path:id!",
+    "days": "query:days"
+   },
+   "output": {}
+  },
+  "setTriggerStatus": {
+   "method": "PATCH",
+   "path": "/v1/triggers/{id}/status",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": {}
+  },
+  "setTriggerReporting": {
+   "method": "PUT",
+   "path": "/v1/triggers/{id}/reporting",
+   "inputs": {
+    "id": "path:id!",
+    "countOnlyField": "body:countOnlyField!"
+   },
+   "output": {}
+  },
+  "resetCircuitBreaker": {
+   "method": "POST",
+   "path": "/v1/triggers/{id}/circuit-breaker/reset",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listDlq": {
+   "method": "GET",
+   "path": "/v1/dlq",
+   "inputs": {
+    "limit": "query:limit",
+    "cursor": "query:cursor",
+    "triggerId": "query:triggerId"
+   },
+   "output": {}
+  },
+  "replayDlqEntry": {
+   "method": "POST",
+   "path": "/v1/dlq/{id}/replay",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listEvents": {
+   "method": "GET",
+   "path": "/v1/events",
+   "inputs": {
+    "since": "query:since",
+    "triggerId": "query:triggerId",
+    "type": "query:type",
+    "env": "query:env",
+    "search": "query:search",
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "delivery": "query:delivery",
+    "outcome": "query:outcome",
+    "until": "query:until",
+    "customer": "query:customer"
+   },
+   "output": {}
+  },
+  "eventCounts": {
+   "method": "GET",
+   "path": "/v1/events/counts",
+   "inputs": {
+    "since": "query:since",
+    "triggerId": "query:triggerId",
+    "env": "query:env",
+    "search": "query:search",
+    "delivery": "query:delivery",
+    "outcome": "query:outcome",
+    "until": "query:until",
+    "customer": "query:customer"
+   },
+   "output": {}
+  },
+  "countEvents": {
+   "method": "GET",
+   "path": "/v1/events/count",
+   "inputs": {
+    "since": "query:since",
+    "triggerId": "query:triggerId",
+    "type": "query:type",
+    "env": "query:env",
+    "search": "query:search"
+   },
+   "output": {}
+  },
+  "getEvent": {
+   "method": "GET",
+   "path": "/v1/events/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getEventAttempts": {
+   "method": "GET",
+   "path": "/v1/events/{id}/attempts",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "replayEvent": {
+   "method": "POST",
+   "path": "/v1/events/{id}/replay",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listWorkflows": {
+   "method": "GET",
+   "path": "/v1/workflows",
+   "inputs": {
+    "deleted": "query:deleted",
+    "groupBy": "query:groupBy",
+    "label": "query:label",
+    "status": "query:status",
+    "updatedWithin": "query:updatedWithin",
+    "sort": "query:sort",
+    "dir": "query:dir",
+    "executionTier": "query:executionTier",
+    "search": "query:search",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].description": "string",
+    "data[].status": "string",
+    "data[].trigger": "Record<string, any>",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string",
+    "total": "number"
+   }
+  },
+  "createWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows",
+   "inputs": {
+    "categoryId": "body:categoryId",
+    "slug": "body:slug!",
+    "name": "body:name!",
+    "description": "body:description",
+    "code": "body:code!",
+    "inputSchema": "body:inputSchema",
+    "outputSchema": "body:outputSchema",
+    "inputExample": "body:inputExample",
+    "outputExample": "body:outputExample",
+    "executionTier": "body:executionTier",
+    "timeoutMs": "body:timeoutMs",
+    "retryPolicy": "body:retryPolicy",
+    "escalateOnTimeout": "body:escalateOnTimeout",
+    "enabled": "body:enabled",
+    "testCases": "body:testCases",
+    "configId": "body:configId",
+    "testInput": "body:testInput",
+    "testHeaders": "body:testHeaders",
+    "connectorManifest": "body:connectorManifest"
+   },
+   "output": {}
+  },
+  "listWorkflowCategories": {
+   "method": "GET",
+   "path": "/v1/workflow-categories",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].colour": "string",
+    "data[].workflowCount": "number",
+    "data[].createdAt": "string | null",
+    "data[].updatedAt": "string | null",
+    "limit": "number"
+   }
+  },
+  "createWorkflowCategory": {
+   "method": "POST",
+   "path": "/v1/workflow-categories",
+   "inputs": {
+    "name": "body:name!",
+    "colour": "body:colour!"
+   },
+   "output": {}
+  },
+  "deleteWorkflowCategory": {
+   "method": "DELETE",
+   "path": "/v1/workflow-categories/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateWorkflowCategory": {
+   "method": "PATCH",
+   "path": "/v1/workflow-categories/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "colour": "body:colour"
+   },
+   "output": {}
+  },
+  "listWorkflowLabels": {
+   "method": "GET",
+   "path": "/v1/workflow-labels",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].colour": "string",
+    "data[].usageCount": "number",
+    "data[].createdAt": "string | null",
+    "data[].updatedAt": "string | null",
+    "limit": "number"
+   }
+  },
+  "createWorkflowLabel": {
+   "method": "POST",
+   "path": "/v1/workflow-labels",
+   "inputs": {
+    "name": "body:name!",
+    "colour": "body:colour!"
+   },
+   "output": {}
+  },
+  "deleteWorkflowLabel": {
+   "method": "DELETE",
+   "path": "/v1/workflow-labels/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateWorkflowLabel": {
+   "method": "PATCH",
+   "path": "/v1/workflow-labels/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "colour": "body:colour"
+   },
+   "output": {}
+  },
+  "setWorkflowLabels": {
+   "method": "PUT",
+   "path": "/v1/workflows/{id}/labels",
+   "inputs": {
+    "id": "path:id!",
+    "labelIds": "body:labelIds!"
+   },
+   "output": {}
+  },
+  "runWorkflowCode": {
+   "method": "POST",
+   "path": "/v1/workflows/test",
+   "inputs": {
+    "code": "body:code!",
+    "input": "body:input",
+    "headers": "body:headers",
+    "mockMode": "body:mockMode",
+    "partialMock": "body:partialMock",
+    "mockScenarios": "body:mockScenarios",
+    "timeoutMs": "body:timeoutMs",
+    "workflowId": "body:workflowId",
+    "verification": "body:verification"
+   },
+   "output": {}
+  },
+  "testSavedWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/test",
+   "inputs": {
+    "id": "path:id!",
+    "input": "body:input",
+    "headers": "body:headers",
+    "mockMode": "body:mockMode",
+    "partialMock": "body:partialMock",
+    "mockScenarios": "body:mockScenarios"
+   },
+   "output": {}
+  },
+  "listWorkflowStateKeys": {
+   "method": "GET",
+   "path": "/v1/workflows/state-keys",
+   "inputs": {
+    "prefix": "query:prefix",
+    "limit": "query:limit"
+   },
+   "output": {}
+  },
+  "listWorkflowTables": {
+   "method": "GET",
+   "path": "/v1/workflows/tables",
+   "inputs": {
+    "tableName": "query:tableName"
+   },
+   "output": {}
+  },
+  "getWorkflow": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateWorkflow": {
+   "method": "PUT",
+   "path": "/v1/workflows/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "categoryId": "body:categoryId",
+    "name": "body:name",
+    "description": "body:description",
+    "code": "body:code",
+    "inputSchema": "body:inputSchema",
+    "outputSchema": "body:outputSchema",
+    "inputExample": "body:inputExample",
+    "outputExample": "body:outputExample",
+    "executionTier": "body:executionTier",
+    "timeoutMs": "body:timeoutMs",
+    "retryPolicy": "body:retryPolicy",
+    "escalateOnTimeout": "body:escalateOnTimeout",
+    "configId": "body:configId",
+    "enabled": "body:enabled",
+    "testCases": "body:testCases",
+    "documentationOverride": "body:documentationOverride",
+    "testInput": "body:testInput",
+    "testHeaders": "body:testHeaders",
+    "connectorManifest": "body:connectorManifest"
+   },
+   "output": {}
+  },
+  "deleteWorkflow": {
+   "method": "DELETE",
+   "path": "/v1/workflows/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "permanent": "query:permanent"
+   },
+   "output": {}
+  },
+  "restoreWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/restore",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {
+    "data": "object",
+    "data.restored": "boolean",
+    "data.reason": "string"
+   }
+  },
+  "getWorkflowConnectorManifest": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/manifest",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.connectorManifest": "object[]",
+    "data.connectorManifest[].slug": "string",
+    "data.connectorManifest[].connectorId": "string",
+    "data.connectorManifest[].orgId": "string",
+    "data.connectorManifest[].scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest[].connectionId": "string | null",
+    "data.connectorManifest[].retryPolicy": "object | null",
+    "data.connectorManifest[].timeoutMs": "number | null",
+    "data.connectorManifest[].stale": "boolean",
+    "data.connectorManifest[].actions": "object[]",
+    "data.connectorManifest[].actions[].slug": "string",
+    "data.connectorManifest[].actions[].id": "string",
+    "data.connectorManifest[].actions[].version": "string",
+    "data.connectorManifest[].actions[].externalVersion": "string",
+    "data.connectorManifest[].actions[].versionMajor": "number",
+    "data.connectorManifest[].actions[].manual": "boolean",
+    "data.connectorManifest[].actions[].retryPolicy": "object | null",
+    "data.connectorManifest[].actions[].timeoutMs": "number | null"
+   }
+  },
+  "setWorkflowConnectorScope": {
+   "method": "PATCH",
+   "path": "/v1/workflows/{id}/manifest/{slug}",
+   "inputs": {
+    "id": "path:id!",
+    "slug": "path:slug!",
+    "scope": "body:scope",
+    "connectionId": "body:connectionId",
+    "retryPolicy": "body:retryPolicy",
+    "timeoutMs": "body:timeoutMs",
+    "actions": "body:actions"
+   },
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.slug": "string",
+    "data.scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest": "object[]",
+    "data.connectorManifest[].slug": "string",
+    "data.connectorManifest[].connectorId": "string",
+    "data.connectorManifest[].orgId": "string",
+    "data.connectorManifest[].scope": "\"SAAS\" | \"MULTI_TENANT\"",
+    "data.connectorManifest[].connectionId": "string | null",
+    "data.connectorManifest[].retryPolicy": "object | null",
+    "data.connectorManifest[].timeoutMs": "number | null",
+    "data.connectorManifest[].stale": "boolean",
+    "data.connectorManifest[].actions": "object[]",
+    "data.connectorManifest[].actions[].slug": "string",
+    "data.connectorManifest[].actions[].id": "string",
+    "data.connectorManifest[].actions[].version": "string",
+    "data.connectorManifest[].actions[].externalVersion": "string",
+    "data.connectorManifest[].actions[].versionMajor": "number",
+    "data.connectorManifest[].actions[].manual": "boolean",
+    "data.connectorManifest[].actions[].retryPolicy": "object | null",
+    "data.connectorManifest[].actions[].timeoutMs": "number | null"
+   }
+  },
+  "getWorkflowDocs": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/docs",
+   "inputs": {
+    "id": "path:id!",
+    "audience": "query:audience",
+    "format": "query:format"
+   },
+   "output": {
+    "data": "object",
+    "data.workflowId": "string",
+    "data.audience": "string",
+    "data.generatedAt": "string | null",
+    "data.stale": "boolean",
+    "data.workflowUpdatedAt": "string | null",
+    "data.workflowVersion": "number",
+    "data.markdown": "string",
+    "data.sections": "object[]",
+    "data.sections[].heading": "string | null",
+    "data.sections[].markdown": "string",
+    "data.fieldMappings": "object[]",
+    "data.fieldMappings[].source": "string",
+    "data.fieldMappings[].destination": "string",
+    "data.fieldMappings[].notes": "string",
+    "data.slug": "string",
+    "data.name": "string",
+    "data.description": "string | null",
+    "data.flowSteps": "Record<string, any>[]",
+    "data.sequencePhases": "Record<string, any> | null",
+    "data.sequenceMermaid": "string | null",
+    "data.triggers": "Record<string, any>[]",
+    "data.connectorActions": "object[]",
+    "data.connectorActions[].slug": "string",
+    "data.connectorActions[].actions": "string[]",
+    "data.inputSchema": "Record<string, any> | null",
+    "data.outputSchema": "Record<string, any> | null",
+    "data.inputExample": "any | null",
+    "data.executionTier": "string",
+    "data.timeoutMs": "number"
+   }
+  },
+  "listWorkflowDocVersions": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/docs/history",
+   "inputs": {
+    "id": "path:id!",
+    "audience": "query:audience",
+    "kind": "query:kind",
+    "limit": "query:limit"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].audience": "string",
+    "data[].kind": "string",
+    "data[].createdBy": "string | null",
+    "data[].createdAt": "string",
+    "data[].markdownLength": "number"
+   }
+  },
+  "getWorkflowDocVersion": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/docs/history/{versionId}",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": {}
+  },
+  "generateWorkflowDocs": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/generate-docs",
+   "inputs": {
+    "id": "path:id!",
+    "audience": "body:audience"
+   },
+   "output": {
+    "data": "object",
+    "data.generating": "boolean",
+    "data.audience": "string"
+   }
+  },
+  "executeWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/execute",
+   "inputs": {
+    "id": "path:id!",
+    "fastnEnv": "header:x-fastn-env",
+    "input": "body:input"
+   },
+   "output": {}
+  },
+  "listWorkflowExecutions": {
+   "method": "GET",
+   "path": "/v1/workflows/executions",
+   "inputs": {
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "status": "query:status",
+    "workflowId": "query:workflowId",
+    "installationId": "query:installationId",
+    "eventId": "query:eventId",
+    "triggerId": "query:triggerId",
+    "parentExecutionId": "query:parentExecutionId",
+    "dateFrom": "query:dateFrom",
+    "dateTo": "query:dateTo",
+    "search": "query:search",
+    "searchIn": "query:searchIn",
+    "sort": "query:sort"
+   },
+   "output": {}
+  },
+  "searchExecutionLogs": {
+   "method": "GET",
+   "path": "/v1/workflows/executions/logs",
+   "inputs": {
+    "q": "query:q",
+    "workflowId": "query:workflowId",
+    "level": "query:level",
+    "dateFrom": "query:dateFrom",
+    "dateTo": "query:dateTo",
+    "since": "query:since",
+    "limit": "query:limit"
+   },
+   "output": {}
+  },
+  "listExecutions": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/executions",
+   "inputs": {
+    "id": "path:id!",
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "status": "query:status",
+    "status_code": "query:status_code"
+   },
+   "output": {}
+  },
+  "getWorkflowExecution": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/executions/{executionId}",
+   "inputs": {
+    "id": "path:id!",
+    "executionId": "path:executionId!"
+   },
+   "output": {}
+  },
+  "cancelWorkflowExecution": {
+   "method": "DELETE",
+   "path": "/v1/workflows/{id}/executions/{executionId}",
+   "inputs": {
+    "id": "path:id!",
+    "executionId": "path:executionId!"
+   },
+   "output": {}
+  },
+  "getExecutionLogs": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/executions/{executionId}/logs",
+   "inputs": {
+    "id": "path:id!",
+    "executionId": "path:executionId!",
+    "limit": "query:limit"
+   },
+   "output": {
+    "data": "object",
+    "data.source": "\"loki\"",
+    "data.available": "boolean",
+    "data.reason": "\"not_configured\" | \"query_failed\" | \"redacted\"",
+    "data.truncated": "boolean",
+    "data.lines": "object[]",
+    "data.lines[].ts": "string",
+    "data.lines[].level": "\"debug\" | \"info\" | \"warn\" | \"error\"",
+    "data.lines[].source": "\"fastn.loki\" | \"console\"",
+    "data.lines[].message": "string",
+    "data.lines[].executionId": "string | null",
+    "data.lines[].data": "any"
+   }
+  },
+  "replayExecution": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/executions/{executionId}/replay",
+   "inputs": {
+    "id": "path:id!",
+    "executionId": "path:executionId!",
+    "env": "query:env"
+   },
+   "output": {
+    "data": "object",
+    "data.executionId": "string",
+    "data.replayedFrom": "string",
+    "data.tier": "\"instant\" | \"standard\" | \"long\"",
+    "data.status": "string",
+    "data.statusCode": "number",
+    "data.durationMs": "number",
+    "data.output": "any",
+    "data.error": "string | null",
+    "data.errorCategory": "string | null",
+    "data.fixSuggestion": "string | null"
+   }
+  },
+  "listWorkflowDiffReports": {
+   "method": "GET",
+   "path": "/v1/workflows/diff-reports",
+   "inputs": {
+    "scope": "query:scope",
+    "entity": "query:entity",
+    "workflow_id": "query:workflow_id",
+    "limit": "query:limit",
+    "before": "query:before"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].scope": "string",
+    "data[].entity": "string",
+    "data[].runId": "string | null",
+    "data[].executionId": "string | null",
+    "data[].workflowId": "string | null",
+    "data[].stats": "Record<string, any>",
+    "data[].details": "Record<string, any>[] | null",
+    "data[].createdAt": "string"
+   }
+  },
+  "listEnvironments": {
+   "method": "GET",
+   "path": "/v1/environments",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].slug": "string",
+    "data[].isDefault": "boolean",
+    "data[].isDeletable": "boolean",
+    "data[].requiresReview": "boolean",
+    "data[].createdAt": "string"
+   }
+  },
+  "createEnvironment": {
+   "method": "POST",
+   "path": "/v1/environments",
+   "inputs": {
+    "name": "body:name!",
+    "slug": "body:slug!"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.slug": "string",
+    "data.isDefault": "boolean",
+    "data.isDeletable": "boolean",
+    "data.requiresReview": "boolean",
+    "data.createdAt": "string"
+   }
+  },
+  "deleteEnvironment": {
+   "method": "DELETE",
+   "path": "/v1/environments/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "setEnvironmentReviewRequirement": {
+   "method": "PATCH",
+   "path": "/v1/environments/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "requiresReview": "body:requiresReview!"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.slug": "string",
+    "data.isDefault": "boolean",
+    "data.isDeletable": "boolean",
+    "data.requiresReview": "boolean",
+    "data.createdAt": "string"
+   }
+  },
+  "getWorkflowVersion": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/versions/{versionId}",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.versionNumber": "number",
+    "data.message": "string | null",
+    "data.publishedBy": "string",
+    "data.publishedAt": "string",
+    "data.gitCommitSha": "string | null",
+    "data.githubPrNumber": "number | null",
+    "data.githubReleaseId": "string | null",
+    "data.githubReleaseUrl": "string | null",
+    "data.code": "string"
+   }
+  },
+  "deployWorkflowVersion": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/deploy",
+   "inputs": {
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "version_id": "body:version_id!"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.envId": "string",
+    "data.envSlug": "string",
+    "data.versionId": "string",
+    "data.envVersion": "number",
+    "data.deployedAt": "string"
+   }
+  },
+  "promoteWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/promote",
+   "inputs": {
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "version_id": "body:version_id!",
+    "message": "body:message"
+   },
+   "output": {
+    "data": "object | object"
+   }
+  },
+  "listSyncJobs": {
+   "method": "GET",
+   "path": "/v1/sync/jobs",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].connectorId": "string",
+    "data[].direction": "\"inbound\" | \"outbound\" | \"bidirectional\"",
+    "data[].entity": "string",
+    "data[].status": "\"active\" | \"paused\" | \"running\" | \"error\"",
+    "data[].lastSyncAt": "string | null",
+    "data[].recordsSynced": "number",
+    "data[].recordsProcessed": "number",
+    "data[].recordsFailed": "number",
+    "data[].recordsSkipped": "number",
+    "total": "number"
+   }
+  },
+  "createSyncJob": {
+   "method": "POST",
+   "path": "/v1/sync/jobs",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "entity": "body:entity!",
+    "direction": "body:direction"
+   },
+   "output": {}
+  },
+  "getSyncJob": {
+   "method": "GET",
+   "path": "/v1/sync/jobs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "deleteSyncJob": {
+   "method": "DELETE",
+   "path": "/v1/sync/jobs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "triggerSync": {
+   "method": "POST",
+   "path": "/v1/sync/jobs/{id}/trigger",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "executeRequest": {
+   "method": "POST",
+   "path": "/v1/execute",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "path": "body:path!",
+    "method": "body:method",
+    "headers": "body:headers",
+    "body": "body:body",
+    "connectionId": "body:connectionId"
+   },
+   "output": {}
+  },
+  "listConnectorExecutions": {
+   "method": "GET",
+   "path": "/v1/executions",
+   "inputs": {
+    "actionId": "query:actionId",
+    "connectionId": "query:connectionId",
+    "endOrgId": "query:endOrgId",
+    "userId": "query:userId",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "getConnectorExecution": {
+   "method": "GET",
+   "path": "/v1/executions/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "agentListOrchestratorSessions": {
+   "method": "GET",
+   "path": "/v1/agent/orchestrator/sessions",
+   "inputs": {},
+   "output": {}
+  },
+  "agentCreateOrchestratorSession": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/sessions",
+   "inputs": {
+    "title": "body:title"
+   },
+   "output": {}
+  },
+  "agentGetOrchestratorMessages": {
+   "method": "GET",
+   "path": "/v1/agent/orchestrator/sessions/{id}/messages",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "agentUploadOrchestratorAttachment": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/sessions/{id}/attachments",
+   "inputs": {
+    "id": "path:id!",
+    "mediaType": "body:mediaType!",
+    "base64": "body:base64!",
+    "filename": "body:filename",
+    "width": "body:width",
+    "height": "body:height"
+   },
+   "output": {}
+  },
+  "agentGetOrchestratorAttachment": {
+   "method": "GET",
+   "path": "/v1/agent/orchestrator/sessions/{id}/attachments/{attachmentId}",
+   "inputs": {
+    "id": "path:id!",
+    "attachmentId": "path:attachmentId!"
+   },
+   "output": {}
+  },
+  "agentOrchestratorStream": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/stream",
+   "inputs": {
+    "threadId": "body:threadId!",
+    "messages": "body:messages!",
+    "trigger": "body:trigger",
+    "messageId": "body:messageId"
+   },
+   "output": {}
+  },
+  "agentErrorDiagnosis": {
+   "method": "POST",
+   "path": "/v1/agent/error-diagnosis",
+   "inputs": {
+    "error": "body:error!",
+    "errorCategory": "body:errorCategory",
+    "errorSummary": "body:errorSummary",
+    "workflowCode": "body:workflowCode",
+    "inputData": "body:inputData",
+    "trace": "body:trace",
+    "stack": "body:stack"
+   },
+   "output": {}
+  },
+  "agentGenerateWorkflowDocs": {
+   "method": "POST",
+   "path": "/v1/agent/workflow/generate-docs",
+   "inputs": {
+    "code": "body:code!",
+    "name": "body:name",
+    "slug": "body:slug",
+    "description": "body:description",
+    "executionTier": "body:executionTier",
+    "timeoutMs": "body:timeoutMs",
+    "triggers": "body:triggers",
+    "audience": "body:audience",
+    "inputSchema": "body:inputSchema",
+    "outputSchema": "body:outputSchema",
+    "inputExample": "body:inputExample",
+    "connectorActions": "body:connectorActions"
+   },
+   "output": {}
+  },
+  "listTraces": {
+   "method": "GET",
+   "path": "/v1/traces",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "status": "query:status"
+   },
+   "output": {}
+  },
+  "getTrace": {
+   "method": "GET",
+   "path": "/v1/traces/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAlerts": {
+   "method": "GET",
+   "path": "/v1/alerts",
+   "inputs": {
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data[].metric": "string",
+    "data[].condition": "\"gt\" | \"lt\"",
+    "data[].threshold": "number",
+    "data[].window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data[].workflowIds": "string[] | null",
+    "data[].workflowNames": "string[] | null",
+    "data[].deliveries": "object[]",
+    "data[].deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data[].deliveries[].to": "string",
+    "data[].deliveries[].url": "string",
+    "data[].deliveries[].connectionId": "string",
+    "data[].deliveries[].connectorSlug": "string",
+    "data[].deliveries[].target": "string",
+    "data[].enabled": "boolean",
+    "data[].throttle": "boolean",
+    "data[].endOrgId": "string | null",
+    "data[].lastFiredAt": "string | null",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
+  },
+  "createAlert": {
+   "method": "POST",
+   "path": "/v1/alerts",
+   "inputs": {
+    "endOrgId": "query:endOrgId",
+    "name": "body:name!",
+    "mode": "body:mode",
+    "metric": "body:metric",
+    "condition": "body:condition",
+    "threshold": "body:threshold",
+    "window": "body:window",
+    "workflowIds": "body:workflowIds",
+    "deliveries": "body:deliveries",
+    "enabled": "body:enabled",
+    "throttle": "body:throttle"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data.metric": "string",
+    "data.condition": "\"gt\" | \"lt\"",
+    "data.threshold": "number",
+    "data.window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data.workflowIds": "string[] | null",
+    "data.workflowNames": "string[] | null",
+    "data.deliveries": "object[]",
+    "data.deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data.deliveries[].to": "string",
+    "data.deliveries[].url": "string",
+    "data.deliveries[].connectionId": "string",
+    "data.deliveries[].connectorSlug": "string",
+    "data.deliveries[].target": "string",
+    "data.enabled": "boolean",
+    "data.throttle": "boolean",
+    "data.endOrgId": "string | null",
+    "data.lastFiredAt": "string | null",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
+  },
+  "enableDefaultAlerts": {
+   "method": "POST",
+   "path": "/v1/alerts/defaults",
+   "inputs": {
+    "endOrgId": "query:endOrgId",
+    "email": "body:email"
+   },
+   "output": {
+    "data": "object",
+    "data.created": "Record<string, any>[]",
+    "data.alreadyConfigured": "boolean"
+   }
+  },
+  "updateAlert": {
+   "method": "PUT",
+   "path": "/v1/alerts/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "name": "body:name",
+    "mode": "body:mode",
+    "metric": "body:metric",
+    "condition": "body:condition",
+    "threshold": "body:threshold",
+    "window": "body:window",
+    "workflowIds": "body:workflowIds",
+    "deliveries": "body:deliveries",
+    "enabled": "body:enabled",
+    "throttle": "body:throttle"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.mode": "\"threshold\" | \"instant\" | \"code\"",
+    "data.metric": "string",
+    "data.condition": "\"gt\" | \"lt\"",
+    "data.threshold": "number",
+    "data.window": "\"1h\" | \"24h\" | \"7d\" | \"30d\"",
+    "data.workflowIds": "string[] | null",
+    "data.workflowNames": "string[] | null",
+    "data.deliveries": "object[]",
+    "data.deliveries[].type": "\"email\" | \"webhook\" | \"slack\" | \"connection\"!",
+    "data.deliveries[].to": "string",
+    "data.deliveries[].url": "string",
+    "data.deliveries[].connectionId": "string",
+    "data.deliveries[].connectorSlug": "string",
+    "data.deliveries[].target": "string",
+    "data.enabled": "boolean",
+    "data.throttle": "boolean",
+    "data.endOrgId": "string | null",
+    "data.lastFiredAt": "string | null",
+    "data.createdAt": "string",
+    "data.updatedAt": "string"
+   }
+  },
+  "deleteAlert": {
+   "method": "DELETE",
+   "path": "/v1/alerts/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "listAuditLog": {
+   "method": "GET",
+   "path": "/v1/audit-log",
+   "inputs": {
+    "action": "query:action",
+    "userId": "query:userId",
+    "endOrgId": "query:endOrgId",
+    "resourceType": "query:resourceType",
+    "search": "query:search",
+    "excludeAction": "query:excludeAction",
+    "from": "query:from",
+    "to": "query:to",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].action": "string",
+    "data[].userId": "string",
+    "data[].userName": "string",
+    "data[].resourceType": "string",
+    "data[].resource": "string",
+    "data[].targetName": "string",
+    "data[].outcome": "string",
+    "data[].details": "Record<string, any>",
+    "data[].orgId": "string",
+    "data[].endOrgId": "string | null",
+    "data[].createdAt": "string",
+    "pagination": "object",
+    "pagination.total": "number",
+    "pagination.limit": "number",
+    "pagination.offset": "number",
+    "pagination.totalIsLowerBound": "boolean",
+    "pagination.nextCursor": "string | null"
+   }
+  },
+  "listAuditLogActions": {
+   "method": "GET",
+   "path": "/v1/audit-log/actions",
+   "inputs": {},
+   "output": {
+    "data": "string[]"
+   }
+  },
+  "listPlans": {
+   "method": "GET",
+   "path": "/v1/plans",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].tier": "string",
+    "data[].name": "string",
+    "data[].price": "number",
+    "data[].features": "string[]",
+    "data[].limits": "Record<string, any>"
+   }
+  },
+  "getPlan": {
+   "method": "GET",
+   "path": "/v1/plans/{tier}",
+   "inputs": {
+    "tier": "path:tier!"
+   },
+   "output": {}
+  },
+  "getUsage": {
+   "method": "GET",
+   "path": "/v1/usage",
+   "inputs": {
+    "end_org_id": "query:end_org_id",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "setQuotaLimit": {
+   "method": "PUT",
+   "path": "/v1/quotas/limits",
+   "inputs": {
+    "orgId": "body:orgId",
+    "endOrgId": "body:endOrgId",
+    "limits": "body:limits!"
+   },
+   "output": {}
+  },
+  "deleteQuotaLimit": {
+   "method": "DELETE",
+   "path": "/v1/quotas/limits",
+   "inputs": {
+    "dimension": "body:dimension!",
+    "orgId": "body:orgId",
+    "endOrgId": "body:endOrgId"
+   },
+   "output": {}
+  },
+  "getQuotaUsage": {
+   "method": "GET",
+   "path": "/v1/quotas/usage",
+   "inputs": {
+    "org_id": "query:org_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "listApiKeys": {
+   "method": "GET",
+   "path": "/v1/api-keys",
+   "inputs": {
+    "mode": "query:mode"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].prefix": "string",
+    "data[].workflowEnvId": "string | null",
+    "data[].workflowEnvironment": "object | null",
+    "data[].workflowEnvironment.id": "string",
+    "data[].workflowEnvironment.name": "string",
+    "data[].workflowEnvironment.slug": "string",
+    "data[].envReach": "\"test\" | \"pinned\" | \"all\"",
+    "data[].permissions": "string[]",
+    "data[].expiresAt": "string | null",
+    "data[].lastUsedAt": "string | null",
+    "data[].createdAt": "string"
+   }
+  },
+  "getApiKey": {
+   "method": "GET",
+   "path": "/v1/api-keys/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateApiKey": {
+   "method": "PUT",
+   "path": "/v1/api-keys/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "permissions": "body:permissions",
+    "ipWhitelist": "body:ipWhitelist",
+    "rateLimit": "body:rateLimit",
+    "expiresAt": "body:expiresAt",
+    "allowedOrigins": "body:allowedOrigins"
+   },
+   "output": {}
+  },
+  "revokeApiKey": {
+   "method": "DELETE",
+   "path": "/v1/api-keys/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "permanent": "query:permanent"
+   },
+   "output": {}
+  },
+  "getThrottle": {
+   "method": "GET",
+   "path": "/v1/throttle",
+   "inputs": {
+    "org_id": "query:org_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "updateThrottle": {
+   "method": "PUT",
+   "path": "/v1/throttle",
+   "inputs": {
+    "resource": "body:resource!",
+    "orgId": "body:orgId",
+    "endOrgId": "body:endOrgId",
+    "maxPerSecond": "body:maxPerSecond",
+    "maxPerMinute": "body:maxPerMinute",
+    "maxPerHour": "body:maxPerHour",
+    "maxConcurrent": "body:maxConcurrent",
+    "burstLimit": "body:burstLimit"
+   },
+   "output": {}
+  },
+  "createEmbedToken": {
+   "method": "POST",
+   "path": "/v1/embed/token",
+   "inputs": {
+    "orgId": "header:x-org-id",
+    "headerUserId": "header:x-user-id",
+    "identityHmac": "header:x-identity-hmac",
+    "endOrgId": "body:endOrgId",
+    "allowOrgLevel": "body:allowOrgLevel",
+    "createIfMissing": "body:createIfMissing",
+    "customerName": "body:customerName",
+    "userId": "body:userId",
+    "userEmail": "body:userEmail",
+    "userName": "body:userName",
+    "roleOverride": "body:roleOverride",
+    "role": "body:role",
+    "metadata": "body:metadata"
+   },
+   "output": {
+    "data": "object",
+    "data.token": "string",
+    "data.endOrgId": "string",
+    "data.userId": "string",
+    "data.role": "string",
+    "data.tierId": "string | null",
+    "data.expiresAt": "string",
+    "data.expiresIn": "number"
+   }
+  },
+  "createSetupLink": {
+   "method": "POST",
+   "path": "/v1/setup-links",
+   "inputs": {
+    "widgetId": "body:widgetId!",
+    "endOrgId": "body:endOrgId",
+    "useCallerOrg": "body:useCallerOrg",
+    "label": "body:label",
+    "connectionName": "body:connectionName!",
+    "externalRef": "body:externalRef",
+    "createIfMissing": "body:createIfMissing",
+    "expiresInMinutes": "body:expiresInMinutes",
+    "allowAdditionalConnection": "body:allowAdditionalConnection",
+    "metadata": "body:metadata",
+    "redirectUrl": "body:redirectUrl"
+   },
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.setupUrl": "string",
+    "data.status": "\"pending\"",
+    "data.expiresAt": "string",
+    "data.endOrgId": "string",
+    "data.metadata": "Record<string, any>",
+    "data.redirectUrl": "string",
+    "data.allowAdditionalConnection": "boolean"
+   }
+  },
+  "getSetupLink": {
+   "method": "GET",
+   "path": "/v1/setup-links/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.status": "\"pending\" | \"complete\" | \"revoked\"",
+    "data.widgetId": "string",
+    "data.endOrgId": "string",
+    "data.label": "string",
+    "data.installationId": "string | null",
+    "data.expiresAt": "string",
+    "data.redirectUrl": "string",
+    "data.metadata": "Record<string, any>",
+    "data.allowAdditionalConnection": "boolean",
+    "data.widget": "object | null",
+    "data.widget.id": "string",
+    "data.widget.name": "string",
+    "data.widget.slug": "string",
+    "data.widget.connectorRefs": "Record<string, any>[]",
+    "data.widget.connectorIds": "string[]",
+    "data.widget.unifiedRefs": "Record<string, any>[]",
+    "data.configTemplate": "object | null",
+    "data.configTemplate.id": "string",
+    "data.configTemplate.config": "Record<string, any>"
+   }
+  },
+  "cancelSetupLink": {
+   "method": "DELETE",
+   "path": "/v1/setup-links/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {
+    "data": "object",
+    "data.setupId": "string",
+    "data.status": "\"revoked\""
+   }
+  },
+  "completeSetupLink": {
+   "method": "POST",
+   "path": "/v1/setup-links/{id}/complete",
+   "inputs": {
+    "id": "path:id!",
+    "connections": "body:connections",
+    "config": "body:config"
+   },
+   "output": {
+    "data": "object",
+    "data.installationId": "string",
+    "data.status": "\"complete\"",
+    "data.reused": "boolean"
+   }
+  },
+  "listSystemGrants": {
+   "method": "GET",
+   "path": "/v1/grants/system",
+   "inputs": {},
+   "output": {}
+  },
+  "listGrants": {
+   "method": "GET",
+   "path": "/v1/grants",
+   "inputs": {},
+   "output": {}
+  },
+  "createGrant": {
+   "method": "POST",
+   "path": "/v1/grants",
+   "inputs": {
+    "body": "body:*!"
+   },
+   "output": {}
+  },
+  "updateGrant": {
+   "method": "PUT",
+   "path": "/v1/grants/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "deleteGrant": {
+   "method": "DELETE",
+   "path": "/v1/grants/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "trackActivity": {
+   "method": "POST",
+   "path": "/v1/activity/track",
+   "inputs": {
+    "event": "body:event!",
+    "source": "body:source",
+    "sessionId": "body:sessionId",
+    "userAgent": "body:userAgent"
+   },
+   "output": {
+    "data": "object",
+    "data.recorded": "boolean"
+   }
+  },
+  "trackPageActivity": {
+   "method": "POST",
+   "path": "/v1/activity/page",
+   "inputs": {
+    "page": "body:page!",
+    "referrer": "body:referrer"
+   },
+   "output": {
+    "data": "object",
+    "data.recorded": "boolean"
+   }
+  },
+  "getMyActivity": {
+   "method": "GET",
+   "path": "/v1/activity/me",
+   "inputs": {},
+   "output": {}
+  },
+  "getOnboardingStatus": {
+   "method": "GET",
+   "path": "/v1/onboarding/status",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.isComplete": "boolean",
+    "data.completedAt": "string | null"
+   }
+  },
+  "getOnboarding": {
+   "method": "GET",
+   "path": "/v1/onboarding",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.heardFrom": "string",
+    "data.jobRole": "string",
+    "data.completedAt": "string | null"
+   }
+  },
+  "submitOnboarding": {
+   "method": "POST",
+   "path": "/v1/onboarding",
+   "inputs": {
+    "heardFrom": "body:heardFrom!",
+    "jobRole": "body:jobRole!",
+    "companyName": "body:companyName",
+    "useCase": "body:useCase",
+    "useCaseCategory": "body:useCaseCategory",
+    "classification": "body:classification",
+    "needsReview": "body:needsReview",
+    "enrichment": "body:enrichment"
+   },
+   "output": {
+    "data": "object",
+    "data.saved": "boolean"
+   }
+  },
+  "updateOnboarding": {
+   "method": "PATCH",
+   "path": "/v1/onboarding",
+   "inputs": {
+    "heardFrom": "body:heardFrom",
+    "jobRole": "body:jobRole",
+    "companyName": "body:companyName",
+    "useCase": "body:useCase",
+    "useCaseCategory": "body:useCaseCategory",
+    "currentStep": "body:currentStep",
+    "chatHistory": "body:chatHistory"
+   },
+   "output": {}
+  },
+  "setOnboardingAgentDomain": {
+   "method": "POST",
+   "path": "/v1/onboarding/agent-domain",
+   "inputs": {
+    "domain": "body:domain!"
+   },
+   "output": {
+    "data": "object",
+    "data.saved": "boolean"
+   }
+  },
+  "clearOnboardingAgentDomain": {
+   "method": "DELETE",
+   "path": "/v1/onboarding/agent-domain",
+   "inputs": {},
+   "output": {}
+  },
+  "getHubSettings": {
+   "method": "GET",
+   "path": "/v1/hub-settings",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.primaryColor": "string",
+    "data.logoUrl": "string",
+    "data.welcomeMessage": "string",
+    "data.allowedConnectors": "string[]"
+   }
+  },
+  "updateHubSettings": {
+   "method": "PUT",
+   "path": "/v1/hub-settings",
+   "inputs": {
+    "config": "body:config!",
+    "baseUpdatedAt": "body:baseUpdatedAt"
+   },
+   "output": {
+    "data": "Record<string, any>"
+   }
+  },
+  "listSecrets": {
+   "method": "GET",
+   "path": "/v1/secrets",
+   "inputs": {
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].type": "\"text\" | \"json\"",
+    "data[].createdAt": "string",
+    "data[].updatedAt": "string"
+   }
+  },
+  "createSecret": {
+   "method": "POST",
+   "path": "/v1/secrets",
+   "inputs": {
+    "name": "body:name!",
+    "value": "body:value!",
+    "type": "body:type",
+    "endOrgId": "body:endOrgId",
+    "environment": "body:environment"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.type": "\"text\" | \"json\"",
+    "data.createdAt": "string"
+   }
+  },
+  "updateSecret": {
+   "method": "PUT",
+   "path": "/v1/secrets/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "end_org_id": "query:end_org_id",
+    "environment": "query:environment",
+    "value": "body:value!",
+    "type": "body:type"
+   },
+   "output": {}
+  },
+  "deleteSecret": {
+   "method": "DELETE",
+   "path": "/v1/secrets/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "end_org_id": "query:end_org_id",
+    "environment": "query:environment"
+   },
+   "output": {}
+  },
+  "listWidgets": {
+   "method": "GET",
+   "path": "/v1/widgets",
+   "inputs": {
+    "include": "query:include",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].orgId": "string",
+    "data[].forkedFromWidgetId": "string | null",
+    "data[].inheritedFrom": "Record<string, any> | null",
+    "data[].customisedFrom": "Record<string, any> | null",
+    "data[].version": "Record<string, any> | null",
+    "data[].name": "string",
+    "data[].type": "string",
+    "data[].config": "Record<string, any>",
+    "data[].createdAt": "string",
+    "total": "number"
+   }
+  },
+  "createWidget": {
+   "method": "POST",
+   "path": "/v1/widgets",
+   "inputs": {
+    "name": "body:name!",
+    "description": "body:description",
+    "connector_ids": "body:connector_ids",
+    "connector_refs": "body:connector_refs",
+    "workflow_ids": "body:workflow_ids",
+    "workflow_refs": "body:workflow_refs",
+    "trigger_ids": "body:trigger_ids",
+    "trigger_refs": "body:trigger_refs",
+    "trigger_categories": "body:trigger_categories",
+    "trigger_categories_title": "body:trigger_categories_title",
+    "unified_refs": "body:unified_refs",
+    "agent_context": "body:agent_context",
+    "status": "body:status",
+    "sync_direction": "body:sync_direction",
+    "style_overrides": "body:style_overrides",
+    "form_schema": "body:form_schema",
+    "lifecycle_hooks": "body:lifecycle_hooks",
+    "activation_mode": "body:activation_mode",
+    "enabled": "body:enabled",
+    "allowed_end_org_ids": "body:allowed_end_org_ids"
+   },
+   "output": {
+    "data": "object",
+    "data.id": "string",
+    "data.name": "string",
+    "data.type": "string",
+    "data.createdAt": "string"
+   }
+  },
+  "getWidgetInsights": {
+   "method": "GET",
+   "path": "/v1/widgets/insights",
+   "inputs": {
+    "range": "query:range",
+    "days": "query:days",
+    "from": "query:from",
+    "to": "query:to",
+    "tz": "query:tz",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "getTenantInsights": {
+   "method": "GET",
+   "path": "/v1/widgets/insights/tenants",
+   "inputs": {
+    "range": "query:range",
+    "days": "query:days",
+    "sort": "query:sort",
+    "dir": "query:dir",
+    "limit": "query:limit",
+    "offset": "query:offset",
+    "q": "query:q",
+    "tz": "query:tz",
+    "from": "query:from",
+    "to": "query:to",
+    "health": "query:health",
+    "customer": "query:customer"
+   },
+   "output": {}
+  },
+  "getLiveTenantInsights": {
+   "method": "GET",
+   "path": "/v1/widgets/insights/tenants/live",
+   "inputs": {
+    "customer": "query:customer"
+   },
+   "output": {}
+  },
+  "forkIntegration": {
+   "method": "POST",
+   "path": "/v1/integrations/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "name": "body:name"
+   },
+   "output": {}
+  },
+  "forkWidget": {
+   "method": "POST",
+   "path": "/v1/widgets/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "name": "body:name"
+   },
+   "output": {}
+  },
+  "setWidgetActiveVersion": {
+   "method": "PUT",
+   "path": "/v1/widgets/{id}/active-version",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "activeWidgetId": "body:activeWidgetId!"
+   },
+   "output": {}
+  },
+  "getForkLineage": {
+   "method": "GET",
+   "path": "/v1/forks/lineage",
+   "inputs": {
+    "ids": "query:ids!",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "forkWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "name": "body:name"
+   },
+   "output": {}
+  },
+  "forkTrigger": {
+   "method": "POST",
+   "path": "/v1/triggers/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "name": "body:name"
+   },
+   "output": {}
+  },
+  "forkConfig": {
+   "method": "POST",
+   "path": "/v1/configs/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId",
+    "widgetId": "body:widgetId"
+   },
+   "output": {}
+  },
+  "forkConnector": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/fork",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "getWidgetEmbedStatus": {
+   "method": "GET",
+   "path": "/v1/widgets/embed-status",
+   "inputs": {
+    "widgetId": "query:widgetId"
+   },
+   "output": {}
+  },
+  "getWidget": {
+   "method": "GET",
+   "path": "/v1/widgets/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "include": "query:include"
+   },
+   "output": {}
+  },
+  "updateWidget": {
+   "method": "PUT",
+   "path": "/v1/widgets/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description",
+    "connector_ids": "body:connector_ids",
+    "connector_refs": "body:connector_refs",
+    "workflow_ids": "body:workflow_ids",
+    "workflow_refs": "body:workflow_refs",
+    "trigger_ids": "body:trigger_ids",
+    "trigger_refs": "body:trigger_refs",
+    "trigger_categories": "body:trigger_categories",
+    "trigger_categories_title": "body:trigger_categories_title",
+    "unified_refs": "body:unified_refs",
+    "agent_context": "body:agent_context",
+    "status": "body:status",
+    "sync_direction": "body:sync_direction",
+    "style_overrides": "body:style_overrides",
+    "form_schema": "body:form_schema",
+    "lifecycle_hooks": "body:lifecycle_hooks",
+    "activation_mode": "body:activation_mode",
+    "enabled": "body:enabled",
+    "allowed_end_org_ids": "body:allowed_end_org_ids"
+   },
+   "output": {}
+  },
+  "deleteWidget": {
+   "method": "DELETE",
+   "path": "/v1/widgets/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConfigFieldOptions": {
+   "method": "POST",
+   "path": "/v1/configs/{id}/options",
+   "inputs": {
+    "id": "path:id!",
+    "fieldId": "query:fieldId!",
+    "side": "query:side",
+    "installationId": "query:installationId",
+    "data": "body:data",
+    "offset": "body:offset",
+    "limit": "body:limit",
+    "cursor": "body:cursor",
+    "query": "body:query"
+   },
+   "output": {
+    "data": "object",
+    "data.options": "object[]",
+    "data.options[].value": "string",
+    "data.options[].label": "string",
+    "data.pageInfo": "object",
+    "data.pageInfo.hasNextPage": "boolean",
+    "data.pageInfo.offset": "number",
+    "data.pageInfo.limit": "number",
+    "data.pageInfo.endCursor": "string | null",
+    "data.pageInfo.total": "number | null"
+   }
+  },
+  "listConfigEntries": {
+   "method": "GET",
+   "path": "/v1/configs/{id}/entries",
+   "inputs": {
+    "id": "path:id!",
+    "entityId": "query:entityId",
+    "connectorId": "query:connectorId"
+   },
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "meta": "object",
+    "meta.entityId": "string",
+    "meta.entities": "string[]",
+    "meta.total": "number",
+    "meta.totalUnfiltered": "number",
+    "meta.multiConfig": "boolean",
+    "meta.connectorId": "string"
+   }
+  },
+  "createConfigEntry": {
+   "method": "POST",
+   "path": "/v1/configs/{id}/entries",
+   "inputs": {
+    "id": "path:id!",
+    "entityId": "body:entityId",
+    "bodyId": "body:id",
+    "connectorId": "body:connectorId",
+    "values": "body:values"
+   },
+   "output": {}
+  },
+  "getConfigEntry": {
+   "method": "GET",
+   "path": "/v1/configs/{id}/entries/{entryId}",
+   "inputs": {
+    "id": "path:id!",
+    "entryId": "path:entryId!",
+    "entityId": "query:entityId",
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "updateConfigEntry": {
+   "method": "PUT",
+   "path": "/v1/configs/{id}/entries/{entryId}",
+   "inputs": {
+    "id": "path:id!",
+    "entryId": "path:entryId!",
+    "connectorId": "query:connectorId",
+    "entityId": "body:entityId",
+    "bodyId": "body:id",
+    "bodyConnectorId": "body:connectorId",
+    "values": "body:values"
+   },
+   "output": {}
+  },
+  "deleteConfigEntry": {
+   "method": "DELETE",
+   "path": "/v1/configs/{id}/entries/{entryId}",
+   "inputs": {
+    "id": "path:id!",
+    "entryId": "path:entryId!",
+    "entityId": "query:entityId",
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "listRoles": {
+   "method": "GET",
+   "path": "/v1/roles",
+   "inputs": {},
+   "output": {
+    "data": "object[]",
+    "data[].id": "string",
+    "data[].name": "string",
+    "data[].permissions": "string[]",
+    "data[].createdAt": "string"
+   }
+  },
+  "createRole": {
+   "method": "POST",
+   "path": "/v1/roles",
+   "inputs": {
+    "name": "body:name!",
+    "description": "body:description",
+    "permissions": "body:permissions!",
+    "baseRole": "body:baseRole"
+   },
+   "output": {}
+  },
+  "getRole": {
+   "method": "GET",
+   "path": "/v1/roles/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateRole": {
+   "method": "PUT",
+   "path": "/v1/roles/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description",
+    "permissions": "body:permissions",
+    "baseRole": "body:baseRole"
+   },
+   "output": {}
+  },
+  "deleteRole": {
+   "method": "DELETE",
+   "path": "/v1/roles/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "whoami": {
+   "method": "GET",
+   "path": "/v1/me",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.actor": "\"user\" | \"api_key\" | \"embed_user\" | \"share_link\"",
+    "data.surface": "\"dashboard\" | \"embed\" | \"api\"",
+    "data.actingAsTenant": "boolean",
+    "data.role": "string",
+    "data.sub": "string",
+    "data.user": "object | null",
+    "data.user.id": "string | null",
+    "data.user.displayName": "string | null",
+    "data.user.email": "string | null",
+    "data.org": "object",
+    "data.org.id": "string",
+    "data.org.name": "string | null",
+    "data.org.type": "string | null",
+    "data.org.externalRef": "string | null",
+    "data.parentOrg": "object | null",
+    "data.parentOrg.id": "string",
+    "data.parentOrg.name": "string | null",
+    "data.parentOrg.type": "string | null",
+    "data.parentOrg.externalRef": "string | null",
+    "data.installationId": "string | null",
+    "data.environment": "string | null",
+    "data.permissions": "object",
+    "data.permissions.role": "string[]",
+    "data.permissions.structured": "Record<string, any> | null",
+    "data.permissions.apiKeyGrant": "string[] | null",
+    "data.capability": "object | null",
+    "data.capability.action": "string",
+    "data.capability.resourceId": "string",
+    "data.apiKey": "object | null",
+    "data.apiKey.mode": "string | null",
+    "data.apiKey.environment": "string | null"
+   }
+  },
+  "getMyEntitlements": {
+   "method": "GET",
+   "path": "/v1/me/entitlements",
+   "inputs": {},
+   "output": {
+    "data": "Record<string, boolean>"
+   }
+  },
+  "getMyOrgDomain": {
+   "method": "GET",
+   "path": "/v1/me/org-domain",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.domain": "string | null"
+   }
+  },
+  "getMySuggestions": {
+   "method": "GET",
+   "path": "/v1/me/suggestions",
+   "inputs": {},
+   "output": {
+    "data": "object",
+    "data.suggestions": "object[]",
+    "data.suggestions[].label": "string",
+    "data.suggestions[].prompt": "string",
+    "data.writing": "boolean"
+   }
+  },
+  "getMyPlanChangeRequest": {
+   "method": "GET",
+   "path": "/v1/plan-change-requests/me",
+   "inputs": {},
+   "output": {
+    "data": "object | null",
+    "data.id": "string",
+    "data.requestedTier": "string",
+    "data.status": "\"pending\" | \"approved\" | \"rejected\" | \"cancelled\"",
+    "data.createdAt": "string"
+   }
+  },
+  "refreshConnection": {
+   "method": "POST",
+   "path": "/v1/connections/{id}/refresh",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConnectorVersion": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/versions/{versionId}",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": {}
+  },
+  "listConnectorVersionPins": {
+   "method": "GET",
+   "path": "/v1/connector-version-pins",
+   "inputs": {
+    "connectorSlug": "query:connectorSlug",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "upsertConnectorVersionPin": {
+   "method": "POST",
+   "path": "/v1/connector-version-pins",
+   "inputs": {
+    "connectorSlug": "body:connectorSlug!",
+    "endOrgId": "body:endOrgId!",
+    "externalVersion": "body:externalVersion",
+    "apiVersion": "body:apiVersion",
+    "versionMajor": "body:versionMajor"
+   },
+   "output": {}
+  },
+  "deleteConnectorVersionPin": {
+   "method": "DELETE",
+   "path": "/v1/connector-version-pins/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConnectorVersionUsage": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/version-usage",
+   "inputs": {
+    "id": "path:id!",
+    "externalVersion": "query:externalVersion"
+   },
+   "output": {}
+  },
+  "getActionVersionDiff": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/actions/{actionSlug}/version-diff",
+   "inputs": {
+    "id": "path:id!",
+    "actionSlug": "path:actionSlug!",
+    "from": "query:from",
+    "to": "query:to",
+    "fromMajor": "query:fromMajor",
+    "toMajor": "query:toMajor"
+   },
+   "output": {}
+  },
+  "listConnectorHealth": {
+   "method": "GET",
+   "path": "/v1/integrations/health",
+   "inputs": {
+    "connectorSlug": "query:connectorSlug",
+    "status": "query:status",
+    "atRisk": "query:atRisk"
+   },
+   "output": {}
+  },
+  "listConnectorChanges": {
+   "method": "GET",
+   "path": "/v1/connector-changes",
+   "inputs": {
+    "status": "query:status",
+    "connectorSlug": "query:connectorSlug",
+    "openOnly": "query:openOnly",
+    "limit": "query:limit"
+   },
+   "output": {}
+  },
+  "listConnectorChangeConsumers": {
+   "method": "GET",
+   "path": "/v1/connector-changes/{id}/consumers",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "setConnectorChangeStatus": {
+   "method": "PUT",
+   "path": "/v1/connector-changes/{id}/status",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": {}
+  },
+  "proposeConnectorChangeFix": {
+   "method": "POST",
+   "path": "/v1/connector-changes/{id}/propose",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listConnectorUpdateProposals": {
+   "method": "GET",
+   "path": "/v1/connector-update-proposals",
+   "inputs": {
+    "stage": "query:stage",
+    "scope": "query:scope",
+    "status": "query:status",
+    "connectorSlug": "query:connectorSlug",
+    "changeEventId": "query:changeEventId",
+    "limit": "query:limit"
+   },
+   "output": {}
+  },
+  "getConnectorUpdateProposal": {
+   "method": "GET",
+   "path": "/v1/connector-update-proposals/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "scope": "query:scope"
+   },
+   "output": {}
+  },
+  "decideConnectorUpdateProposalItem": {
+   "method": "PUT",
+   "path": "/v1/connector-update-proposals/{id}/items/{itemId}",
+   "inputs": {
+    "id": "path:id!",
+    "itemId": "path:itemId!",
+    "decision": "body:decision!",
+    "note": "body:note",
+    "overrideReason": "body:overrideReason"
+   },
+   "output": {}
+  },
+  "applyConnectorUpdateProposal": {
+   "method": "POST",
+   "path": "/v1/connector-update-proposals/{id}/apply",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "runConnectorUpdateAgent": {
+   "method": "POST",
+   "path": "/v1/connector-update-proposals/{id}/agent-run",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "scanConnectorStaleness": {
+   "method": "POST",
+   "path": "/v1/connector-staleness/scan",
+   "inputs": {},
+   "output": {}
+  },
+  "listConnectorStaleness": {
+   "method": "GET",
+   "path": "/v1/connector-staleness",
+   "inputs": {
+    "status": "query:status"
+   },
+   "output": {}
+  },
+  "setConnectorStalenessStatus": {
+   "method": "PUT",
+   "path": "/v1/connector-staleness/{id}/status",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status!"
+   },
+   "output": {}
+  },
+  "getPlatformProviderBySlug": {
+   "method": "GET",
+   "path": "/v1/platform-providers/by-slug/{platformSlug}",
+   "inputs": {
+    "platformSlug": "path:platformSlug!"
+   },
+   "output": {}
+  },
+  "getPlatformProvider": {
+   "method": "GET",
+   "path": "/v1/platform-providers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAuthProviders": {
+   "method": "GET",
+   "path": "/v1/auth-providers",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "includeDeleted": "query:includeDeleted",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "createAuthProvider": {
+   "method": "POST",
+   "path": "/v1/auth-providers",
+   "inputs": {
+    "connectorId": "body:connectorId",
+    "name": "body:name!",
+    "slug": "body:slug",
+    "description": "body:description",
+    "clientId": "body:clientId",
+    "clientSecret": "body:clientSecret",
+    "authorizationUrl": "body:authorizationUrl",
+    "params": "body:params",
+    "authorization": "body:authorization",
+    "additionalFields": "body:additionalFields",
+    "scopeConfig": "body:scopeConfig",
+    "oauthVariables": "body:oauthVariables",
+    "isDefault": "body:isDefault",
+    "platformProviderId": "body:platformProviderId",
+    "pkce": "body:pkce"
+   },
+   "output": {}
+  },
+  "getAuthProvider": {
+   "method": "GET",
+   "path": "/v1/auth-providers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAuthProvider": {
+   "method": "PUT",
+   "path": "/v1/auth-providers/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description",
+    "clientId": "body:clientId",
+    "clientSecret": "body:clientSecret",
+    "pkce": "body:pkce",
+    "authorizationUrl": "body:authorizationUrl",
+    "params": "body:params",
+    "authorization": "body:authorization",
+    "additionalFields": "body:additionalFields",
+    "scopeConfig": "body:scopeConfig",
+    "oauthVariables": "body:oauthVariables",
+    "isDefault": "body:isDefault"
+   },
+   "output": {}
+  },
+  "deleteAuthProvider": {
+   "method": "DELETE",
+   "path": "/v1/auth-providers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAuthProviderScopes": {
+   "method": "GET",
+   "path": "/v1/auth-providers/{id}/scopes",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAuthMethods": {
+   "method": "GET",
+   "path": "/v1/auth-methods",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "createAuthMethod": {
+   "method": "POST",
+   "path": "/v1/auth-methods",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "type": "body:type!",
+    "title": "body:title!",
+    "isDefault": "body:isDefault",
+    "inputContract": "body:inputContract",
+    "authConfig": "body:authConfig",
+    "authProviderId": "body:authProviderId",
+    "docsUrl": "body:docsUrl"
+   },
+   "output": {}
+  },
+  "getAuthMethod": {
+   "method": "GET",
+   "path": "/v1/auth-methods/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAuthMethod": {
+   "method": "PUT",
+   "path": "/v1/auth-methods/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "bodyId": "body:id",
+    "type": "body:type",
+    "title": "body:title",
+    "isDefault": "body:isDefault",
+    "inputContract": "body:inputContract",
+    "authConfig": "body:authConfig",
+    "authProviderId": "body:authProviderId",
+    "docsUrl": "body:docsUrl"
+   },
+   "output": {}
+  },
+  "deleteAuthMethod": {
+   "method": "DELETE",
+   "path": "/v1/auth-methods/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listConnectorEntities": {
+   "method": "GET",
+   "path": "/v1/entities",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "createConnectorEntity": {
+   "method": "POST",
+   "path": "/v1/entities",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
+    "slug": "body:slug!",
+    "description": "body:description"
+   },
+   "output": {}
+  },
+  "getConnectorEntity": {
+   "method": "GET",
+   "path": "/v1/entities/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateConnectorEntity": {
+   "method": "PUT",
+   "path": "/v1/entities/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description"
+   },
+   "output": {}
+  },
+  "deleteConnectorEntity": {
+   "method": "DELETE",
+   "path": "/v1/entities/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConnectorEntities": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/entities",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConnectorMethods": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/methods",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listActions": {
+   "method": "GET",
+   "path": "/v1/actions",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "search": "query:search",
+    "slugs": "query:slugs",
+    "view": "query:view",
+    "order": "query:order",
+    "includeDeleted": "query:includeDeleted",
+    "deleted": "query:deleted",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "createAction": {
+   "method": "POST",
+   "path": "/v1/actions",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
+    "slug": "body:slug!",
+    "description": "body:description",
+    "type": "body:type!",
+    "method": "body:method",
+    "path": "body:path",
+    "headers": "body:headers",
+    "queryParams": "body:queryParams",
+    "bodyTemplate": "body:bodyTemplate",
+    "httpConfig": "body:httpConfig",
+    "grpcConfig": "body:grpcConfig",
+    "ftpConfig": "body:ftpConfig",
+    "redisConfig": "body:redisConfig",
+    "lambdaConfig": "body:lambdaConfig",
+    "dbConfig": "body:dbConfig",
+    "authConfig": "body:authConfig",
+    "inputContract": "body:inputContract",
+    "outputContract": "body:outputContract",
+    "language": "body:language",
+    "code": "body:code",
+    "rateLimit": "body:rateLimit",
+    "stage": "body:stage",
+    "folderId": "body:folderId",
+    "externalVersion": "body:externalVersion",
+    "apiVersion": "body:apiVersion",
+    "isDefaultExternalVersion": "body:isDefaultExternalVersion",
+    "versionMajor": "body:versionMajor",
+    "submissionNote": "body:submissionNote"
+   },
+   "output": {}
+  },
+  "getAction": {
+   "method": "GET",
+   "path": "/v1/actions/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAction": {
+   "method": "PUT",
+   "path": "/v1/actions/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description!",
+    "authMethodId": "body:authMethodId",
+    "authConfig": "body:authConfig",
+    "inputContract": "body:inputContract",
+    "outputContract": "body:outputContract",
+    "httpConfig": "body:httpConfig",
+    "grpcConfig": "body:grpcConfig",
+    "ftpConfig": "body:ftpConfig",
+    "redisConfig": "body:redisConfig",
+    "lambdaConfig": "body:lambdaConfig",
+    "dbConfig": "body:dbConfig",
+    "language": "body:language",
+    "code": "body:code",
+    "rateLimit": "body:rateLimit",
+    "stage": "body:stage",
+    "commit": "body:commit",
+    "folderId": "body:folderId",
+    "externalVersion": "body:externalVersion",
+    "apiVersion": "body:apiVersion",
+    "isDefaultExternalVersion": "body:isDefaultExternalVersion",
+    "deprecated": "body:deprecated",
+    "sunsetAt": "body:sunsetAt",
+    "successorActionId": "body:successorActionId"
+   },
+   "output": {}
+  },
+  "deleteAction": {
+   "method": "DELETE",
+   "path": "/v1/actions/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "hard": "query:hard"
+   },
+   "output": {}
+  },
+  "createActionVersion": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/new-version",
+   "inputs": {
+    "id": "path:id!",
+    "bump": "body:bump!",
+    "externalVersion": "body:externalVersion",
+    "makeDefault": "body:makeDefault",
+    "deprecatePrevious": "body:deprecatePrevious",
+    "sunsetAt": "body:sunsetAt"
+   },
+   "output": {}
+  },
+  "proposeActionUpdate": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/propose-update",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description!",
+    "authMethodId": "body:authMethodId",
+    "authConfig": "body:authConfig",
+    "inputContract": "body:inputContract",
+    "outputContract": "body:outputContract",
+    "httpConfig": "body:httpConfig",
+    "grpcConfig": "body:grpcConfig",
+    "ftpConfig": "body:ftpConfig",
+    "redisConfig": "body:redisConfig",
+    "lambdaConfig": "body:lambdaConfig",
+    "dbConfig": "body:dbConfig",
+    "language": "body:language",
+    "code": "body:code",
+    "rateLimit": "body:rateLimit",
+    "submissionNote": "body:submissionNote"
+   },
+   "output": {}
+  },
+  "getActionReview": {
+   "method": "GET",
+   "path": "/v1/actions/{id}/review",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "createActionReviewComment": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/review/comments",
+   "inputs": {
+    "id": "path:id!",
+    "body": "body:body!"
+   },
+   "output": {}
+  },
+  "setActionTestResult": {
+   "method": "PATCH",
+   "path": "/v1/actions/{id}/test-result",
+   "inputs": {
+    "id": "path:id!",
+    "testStatus": "body:testStatus!",
+    "lastTestEvidence": "body:lastTestEvidence"
+   },
+   "output": {}
+  },
+  "saveActionMockStub": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/mock-stub",
+   "inputs": {
+    "id": "path:id!",
+    "connectorId": "body:connectorId!",
+    "method": "body:method",
+    "requestBody": "body:requestBody",
+    "responseStatus": "body:responseStatus!",
+    "responseBody": "body:responseBody"
+   },
+   "output": {}
+  },
+  "listActionVersions": {
+   "method": "GET",
+   "path": "/v1/actions/{id}/versions",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getActionVersion": {
+   "method": "GET",
+   "path": "/v1/actions/{id}/versions/{versionId}",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "path:versionId!"
+   },
+   "output": {}
+  },
+  "promoteAction": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/promote",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "initiateOauthConnection": {
+   "method": "POST",
+   "path": "/v1/oauth/initiate",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "authMethodId": "body:authMethodId",
+    "authProviderId": "body:authProviderId",
+    "connectionName": "body:connectionName!",
+    "connectionId": "body:connectionId",
+    "setupLinkId": "body:setupLinkId",
+    "scopes": "body:scopes",
+    "oauthProxyUrl": "body:oauthProxyUrl",
+    "returnUrl": "body:returnUrl",
+    "dashboardOrigin": "body:dashboardOrigin",
+    "oauthVariables": "body:oauthVariables",
+    "endOrgId": "body:endOrgId",
+    "source": "body:source",
+    "connectionScope": "body:connectionScope"
+   },
+   "output": {}
+  },
+  "syncMcpTools": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/sync-mcp-tools",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listWebhookConfigConnectors": {
+   "method": "GET",
+   "path": "/v1/webhook-configs/connectors",
+   "inputs": {
+    "connectorId": "query:connectorId",
+    "search": "query:search",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "listWebhookConfigs": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/webhook-config",
+   "inputs": {
+    "id": "path:id!",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "createWebhookConfig": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/webhook-config",
+   "inputs": {
+    "id": "path:id!",
+    "type": "body:type!",
+    "subscription": "body:subscription",
+    "unsubscription": "body:unsubscription",
+    "resubscription": "body:resubscription",
+    "events": "body:events",
+    "inputs": "body:inputs",
+    "requiredActions": "body:requiredActions",
+    "authProviderId": "body:authProviderId",
+    "eventKey": "body:eventKey",
+    "verification": "body:verification",
+    "verificationSecret": "body:verificationSecret",
+    "enabled": "body:enabled",
+    "endOrgRouting": "body:endOrgRouting",
+    "requireApiKey": "body:requireApiKey"
+   },
+   "output": {}
+  },
+  "getWebhookConfig": {
+   "method": "GET",
+   "path": "/v1/webhook-configs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateWebhookConfig": {
+   "method": "PUT",
+   "path": "/v1/webhook-configs/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "type": "body:type",
+    "subscription": "body:subscription",
+    "unsubscription": "body:unsubscription",
+    "resubscription": "body:resubscription",
+    "events": "body:events",
+    "inputs": "body:inputs",
+    "requiredActions": "body:requiredActions",
+    "registeredEvents": "body:registeredEvents",
+    "authProviderId": "body:authProviderId",
+    "eventKey": "body:eventKey",
+    "verification": "body:verification",
+    "verificationSecret": "body:verificationSecret",
+    "connectorSlug": "body:connectorSlug",
+    "enabled": "body:enabled",
+    "endOrgRouting": "body:endOrgRouting",
+    "requireApiKey": "body:requireApiKey"
+   },
+   "output": {}
+  },
+  "deleteWebhookConfig": {
+   "method": "DELETE",
+   "path": "/v1/webhook-configs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "executeWebhookSubscription": {
+   "method": "POST",
+   "path": "/v1/webhook-configs/{id}/execute-subscription",
+   "inputs": {
+    "id": "path:id!",
+    "eventId": "body:eventId!",
+    "webhookUrl": "body:webhookUrl!",
+    "additionalInputs": "body:additionalInputs"
+   },
+   "output": {}
+  },
+  "importConnectors": {
+   "method": "POST",
+   "path": "/v1/connectors/import",
+   "inputs": {
+    "connector": "body:connector",
+    "actions": "body:actions",
+    "webhookConfigs": "body:webhookConfigs",
+    "authProviders": "body:authProviders",
+    "connectors": "body:connectors",
+    "slug": "body:slug",
+    "name": "body:name",
+    "ownerLevel": "body:ownerLevel"
+   },
+   "output": {}
+  },
+  "setDefaultConnection": {
+   "method": "PATCH",
+   "path": "/v1/connections/{id}/default",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getConnectionByName": {
+   "method": "GET",
+   "path": "/v1/connections/by-name/{connectorId}/{name}",
+   "inputs": {
+    "connectorId": "path:connectorId!",
+    "name": "path:name!"
+   },
+   "output": {}
+  },
+  "batchDeleteActions": {
+   "method": "POST",
+   "path": "/v1/actions/batch-delete",
+   "inputs": {
+    "hard": "query:hard",
+    "ids": "body:ids!"
+   },
+   "output": {}
+  },
+  "exportActions": {
+   "method": "GET",
+   "path": "/v1/actions/export",
+   "inputs": {
+    "connectorId": "query:connectorId!"
+   },
+   "output": {}
+  },
+  "exportAction": {
+   "method": "GET",
+   "path": "/v1/actions/{id}/export",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "importActions": {
+   "method": "POST",
+   "path": "/v1/actions/import",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "url": "body:url",
+    "content": "body:content",
+    "format": "body:format",
+    "baseUrl": "body:baseUrl",
+    "conflictResolution": "body:conflictResolution",
+    "preview": "body:preview",
+    "selectedSlugs": "body:selectedSlugs"
+   },
+   "output": {}
+  },
+  "mockAction": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/mock",
+   "inputs": {
+    "id": "path:id!",
+    "body": "body:*!"
+   },
+   "output": {}
+  },
+  "listConnectorVersions": {
+   "method": "GET",
+   "path": "/v1/connectors/{id}/versions",
+   "inputs": {
+    "id": "path:id!",
+    "stage": "query:stage",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "promoteConnector": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/promote",
+   "inputs": {
+    "id": "path:id!",
+    "stage": "body:stage",
+    "commit": "body:commit"
+   },
+   "output": {}
+  },
+  "publishConnectorVersion": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/publish-version",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "body:versionId!",
+    "commit": "body:commit"
+   },
+   "output": {}
+  },
+  "revertConnector": {
+   "method": "POST",
+   "path": "/v1/connectors/{id}/revert",
+   "inputs": {
+    "id": "path:id!",
+    "versionId": "body:versionId!"
+   },
+   "output": {}
+  },
+  "revokeEmbedShareLink": {
+   "method": "DELETE",
+   "path": "/v1/embed/share-links/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listConfigs": {
+   "method": "GET",
+   "path": "/v1/configs",
+   "inputs": {
+    "widget_id": "query:widget_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "createConfig": {
+   "method": "POST",
+   "path": "/v1/configs",
+   "inputs": {
+    "widget_id": "body:widget_id",
+    "end_org_id": "body:end_org_id",
+    "template_config_id": "body:template_config_id",
+    "fork_from_widget_id": "body:fork_from_widget_id",
+    "installation_id": "body:installation_id",
+    "config": "body:config",
+    "plan": "body:plan"
+   },
+   "output": {}
+  },
+  "getConfig": {
+   "method": "GET",
+   "path": "/v1/configs/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateConfig": {
+   "method": "PUT",
+   "path": "/v1/configs/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "widget_id": "body:widget_id",
+    "end_org_id": "body:end_org_id",
+    "template_config_id": "body:template_config_id",
+    "config": "body:config",
+    "plan": "body:plan",
+    "baseUpdatedAt": "body:baseUpdatedAt"
+   },
+   "output": {}
+  },
+  "deleteConfig": {
+   "method": "DELETE",
+   "path": "/v1/configs/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "force": "query:force"
+   },
+   "output": {}
+  },
+  "updateConfigDecisions": {
+   "method": "PATCH",
+   "path": "/v1/configs/{id}/decisions",
+   "inputs": {
+    "id": "path:id!",
+    "decisions": "body:decisions",
+    "matching": "body:matching"
+   },
+   "output": {}
+  },
+  "upgradeConfig": {
+   "method": "POST",
+   "path": "/v1/configs/{id}/upgrade",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listConfigWorkflows": {
+   "method": "GET",
+   "path": "/v1/configs/{id}/workflows",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "createConfigDraft": {
+   "method": "POST",
+   "path": "/v1/config-drafts",
+   "inputs": {
+    "proposal": "body:proposal!",
+    "plan": "body:plan",
+    "widget_id": "body:widget_id"
+   },
+   "output": {}
+  },
+  "proposeConfiguration": {
+   "method": "POST",
+   "path": "/v1/config-drafts/propose",
+   "inputs": {
+    "directions": "body:directions!",
+    "matchingStrategy": "body:matchingStrategy",
+    "settings": "body:settings",
+    "plan": "body:plan",
+    "widget_id": "body:widget_id"
+   },
+   "output": {}
+  },
+  "getConfigDraft": {
+   "method": "GET",
+   "path": "/v1/config-drafts/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "include": "query:include"
+   },
+   "output": {}
+  },
+  "executeAction": {
+   "method": "POST",
+   "path": "/v1/actions/{id}/execute",
+   "inputs": {
+    "id": "path:id!",
+    "connectorId": "body:connectorId",
+    "connectionName": "body:connectionName",
+    "connectionId": "body:connectionId",
+    "installationId": "body:installationId",
+    "userId": "body:userId",
+    "input": "body:input",
+    "externalVersion": "body:externalVersion",
+    "versionMajor": "body:versionMajor",
+    "mockMode": "body:mockMode"
+   },
+   "output": {}
+  },
+  "listActionFolders": {
+   "method": "GET",
+   "path": "/v1/action-folders",
+   "inputs": {
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "createActionFolder": {
+   "method": "POST",
+   "path": "/v1/action-folders",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "name": "body:name!",
+    "description": "body:description",
+    "parentId": "body:parentId"
+   },
+   "output": {}
+  },
+  "getActionFolder": {
+   "method": "GET",
+   "path": "/v1/action-folders/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateActionFolder": {
+   "method": "PUT",
+   "path": "/v1/action-folders/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "description": "body:description",
+    "parentId": "body:parentId"
+   },
+   "output": {}
+  },
+  "deleteActionFolder": {
+   "method": "DELETE",
+   "path": "/v1/action-folders/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getGithubIntegrationStatus": {
+   "method": "GET",
+   "path": "/v1/integrations/github/status",
+   "inputs": {},
+   "output": {}
+  },
+  "startGithubInstallation": {
+   "method": "POST",
+   "path": "/v1/integrations/github/install",
+   "inputs": {
+    "returnUrl": "body:returnUrl",
+    "dashboardOrigin": "body:dashboardOrigin"
+   },
+   "output": {}
+  },
+  "disconnectGithubIntegration": {
+   "method": "DELETE",
+   "path": "/v1/integrations/github",
+   "inputs": {},
+   "output": {}
+  },
+  "setGithubPublishGate": {
+   "method": "PATCH",
+   "path": "/v1/integrations/github",
+   "inputs": {
+    "gatePublish": "body:gatePublish",
+    "repoOwner": "body:repoOwner",
+    "repoName": "body:repoName"
+   },
+   "output": {}
+  },
+  "listGithubRepositories": {
+   "method": "GET",
+   "path": "/v1/integrations/github/repositories",
+   "inputs": {},
+   "output": {}
+  },
+  "syncWorkflowsToGithub": {
+   "method": "POST",
+   "path": "/v1/integrations/github/sync",
+   "inputs": {},
+   "output": {}
+  },
+  "cancelGithubSync": {
+   "method": "DELETE",
+   "path": "/v1/integrations/github/sync/{syncId}",
+   "inputs": {
+    "syncId": "path:syncId!"
+   },
+   "output": {}
+  },
+  "listGithubReviews": {
+   "method": "GET",
+   "path": "/v1/integrations/github/reviews",
+   "inputs": {},
+   "output": {}
+  },
+  "createConnectLink": {
+   "method": "POST",
+   "path": "/v1/connect-links",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "connectionName": "body:connectionName",
+    "expiresInMinutes": "body:expiresInMinutes"
+   },
+   "output": {}
+  },
+  "listInstallations": {
+   "method": "GET",
+   "path": "/v1/installations",
+   "inputs": {
+    "target_type": "query:target_type",
+    "target_id": "query:target_id",
+    "end_org_id": "query:end_org_id",
+    "widget_id": "query:widget_id"
+   },
+   "output": {}
+  },
+  "createInstallation": {
+   "method": "POST",
+   "path": "/v1/installations",
+   "inputs": {
+    "target_type": "body:target_type!",
+    "target_id": "body:target_id!",
+    "target_version": "body:target_version",
+    "end_org_id": "body:end_org_id!",
+    "widget_id": "body:widget_id",
+    "source_template_id": "body:source_template_id",
+    "label": "body:label!",
+    "slug": "body:slug",
+    "user_id": "body:user_id",
+    "connections": "body:connections",
+    "config_id": "body:config_id",
+    "config": "body:config",
+    "status": "body:status",
+    "provenance": "body:provenance",
+    "rationale": "body:rationale",
+    "defer_config": "body:defer_config",
+    "selected_trigger_categories": "body:selected_trigger_categories"
+   },
+   "output": {}
+  },
+  "getInstallation": {
+   "method": "GET",
+   "path": "/v1/installations/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateInstallation": {
+   "method": "PUT",
+   "path": "/v1/installations/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "target_version": "body:target_version",
+    "widget_id": "body:widget_id",
+    "label": "body:label",
+    "slug": "body:slug",
+    "connections": "body:connections",
+    "config_id": "body:config_id",
+    "config": "body:config",
+    "status": "body:status",
+    "health_status": "body:health_status",
+    "rationale": "body:rationale",
+    "selected_trigger_categories": "body:selected_trigger_categories"
+   },
+   "output": {}
+  },
+  "deleteInstallation": {
+   "method": "DELETE",
+   "path": "/v1/installations/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getInstallationResolvedConfig": {
+   "method": "GET",
+   "path": "/v1/installations/{id}/resolved-config",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listEventSubscriptions": {
+   "method": "GET",
+   "path": "/v1/event-subscriptions",
+   "inputs": {},
+   "output": {}
+  },
+  "createEventSubscription": {
+   "method": "POST",
+   "path": "/v1/event-subscriptions",
+   "inputs": {
+    "url": "body:url!",
+    "eventTypes": "body:eventTypes",
+    "connectors": "body:connectors",
+    "providerEvents": "body:providerEvents",
+    "entities": "body:entities",
+    "endOrgId": "body:endOrgId",
+    "description": "body:description",
+    "enabled": "body:enabled"
+   },
+   "output": {}
+  },
+  "getEventSubscription": {
+   "method": "GET",
+   "path": "/v1/event-subscriptions/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "deleteEventSubscription": {
+   "method": "DELETE",
+   "path": "/v1/event-subscriptions/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateEventSubscription": {
+   "method": "PATCH",
+   "path": "/v1/event-subscriptions/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "url": "body:url",
+    "eventTypes": "body:eventTypes",
+    "connectors": "body:connectors",
+    "providerEvents": "body:providerEvents",
+    "entities": "body:entities",
+    "description": "body:description",
+    "enabled": "body:enabled"
+   },
+   "output": {}
+  },
+  "rotateEventSubscriptionSecret": {
+   "method": "POST",
+   "path": "/v1/event-subscriptions/{id}/rotate-secret",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "testEventSubscription": {
+   "method": "POST",
+   "path": "/v1/event-subscriptions/{id}/test",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listEventDeliveries": {
+   "method": "GET",
+   "path": "/v1/event-subscriptions/{id}/deliveries",
+   "inputs": {
+    "id": "path:id!",
+    "status": "query:status",
+    "limit": "query:limit"
+   },
+   "output": {}
+  },
+  "replayEventDelivery": {
+   "method": "POST",
+   "path": "/v1/event-subscriptions/deliveries/{id}/replay",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getSetupLinkStatus": {
+   "method": "GET",
+   "path": "/v1/setup-links/{id}/status",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "assignOrgAdmin": {
+   "method": "POST",
+   "path": "/v1/orgs/{id}/admin",
+   "inputs": {
+    "id": "path:id!",
+    "email": "body:email!"
+   },
+   "output": {}
+  },
+  "getOrgDbConfig": {
+   "method": "GET",
+   "path": "/v1/orgs/{id}/db-config",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "deleteOrgDbConfig": {
+   "method": "DELETE",
+   "path": "/v1/orgs/{id}/db-config",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listOrgDbConfigOverrides": {
+   "method": "GET",
+   "path": "/v1/orgs/{id}/db-config/overrides",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "enableOrgDbConfig": {
+   "method": "POST",
+   "path": "/v1/orgs/{id}/db-config/enable",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "disableOrgDbConfig": {
+   "method": "POST",
+   "path": "/v1/orgs/{id}/db-config/disable",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateOrgV1Bridge": {
+   "method": "PUT",
+   "path": "/v1/orgs/{id}/db-config/v1-bridge",
+   "inputs": {
+    "id": "path:id!",
+    "queryTimeoutMs": "body:queryTimeoutMs",
+    "connection": "body:connection",
+    "workspaceId": "body:workspaceId"
+   },
+   "output": {}
+  },
+  "getMyPreferences": {
+   "method": "GET",
+   "path": "/v1/users/me/preferences",
+   "inputs": {},
+   "output": {}
+  },
+  "updateMyPreferences": {
+   "method": "PATCH",
+   "path": "/v1/users/me/preferences",
+   "inputs": {
+    "nav_layout": "body:nav_layout"
+   },
+   "output": {}
+  },
+  "resendInvite": {
+   "method": "POST",
+   "path": "/v1/users/{userId}/resend-invite",
+   "inputs": {
+    "userId": "path:userId!"
+   },
+   "output": {}
+  },
+  "listUserMemberships": {
+   "method": "GET",
+   "path": "/v1/users/{userId}/memberships",
+   "inputs": {
+    "userId": "path:userId!",
+    "limit": "query:limit",
+    "offset": "query:offset"
+   },
+   "output": {}
+  },
+  "removeUserMembership": {
+   "method": "DELETE",
+   "path": "/v1/users/{userId}/memberships/{membershipId}",
+   "inputs": {
+    "userId": "path:userId!",
+    "membershipId": "path:membershipId!"
+   },
+   "output": {}
+  },
+  "getUserPermissions": {
+   "method": "GET",
+   "path": "/v1/users/{userId}/permissions",
+   "inputs": {
+    "userId": "path:userId!"
+   },
+   "output": {}
+  },
+  "updateUserPermissions": {
+   "method": "PUT",
+   "path": "/v1/users/{userId}/permissions",
+   "inputs": {
+    "userId": "path:userId!",
+    "permissions": "body:permissions"
+   },
+   "output": {}
+  },
+  "reactivateUser": {
+   "method": "POST",
+   "path": "/v1/users/{userId}/reactivate",
+   "inputs": {
+    "userId": "path:userId!"
+   },
+   "output": {}
+  },
+  "getLiveWidgetInsights": {
+   "method": "GET",
+   "path": "/v1/widgets/insights/live",
+   "inputs": {
+    "endOrgId": "query:endOrgId",
+    "range": "query:range"
+   },
+   "output": {}
+  },
+  "getAlertCatalog": {
+   "method": "GET",
+   "path": "/v1/alerts/metrics",
+   "inputs": {},
+   "output": {}
+  },
+  "listAlertChannels": {
+   "method": "GET",
+   "path": "/v1/alerts/channels",
+   "inputs": {
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "listAlertEvents": {
+   "method": "GET",
+   "path": "/v1/alerts/{id}/events",
+   "inputs": {
+    "id": "path:id!",
+    "endOrgId": "query:endOrgId"
+   },
+   "output": {}
+  },
+  "listAuditLogResourceTypes": {
+   "method": "GET",
+   "path": "/v1/audit-log/resource-types",
+   "inputs": {},
+   "output": {}
+  },
+  "listAuditLogUsers": {
+   "method": "GET",
+   "path": "/v1/audit-log/users",
+   "inputs": {},
+   "output": {}
+  },
+  "submitOrchestratorFeedback": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/feedback",
+   "inputs": {
+    "threadId": "body:threadId!",
+    "messageIndex": "body:messageIndex!",
+    "messageId": "body:messageId",
+    "runId": "body:runId",
+    "agentId": "body:agentId!",
+    "result": "body:result!",
+    "category": "body:category",
+    "subcategory": "body:subcategory",
+    "feedback": "body:feedback",
+    "messageText": "body:messageText!",
+    "userPrompt": "body:userPrompt",
+    "model": "body:model",
+    "promptTokens": "body:promptTokens",
+    "completionTokens": "body:completionTokens",
+    "costCents": "body:costCents",
+    "latencyMs": "body:latencyMs",
+    "toolCallsCount": "body:toolCallsCount",
+    "dashboardUrl": "body:dashboardUrl"
+   },
+   "output": {}
+  },
+  "createTestCaseDraft": {
+   "method": "POST",
+   "path": "/v1/test-case-drafts",
+   "inputs": {
+    "scope": "body:scope!",
+    "testCases": "body:testCases!"
+   },
+   "output": {}
+  },
+  "getTestCaseDraft": {
+   "method": "GET",
+   "path": "/v1/test-case-drafts/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "include": "query:include"
+   },
+   "output": {}
+  },
+  "listQuotas": {
+   "method": "GET",
+   "path": "/v1/quotas",
+   "inputs": {
+    "org_id": "query:org_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "checkQuota": {
+   "method": "GET",
+   "path": "/v1/quotas/check/{dimension}",
+   "inputs": {
+    "dimension": "path:dimension!",
+    "org_id": "query:org_id",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "getBillingSubscription": {
+   "method": "GET",
+   "path": "/v1/billing/subscription",
+   "inputs": {},
+   "output": {}
+  },
+  "listBillingInvoices": {
+   "method": "GET",
+   "path": "/v1/billing/invoices",
+   "inputs": {},
+   "output": {}
+  },
+  "getBillingPaymentMethod": {
+   "method": "GET",
+   "path": "/v1/billing/payment-method",
+   "inputs": {},
+   "output": {}
+  },
+  "getOnboardingProductProfile": {
+   "method": "GET",
+   "path": "/v1/onboarding/product-profile",
+   "inputs": {},
+   "output": {}
+  },
+  "saveOnboardingProductProfile": {
+   "method": "PUT",
+   "path": "/v1/onboarding/product-profile",
+   "inputs": {
+    "domain": "body:domain!",
+    "company": "body:company",
+    "api": "body:api",
+    "entities": "body:entities",
+    "webhooks": "body:webhooks",
+    "confirmed": "body:confirmed"
+   },
+   "output": {}
+  },
+  "getSetupJourney": {
+   "method": "GET",
+   "path": "/v1/onboarding/setup",
+   "inputs": {},
+   "output": {}
+  },
+  "updateSetupJourney": {
+   "method": "PUT",
+   "path": "/v1/onboarding/setup",
+   "inputs": {
+    "status": "body:status",
+    "step": "body:step",
+    "connectorIds": "body:connectorIds",
+    "useCase": "body:useCase",
+    "widgetId": "body:widgetId",
+    "completedAt": "body:completedAt",
+    "screen": "body:screen",
+    "mode": "body:mode",
+    "aiTool": "body:aiTool",
+    "product": "body:product",
+    "productThreadId": "body:productThreadId",
+    "integrationThreadId": "body:integrationThreadId",
+    "integrationChoice": "body:integrationChoice"
+   },
+   "output": {}
+  },
+  "claimOnboardingCredits": {
+   "method": "POST",
+   "path": "/v1/onboarding/credits/claim",
+   "inputs": {},
+   "output": {}
+  },
+  "joinOnboardingOrg": {
+   "method": "POST",
+   "path": "/v1/onboarding/join-org",
+   "inputs": {
+    "orgId": "body:orgId!"
+   },
+   "output": {}
+  },
+  "createPlanChangeRequest": {
+   "method": "POST",
+   "path": "/v1/plan-change-requests",
+   "inputs": {
+    "requestedPlan": "body:requestedPlan!"
+   },
+   "output": {}
+  },
+  "cancelMyPlanChangeRequest": {
+   "method": "POST",
+   "path": "/v1/plan-change-requests/me/cancel",
+   "inputs": {},
+   "output": {}
+  },
+  "probeConnector": {
+   "method": "POST",
+   "path": "/v1/probes",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "actionSlug": "body:actionSlug!",
+    "params": "body:params",
+    "connectionId": "body:connectionId",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId"
+   },
+   "output": {}
+  },
+  "probeConnectorValues": {
+   "method": "POST",
+   "path": "/v1/probes/values",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "actionSlug": "body:actionSlug!",
+    "params": "body:params",
+    "connectionId": "body:connectionId",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId"
+   },
+   "output": {}
+  },
+  "mergeProbes": {
+   "method": "POST",
+   "path": "/v1/probes/merge",
+   "inputs": {
+    "parentProbeId": "body:parentProbeId!",
+    "subProbes": "body:subProbes!"
+   },
+   "output": {}
+  },
+  "searchWeb": {
+   "method": "POST",
+   "path": "/v1/web/search",
+   "inputs": {
+    "query": "body:query!",
+    "platform": "body:platform",
+    "maxResults": "body:maxResults"
+   },
+   "output": {}
+  },
+  "fetchWebPage": {
+   "method": "POST",
+   "path": "/v1/web/fetch",
+   "inputs": {
+    "url": "body:url!",
+    "maxChars": "body:maxChars"
+   },
+   "output": {}
+  },
+  "getAiUsage": {
+   "method": "GET",
+   "path": "/v1/usage/ai",
+   "inputs": {
+    "scope": "query:scope"
+   },
+   "output": {}
+  },
+  "generateActionMock": {
+   "method": "GET",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "listMockStubs": {
+   "method": "GET",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "createMockStub": {
+   "method": "POST",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId",
+    "name": "body:name!",
+    "description": "body:description",
+    "inputMatchers": "body:inputMatchers",
+    "response": "body:response!"
+   },
+   "output": {}
+  },
+  "regenerateMockStubs": {
+   "method": "POST",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/regenerate",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId"
+   },
+   "output": {}
+  },
+  "updateMockStub": {
+   "method": "PUT",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId",
+    "stubId": "path:stubId!",
+    "name": "body:name",
+    "description": "body:description",
+    "inputMatchers": "body:inputMatchers",
+    "response": "body:response"
+   },
+   "output": {}
+  },
+  "deleteMockStub": {
+   "method": "DELETE",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/stubs/{stubId}",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "connectorId": "query:connectorId",
+    "stubId": "path:stubId!"
+   },
+   "output": {}
+  },
+  "getWorkflowExecutionCounts": {
+   "method": "GET",
+   "path": "/v1/workflows/executions/counts",
+   "inputs": {
+    "workflowId": "query:workflowId",
+    "dateFrom": "query:dateFrom",
+    "dateTo": "query:dateTo",
+    "search": "query:search",
+    "searchIn": "query:searchIn"
+   },
+   "output": {}
+  },
+  "submitWorkflowExecutionFeedback": {
+   "method": "POST",
+   "path": "/v1/workflows/executions/{executionId}/feedback",
+   "inputs": {
+    "executionId": "path:executionId!",
+    "helpful": "body:helpful!",
+    "rating": "body:rating",
+    "comment": "body:comment"
+   },
+   "output": {}
+  },
+  "refreshWorkflowManifest": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/manifest/refresh",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "saveWorkflowValidation": {
+   "method": "PATCH",
+   "path": "/v1/workflows/{id}/validation",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status!",
+    "mode": "body:mode!",
+    "results": "body:results!",
+    "cleanup": "body:cleanup"
+   },
+   "output": {}
+  },
+  "saveWorkflowDraft": {
+   "method": "PATCH",
+   "path": "/v1/workflows/{id}/draft",
+   "inputs": {
+    "id": "path:id!",
+    "code": "body:code!"
+   },
+   "output": {}
+  },
+  "editWorkflowCode": {
+   "method": "PATCH",
+   "path": "/v1/workflows/{id}/code",
+   "inputs": {
+    "id": "path:id!",
+    "oldString": "body:oldString!",
+    "newString": "body:newString",
+    "replaceAll": "body:replaceAll"
+   },
+   "output": {}
+  },
+  "publishWorkflow": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/publish",
+   "inputs": {
+    "id": "path:id!",
+    "message": "body:message"
+   },
+   "output": {}
+  },
+  "rollbackWorkflowDeployment": {
+   "method": "POST",
+   "path": "/v1/workflows/{id}/rollback",
+   "inputs": {
+    "id": "path:id!",
+    "env_id": "body:env_id!",
+    "env_version": "body:env_version!"
+   },
+   "output": {}
+  },
+  "listWorkflowDeployments": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/deployments",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listWorkflowPromotions": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/promotions",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "cancelWorkflowPromotion": {
+   "method": "DELETE",
+   "path": "/v1/workflows/{id}/promotions/{promotionId}",
+   "inputs": {
+    "id": "path:id!",
+    "promotionId": "path:promotionId!"
+   },
+   "output": {}
+  },
+  "listWorkflowVersions": {
+   "method": "GET",
+   "path": "/v1/workflows/{id}/versions",
+   "inputs": {
+    "id": "path:id!",
+    "include": "query:include"
+   },
+   "output": {}
+  },
+  "listEnvironmentConfigs": {
+   "method": "GET",
+   "path": "/v1/env-configs",
+   "inputs": {},
+   "output": {}
+  },
+  "bulkUpsertEnvironmentConfigs": {
+   "method": "PUT",
+   "path": "/v1/env-configs",
+   "inputs": {
+    "environments": "body:environments",
+    "items": "body:items!"
+   },
+   "output": {}
+  },
+  "getEnvConfig": {
+   "method": "GET",
+   "path": "/v1/env-configs/{key}",
+   "inputs": {
+    "key": "path:key!"
+   },
+   "output": {}
+  },
+  "upsertEnvironmentConfig": {
+   "method": "PUT",
+   "path": "/v1/env-configs/{key}",
+   "inputs": {
+    "key": "path:key!",
+    "values": "body:values!"
+   },
+   "output": {}
+  },
+  "createEnvironmentConfig": {
+   "method": "POST",
+   "path": "/v1/env-configs/{key}",
+   "inputs": {
+    "key": "path:key!",
+    "values": "body:values!"
+   },
+   "output": {}
+  },
+  "removeEnvironmentConfigKey": {
+   "method": "DELETE",
+   "path": "/v1/env-configs/{key}",
+   "inputs": {
+    "key": "path:key!",
+    "env": "query:env"
+   },
+   "output": {}
+  },
+  "listWebhookTriggers": {
+   "method": "GET",
+   "path": "/v1/webhooks",
+   "inputs": {
+    "limit": "query:limit",
+    "cursor": "query:cursor",
+    "search": "query:search",
+    "status": "query:status",
+    "include_instances": "query:include_instances",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "createWebhookTrigger": {
+   "method": "POST",
+   "path": "/v1/webhooks",
+   "inputs": {
+    "id": "body:id",
+    "name": "body:name!",
+    "status": "body:status",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId",
+    "authMethod": "body:authMethod",
+    "routeExecutionMode": "body:routeExecutionMode",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "routes": "body:routes"
+   },
+   "output": {}
+  },
+  "bulkDeleteWebhookTriggers": {
+   "method": "POST",
+   "path": "/v1/webhooks/bulk-delete",
+   "inputs": {
+    "ids": "body:ids!"
+   },
+   "output": {}
+  },
+  "getWebhookTriggerStats": {
+   "method": "GET",
+   "path": "/v1/webhooks/{id}/stats",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getWebhookTrigger": {
+   "method": "GET",
+   "path": "/v1/webhooks/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateWebhookTrigger": {
+   "method": "PUT",
+   "path": "/v1/webhooks/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "status": "body:status",
+    "authMethod": "body:authMethod",
+    "routeExecutionMode": "body:routeExecutionMode",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "routes": "body:routes"
+   },
+   "output": {}
+  },
+  "deleteWebhookTrigger": {
+   "method": "DELETE",
+   "path": "/v1/webhooks/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listSchedulers": {
+   "method": "GET",
+   "path": "/v1/schedulers",
+   "inputs": {
+    "limit": "query:limit",
+    "cursor": "query:cursor",
+    "search": "query:search",
+    "status": "query:status",
+    "include_instances": "query:include_instances",
+    "end_org_id": "query:end_org_id"
+   },
+   "output": {}
+  },
+  "createScheduler": {
+   "method": "POST",
+   "path": "/v1/schedulers",
+   "inputs": {
+    "id": "body:id",
+    "name": "body:name!",
+    "status": "body:status",
+    "endOrgId": "body:endOrgId",
+    "installationId": "body:installationId",
+    "cron": "body:cron",
+    "rate": "body:rate",
+    "delayMinutes": "body:delayMinutes",
+    "timezone": "body:timezone",
+    "startsAt": "body:startsAt",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "routes": "body:routes",
+    "reenableAfterMinutes": "body:reenableAfterMinutes",
+    "runOnCreate": "body:runOnCreate"
+   },
+   "output": {}
+  },
+  "bulkDeleteSchedulers": {
+   "method": "POST",
+   "path": "/v1/schedulers/bulk-delete",
+   "inputs": {
+    "ids": "body:ids!"
+   },
+   "output": {}
+  },
+  "disableSchedulersByRoute": {
+   "method": "POST",
+   "path": "/v1/schedulers/disable-by-route",
+   "inputs": {
+    "routeIds": "body:routeIds!"
+   },
+   "output": {}
+  },
+  "getSchedulerStats": {
+   "method": "GET",
+   "path": "/v1/schedulers/{id}/stats",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getScheduler": {
+   "method": "GET",
+   "path": "/v1/schedulers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateScheduler": {
+   "method": "PUT",
+   "path": "/v1/schedulers/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "name": "body:name",
+    "status": "body:status",
+    "cron": "body:cron",
+    "rate": "body:rate",
+    "delayMinutes": "body:delayMinutes",
+    "timezone": "body:timezone",
+    "startsAt": "body:startsAt",
+    "dlqConfiguration": "body:dlqConfiguration",
+    "additionalConfig": "body:additionalConfig",
+    "routes": "body:routes",
+    "reenableAfterMinutes": "body:reenableAfterMinutes"
+   },
+   "output": {}
+  },
+  "deleteScheduler": {
+   "method": "DELETE",
+   "path": "/v1/schedulers/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "bulkDeleteAppEventTriggers": {
+   "method": "POST",
+   "path": "/v1/app-triggers/bulk-delete",
+   "inputs": {
+    "ids": "body:ids!"
+   },
+   "output": {}
+  },
+  "listConnectorEvents": {
+   "method": "GET",
+   "path": "/v1/app-triggers/connectors/{connectorId}/events",
+   "inputs": {
+    "connectorId": "path:connectorId!"
+   },
+   "output": {}
+  },
+  "listConnectorWebhookConfigEvents": {
+   "method": "GET",
+   "path": "/v1/app-triggers/connectors/{connectorId}/webhook-config-events",
+   "inputs": {
+    "connectorId": "path:connectorId!"
+   },
+   "output": {}
+  },
+  "getAppEventTriggerStats": {
+   "method": "GET",
+   "path": "/v1/app-triggers/{id}/stats",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAppWebhookRegistrations": {
+   "method": "GET",
+   "path": "/v1/app-webhooks",
+   "inputs": {},
+   "output": {}
+  },
+  "createAppWebhookRegistration": {
+   "method": "POST",
+   "path": "/v1/app-webhooks",
+   "inputs": {
+    "connectorId": "body:connectorId!",
+    "connectorName": "body:connectorName!",
+    "verificationType": "body:verificationType",
+    "events": "body:events",
+    "verification": "body:verification",
+    "verificationSecret": "body:verificationSecret",
+    "authProviderId": "body:authProviderId",
+    "subscriptionActionId": "body:subscriptionActionId",
+    "subscriptionBodyMapping": "body:subscriptionBodyMapping",
+    "unsubscriptionActionId": "body:unsubscriptionActionId",
+    "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
+   },
+   "output": {}
+  },
+  "listAppWebhookRegistrationStats": {
+   "method": "GET",
+   "path": "/v1/app-webhooks/stats",
+   "inputs": {},
+   "output": {}
+  },
+  "generateAppWebhookRegistrationUrl": {
+   "method": "POST",
+   "path": "/v1/app-webhooks/{id}/generate-url",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getAppWebhookRegistrationStats": {
+   "method": "GET",
+   "path": "/v1/app-webhooks/{id}/stats",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getAppWebhookRegistration": {
+   "method": "GET",
+   "path": "/v1/app-webhooks/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "updateAppWebhookRegistration": {
+   "method": "PUT",
+   "path": "/v1/app-webhooks/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "status": "body:status",
+    "connectorName": "body:connectorName",
+    "events": "body:events",
+    "verification": "body:verification",
+    "verificationSecret": "body:verificationSecret",
+    "authProviderId": "body:authProviderId",
+    "subscriptionActionId": "body:subscriptionActionId",
+    "subscriptionBodyMapping": "body:subscriptionBodyMapping",
+    "unsubscriptionActionId": "body:unsubscriptionActionId",
+    "unsubscriptionBodyMapping": "body:unsubscriptionBodyMapping"
+   },
+   "output": {}
+  },
+  "deleteAppWebhookRegistration": {
+   "method": "DELETE",
+   "path": "/v1/app-webhooks/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "replayAllTriggerDlq": {
+   "method": "POST",
+   "path": "/v1/triggers/{id}/dlq/replay-all",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "deleteDlqEntry": {
+   "method": "DELETE",
+   "path": "/v1/dlq/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "getAlertLimits": {
+   "method": "GET",
+   "path": "/v1/events/alerts/limits",
+   "inputs": {},
+   "output": {}
+  },
+  "testAlert": {
+   "method": "POST",
+   "path": "/v1/events/alerts/{id}/test",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "listAlertChannelTargets": {
+   "method": "GET",
+   "path": "/v1/events/alerts/channels/{connectionId}/targets",
+   "inputs": {
+    "connectionId": "path:connectionId!",
+    "connectorSlug": "query:connectorSlug!",
+    "teamId": "query:teamId"
+   },
+   "output": {}
+  },
+  "sendTestAppEvent": {
+   "method": "POST",
+   "path": "/v1/triggers/{orgId}/{connectorId}/events",
+   "inputs": {
+    "orgId": "path:orgId!",
+    "connectorId": "path:connectorId!",
+    "triggerId": "query:triggerId",
+    "payload": "body:*!"
+   },
+   "output": {}
+  },
+  "listConnectorActionsBySlug": {
+   "method": "GET",
+   "path": "/v2/connectors/{connector}/actions",
+   "inputs": {
+    "connector": "path:connector!"
+   },
+   "output": {}
+  },
+  "getConnectorActionSchema": {
+   "method": "GET",
+   "path": "/v2/connectors/{connector}/actions/{action}/schema",
+   "inputs": {
+    "connector": "path:connector!",
+    "action": "path:action!"
+   },
+   "output": {}
+  },
+  "discoverMcpConnectorTools": {
+   "method": "GET",
+   "path": "/v2/connectors/{connector}/mcp/discover",
+   "inputs": {
+    "connector": "path:connector!"
+   },
+   "output": {}
+  },
+  "getConnectorConnectionStatus": {
+   "method": "GET",
+   "path": "/v2/connectors/{connector}/connection-status",
+   "inputs": {
+    "connector": "path:connector!"
+   },
+   "output": {}
+  },
+  "executeConnectorActionBySlug": {
+   "method": "POST",
+   "path": "/v2/connectors/{connector}/actions/{action}/execute",
+   "inputs": {
+    "connector": "path:connector!",
+    "action": "path:action!",
+    "input": "body:input",
+    "connectionId": "body:connectionId",
+    "installationId": "body:installationId",
+    "connectionOrgId": "body:connectionOrgId",
+    "userId": "body:userId",
+    "mockMode": "body:mockMode",
+    "version": "body:version",
+    "externalVersion": "body:externalVersion",
+    "versionMajor": "body:versionMajor",
+    "orgScope": "body:orgScope"
+   },
+   "output": {}
+  },
+  "executeMockAction": {
+   "method": "POST",
+   "path": "/v1/mock/connectors/{connectorSlug}/actions/{actionSlug}/execute",
+   "inputs": {
+    "connectorSlug": "path:connectorSlug!",
+    "actionSlug": "path:actionSlug!",
+    "input": "body:input",
+    "mockStubId": "body:mockStubId",
+    "scenario": "body:scenario",
+    "version": "body:version",
+    "orgScope": "body:orgScope"
+   },
+   "output": {}
+  },
+  "agentBuildPlan": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/build-plan",
+   "inputs": {
+    "prompt": "body:prompt!",
+    "company": "body:company"
+   },
+   "output": {}
+  },
+  "agentSuggestConnectors": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/suggest-connectors",
+   "inputs": {
+    "useCase": "body:useCase!"
+   },
+   "output": {}
+  },
+  "agentDeleteOrchestratorSession": {
+   "method": "DELETE",
+   "path": "/v1/agent/orchestrator/sessions/{id}",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "agentRenameOrchestratorSession": {
+   "method": "PATCH",
+   "path": "/v1/agent/orchestrator/sessions/{id}",
+   "inputs": {
+    "id": "path:id!",
+    "title": "body:title!"
+   },
+   "output": {}
+  },
+  "agentGetOrchestratorFile": {
+   "method": "GET",
+   "path": "/v1/agent/orchestrator/sessions/{id}/files",
+   "inputs": {
+    "id": "path:id!",
+    "path": "query:path!"
+   },
+   "output": {}
+  },
+  "agentStopOrchestratorSession": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/sessions/{id}/stop",
+   "inputs": {
+    "id": "path:id!"
+   },
+   "output": {}
+  },
+  "agentInjectOrchestratorMessage": {
+   "method": "POST",
+   "path": "/v1/agent/orchestrator/sessions/{id}/inject",
+   "inputs": {
+    "id": "path:id!",
+    "message": "body:message!"
+   },
+   "output": {}
+  },
+  "researchSaas": {
+   "method": "POST",
+   "path": "/v1/agent/research/saas",
+   "inputs": {
+    "domain": "body:domain!",
+    "refresh": "body:refresh"
+   },
+   "output": {}
+  },
+  "getSaasResearch": {
+   "method": "GET",
+   "path": "/v1/agent/research/saas/{domain}",
+   "inputs": {
+    "domain": "path:domain!"
+   },
+   "output": {}
+  },
+  "matchProductConnector": {
+   "method": "POST",
+   "path": "/v1/agent/research/product/match",
+   "inputs": {
+    "domain": "body:domain!",
+    "productName": "body:productName"
+   },
+   "output": {}
+  },
+  "reviseProductProfile": {
+   "method": "POST",
+   "path": "/v1/agent/research/product/revise",
+   "inputs": {
+    "domain": "body:domain",
+    "field": "body:field!",
+    "instruction": "body:instruction!",
+    "product": "body:product!",
+    "history": "body:history"
+   },
+   "output": {}
+  }
+ }
+}

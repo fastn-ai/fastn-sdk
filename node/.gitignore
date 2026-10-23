@@ -1,7 +1,4 @@
 node_modules/
 dist/
-coverage/
-*.log
-.DS_Store
-.env
-.env.*
+test/live/evidence.jsonl
+*.tsbuildinfo
