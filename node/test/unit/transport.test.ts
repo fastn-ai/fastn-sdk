@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { FastnClient, FastnApiError, FastnNetworkError, OPS } from "../../src/index.js";
+import { FastnClient, FastnApiError, FastnNetworkError, unstable } from "../../src/index.js";
+const { OPS } = unstable;
 
 function mockFetch(responses: Array<{ status?: number; body?: unknown; headers?: Record<string, string> } | Error>) {
   const calls: { url: string; init: any }[] = [];
@@ -83,6 +84,17 @@ describe("request shape", () => {
     expect(m.calls[0].init.headers["x-end-org-id"]).toBe("0b3241c4-fastn"); expect(m.calls[0].init.headers["x-end-org-ref"]).toBeUndefined();
     await c.unified.listUnifiedRecords({ category: "crm", entity: "contact" });
     expect(m.calls[1].init.headers["x-end-org-ref"]).toBe("cust-9"); expect(m.calls[1].init.headers["x-end-org-id"]).toBeUndefined();
+  });
+  it("extraBody and extraQuery send fields the SDK does not know", async () => {
+    const m = mockFetch([{ body: {} }, { body: {} }, { body: {} }]);
+    const c = client(m);
+    await c.orgs.createTenant({ name: "Acme", orgId: "acme-1" }, { extraBody: { brandNewField: true } });
+    expect(JSON.parse(m.calls[0].init.body)).toEqual({ name: "Acme", orgId: "acme-1", brandNewField: true });
+    await c.orgs.listOrgs({ type: "end_org" }, { extraQuery: { brand_new: "1", tags: ["a", "b"] } });
+    expect(m.calls[1].url).toBe("https://api.fastn.dev/v1/orgs?type=end_org&brand_new=1&tags=a&tags=b");
+    await c.unified.createUnifiedRecord({ category: "crm", entity: "contact", record: { email: "a@b.c" } }, { extraBody: { custom_field: 1 } });
+    expect(JSON.parse(m.calls[2].init.body)).toEqual({ email: "a@b.c", custom_field: 1 });
+    await expect(c.orgs.listOrgs({}, { extraBody: { x: 1 } })).rejects.toThrow(/takes no request body/);
   });
   it("call() by operationId", async () => {
     const m = mockFetch([{ body: { data: 1 } }]);

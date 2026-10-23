@@ -94,7 +94,13 @@ export { FastnApiError, FastnNetworkError } from "./errors.js";
 export { verifyEventSignature, signEventBody, parseEvent, readEventHeaders, type EventHeaders, type FastnEvent, type VerifyOptions } from "./events.js";
 export { paginate, type PaginateOptions } from "./paginate.js";
 export { ToolsClient, ToolError, parseMessages, type ToolsClientConfig, type ToolCallOptions, type Tool, type ToolResult } from "./tools.js";
-export { FetchTransport, type Transport, type RequestOptions, type RequestLog, type OpDef, type FetchTransportConfig } from "./transport.js";
-export { OPS, SPEC_VERSION, type OperationId } from "./generated/ops.js";
+export { type Transport, type RequestOptions, type RequestLog } from "./transport.js";
+export { SPEC_VERSION, type OperationId } from "./generated/ops.js";
 export type { FastnApis } from "./generated/api.js";
+// One Input and one Output type per operation, named after the operationId, plus the spec's named schemas.
 export type * from "./generated/types.js";
+/**
+ * Internals with no compatibility promise: the wire manifest (`OPS`), the fetch transport and their types. They can
+ * change in any release. Use them for debugging or to build your own transport, not in application code.
+ */
+export * as unstable from "./unstable.js";

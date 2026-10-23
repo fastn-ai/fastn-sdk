@@ -32,6 +32,13 @@ export interface RequestOptions {
   targetOrg?: string;
   /** Extra headers, sent as given. */
   headers?: Record<string, string>;
+  /**
+   * Body fields the SDK does not know yet, sent as given (merged over the generated body). An escape hatch for a new
+   * API field before the SDK catches up; not validated.
+   */
+  extraBody?: Record<string, unknown>;
+  /** Query parameters the SDK does not know yet, sent as given. */
+  extraQuery?: Record<string, string | number | boolean | Array<string | number | boolean>>;
   /** Overrides the client's timeout for this call. */
   timeoutMs?: number;
   /** Overrides the client's retry count for this call (0 = never retry). */
@@ -95,7 +102,13 @@ export class FetchTransport implements Transport {
       else if ("id" in o.customer && o.customer.id) headers["x-end-org-id"] ??= o.customer.id;
     }
     for (const [k, v] of Object.entries(o.headers)) if (typeof v === "string") headers[k.toLowerCase()] = v;
+    for (const [k, v] of Object.entries(o.extraQuery ?? {})) {
+      if (v === undefined || v === null) continue;
+      query.delete(k);
+      if (Array.isArray(v)) for (const x of v) query.append(k, String(x)); else query.set(k, String(v));
+    }
     let body: string | undefined;
+    if (!op.body && o.extraBody && Object.keys(o.extraBody).length) throw new TypeError(`${op.id}: extraBody given, but ${op.method} ${op.path} takes no request body`);
     if (op.body) {
       let payload: unknown;
       if (op.body.kind === "fields") {
@@ -105,10 +118,16 @@ export class FetchTransport implements Transport {
           const taken = new Set([...Object.keys(op.body.keys ?? {}), ...op.params.map((p) => p.key)]);
           for (const [key, v] of Object.entries(input)) if (!taken.has(key) && v !== undefined) obj[key] = v;
         }
+        if (o.extraBody) for (const [k, v] of Object.entries(o.extraBody)) if (v !== undefined) obj[k] = v;
         payload = obj;
       } else {
         payload = input[op.body.key!];
+        if (payload === undefined && o.extraBody && Object.keys(o.extraBody).length) payload = {};
         if (payload === undefined && op.body.required) throw new TypeError(`${op.id}: "${op.body.key}" (request body) is required`);
+        if (o.extraBody && Object.keys(o.extraBody).length) {
+          if (typeof payload !== "object" || payload === null || Array.isArray(payload)) throw new TypeError(`${op.id}: extraBody needs an object body`);
+          payload = { ...(payload as Record<string, unknown>), ...o.extraBody };
+        }
       }
       if (payload !== undefined) {
         if (op.body.contentType === "application/x-www-form-urlencoded") {

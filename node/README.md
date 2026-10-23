@@ -118,8 +118,11 @@ catch (e) { if (e instanceof FastnApiError && e.isNotFound) ... }
 Every method takes an optional second argument:
 
 ```ts
-{ idempotencyKey, correlationId, customer, installationId, targetOrg, headers, timeoutMs, retries, signal }
+{ idempotencyKey, correlationId, customer, installationId, targetOrg, headers, extraBody, extraQuery, timeoutMs, retries, signal }
 ```
+
+`extraBody` / `extraQuery` send fields the SDK does not know yet (a new API field before the SDK catches up); they are
+passed as given and not validated.
 
 `customer` is `{ ref: "acme-42" }` (your id) or `{ id: "<fastn org id>" }`. `new FastnClient({ defaults: { customer: { ref: "acme-42" } } })` applies options to every call.
 
@@ -184,6 +187,15 @@ npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a pla
 ```
 
 `spec/SOURCE.md` records which platform commit the spec came from.
+
+### What stays compatible
+
+- The hand-written layer (`FastnClient`, `customer(...)`, `records(...)`, `ToolsClient`, `parseEvent`, `paginate`,
+  the error classes) follows semver: breaking changes only in a major version.
+- The generated methods mirror the REST API 1:1. `spec/surface.lock.json` records every operation with its input
+  keys; `npm run generate` refuses a spec that removes an operation, renames an input or moves it (path, query, body,
+  header) unless run with `--accept-breaking`, which goes with a major version bump. Additions pass.
+- Everything under `unstable` (the wire manifest `OPS`, `FetchTransport`) has no compatibility promise.
 
 ## Releasing
 

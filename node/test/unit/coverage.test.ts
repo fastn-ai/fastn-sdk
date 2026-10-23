@@ -39,6 +39,20 @@ describe("every partner-facing spec operation is in the SDK, nothing else", () =
     for (const s of specOps) expect(methods.has(s.id), s.id).toBe(true);
     expect(methods.size).toBe(specOps.length);
   });
+  it("matches spec/surface.lock.json (the compatibility record a spec refresh is checked against)", () => {
+    const lock = JSON.parse(fs.readFileSync(path.join(specDir, "surface.lock.json"), "utf8"));
+    expect(lock.spec).toBe(specFile);
+    expect(Object.keys(lock.operations).sort()).toEqual(Object.keys(OPS).sort());
+    for (const [id, entry] of Object.entries<any>(lock.operations)) {
+      const o = (OPS as any)[id];
+      expect(`${o.method} ${o.path}`).toBe(`${entry.method} ${entry.path}`);
+      const inputs: Record<string, string> = {};
+      for (const p of o.params) inputs[p.key] = `${p.in}:${p.name}`;
+      if (o.body?.kind === "fields") for (const [k, n] of Object.entries(o.body.keys ?? {})) inputs[k] = `body:${n}`;
+      else if (o.body?.kind === "whole") inputs[o.body.key] = "body:*";
+      expect(inputs, id).toEqual(entry.inputs);
+    }
+  });
   it("every path parameter has an input", () => {
     for (const o of Object.values(OPS)) for (const m of o.path.matchAll(/\{([^}]+)\}/g)) expect(o.params.some((p) => p.in === "path" && p.name === m[1]), `${o.id} ${m[1]}`).toBe(true);
   });

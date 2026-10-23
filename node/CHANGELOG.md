@@ -8,6 +8,9 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 - Fixed: `customer.find()` / `id()` only look under the caller's own org (listOrgs with `parent_id`, parentId checked), so a key that sees every org can never resolve another partner's customer. The ref -> id cache is now per client, not per `Customer` object.
 - Fixed: `customer.remove()` sets the org back to active when the delete fails and says so in the error.
 - Added: `customer.connect()` (OAuth, returns `authorizationUrl`), `customer.authFields()` and `customer.connectWithCredentials()` (typed-in credentials, required fields checked first), `fastn.me()` (whoami, cached).
+- Added: `spec/surface.lock.json`, a record of every generated operation and input key; `npm run generate` fails on a spec that removes or renames one unless `--accept-breaking` is given.
+- Added: `extraBody` / `extraQuery` per-call options for API fields the SDK does not know yet.
+- Changed: `OPS`, `FetchTransport` and their types moved under the `unstable` export (no compatibility promise). The generator refuses an API area whose name would shadow a client member.
 - Changed: `Records` methods are typed with the generated unified input/output types (no more `as any`).
 
 ## [0.1.0] - 2026-10-22
