@@ -109,4 +109,23 @@ describe("customer context", () => {
     const sent = JSON.parse(m.calls.at(-1)!.init.body);
     expect(sent).toEqual({ connectorId: "acme-crm", credentials: { apiKey: "s3cret" }, name: "Acme CRM", authMethodId: "am_key", endOrgId: "11111111-aaaa" });
   });
+  it("runAction pins the customer's own connection and installation for a raw connector action", async () => {
+    const conn = { id: "ucl:p:cust:hs:default", name: "Inline CRM", connectorId: "hs-uuid", connectorSlug: "hubspot" };
+    const m = fx((url) => {
+      if (url.includes("/v1/orgs?")) return { body: { data: [orgRow] } };
+      if (url.includes("/v1/connections")) return { body: { data: [conn] } };
+      if (url.includes("/v1/installations")) return { body: { data: [{ id: "inst_other", endOrgId: "other", connections: { hubspot: "x" } }, { id: "inst_1", endOrgId: "11111111-aaaa", connections: { hubspot: conn.id } }] } };
+      if (url.includes("/v2/connectors/hubspot/actions")) return { body: { data: [{ id: "act_upd", slug: "updateDeal" }] } };
+      if (url.includes("/v2/connectors/slack/actions")) return { body: { data: [] } };
+      if (url.includes("/v1/actions/act_upd/execute")) return { body: { data: { success: true, response: { id: "deal_1" } } } };
+      return undefined;
+    });
+    const c = new FastnClient({ apiKey: "k", fetch: m.fetch }).customer("acme-1");
+    const r: any = await c.runAction({ connector: "hubspot", action: "updateDeal", input: { dealId: "deal_1", properties: { dealstage: "qualifiedtobuy" } } });
+    expect(r.data.response.id).toBe("deal_1");
+    const exec = m.calls.find((x) => x.url.endsWith("/v1/actions/act_upd/execute"))!;
+    expect(JSON.parse(exec.init.body)).toEqual({ connectorId: "hs-uuid", connectionName: "Inline CRM", connectionId: conn.id, installationId: "inst_1", input: { dealId: "deal_1", properties: { dealstage: "qualifiedtobuy" } } });
+    await expect(c.runAction({ connector: "hubspot", action: "noSuchAction" })).rejects.toThrow(/no action "noSuchAction"/);
+    await expect(c.runAction({ connector: "slack", action: "postMessage" })).rejects.toThrow(/no slack connection/);
+  });
 });

@@ -93,6 +93,12 @@ const fields = await customer.authFields("acme-crm");                 // { names
 await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { apiKey: "..." }, name: "Acme CRM" });
 ```
 
+```ts
+// Anything the unified API does not cover: run the connector's own action with the customer's connection.
+const r = await customer.runAction({ connector: "hubspot", action: "updateDeal", input: { dealId, properties: { dealstage: "qualifiedtobuy" } } });
+r.data.response                                                       // the provider's answer
+```
+
 Prefer `setupLink()` for credentials: fastn's hosted page collects them, so they never pass through your backend. For
 auth types other than custom-input forms the platform may store the credential under a fixed field name that differs
 from the auth method's contract; that is a platform limitation being tracked, not something the SDK can see.

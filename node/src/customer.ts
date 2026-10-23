@@ -146,6 +146,29 @@ export class Customer {
     return { authMethodId: m.id, authType: m.authType ?? m.type, names, required, schema };
   }
 
+  /**
+   * Runs one raw connector action with this customer's own connection, for what the unified API does not cover
+   * (e.g. updating a HubSpot deal's stage, logging a call). The action is named by connector slug and action slug;
+   * the customer's connection and installation for that connector are looked up and pinned, so the call can never
+   * run with your own org's connection. The provider's answer is returned under `response`.
+   */
+  async runAction(input: { connector: string; action: string; input?: Record<string, any>; mockMode?: boolean }, opts?: RequestOptions): Promise<T.ExecuteActionOutput> {
+    const [conns, insts, acts] = await Promise.all([
+      this.connections(undefined, opts),
+      this.root.embed.listInstallations({} as any, opts),
+      this.root.connectors.listConnectorActionsBySlug({ connector: input.connector } as any, opts),
+    ]);
+    const rows = (r: any): any[] => (Array.isArray(r?.data) ? r.data : Array.isArray(r?.data?.actions) ? r.data.actions : Array.isArray(r) ? r : []);
+    const id = await this.id();
+    const inst = rows(insts).find((i) => i.endOrgId === id && i.connections && typeof i.connections === "object" && input.connector in i.connections);
+    const connId: string | undefined = inst?.connections?.[input.connector];
+    const conn = rows(conns).find((c) => c.id === connId) ?? rows(conns).find((c) => c.connectorSlug === input.connector || c.connector?.slug === input.connector);
+    if (!inst || !conn) throw new FastnApiError(`customer "${this.ref}" has no ${input.connector} connection to run ${input.action} with`, 404, "CONNECTION_NOT_FOUND", { connector: input.connector }, "POST", "/v1/actions/{id}/execute", undefined, undefined);
+    const action = rows(acts).find((a) => a.slug === input.action);
+    if (!action?.id) throw new FastnApiError(`connector ${input.connector} has no action "${input.action}"`, 404, "NOT_FOUND", { connector: input.connector, action: input.action }, "GET", "/v2/connectors/{connector}/actions", undefined, undefined);
+    return this.root.connectors.executeAction({ id: action.id, connectorId: conn.connectorId, connectionName: conn.name, connectionId: conn.id, installationId: inst.id, input: input.input ?? {}, ...(input.mockMode ? { mockMode: true } : {}) } as any, opts);
+  }
+
   /** The customer org (getTenant by fastn id). */
   async get(opts?: RequestOptions): Promise<T.GetTenantOutput> { return this.root.orgs.getTenant({ id: await this.id() }, opts); }
 
