@@ -58,6 +58,7 @@ await fastn.connections.listConnections({ endOrgId: await customer.id() });
 await fastn.events.listEventSubscriptions();
 await fastn.embed.getSetupLink({ id: "stp_..." });
 await fastn.call("getTenant", { id: "..." });                   // any operation by operationId
+await fastn.me();                                               // who this key is: actor, role, org, parentOrg
 ```
 
 ## Customer ids, explained once
@@ -73,8 +74,28 @@ rejects the customer headers on a single-tenant key (not exercised by the tests 
 | `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names       | filled in for you                 |
 | `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `await customer.id()` (cached) |
 
-`customer.register()`, `setupLink()`, `embedToken()`, `connections()`, `get()`, `remove()` and `records(...)` all take the
-ref and resolve fastn's id only where the API insists on it.
+`customer.register()`, `setupLink()`, `embedToken()`, `connect()`, `connectWithCredentials()`, `connections()`, `get()`,
+`remove()` and `records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
+limited to orgs under your own org, so a key that can see more than your account can still never resolve someone
+else's customer; the resolved id is cached per client.
+
+`customer.api.<area>.<operation>()` runs any operation for that customer. It sends x-end-org-ref and, on routes that
+take the customer in the body instead (`endOrgId` or `externalRef`: OAuth initiation, stored connections, event
+subscriptions, secrets, setup links, ...), fills that field in too. The platform only reads the header on unified record
+and workflow execute routes; without the body field those calls would silently run as your own org.
+
+```ts
+const { data } = await customer.connect({ connectorId: "googleCalendar", returnUrl: "https://app.acme.com/connected" });
+redirect(data.authorizationUrl);                                      // the connection lands on the customer org
+
+// Typed-in credentials (API key, basic auth): the fields come from the connector's auth method.
+const fields = await customer.authFields("acme-crm");                 // { names, required, schema, authMethodId }
+await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { apiKey: "..." }, name: "Acme CRM" });
+```
+
+Prefer `setupLink()` for credentials: fastn's hosted page collects them, so they never pass through your backend. For
+auth types other than custom-input forms the platform may store the credential under a fixed field name that differs
+from the auth method's contract; that is a platform limitation being tracked, not something the SDK can see.
 
 ## Responses and errors
 

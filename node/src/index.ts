@@ -12,7 +12,7 @@
 
 import { buildApis, type FastnApis } from "./generated/api.js";
 import { FetchTransport, type RequestOptions, type RequestLog, type Transport } from "./transport.js";
-import { Customer } from "./customer.js";
+import { Customer, type CustomerContext } from "./customer.js";
 import { SPEC_VERSION, SPEC_FILE, OPS } from "./generated/ops.js";
 import { ToolsClient, type ToolsClientConfig } from "./tools.js";
 import { VERSION } from "./version.js";
@@ -47,6 +47,8 @@ export class FastnClient {
   readonly api: FastnApis;
   /** The workspace's tools (every connector turned on there), when `tools` was configured. */
   readonly tools?: ToolsClient;
+  private readonly customers: CustomerContext;
+  private meCache: Promise<any> | undefined;
 
   constructor(cfg: FastnClientConfig) {
     if (!cfg?.apiKey || typeof cfg.apiKey !== "string") throw new TypeError("FastnClient: apiKey is required");
@@ -58,12 +60,19 @@ export class FastnClient {
     this.api = buildApis(this.transport);
     Object.assign(this, this.api);
     if (cfg.tools) this.tools = new ToolsClient({ ...cfg.tools, fetch: cfg.fetch, userAgent: cfg.userAgent });
+    this.customers = { ids: new Map(), callerOrgId: async () => { const me = await this.me(); const id = me?.org?.id; if (typeof id !== "string" || !id) throw new TypeError("whoami did not answer the caller's org id"); return id; } };
+  }
+
+  /** Who this API key is (GET /v1/me): actor, role, org, parentOrg. Cached for the life of the client. */
+  me(): Promise<NonNullable<import("./generated/types.js").WhoamiOutput["data"]>> {
+    this.meCache ??= this.api.users.whoami().then((r: any) => r?.data ?? r, (e) => { this.meCache = undefined; throw e; });
+    return this.meCache;
   }
 
   /** One of your customers, by the id you use for them. */
   customer(ref: string): Customer {
     if (!ref) throw new TypeError("customer(ref): ref is required");
-    return new Customer(this.api, this.transport, ref, this.tools);
+    return new Customer(this.api, this.transport, ref, this.customers, this.tools);
   }
 
   /** Calls any operation by its operationId, e.g. fastn.call("listOrgs", { type: "end_org" }). */
