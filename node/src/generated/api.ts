@@ -2975,6 +2975,7 @@ export class UnifiedApi {
    * Create a record from a canonical body via one provider
    * Creates a record from a canonical body (any JSON object, mapped to the provider's fields) through one resolved provider. Requires unified.execute; 400 when the body is not a JSON object.
    * POST /v1/unified/{category}/{entity}
+   * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   createUnifiedRecord(input: T.CreateUnifiedRecordInput, opts?: RequestOptions): Promise<T.CreateUnifiedRecordOutput> {
     return this._t.call(OPS.createUnifiedRecord, input as Record<string, unknown>, opts);
@@ -2999,6 +3000,7 @@ export class UnifiedApi {
    * Delete a record via one provider
    * Only for entities whose mapping offers delete.
    * DELETE /v1/unified/{category}/{entity}/{id}
+   * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   deleteUnifiedRecord(input: T.DeleteUnifiedRecordInput, opts?: RequestOptions): Promise<T.DeleteUnifiedRecordOutput> {
     return this._t.call(OPS.deleteUnifiedRecord, input as Record<string, unknown>, opts);
@@ -3007,6 +3009,7 @@ export class UnifiedApi {
    * Update a record (partial canonical body) via one provider
    * Only for entities whose mapping offers update. Sends only the fields named; unsent fields keep their value.
    * PATCH /v1/unified/{category}/{entity}/{id}
+   * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   updateUnifiedRecord(input: T.UpdateUnifiedRecordInput, opts?: RequestOptions): Promise<T.UpdateUnifiedRecordOutput> {
     return this._t.call(OPS.updateUnifiedRecord, input as Record<string, unknown>, opts);
@@ -3549,6 +3552,7 @@ export class WorkflowsApi {
    * Execute workflow
    * Behaviour depends on the workflow's executionTier, and callers must handle both. STANDARD and LONG queue the run and return 202 with an executionId to poll. INSTANT runs synchronously and returns 200 with the finished result — it holds the HTTP request for the duration, which is the point of the tier, so there is nothing to poll. On the instant path the id appears ONLY in the X-Execution-Id response header — the body is the workflow's own return value and has nowhere to put it — so use that header to correlate a synchronous run. The queued path does not set that header; its id is in data.executionId. A caller written to poll unconditionally will break on an instant-tier workflow. An instant timeout on a workflow with escalateOnTimeout also returns 202, naming the escalated standard run in escalatedTo/escalatedFrom. Send Idempotency-Key to make a retry safe: a duplicate returns the existing execution for the same tenant instead of running again — 200 once it has finished, 202 while it is still in flight — and resolves to the escalated run where a timeout escalated.
    * POST /v1/workflows/{id}/execute
+   * Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice.
    */
   executeWorkflow(input: T.ExecuteWorkflowInput, opts?: RequestOptions): Promise<T.ExecuteWorkflowOutput> {
     return this._t.call(OPS.executeWorkflow, input as Record<string, unknown>, opts);

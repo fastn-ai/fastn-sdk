@@ -11,6 +11,8 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 - Added: `spec/surface.lock.json`, a record of every generated operation and input key; `npm run generate` fails on a spec that removes or renames one unless `--accept-breaking` is given.
 - Added: `extraBody` / `extraQuery` per-call options for API fields the SDK does not know yet.
 - Changed: `OPS`, `FetchTransport` and their types moved under the `unstable` export (no compatibility promise). The generator refuses an API area whose name would shadow a client member.
+- Added: `ToolError` kind "auth" with `isConnectionRequired`, `authorizeUrl` and `connector`, from the gateway's authRequired answer.
+- Added: `scripts/sweep`, a live run that calls every published operation once (reads, writes, deletes) and writes a per-operation report; live suites run on the development environment by default (`FASTN_BASE_URL`, `LIVE_PROD=1` for production) and one file at a time.
 - Changed: `Records` methods are typed with the generated unified input/output types (no more `as any`).
 
 ## [0.1.0] - 2026-10-22

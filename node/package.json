@@ -51,7 +51,7 @@
     "lint:package": "publint --strict && attw --pack .",
     "prepublishOnly": "npm run build",
     "generate": "tsx scripts/generate.ts",
-    "test:live": "LIVE=1 vitest run test/live",
+    "test:live": "LIVE=1 vitest run test/live --no-file-parallelism",
     "spec:refresh": "tsx scripts/refresh-spec.ts"
   },
   "publishConfig": {

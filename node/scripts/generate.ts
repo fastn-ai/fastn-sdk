@@ -35,6 +35,11 @@ const TAG_ALIAS: Record<string, string> = { "Unified API": "unified", "API Keys"
  */
 const HIDDEN_TAGS = new Set(["Admin", "Platform Config", "Platform", "Support"]);
 const PUBLIC_INTERNAL = new Set(["createEmbedToken", "getSetupLinkStatus"]);
+/**
+ * Operations the platform de-duplicates by Idempotency-Key, so the SDK may retry them after a lost answer. Taken from
+ * the spec (an Idempotency-Key header parameter) plus the ones verified live that the spec does not declare yet.
+ */
+const IDEMPOTENT_EXTRA = new Set(["createUnifiedRecord"]);
 export const isHidden = (op: Json): boolean => HIDDEN_TAGS.has(op.tags?.[0]) || (op["x-mcp"] === false && !PUBLIC_INTERNAL.has(op.operationId));
 let hidden = 0;
 const camel = (s: string) => s.replace(/[^A-Za-z0-9]+(.)?/g, (_, c?: string) => (c ? c.toUpperCase() : "")).replace(/^(.)/, (c) => c.toLowerCase());
@@ -97,7 +102,7 @@ function objectTs(schema: Json, indent: string): string {
 // ── operations ──
 interface ParamDef { key: string; name: string; in: "path" | "query" | "header"; required?: boolean }
 interface BodyDef { kind: "fields" | "whole"; keys?: Record<string, string>; key?: string; required?: boolean; open?: boolean; contentType: string }
-interface Op { id: string; method: string; path: string; tag: string; summary?: string; description?: string; params: ParamDef[]; body?: BodyDef; inputTs: string; outputTs: string; inputRequired: boolean; deprecated: boolean }
+interface Op { id: string; method: string; path: string; tag: string; summary?: string; description?: string; params: ParamDef[]; body?: BodyDef; inputTs: string; outputTs: string; inputRequired: boolean; deprecated: boolean; idempotent: boolean }
 
 const ops: Op[] = [];
 for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
@@ -107,7 +112,9 @@ for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
     if (!isObj(op) || typeof op.operationId !== "string") continue;
     if (isHidden(op)) { hidden++; continue; }
     const own: Json[] = (op.parameters ?? []).map(resolveParam);
-    const params = [...shared.filter((s) => !own.some((o) => o.name === s.name && o.in === s.in)), ...own].filter((x) => x.in !== "cookie");
+    const allParams = [...shared.filter((s) => !own.some((o) => o.name === s.name && o.in === s.in)), ...own];
+    const idempotent = allParams.some((x) => x.in === "header" && /^idempotency-key$/i.test(String(x.name))) || IDEMPOTENT_EXTRA.has(op.operationId);
+    const params = allParams.filter((x) => x.in !== "cookie" && !(x.in === "header" && /^idempotency-key$/i.test(String(x.name))));
     const props: string[] = [];
     const claimed = new Set<string>();
     const defs: ParamDef[] = [];
@@ -162,7 +169,7 @@ for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
     const responses: Json = isObj(op.responses) ? op.responses : {};
     const okCode = Object.keys(responses).filter((c) => /^2(\d\d|XX)$/i.test(c)).sort().find((c) => isObj(responses[c]?.content?.["application/json"]?.schema));
     const outputTs = okCode ? ts(responses[okCode].content["application/json"].schema) : "JsonObject";
-    ops.push({ id: op.operationId, method: m.toUpperCase(), path: p, tag: op.tags?.[0] ?? "Untagged", summary: op.summary, description: op.description, params: defs, body, inputTs: props.length ? `{\n${props.join("\n")}\n}` : "Record<string, never>", outputTs, inputRequired, deprecated: op.deprecated === true });
+    ops.push({ id: op.operationId, method: m.toUpperCase(), path: p, tag: op.tags?.[0] ?? "Untagged", summary: op.summary, description: op.description, params: defs, body, inputTs: props.length ? `{\n${props.join("\n")}\n}` : "Record<string, never>", outputTs, inputRequired, deprecated: op.deprecated === true, idempotent });
   }
 }
 const dupes = ops.map((o) => o.id).filter((id, i, a) => a.indexOf(id) !== i);
@@ -213,6 +220,7 @@ const opsOut = [header, `import type { OpDef } from "../transport.js";\n`, `expo
 for (const o of ops) {
   const def: Json = { id: o.id, method: o.method, path: o.path, params: o.params };
   if (o.body) def.body = o.body;
+  if (o.idempotent) def.idempotent = true;
   opsOut.push(`  ${o.id}: ${JSON.stringify(def)} as OpDef,`);
 }
 opsOut.push(`} as const satisfies Record<string, OpDef>;`, `export type OperationId = keyof typeof OPS;`, "");
@@ -243,7 +251,7 @@ for (const [tag, list] of [...byTag.entries()].sort((a, b) => a[0].localeCompare
   const tagDesc = (spec.tags ?? []).find((t: Json) => t.name === tag)?.description;
   apiOut.push(`${doc([`${tag}: ${tagDesc ?? ""}`])}export class ${cls} {`, `  constructor(private readonly _t: Transport) {}`);
   for (const o of list) {
-    const lines = [o.summary, o.description, `${o.method} ${o.path}`, o.deprecated ? "@deprecated" : undefined];
+    const lines = [o.summary, o.description, `${o.method} ${o.path}`, o.idempotent ? "Honours Idempotency-Key: pass opts.idempotencyKey and a retry after a lost answer cannot act twice." : undefined, o.deprecated ? "@deprecated" : undefined];
     const inputType = `T.${pascal(o.id)}Input`;
     const arg = o.inputRequired ? `input: ${inputType}` : `input: ${inputType} = {} as ${inputType}`;
     apiOut.push(`${doc(lines, "  ")}  ${o.id}(${arg}, opts?: RequestOptions): Promise<T.${pascal(o.id)}Output> {`, `    return this._t.call(OPS.${o.id}, input as Record<string, unknown>, opts);`, `  }`);

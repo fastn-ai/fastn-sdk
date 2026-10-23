@@ -668,11 +668,6 @@ export type DeleteUnifiedRecordInput = {
    */
   connection_id?: string;
   /**
-   * The header header "Idempotency-Key".
-   * Makes a retry safe: the same key on this route for the same org and customer answers from the first run for 24 hours (Idempotent-Replayed: true) instead of calling the provider again. A key still in flight is 409 IDEMPOTENCY_IN_PROGRESS; the same key sent with a different query string or body is 422 IDEMPOTENCY_KEY_REUSED.
-   */
-  idempotencyKey?: string;
-  /**
    * The header header "X-Fastn-Correlation-Id".
    * Your own id for this request (a call, a job). Echoed back, and the call is recorded under it: GET /api/v1/unified/calls?correlation_id=...
    */
@@ -704,11 +699,6 @@ export type UpdateUnifiedRecordInput = {
    * The whole request body (application/json).
    */
   record: Record<string, any>;
-  /**
-   * The header header "Idempotency-Key".
-   * Makes a retry safe: the same key on this route for the same org and customer answers from the first run for 24 hours (Idempotent-Replayed: true) instead of calling the provider again. A key still in flight is 409 IDEMPOTENCY_IN_PROGRESS; the same key sent with a different query string or body is 422 IDEMPOTENCY_KEY_REUSED.
-   */
-  idempotencyKey?: string;
   /**
    * The header header "X-Fastn-Correlation-Id".
    * Your own id for this request (a call, a job). Echoed back, and the call is recorded under it: GET /api/v1/unified/calls?correlation_id=...
@@ -3416,11 +3406,6 @@ export type GenerateWorkflowDocsOutput = {
 export type ExecuteWorkflowInput = {
   id: string;
   input?: Record<string, any>;
-  /**
-   * The header header "Idempotency-Key".
-   * Client-supplied dedup key. Scoped to the execution's (owner org, end-org); no expiry window beyond the execution's retention. The prefix fastn-event: is reserved for trigger dispatch and is refused with 400 (reserved_idempotency_key); keys with it replay only an in-flight or completed run from the last 24 hours. Rarely, concurrent requests under one key are answered 503 (idempotency_key_contended) with nothing created; retry. A fastn-event: key whose run exists but was not yet handed to an engine is answered 409 (dispatch_run_not_started); retry.
-   */
-  idempotencyKey?: string;
   /**
    * The header header "x-fastn-env".
    * Which environment to execute against, and therefore WHICH CODE RUNS. 'test' runs the workflow's latest published version; any other slug runs the version actively deployed to that environment. Omitted, it defaults to the credential's own mode: a fsk_test_ key gets 'test', a fsk_live_ key gets 'live'. A test key may ONLY name 'test' — asking for anything else is refused with 403 ENV_NOT_PERMITTED rather than quietly downgraded, so a 200 always means the environment you asked for is the one that ran. A live key pinned to an environment (workflowEnvId) defaults to that environment, may also name 'test', and is refused for any other. A live key made before keys were pinned may name any environment, including 'test'.

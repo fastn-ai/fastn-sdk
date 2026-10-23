@@ -13,11 +13,19 @@ export interface BodyDef {
   open?: boolean;
   contentType: string;
 }
-export interface OpDef { id: string; method: string; path: string; params: ParamDef[]; body?: BodyDef }
+export interface OpDef {
+  id: string; method: string; path: string; params: ParamDef[]; body?: BodyDef;
+  /** The platform de-duplicates this operation by Idempotency-Key, so a call that carries one may be retried. */
+  idempotent?: boolean;
+}
 
 /** Per-call options. Everything here is optional and applies to any operation. */
 export interface RequestOptions {
-  /** Sent as Idempotency-Key: a retry with the same key returns the first answer instead of acting twice. */
+  /**
+   * Sent as Idempotency-Key. On operations the platform de-duplicates by it (unified record writes, workflow
+   * execute; see the method's doc) a retry with the same key returns the first answer instead of acting twice, and
+   * the SDK retries those on 429/502/503/504. Other writes are never retried, key or not.
+   */
   idempotencyKey?: string;
   /** Sent as X-Fastn-Correlation-Id: your own id for the request; look it up later with unified.listUnifiedCalls. */
   correlationId?: string;
@@ -145,7 +153,7 @@ export class FetchTransport implements Transport {
     const { url, init } = this.prepare(op, input, opts);
     const f = this.cfg.fetch ?? globalThis.fetch;
     if (typeof f !== "function") throw new FastnNetworkError("No fetch available: use Node 20+ or pass { fetch } to the client", op.method, op.path);
-    const retryable = op.method === "GET" || init.headers["idempotency-key"] !== undefined;
+    const retryable = op.method === "GET" || (op.idempotent === true && init.headers["idempotency-key"] !== undefined);
     const maxRetries = retryable ? (opts.retries ?? this.cfg.retries) : 0;
     const timeoutMs = opts.timeoutMs ?? this.cfg.timeoutMs;
     for (let attempt = 0; ; attempt++) {

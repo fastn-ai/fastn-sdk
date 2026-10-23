@@ -124,7 +124,7 @@ export class Customer {
    * Prefer setupLink(): fastn's hosted page collects the credentials, so they never pass through your backend.
    * Required fields are checked against the auth method's inputContract before anything is sent.
    */
-  async connectWithCredentials(input: Omit<T.StoreConnectionsInput, "endOrgId" | "orgId">, opts?: RequestOptions): Promise<T.StoreConnectionsOutput> {
+  async connectWithCredentials(input: Omit<T.StoreConnectionsInput, "endOrgId" | "orgId" | "authMethodId"> & { authMethodId?: string }, opts?: RequestOptions): Promise<T.StoreConnectionsOutput> {
     const fields = await this.authFields(input.connectorId, input.authMethodId, opts);
     const missing = fields.required.filter((f) => (input.credentials as Record<string, unknown> | undefined)?.[f] === undefined);
     if (missing.length) throw new TypeError(`connectWithCredentials(${input.connectorId}): missing credential field(s) ${missing.join(", ")}; the auth method "${fields.authMethodId}" takes ${fields.names.join(", ") || "(no fields listed)"}`);

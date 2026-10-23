@@ -91,4 +91,13 @@ describe("tools client", () => {
     expect(parseMessages('event: a\ndata: {"id":1}\n\nevent: b\ndata: {"id":2,\ndata: "x":1}\n')).toEqual([{ id: 1 }, { id: 2, x: 1 }]);
     expect(parseMessages("")).toEqual([]);
   });
+  it("an authRequired answer becomes a ToolError of kind auth with the connect URL", async () => {
+    const fetch = vi.fn(async () => new Response(JSON.stringify({ jsonrpc: "2.0", id: 1, result: { isError: true, content: [{ type: "text", text: JSON.stringify({ authRequired: true, connector: "HubSpot", authorizeUrl: "https://connect.example/u/connect?intent=abc", caller: "agent" }) }] } }), { status: 200, headers: { "content-type": "application/json" } }));
+    const t = new ToolsClient({ key: "k", url: "https://mcp.example/ws", fetch: fetch as any });
+    const e = await t.customer("acme-1").call("hubspot__listContacts", {}).catch((x) => x);
+    expect(e).toBeInstanceOf(ToolError);
+    expect(e.kind).toBe("auth"); expect(e.isConnectionRequired).toBe(true); expect(e.isUnknownTool).toBe(false);
+    expect(e.authorizeUrl).toBe("https://connect.example/u/connect?intent=abc"); expect(e.connector).toBe("HubSpot");
+    expect(e.message).toContain("not connected");
+  });
 });

@@ -65,8 +65,11 @@ export class ToolError extends Error {
   readonly name = "ToolError";
   constructor(
     message: string,
-    /** "http": non-2xx from the gateway; "rpc": JSON-RPC error; "tool": the tool ran and answered isError. */
-    readonly kind: "http" | "rpc" | "tool",
+    /**
+     * "http": non-2xx from the gateway; "rpc": JSON-RPC error; "tool": the tool ran and answered isError;
+     * "auth": the app behind the tool is not connected for this customer yet (see authorizeUrl).
+     */
+    readonly kind: "http" | "rpc" | "tool" | "auth",
     /** HTTP status of the call. */
     readonly status: number,
     /** JSON-RPC error code, or the gateway's error code when it sent one. */
@@ -79,6 +82,12 @@ export class ToolError extends Error {
     super(message);
   }
   get isAuth() { return this.status === 401 || this.status === 403; }
+  /** True when the customer has to connect the app first; send them to authorizeUrl. */
+  get isConnectionRequired() { return this.kind === "auth"; }
+  /** Where the customer connects the app (kind "auth" only). */
+  get authorizeUrl(): string | undefined { const b: any = this.body; return this.kind === "auth" && typeof b?.authorizeUrl === "string" ? b.authorizeUrl : undefined; }
+  /** The app that needs connecting (kind "auth" only). */
+  get connector(): string | undefined { const b: any = this.body; return this.kind === "auth" && typeof b?.connector === "string" ? b.connector : undefined; }
   get isUnknownTool() { return (this.kind === "rpc" && this.code === -32601) || ((this.kind === "rpc" || this.kind === "tool") && /unknown tool|is not a tool/i.test(this.message)); }
 }
 
@@ -138,7 +147,12 @@ export class ToolsClient {
     const content: any[] = Array.isArray(res?.content) ? res.content : [];
     const text = content.filter((c) => c && c.type === "text" && typeof c.text === "string").map((c) => c.text).join("");
     const data = res?.structuredContent !== undefined ? res.structuredContent : parseLoose(text);
-    if (res?.isError) throw new ToolError(summarize(data, text) || `${name} failed`, "tool", 200, undefined, name, data);
+    if (res?.isError) {
+      if (data && typeof data === "object" && (data as any).authRequired === true && typeof (data as any).authorizeUrl === "string") {
+        throw new ToolError(`${name}: ${(data as any).connector ?? "the app"} is not connected for this customer; connect it at ${(data as any).authorizeUrl}`, "auth", 200, "AUTH_REQUIRED", name, data);
+      }
+      throw new ToolError(summarize(data, text) || `${name} failed`, "tool", 200, undefined, name, data);
+    }
     return { data, text, content, structuredContent: res?.structuredContent, isError: false };
   }
 

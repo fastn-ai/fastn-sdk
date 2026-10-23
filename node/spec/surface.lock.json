@@ -92,7 +92,6 @@
     "id": "path:id",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
-    "idempotencyKey": "header:Idempotency-Key",
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id"
    }
@@ -106,7 +105,6 @@
     "id": "path:id",
     "provider": "query:provider",
     "connection_id": "query:connection_id",
-    "idempotencyKey": "header:Idempotency-Key",
     "fastnCorrelationId": "header:X-Fastn-Correlation-Id",
     "installationId": "header:x-installation-id",
     "record": "body:*"
@@ -1165,7 +1163,6 @@
    "path": "/v1/workflows/{id}/execute",
    "inputs": {
     "id": "path:id",
-    "idempotencyKey": "header:Idempotency-Key",
     "fastnEnv": "header:x-fastn-env",
     "input": "body:input"
    }

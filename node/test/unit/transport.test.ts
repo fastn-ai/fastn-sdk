@@ -121,12 +121,17 @@ describe("errors and retries", () => {
     expect(await client(m).orgs.listOrgs()).toEqual({ data: [] });
     expect(m.calls.length).toBe(2);
   });
-  it("POST without idempotency key is never retried; with key it is", async () => {
+  it("writes are retried only where the platform honours Idempotency-Key", async () => {
     const m1 = mockFetch([{ status: 503, body: { error: "down" } }]);
     await expect(client(m1).orgs.createTenant({ name: "x" })).rejects.toBeInstanceOf(FastnApiError);
     expect(m1.calls.length).toBe(1);
+    // createTenant does not honour the key: a key is sent, but a lost answer is never retried
+    const m3 = mockFetch([{ status: 503, body: { error: "down" } }]);
+    await expect(client(m3).orgs.createTenant({ name: "x" }, { idempotencyKey: "k" })).rejects.toBeInstanceOf(FastnApiError);
+    expect(m3.calls.length).toBe(1); expect(m3.calls[0].init.headers["idempotency-key"]).toBe("k");
+    expect(OPS.createTenant.idempotent).toBeFalsy(); expect(OPS.createUnifiedRecord.idempotent).toBe(true); expect(OPS.executeWorkflow.idempotent).toBe(true);
     const m2 = mockFetch([{ status: 429, body: { error: "slow" }, headers: { "retry-after": "0" } }, { status: 201, body: { ok: 1 } }]);
-    expect(await client(m2).orgs.createTenant({ name: "x" }, { idempotencyKey: "k" })).toEqual({ ok: 1 });
+    expect(await client(m2).unified.createUnifiedRecord({ category: "crm", entity: "contact", record: {} }, { idempotencyKey: "k" })).toEqual({ ok: 1 });
     expect(m2.calls.length).toBe(2);
   });
   it("retries stop at the limit and 4xx is never retried", async () => {

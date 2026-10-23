@@ -105,8 +105,10 @@ describes the answer, `Record<string, any>` otherwise.
 
 Non-2xx answers throw `FastnApiError` with `status`, `code` (e.g. `NOT_FOUND`, `VALIDATION_ERROR`), `message`,
 `details` and `requestId` (quote it when asking fastn for help). Network failures throw `FastnNetworkError`.
-`GET` calls and calls that carry an `idempotencyKey` are retried on 429/502/503/504 (default 2 retries, honouring
-`Retry-After`); other writes are never retried.
+`GET` calls are retried on 429/502/503/504 (default 2 retries, honouring `Retry-After`). A write is retried only when
+it carries an `idempotencyKey` **and** the platform de-duplicates that operation by it (unified record create, update
+and delete, workflow execute; each such method says so in its doc). Every other write is never retried, so a lost
+answer cannot make it act twice.
 
 ```ts
 try { await fastn.orgs.getTenant({ id }); }
@@ -147,8 +149,10 @@ r.data                                                     // the tool's answer,
 - `customer(ref)` sends `X-Org-Id: ref`. A delegated key requires it on every call (400 otherwise); set it once with
   `defaults: { customer: { ref } }` when one client serves one customer.
 - `userId` (sent as X-User-Id) is needed when the workspace runs calls as each person.
-- Failures throw `ToolError` with `kind` "http" (gateway), "rpc" (JSON-RPC, e.g. unknown tool) or "tool" (the tool ran
-  and answered an error), plus `status`, `code` and the gateway's message.
+- Failures throw `ToolError` with `kind` "http" (gateway), "rpc" (JSON-RPC, e.g. unknown tool), "tool" (the tool ran
+  and answered an error) or "auth" (the app is not connected for this customer yet), plus `status`, `code` and the
+  gateway's message. For "auth", `e.isConnectionRequired` is true and `e.authorizeUrl` is where to send the customer,
+  so an agent can ask the user to connect at runtime instead of failing.
 - In "one shared account" mode every call runs as that one account, whatever customer you name. Per-customer accounts
   need the "each customer org" mode in the workspace.
 - The gateway does not yet pass X-Org-Id on to the platform, so Fastn Workspace tools that act for a customer (unified
