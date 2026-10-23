@@ -13,7 +13,7 @@ export interface BodyDef {
   open?: boolean;
   contentType: string;
 }
-export interface OpDef { id: string; method: string; path: string; params: ParamDef[]; body?: BodyDef; internal?: boolean }
+export interface OpDef { id: string; method: string; path: string; params: ParamDef[]; body?: BodyDef }
 
 /** Per-call options. Everything here is optional and applies to any operation. */
 export interface RequestOptions {

@@ -24,7 +24,19 @@ function stripRef(p: Json): Json { const { $ref: _, ...rest } = p; return rest; 
 export function headerInputKey(header: string): string {
   return header.replace(/^x-/i, "").replace(/^(.)/, (c) => c.toLowerCase()).replace(/-([a-zA-Z0-9])/g, (_, c: string) => c.toUpperCase());
 }
-const TAG_ALIAS: Record<string, string> = { "Unified API": "unified", "API Keys": "apiKeys", "Platform Config": "platformConfig" };
+const TAG_ALIAS: Record<string, string> = { "Unified API": "unified", "API Keys": "apiKeys" };
+/**
+ * What the SDK leaves out. Partners cannot call these with a partner API key (403), so they only widen the surface
+ * the SDK has to keep compatible.
+ * - HIDDEN_TAGS: whole areas that are platform administration. Billing stays: its quota and plan reads are how a
+ *   partner finds out why a call answered 403 quota_exceeded.
+ * - Routes marked `x-mcp: false` in the spec (callbacks, credentials, staff-only admin) in any other area, except
+ *   the few in PUBLIC_INTERNAL that a partner backend does use.
+ */
+const HIDDEN_TAGS = new Set(["Admin", "Platform Config", "Platform", "Support"]);
+const PUBLIC_INTERNAL = new Set(["createEmbedToken", "getSetupLinkStatus"]);
+export const isHidden = (op: Json): boolean => HIDDEN_TAGS.has(op.tags?.[0]) || (op["x-mcp"] === false && !PUBLIC_INTERNAL.has(op.operationId));
+let hidden = 0;
 const camel = (s: string) => s.replace(/[^A-Za-z0-9]+(.)?/g, (_, c?: string) => (c ? c.toUpperCase() : "")).replace(/^(.)/, (c) => c.toLowerCase());
 const pascal = (s: string) => { const c = camel(s); return c[0]!.toUpperCase() + c.slice(1); };
 const ident = (s: string) => (/^[A-Za-z_$][\w$]*$/.test(s) ? s : JSON.stringify(s));
@@ -85,7 +97,7 @@ function objectTs(schema: Json, indent: string): string {
 // ── operations ──
 interface ParamDef { key: string; name: string; in: "path" | "query" | "header"; required?: boolean }
 interface BodyDef { kind: "fields" | "whole"; keys?: Record<string, string>; key?: string; required?: boolean; open?: boolean; contentType: string }
-interface Op { id: string; method: string; path: string; tag: string; summary?: string; description?: string; internal: boolean; params: ParamDef[]; body?: BodyDef; inputTs: string; outputTs: string; inputRequired: boolean; deprecated: boolean }
+interface Op { id: string; method: string; path: string; tag: string; summary?: string; description?: string; params: ParamDef[]; body?: BodyDef; inputTs: string; outputTs: string; inputRequired: boolean; deprecated: boolean }
 
 const ops: Op[] = [];
 for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
@@ -93,6 +105,7 @@ for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
   for (const m of METHODS) {
     const op = rawItem[m];
     if (!isObj(op) || typeof op.operationId !== "string") continue;
+    if (isHidden(op)) { hidden++; continue; }
     const own: Json[] = (op.parameters ?? []).map(resolveParam);
     const params = [...shared.filter((s) => !own.some((o) => o.name === s.name && o.in === s.in)), ...own].filter((x) => x.in !== "cookie");
     const props: string[] = [];
@@ -149,7 +162,7 @@ for (const [p, rawItem] of Object.entries<Json>(spec.paths)) {
     const responses: Json = isObj(op.responses) ? op.responses : {};
     const okCode = Object.keys(responses).filter((c) => /^2(\d\d|XX)$/i.test(c)).sort().find((c) => isObj(responses[c]?.content?.["application/json"]?.schema));
     const outputTs = okCode ? ts(responses[okCode].content["application/json"].schema) : "JsonObject";
-    ops.push({ id: op.operationId, method: m.toUpperCase(), path: p, tag: op.tags?.[0] ?? "Untagged", summary: op.summary, description: op.description, internal: op["x-mcp"] === false, params: defs, body, inputTs: props.length ? `{\n${props.join("\n")}\n}` : "Record<string, never>", outputTs, inputRequired, deprecated: op.deprecated === true });
+    ops.push({ id: op.operationId, method: m.toUpperCase(), path: p, tag: op.tags?.[0] ?? "Untagged", summary: op.summary, description: op.description, params: defs, body, inputTs: props.length ? `{\n${props.join("\n")}\n}` : "Record<string, never>", outputTs, inputRequired, deprecated: op.deprecated === true });
   }
 }
 const dupes = ops.map((o) => o.id).filter((id, i, a) => a.indexOf(id) !== i);
@@ -165,7 +178,6 @@ const opsOut = [header, `import type { OpDef } from "../transport.js";\n`, `expo
 for (const o of ops) {
   const def: Json = { id: o.id, method: o.method, path: o.path, params: o.params };
   if (o.body) def.body = o.body;
-  if (o.internal) def.internal = true;
   opsOut.push(`  ${o.id}: ${JSON.stringify(def)} as OpDef,`);
 }
 opsOut.push(`} as const satisfies Record<string, OpDef>;`, `export type OperationId = keyof typeof OPS;`, "");
@@ -193,7 +205,7 @@ for (const [tag, list] of [...byTag.entries()].sort((a, b) => a[0].localeCompare
   const tagDesc = (spec.tags ?? []).find((t: Json) => t.name === tag)?.description;
   apiOut.push(`${doc([`${tag}: ${tagDesc ?? ""}`])}export class ${cls} {`, `  constructor(private readonly _t: Transport) {}`);
   for (const o of list) {
-    const lines = [o.summary, o.description, `${o.method} ${o.path}`, o.internal ? "Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration." : undefined, o.deprecated ? "@deprecated" : undefined];
+    const lines = [o.summary, o.description, `${o.method} ${o.path}`, o.deprecated ? "@deprecated" : undefined];
     const inputType = `T.${pascal(o.id)}Input`;
     const arg = o.inputRequired ? `input: ${inputType}` : `input: ${inputType} = {} as ${inputType}`;
     apiOut.push(`${doc(lines, "  ")}  ${o.id}(${arg}, opts?: RequestOptions): Promise<T.${pascal(o.id)}Output> {`, `    return this._t.call(OPS.${o.id}, input as Record<string, unknown>, opts);`, `  }`);
@@ -207,4 +219,4 @@ for (const g of groups) apiOut.push(`    ${g.prop}: new ${g.cls}(t),`);
 apiOut.push(`  };`, `}`, "");
 fs.writeFileSync(path.join(OUT_DIR, "api.ts"), apiOut.join("\n"));
 
-console.log(`generated ${ops.length} operations in ${groups.length} areas from ${specFile} (${ops.filter((o) => o.internal).length} backend-only, ${ops.filter((o) => o.outputTs !== "JsonObject").length} with typed output)`);
+console.log(`generated ${ops.length} operations in ${groups.length} areas from ${specFile} (${hidden} platform-admin/backend-only routes left out, ${ops.filter((o) => o.outputTs !== "JsonObject").length} with typed output)`);

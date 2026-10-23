@@ -4,8 +4,9 @@ The fastn platform REST API for Node and TypeScript. Every endpoint, generated f
 small hand-written layer that makes the common partner flow easy.
 
 - Node 20+ (built-in fetch), no runtime dependencies, ESM and CommonJS, full types.
-- 638 operations in 23 areas (`orgs`, `embed`, `connections`, `unified`, `events`, `workflows`, ...), one method per
-  operation, named exactly like the operation in the API docs and the Fastn Workspace tools.
+- 461 operations in 19 areas (`orgs`, `embed`, `connections`, `unified`, `events`, `workflows`, ...), one method per
+  operation, named exactly like the operation in the API docs and the Fastn Workspace tools. Platform-administration
+  routes, which a partner key cannot call, are left out on purpose.
 - Customer context that hides fastn's internal org ids: you only ever use the id you gave fastn.
 - Event signature verification, retries, typed errors, pagination.
 
@@ -49,7 +50,7 @@ await contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@examp
 await fastn.unified.listUnifiedCalls({ correlation_id: "req-abc" });
 ```
 
-Every area is on the client directly, with typed inputs. Platform-admin areas (`admin`, `platformConfig`, `billing`, credential and callback routes) are generated for completeness and answer 403 with a partner key; the partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`.
+Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`. Platform-administration areas (admin, platform config, support) and backend-only routes (OAuth callbacks, credential reads, staff approvals) are not generated: a partner key cannot call them, and leaving them out keeps the surface the SDK promises to keep stable small. The generator's `HIDDEN_TAGS` / `PUBLIC_INTERNAL` lists in `scripts/generate.ts` are the single place that rule lives.
 
 ```ts
 await fastn.orgs.listOrgs({ type: "end_org" });
@@ -155,7 +156,7 @@ Works for `limit`/`offset` lists and cursor lists; stops on a short page, a miss
 
 ```bash
 npm run generate     # spec/openapi-*.json -> src/generated (ops, types, api)
-npm test             # unit tests with a mocked fetch (31)
+npm test             # unit tests with a mocked fetch (42)
 LIVE=1 FASTN_API_KEY=... npm run test:live   # live run on api.fastn.dev (creates and removes test data)
 npm run build        # dist/ (esm + cjs + d.ts)
 npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a platform checkout

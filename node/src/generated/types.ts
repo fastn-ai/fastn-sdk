@@ -752,29 +752,6 @@ export type LoadUnifiedConfigFieldOptionsInput = {
 export type LoadUnifiedConfigFieldOptionsOutput = JsonObject;
 
 /**
- * Input of previewUnifiedConfigFieldOptions (POST /v1/unified-config/options-preview).
- */
-export type PreviewUnifiedConfigFieldOptionsInput = {
-  code: string;
-  params?: Record<string, any>;
-  endOrgId?: string;
-  installationId?: string;
-  offset?: number;
-  /**
-   * Page size, at most the server's option ceiling (UNIFIED_CONFIG_MAX_OPTIONS). Defaults to the whole result set.
-   */
-  limit?: number;
-  /**
-   * Case-insensitive substring filter over label then value, applied server-side to what the snippet returned.
-   */
-  query?: string;
-};
-/**
- * Output of previewUnifiedConfigFieldOptions.
- */
-export type PreviewUnifiedConfigFieldOptionsOutput = JsonObject;
-
-/**
  * Input of updateInstallationUnifiedValues (PUT /v1/installations/{id}/unified-values).
  */
 export type UpdateInstallationUnifiedValuesInput = {
@@ -869,19 +846,6 @@ export type ListUnifiedCatalogCategoriesInput = Record<string, never>;
 export type ListUnifiedCatalogCategoriesOutput = JsonObject;
 
 /**
- * Input of createUnifiedCatalogCategory (POST /v1/unified-catalog/categories).
- */
-export type CreateUnifiedCatalogCategoryInput = {
-  slug: string;
-  name: string;
-  description?: string | null;
-};
-/**
- * Output of createUnifiedCatalogCategory.
- */
-export type CreateUnifiedCatalogCategoryOutput = JsonObject;
-
-/**
  * Input of listUnifiedCatalogEntities (GET /v1/unified-catalog/entities).
  */
 export type ListUnifiedCatalogEntitiesInput = {
@@ -896,31 +860,6 @@ export type ListUnifiedCatalogEntitiesInput = {
 export type ListUnifiedCatalogEntitiesOutput = JsonObject;
 
 /**
- * Input of createUnifiedCatalogEntity (POST /v1/unified-catalog/entities).
- */
-export type CreateUnifiedCatalogEntityInput = {
-  categoryId: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-  schema?: Record<string, {
-    type: "string" | "number" | "boolean" | "date" | "array" | "object";
-    label: string;
-    required?: boolean;
-    readOnly?: boolean;
-    description?: string;
-    enumValues?: {
-      value: string;
-      label: string;
-    }[];
-  }>;
-};
-/**
- * Output of createUnifiedCatalogEntity.
- */
-export type CreateUnifiedCatalogEntityOutput = JsonObject;
-
-/**
  * Input of getUnifiedCatalogEntity (GET /v1/unified-catalog/entities/{id}).
  */
 export type GetUnifiedCatalogEntityInput = {
@@ -930,374 +869,6 @@ export type GetUnifiedCatalogEntityInput = {
  * Output of getUnifiedCatalogEntity.
  */
 export type GetUnifiedCatalogEntityOutput = JsonObject;
-
-/**
- * Input of updateUnifiedCatalogEntity (PUT /v1/unified-catalog/entities/{id}).
- */
-export type UpdateUnifiedCatalogEntityInput = {
-  id: string;
-  name?: string;
-  description?: string | null;
-  schema?: Record<string, {
-    type: "string" | "number" | "boolean" | "date" | "array" | "object";
-    label: string;
-    required?: boolean;
-    readOnly?: boolean;
-    description?: string;
-    enumValues?: {
-      value: string;
-      label: string;
-    }[];
-  }>;
-};
-/**
- * Output of updateUnifiedCatalogEntity.
- */
-export type UpdateUnifiedCatalogEntityOutput = JsonObject;
-
-/**
- * Input of deleteUnifiedCatalogEntity (DELETE /v1/unified-catalog/entities/{id}).
- */
-export type DeleteUnifiedCatalogEntityInput = {
-  id: string;
-};
-/**
- * Output of deleteUnifiedCatalogEntity.
- */
-export type DeleteUnifiedCatalogEntityOutput = JsonObject;
-
-/**
- * Input of createUnifiedConnectorMapping (POST /v1/unified-catalog/entities/{id}/mappings).
- */
-export type CreateUnifiedConnectorMappingInput = {
-  id: string;
-  connectorSlug: string;
-  enabled?: boolean;
-  events?: Record<string, {
-    action: string;
-    idPath: string;
-  }>;
-  operations?: {
-    list?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    get?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    create?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    update?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    delete?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath?: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath?: string;
-    };
-    search?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-  };
-  fieldMappings?: ({
-    connectorField: string;
-    connectorLabel: string;
-    canonicalField: string;
-    canonicalLabel: string;
-    type?: "string" | "enum" | "number" | "boolean" | "date";
-    direction?: "both" | "toCanonical" | "fromCanonical";
-    transform?: "uppercase" | "lowercase" | "trim" | "toNumber" | "toBoolean" | "toDate";
-    default?: any;
-    valueMappings?: {
-      sourceValue: string;
-      targetValue: string;
-    }[];
-    unmappedDefault?: any;
-    condition?: {
-      type: "fallback";
-      fallbackSource: string;
-    } | {
-      type: "conditional";
-      when: {
-        field: string;
-        operator: string;
-        value: string;
-      };
-      thenSource: string;
-      elseSource: string;
-    } | {
-      type: "combine";
-      sources: string[];
-      separator: string;
-    } | {
-      type: "split";
-      separator: string;
-      index: number;
-    };
-  })[];
-  enrichActions?: ({
-    id: "enrich_source_fields" | "enrich_target_fields" | "enrich_source_records";
-    connector: string;
-    connectorId?: string;
-    action: string;
-    params?: Record<string, any>;
-    labelKey: string;
-    valueKey: string;
-  })[];
-  conditions?: {
-    field: string;
-    operator: string;
-    value: string;
-    label?: string;
-  }[];
-};
-/**
- * Output of createUnifiedConnectorMapping.
- */
-export type CreateUnifiedConnectorMappingOutput = JsonObject;
-
-/**
- * Input of updateUnifiedConnectorMapping (PUT /v1/unified-catalog/mappings/{id}).
- */
-export type UpdateUnifiedConnectorMappingInput = {
-  id: string;
-  enabled?: boolean;
-  events?: Record<string, {
-    action: string;
-    idPath: string;
-  }>;
-  operations?: {
-    list?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    get?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    create?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    update?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-    delete?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath?: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath?: string;
-    };
-    search?: {
-      actionSlug: string;
-      staticInput?: Record<string, any>;
-      paramMap?: {
-        cursor?: string;
-        pageSize?: string;
-        page?: string;
-        id?: string;
-      };
-      recordsPath: string;
-      cursorPath?: string;
-      totalPath?: string;
-      remoteIdPath: string;
-    };
-  };
-  fieldMappings?: ({
-    connectorField: string;
-    connectorLabel: string;
-    canonicalField: string;
-    canonicalLabel: string;
-    type?: "string" | "enum" | "number" | "boolean" | "date";
-    direction?: "both" | "toCanonical" | "fromCanonical";
-    transform?: "uppercase" | "lowercase" | "trim" | "toNumber" | "toBoolean" | "toDate";
-    default?: any;
-    valueMappings?: {
-      sourceValue: string;
-      targetValue: string;
-    }[];
-    unmappedDefault?: any;
-    condition?: {
-      type: "fallback";
-      fallbackSource: string;
-    } | {
-      type: "conditional";
-      when: {
-        field: string;
-        operator: string;
-        value: string;
-      };
-      thenSource: string;
-      elseSource: string;
-    } | {
-      type: "combine";
-      sources: string[];
-      separator: string;
-    } | {
-      type: "split";
-      separator: string;
-      index: number;
-    };
-  })[];
-  enrichActions?: ({
-    id: "enrich_source_fields" | "enrich_target_fields" | "enrich_source_records";
-    connector: string;
-    connectorId?: string;
-    action: string;
-    params?: Record<string, any>;
-    labelKey: string;
-    valueKey: string;
-  })[];
-  conditions?: {
-    field: string;
-    operator: string;
-    value: string;
-    label?: string;
-  }[];
-};
-/**
- * Output of updateUnifiedConnectorMapping.
- */
-export type UpdateUnifiedConnectorMappingOutput = JsonObject;
-
-/**
- * Input of deleteUnifiedConnectorMapping (DELETE /v1/unified-catalog/mappings/{id}).
- */
-export type DeleteUnifiedConnectorMappingInput = {
-  id: string;
-};
-/**
- * Output of deleteUnifiedConnectorMapping.
- */
-export type DeleteUnifiedConnectorMappingOutput = JsonObject;
-
-/**
- * Input of testUnifiedEntityOperation (POST /v1/unified-catalog/entities/{id}/test).
- */
-export type TestUnifiedEntityOperationInput = {
-  id: string;
-  op: "list" | "get" | "create";
-  provider: string;
-  connectionId?: string;
-  params?: Record<string, any>;
-};
-/**
- * Output of testUnifiedEntityOperation.
- */
-export type TestUnifiedEntityOperationOutput = JsonObject;
 
 /**
  * Input of listUnifiedCustom (GET /v1/unified-custom).
@@ -1773,56 +1344,6 @@ export type TestUnifiedCustomEntityInput = {
  * Output of testUnifiedCustomEntity.
  */
 export type TestUnifiedCustomEntityOutput = JsonObject;
-
-/**
- * Input of healthCheck (GET /health).
- */
-export type HealthCheckInput = Record<string, never>;
-/**
- * Output of healthCheck.
- */
-export type HealthCheckOutput = JsonObject;
-
-/**
- * Input of eventServiceHealth (GET /v1/events/health).
- */
-export type EventServiceHealthInput = Record<string, never>;
-/**
- * Output of eventServiceHealth.
- */
-export type EventServiceHealthOutput = JsonObject;
-
-/**
- * Input of readinessCheck (GET /ready).
- */
-export type ReadinessCheckInput = Record<string, never>;
-/**
- * Output of readinessCheck.
- */
-export type ReadinessCheckOutput = JsonObject;
-
-/**
- * Input of logout (POST /v1/auth/logout).
- */
-export type LogoutInput = Record<string, never>;
-/**
- * Output of logout.
- */
-export type LogoutOutput = JsonObject;
-
-/**
- * Input of backchannelLogout (POST /v1/auth/backchannel-logout).
- */
-export type BackchannelLogoutInput = {
-  /**
-   * The whole request body (application/x-www-form-urlencoded).
-   */
-  body: Record<string, any> | string;
-};
-/**
- * Output of backchannelLogout.
- */
-export type BackchannelLogoutOutput = JsonObject;
 
 /**
  * Input of getProfile (GET /v1/profile).
@@ -2825,21 +2346,6 @@ export type DeleteSaasConnectorInput = {
  * Output of deleteSaasConnector.
  */
 export type DeleteSaasConnectorOutput = JsonObject;
-
-/**
- * Input of getConnectionAccessToken (POST /v1/connections/{id}/access-token).
- */
-export type GetConnectionAccessTokenInput = {
-  id: string;
-};
-/**
- * Output of getConnectionAccessToken.
- */
-export type GetConnectionAccessTokenOutput = {
-    data?: {
-      access_token?: string;
-    };
-  };
 
 /**
  * Input of listAppEventTriggers (GET /v1/app-triggers).
@@ -4358,33 +3864,6 @@ export type ListConnectorExecutionsInput = {
 export type ListConnectorExecutionsOutput = JsonObject;
 
 /**
- * Input of recordConnectorExecution (POST /v1/executions).
- */
-export type RecordConnectorExecutionInput = {
-  actionId: string;
-  connectionId?: string | null;
-  connectionName?: string;
-  connectorId?: string;
-  input?: any;
-  output?: any;
-  status?: number;
-  error?: string;
-  durationMs?: number;
-  id?: string;
-  executedAt?: string;
-  orgId?: string;
-  endOrgId?: string | null;
-  userId?: string;
-  uclConnectionId?: string | null;
-  testRun?: boolean;
-  evidence?: Record<string, any>;
-};
-/**
- * Output of recordConnectorExecution.
- */
-export type RecordConnectorExecutionOutput = JsonObject;
-
-/**
  * Input of getConnectorExecution (GET /v1/executions/{id}).
  */
 export type GetConnectorExecutionInput = {
@@ -4834,80 +4313,6 @@ export type GetQuotaUsageInput = {
 export type GetQuotaUsageOutput = JsonObject;
 
 /**
- * Input of listTeams (GET /v1/teams).
- */
-export type ListTeamsInput = Record<string, never>;
-/**
- * Output of listTeams.
- */
-export type ListTeamsOutput = JsonObject;
-
-/**
- * Input of createTeam (POST /v1/teams).
- */
-export type CreateTeamInput = Record<string, never>;
-/**
- * Output of createTeam.
- */
-export type CreateTeamOutput = JsonObject;
-
-/**
- * Input of getTeam (GET /v1/teams/{id}).
- */
-export type GetTeamInput = {
-  id: string;
-};
-/**
- * Output of getTeam.
- */
-export type GetTeamOutput = JsonObject;
-
-/**
- * Input of updateTeam (PUT /v1/teams/{id}).
- */
-export type UpdateTeamInput = {
-  id: string;
-};
-/**
- * Output of updateTeam.
- */
-export type UpdateTeamOutput = JsonObject;
-
-/**
- * Input of deleteTeam (DELETE /v1/teams/{id}).
- */
-export type DeleteTeamInput = {
-  id: string;
-};
-/**
- * Output of deleteTeam.
- */
-export type DeleteTeamOutput = JsonObject;
-
-/**
- * Input of addTeamMember (POST /v1/teams/{id}/members).
- */
-export type AddTeamMemberInput = {
-  id: string;
-};
-/**
- * Output of addTeamMember.
- */
-export type AddTeamMemberOutput = JsonObject;
-
-/**
- * Input of removeTeamMember (DELETE /v1/teams/{id}/members/{userId}).
- */
-export type RemoveTeamMemberInput = {
-  id: string;
-  userId: string;
-};
-/**
- * Output of removeTeamMember.
- */
-export type RemoveTeamMemberOutput = JsonObject;
-
-/**
  * Input of listApiKeys (GET /v1/api-keys).
  */
 export type ListApiKeysInput = {
@@ -4939,69 +4344,6 @@ export type ListApiKeysOutput = {
       lastUsedAt?: string | null;
       createdAt?: string;
     })[];
-  };
-
-/**
- * Input of createApiKey (POST /v1/api-keys).
- */
-export type CreateApiKeyInput = {
-  name: string;
-  mode?: "test" | "live";
-  environment?: "production" | "staging" | "development";
-  workflowEnvId?: string;
-  permissions?: string[];
-  orgId?: string;
-  endOrgId?: string;
-  endOrgScope?: ({
-    id: string;
-    name: string;
-    externalRef?: string | null;
-  })[];
-  ipWhitelist?: string[];
-  rateLimit?: number;
-  expiresAt?: string;
-  allowedOrigins?: string[];
-  idvMode?: "off" | "optional" | "required";
-};
-/**
- * Output of createApiKey.
- */
-export type CreateApiKeyOutput = {
-    data?: {
-      id?: string;
-      name?: string;
-      /**
-       * Full API key value — only returned on creation
-       */
-      key?: string;
-      prefix?: string;
-      /**
-       * The workflow environment a live key is pinned to; null on a test key or a live key made before keys were pinned.
-       */
-      workflowEnvId?: string | null;
-      workflowEnvironment?: {
-        id?: string;
-        name?: string;
-        slug?: string;
-      } | null;
-      /**
-       * test: test environment only. pinned: workflowEnvironment plus test. all: a legacy live key, any environment.
-       */
-      envReach?: "test" | "pinned" | "all";
-      permissions?: string[];
-      /**
-       * The org the key was created in (effective target org).
-       */
-      orgId?: string;
-      expiresAt?: string | null;
-      createdAt?: string;
-      idvMode?: "off" | "optional" | "required";
-      /**
-       * Identity-verification HMAC secret — only returned when idvMode was enabled at creation (shown once).
-       */
-      idvSecret?: string;
-      idvSecretPrefix?: string;
-    };
   };
 
 /**
@@ -5046,144 +4388,6 @@ export type RevokeApiKeyInput = {
  * Output of revokeApiKey.
  */
 export type RevokeApiKeyOutput = JsonObject;
-
-/**
- * Input of setApiKeyIdentityVerification (PUT /v1/api-keys/{id}/identity-verification).
- */
-export type SetApiKeyIdentityVerificationInput = {
-  id: string;
-  mode: "off" | "optional" | "required";
-  rotate?: boolean;
-};
-/**
- * Output of setApiKeyIdentityVerification.
- */
-export type SetApiKeyIdentityVerificationOutput = {
-    data?: {
-      id?: string;
-      idvMode?: "off" | "optional" | "required";
-      idvConfigured?: boolean;
-      idvSecretPrefix?: string | null;
-      /**
-       * Only when minted — shown once.
-       */
-      idvSecret?: string;
-    };
-  };
-
-/**
- * Input of startImpersonation (POST /v1/impersonate).
- */
-export type StartImpersonationInput = {
-  orgId?: string | null;
-  userId?: string | null;
-  accountName?: string | null;
-  reason?: string | null;
-};
-/**
- * Output of startImpersonation.
- */
-export type StartImpersonationOutput = {
-    data?: {
-      impersonatedContext?: {
-        sub?: string;
-        email?: string;
-        role?: string;
-        orgId?: string;
-        /**
-         * Set only when the impersonated membership is on a workspace beneath the caller's account.
-         */
-        endOrgId?: string | null;
-        accountName?: string;
-        displayName?: string;
-      };
-      expiresAt?: string;
-    };
-  };
-
-/**
- * Input of stopImpersonation (POST /v1/impersonate/stop).
- */
-export type StopImpersonationInput = {
-  orgId?: string | null;
-  reason?: string | null;
-  userId?: string | null;
-};
-/**
- * Output of stopImpersonation.
- */
-export type StopImpersonationOutput = JsonObject;
-
-/**
- * Input of getBoundaries (GET /v1/boundaries).
- */
-export type GetBoundariesInput = Record<string, never>;
-/**
- * Output of getBoundaries.
- */
-export type GetBoundariesOutput = JsonObject;
-
-/**
- * Input of updateBoundaries (PUT /v1/boundaries).
- */
-export type UpdateBoundariesInput = {
-  /**
-   * The whole request body (application/json).
-   */
-  body: Record<string, any>;
-};
-/**
- * Output of updateBoundaries.
- */
-export type UpdateBoundariesOutput = JsonObject;
-
-/**
- * Input of listSiAssignments (GET /v1/si-assignments).
- */
-export type ListSiAssignmentsInput = {
-  tenantId?: string;
-  siUserId?: string;
-};
-/**
- * Output of listSiAssignments.
- */
-export type ListSiAssignmentsOutput = JsonObject;
-
-/**
- * Input of createSiAssignment (POST /v1/si-assignments).
- */
-export type CreateSiAssignmentInput = {
-  siUserId: string;
-  tenantId: string;
-  expiresAt: string;
-};
-/**
- * Output of createSiAssignment.
- */
-export type CreateSiAssignmentOutput = JsonObject;
-
-/**
- * Input of extendSiAssignment (PUT /v1/si-assignments/{id}/extend).
- */
-export type ExtendSiAssignmentInput = {
-  id: string;
-  expiresAt: string;
-};
-/**
- * Output of extendSiAssignment.
- */
-export type ExtendSiAssignmentOutput = JsonObject;
-
-/**
- * Input of deleteSiAssignment (DELETE /v1/si-assignments/{id}).
- */
-export type DeleteSiAssignmentInput = {
-  id: string;
-};
-/**
- * Output of deleteSiAssignment.
- */
-export type DeleteSiAssignmentOutput = JsonObject;
 
 /**
  * Input of getThrottle (GET /v1/throttle).
@@ -5277,157 +4481,6 @@ export type CreateEmbedTokenOutput = {
       expiresIn?: number;
     };
   };
-
-/**
- * Input of validateEmbedToken (POST /v1/embed/token/validate).
- */
-export type ValidateEmbedTokenInput = {
-  token: string;
-  /**
-   * Optional. The customer the caller believes this session is for (the <fastn-embed org-id/tenant-id> attribute). Either the customer's fastn id or the external_ref it was registered under. If it names a different customer than the token carries, the request is refused rather than silently answered for the token's customer.
-   */
-  endOrgId?: string;
-};
-/**
- * Output of validateEmbedToken.
- */
-export type ValidateEmbedTokenOutput = {
-    data?: {
-      valid?: boolean;
-      endOrgId?: string;
-      orgId?: string;
-      role?: string;
-      expiresAt?: string;
-      /**
-       * Remaining ACCESS in ms, never negative. 0 when the token resolved on the refresh grace alone.
-       */
-      remainingMs?: number;
-      /**
-       * True when the token is past expiry and resolved only via the refresh grace: it carries identity but authenticates nothing, so the caller must refresh before using it.
-       */
-      expired?: boolean;
-      /**
-       * False for scoped-link tokens, whose expiry is hard.
-       */
-      refreshable?: boolean;
-      /**
-       * Absolute end of the session; refresh cannot extend past this.
-       */
-      sessionExpiresAt?: string;
-    };
-  };
-
-/**
- * Input of refreshEmbedToken (POST /v1/embed/token/refresh).
- */
-export type RefreshEmbedTokenInput = {
-  token: string;
-};
-/**
- * Output of refreshEmbedToken.
- */
-export type RefreshEmbedTokenOutput = {
-    data?: {
-      token?: string;
-      endOrgId?: string;
-      role?: string;
-      expiresAt?: string;
-      expiresIn?: number;
-    };
-  };
-
-/**
- * Input of redeemEmbedShareLink (POST /v1/embed/share-links/redeem).
- */
-export type RedeemEmbedShareLinkInput = {
-  shareId: string;
-  mint?: boolean;
-};
-/**
- * Output of redeemEmbedShareLink.
- */
-export type RedeemEmbedShareLinkOutput = {
-    data?: {
-      orgId?: string;
-      endOrgId?: string;
-      label?: string;
-      expiresAt?: string | null;
-      /**
-       * mint:true only
-       */
-      token?: string;
-      /**
-       * mint:true only
-       */
-      tokenExpiresAt?: string;
-    };
-  };
-
-/**
- * Input of createMcpConnectCode (POST /v1/embed/mcp-connect-codes).
- */
-export type CreateMcpConnectCodeInput = {
-  endOrgId?: string;
-};
-/**
- * Output of createMcpConnectCode.
- */
-export type CreateMcpConnectCodeOutput = {
-    data?: {
-      url?: string;
-      expiresAt?: string;
-    };
-  };
-
-/**
- * Input of redeemMcpConnectCode (POST /v1/embed/mcp-connect-codes/redeem).
- */
-export type RedeemMcpConnectCodeInput = {
-  code: string;
-};
-/**
- * Output of redeemMcpConnectCode.
- */
-export type RedeemMcpConnectCodeOutput = {
-    data?: {
-      shareId?: string;
-      orgId?: string;
-      endOrgId?: string;
-      label?: string;
-    };
-  };
-
-/**
- * Input of reportEmbedEvents (POST /v1/embed/events).
- */
-export type ReportEmbedEventsInput = {
-  events: {
-    name: string;
-    props: Record<string, any>;
-  }[];
-};
-/**
- * Output of reportEmbedEvents.
- */
-export type ReportEmbedEventsOutput = {
-    data?: {
-      accepted?: number;
-    };
-  };
-
-/**
- * Input of reportCspViolation (POST /v1/csp-report).
- */
-export type ReportCspViolationInput = {
-  /**
-   * The whole request body (application/csp-report).
-   */
-  body?: Record<string, any> | string;
-};
-/**
- * Output of reportCspViolation.
- */
-export type ReportCspViolationOutput = JsonObject;
 
 /**
  * Input of createSetupLink (POST /v1/setup-links).
@@ -7007,186 +6060,6 @@ export type GetMyPlanChangeRequestOutput = {
   };
 
 /**
- * Input of listPlatformProviders (GET /v1/platform-providers).
- */
-export type ListPlatformProvidersInput = {
-  platformSlug?: string;
-};
-/**
- * Output of listPlatformProviders.
- */
-export type ListPlatformProvidersOutput = {
-    data?: {
-      id?: string;
-      slug?: string;
-      name?: string;
-      logoUrl?: string;
-      status?: string;
-    }[];
-  };
-
-/**
- * Input of createPlatformProvider (POST /v1/platform-providers).
- */
-export type CreatePlatformProviderInput = {
-  platformSlug: string;
-  displayName: string;
-  clientId: string;
-  clientSecret: string;
-  authorizationUrl: string;
-  tokenUrl: string;
-  scopes?: string[];
-  params?: Record<string, any>;
-  authorization?: Record<string, any>;
-};
-/**
- * Output of createPlatformProvider.
- */
-export type CreatePlatformProviderOutput = JsonObject;
-
-/**
- * Input of getApiTrafficMetrics (GET /v1/platform-metrics/api-traffic).
- */
-export type GetApiTrafficMetricsInput = {
-  days?: number;
-};
-/**
- * Output of getApiTrafficMetrics.
- */
-export type GetApiTrafficMetricsOutput = {
-    data?: {
-      rangeDays?: number;
-      summary?: {
-        totalRequests?: number;
-        activeUsers?: number;
-        activeOrgs?: number;
-        avgRequestsPerUser?: number;
-      };
-      series?: {
-        day?: string;
-        requests?: number;
-        users?: number;
-      }[];
-      topEndpoints?: {
-        /**
-         * Endpoint category, not a raw path
-         */
-        endpoint?: string;
-        count?: number;
-      }[];
-    };
-  };
-
-/**
- * Input of getDatabaseMetrics (GET /v1/platform-metrics/database).
- */
-export type GetDatabaseMetricsInput = Record<string, never>;
-/**
- * Output of getDatabaseMetrics.
- */
-export type GetDatabaseMetricsOutput = {
-    data?: {
-      sizeBytes?: number;
-      cacheHitRatio?: number;
-      commitRatio?: number;
-      deadlocks?: number;
-      tempFiles?: number;
-      tempBytes?: number;
-      connections?: {
-        total?: number;
-        max?: number;
-        active?: number;
-        idle?: number;
-        idleInTransaction?: number;
-        waitingOnLocks?: number;
-      };
-      topTables?: {
-        table?: string;
-        totalBytes?: number;
-        liveRows?: number;
-        deadRows?: number;
-        seqScans?: number;
-        idxScans?: number;
-      }[];
-      statements?: {
-        available?: boolean;
-        slowest?: {
-          query?: string;
-          calls?: number;
-          meanMs?: number;
-          totalMs?: number;
-          rows?: number;
-        }[];
-        heaviest?: {
-          query?: string;
-          calls?: number;
-          meanMs?: number;
-          totalMs?: number;
-          rows?: number;
-        }[];
-      };
-    };
-  };
-
-/**
- * Input of listPlatformConfig (GET /v1/platform/config).
- */
-export type ListPlatformConfigInput = Record<string, never>;
-/**
- * Output of listPlatformConfig.
- */
-export type ListPlatformConfigOutput = JsonObject;
-
-/**
- * Input of setPlatformConfig (PUT /v1/platform/config).
- */
-export type SetPlatformConfigInput = {
-  key: string;
-  value: string;
-};
-/**
- * Output of setPlatformConfig.
- */
-export type SetPlatformConfigOutput = JsonObject;
-
-/**
- * Input of deprecatePlatformConfig (POST /v1/platform/config/deprecate).
- */
-export type DeprecatePlatformConfigInput = {
-  key: string;
-};
-/**
- * Output of deprecatePlatformConfig.
- */
-export type DeprecatePlatformConfigOutput = JsonObject;
-
-/**
- * Input of togglePlatformConfigSecret (PATCH /v1/platform/config/secret).
- */
-export type TogglePlatformConfigSecretInput = {
-  key: string;
-  isSecret: boolean;
-};
-/**
- * Output of togglePlatformConfigSecret.
- */
-export type TogglePlatformConfigSecretOutput = JsonObject;
-
-/**
- * Input of getPlatformConfigHistory (GET /v1/platform/config/history).
- */
-export type GetPlatformConfigHistoryInput = {
-  /**
-   * Only this key's history.
-   */
-  key?: string;
-};
-/**
- * Output of getPlatformConfigHistory.
- */
-export type GetPlatformConfigHistoryOutput = JsonObject;
-
-/**
  * Input of refreshConnection (POST /v1/connections/{id}/refresh).
  */
 export type RefreshConnectionInput = {
@@ -7196,108 +6069,6 @@ export type RefreshConnectionInput = {
  * Output of refreshConnection.
  */
 export type RefreshConnectionOutput = JsonObject;
-
-/**
- * Input of refreshDueOAuthTokens (POST /v1/platform/oauth/refresh-due).
- */
-export type RefreshDueOAuthTokensInput = {
-  withinSec?: number;
-};
-/**
- * Output of refreshDueOAuthTokens.
- */
-export type RefreshDueOAuthTokensOutput = JsonObject;
-
-/**
- * Input of listPlatformAgents (GET /v1/platform/agents).
- */
-export type ListPlatformAgentsInput = Record<string, never>;
-/**
- * Output of listPlatformAgents.
- */
-export type ListPlatformAgentsOutput = JsonObject;
-
-/**
- * Input of updatePlatformAgent (PATCH /v1/platform/agents/{agentId}).
- */
-export type UpdatePlatformAgentInput = {
-  agentId: string;
-  overrideModel?: string | null;
-  overrideTemperature?: number | null;
-  overrideMaxTokens?: number | null;
-  overrideSystemPrompt?: string | null;
-  overrideUserPromptTemplate?: string | null;
-  overrideTools?: string[] | null;
-  isActive?: boolean;
-};
-/**
- * Output of updatePlatformAgent.
- */
-export type UpdatePlatformAgentOutput = JsonObject;
-
-/**
- * Input of createBugReport (POST /v1/bug-reports).
- */
-export type CreateBugReportInput = {
-  title: string;
-  description: string;
-  severity?: "low" | "medium" | "high";
-  assigneeId?: string;
-  browserContext: {
-    url: string;
-    userAgent: string;
-    viewport: {
-      width: number;
-      height: number;
-    };
-    buildSha?: string;
-  };
-  networkLog?: {
-    method: string;
-    url: string;
-    status: number;
-    durationMs: number;
-    requestId?: string;
-    timestamp: string;
-    requestBody?: string;
-    responseBody?: string;
-    requestHeaders?: Record<string, string>;
-    responseHeaders?: Record<string, string>;
-  }[];
-  consoleLog?: ({
-    level: "error" | "warn";
-    message: string;
-    timestamp: string;
-  })[];
-  screenshotBase64?: string;
-};
-/**
- * Output of createBugReport.
- */
-export type CreateBugReportOutput = {
-    data?: {
-      identifier?: string;
-      url?: string;
-    };
-  };
-
-/**
- * Input of getOpenApiSpec (GET /v1/openapi.json).
- */
-export type GetOpenApiSpecInput = Record<string, never>;
-/**
- * Output of getOpenApiSpec.
- */
-export type GetOpenApiSpecOutput = JsonObject;
-
-/**
- * Input of getApiDocs (GET /v1/docs).
- */
-export type GetApiDocsInput = Record<string, never>;
-/**
- * Output of getApiDocs.
- */
-export type GetApiDocsOutput = JsonObject;
 
 /**
  * Input of getConnectorVersion (GET /v1/connectors/{id}/versions/{versionId}).
@@ -7310,21 +6081,6 @@ export type GetConnectorVersionInput = {
  * Output of getConnectorVersion.
  */
 export type GetConnectorVersionOutput = JsonObject;
-
-/**
- * Input of getConnectorActivity (GET /v1/connectors/{id}/activity).
- */
-export type GetConnectorActivityInput = {
-  id: string;
-  /**
-   * Only this action's events.
-   */
-  actionId?: string;
-};
-/**
- * Output of getConnectorActivity.
- */
-export type GetConnectorActivityOutput = JsonObject;
 
 /**
  * Input of listConnectorVersionPins (GET /v1/connector-version-pins).
@@ -7418,15 +6174,6 @@ export type ListConnectorHealthInput = {
 export type ListConnectorHealthOutput = JsonObject;
 
 /**
- * Input of ingestConnectorChange (POST /v1/connector-changes/ingest).
- */
-export type IngestConnectorChangeInput = Record<string, never>;
-/**
- * Output of ingestConnectorChange.
- */
-export type IngestConnectorChangeOutput = JsonObject;
-
-/**
  * Input of listConnectorChanges (GET /v1/connector-changes).
  */
 export type ListConnectorChangesInput = {
@@ -7473,26 +6220,6 @@ export type ProposeConnectorChangeFixInput = {
  * Output of proposeConnectorChangeFix.
  */
 export type ProposeConnectorChangeFixOutput = JsonObject;
-
-/**
- * Input of listConnectorWatchTargets (GET /v1/connector-update-watch-targets).
- */
-export type ListConnectorWatchTargetsInput = {
-  refresh?: "1";
-};
-/**
- * Output of listConnectorWatchTargets.
- */
-export type ListConnectorWatchTargetsOutput = JsonObject;
-
-/**
- * Input of pushConnectorWatchTargets (POST /v1/connector-update-watch-targets/push).
- */
-export type PushConnectorWatchTargetsInput = Record<string, never>;
-/**
- * Output of pushConnectorWatchTargets.
- */
-export type PushConnectorWatchTargetsOutput = JsonObject;
 
 /**
  * Input of listConnectorUpdateProposals (GET /v1/connector-update-proposals).
@@ -7560,17 +6287,6 @@ export type RunConnectorUpdateAgentInput = {
 export type RunConnectorUpdateAgentOutput = JsonObject;
 
 /**
- * Input of fanOutConnectorUpdateProposal (POST /v1/connector-update-proposals/{id}/fan-out).
- */
-export type FanOutConnectorUpdateProposalInput = {
-  id: string;
-};
-/**
- * Output of fanOutConnectorUpdateProposal.
- */
-export type FanOutConnectorUpdateProposalOutput = JsonObject;
-
-/**
  * Input of scanConnectorStaleness (POST /v1/connector-staleness/scan).
  */
 export type ScanConnectorStalenessInput = Record<string, never>;
@@ -7623,17 +6339,6 @@ export type GetPlatformProviderInput = {
  * Output of getPlatformProvider.
  */
 export type GetPlatformProviderOutput = JsonObject;
-
-/**
- * Input of deletePlatformProvider (DELETE /v1/platform-providers/{id}).
- */
-export type DeletePlatformProviderInput = {
-  id: string;
-};
-/**
- * Output of deletePlatformProvider.
- */
-export type DeletePlatformProviderOutput = JsonObject;
 
 /**
  * Input of listAuthProviders (GET /v1/auth-providers).
@@ -7797,17 +6502,6 @@ export type ListAuthProviderScopesInput = {
  * Output of listAuthProviderScopes.
  */
 export type ListAuthProviderScopesOutput = JsonObject;
-
-/**
- * Input of getAuthProviderCredentials (GET /v1/auth-providers/{id}/credentials).
- */
-export type GetAuthProviderCredentialsInput = {
-  id: string;
-};
-/**
- * Output of getAuthProviderCredentials.
- */
-export type GetAuthProviderCredentialsOutput = JsonObject;
 
 /**
  * Input of listAuthMethods (GET /v1/auth-methods).
@@ -8243,119 +6937,6 @@ export type CreateActionInput = {
 export type CreateActionOutput = JsonObject;
 
 /**
- * Input of createConnectorAction (POST /v1/connectors/{id}/actions).
- */
-export type CreateConnectorActionInput = {
-  /**
-   * Connector id.
-   */
-  id: string;
-  connectorId: string;
-  name: string;
-  slug: string;
-  description?: string;
-  type: "HTTP" | "GRPC" | "FTP" | "LAMBDA" | "DB" | "REDIS";
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS" | "PROPFIND" | "MKCOL" | "MOVE" | "COPY" | "LOCK" | "UNLOCK";
-  path?: string;
-  headers?: Record<string, string>;
-  queryParams?: Record<string, string>;
-  bodyTemplate?: string | null;
-  httpConfig?: {
-    url: string;
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "PROPFIND" | "MKCOL" | "MOVE" | "COPY" | "LOCK" | "UNLOCK";
-    path?: string;
-    headers?: Record<string, string>;
-    queryParams?: Record<string, string>;
-    body?: any;
-    bodyType?: "none" | "json" | "text" | "raw" | "form-data" | "form-urlencoded" | "binary" | "multipart-related" | "graphql";
-    bodyTemplate?: any;
-    [key: string]: any;
-  };
-  grpcConfig?: {
-    target: string;
-    serviceName: string;
-    methodName: string;
-    jsonRequest?: Record<string, any>;
-    metadata?: {
-      key: string;
-      value: string;
-    }[];
-    authConfig?: Record<string, any>;
-    timeout?: number;
-  };
-  ftpConfig?: {
-    operation: "list" | "download" | "upload" | "delete" | "rename" | "mkdir" | "exists";
-    remotePath: string;
-    transferMode?: "binary" | "ascii";
-    renameTo?: string;
-  };
-  redisConfig?: {
-    operation: "get" | "set" | "del" | "exists" | "expire" | "ttl" | "keys" | "incr" | "decr" | "mget" | "mset" | "hget" | "hset" | "hgetall" | "hdel" | "lpush" | "rpush" | "lpop" | "rpop" | "lrange" | "llen" | "publish" | "incrby" | "setnx" | "hmget" | "hmset" | "hexists" | "hincrby" | "hlen" | "ltrim" | "lrem" | "lindex" | "sadd" | "srem" | "smembers" | "sismember" | "scard" | "zadd" | "zrem" | "zrange" | "zrangebyscore" | "zscore" | "zcard" | "persist" | "type" | "ping";
-    key?: string;
-    field?: string;
-    value?: string;
-    ttl?: number;
-    start?: number;
-    stop?: number;
-    pattern?: string;
-    channel?: string;
-    values?: string[];
-    member?: string;
-    members?: string[];
-    score?: number;
-    min?: string;
-    max?: string;
-    count?: number;
-    amount?: number;
-    fields?: string[];
-  };
-  lambdaConfig?: {
-    functionArn: string;
-    region?: string;
-    payload?: Record<string, any>;
-    invocationType?: "RequestResponse" | "Event" | "DryRun";
-  };
-  dbConfig?: {
-    operation: "query";
-    dbType: "postgres" | "redshift" | "mysql" | "mssql" | "mongodb";
-    query?: string;
-  };
-  authConfig?: Record<string, any>;
-  inputContract?: {
-    type: "object";
-    properties: Record<string, any>;
-    required?: string[];
-  };
-  outputContract?: {
-    type: "object";
-    properties: Record<string, any>;
-    required?: string[];
-  };
-  language?: "PYTHON" | "JS";
-  code?: string;
-  rateLimit?: {
-    enabled: boolean;
-    limits: ({
-      requests: number;
-      strategy: "FIXED_WINDOW" | "SLIDING_WINDOW" | "CONCURRENCY";
-      window: number;
-      burstLimit?: number;
-    })[];
-  };
-  stage?: "test" | "live";
-  folderId?: string | null;
-  externalVersion?: string;
-  apiVersion?: string;
-  isDefaultExternalVersion?: boolean;
-  versionMajor?: number;
-  submissionNote?: string;
-};
-/**
- * Output of createConnectorAction.
- */
-export type CreateConnectorActionOutput = JsonObject;
-
-/**
  * Input of getAction (GET /v1/actions/{id}).
  */
 export type GetActionInput = {
@@ -8620,46 +7201,6 @@ export type CreateActionReviewCommentInput = {
 export type CreateActionReviewCommentOutput = JsonObject;
 
 /**
- * Input of listActionReviews (GET /v1/admin/action-reviews).
- */
-export type ListActionReviewsInput = {
-  /**
-   * Default pending_review.
-   */
-  status?: string;
-  limit?: number;
-  offset?: number;
-};
-/**
- * Output of listActionReviews.
- */
-export type ListActionReviewsOutput = JsonObject;
-
-/**
- * Input of approveActionReview (POST /v1/admin/action-reviews/{id}/approve).
- */
-export type ApproveActionReviewInput = {
-  id: string;
-  reviewerNote?: string;
-};
-/**
- * Output of approveActionReview.
- */
-export type ApproveActionReviewOutput = JsonObject;
-
-/**
- * Input of rejectActionReview (POST /v1/admin/action-reviews/{id}/reject).
- */
-export type RejectActionReviewInput = {
-  id: string;
-  reviewerNote?: string;
-};
-/**
- * Output of rejectActionReview.
- */
-export type RejectActionReviewOutput = JsonObject;
-
-/**
  * Input of setActionTestResult (PATCH /v1/actions/{id}/test-result).
  */
 export type SetActionTestResultInput = {
@@ -8745,20 +7286,6 @@ export type InitiateOauthConnectionInput = {
  * Output of initiateOauthConnection.
  */
 export type InitiateOauthConnectionOutput = JsonObject;
-
-/**
- * Input of oauthCallback (GET /v1/oauth/callback).
- */
-export type OauthCallbackInput = {
-  code?: string;
-  state?: string;
-  error?: string;
-  error_description?: string;
-};
-/**
- * Output of oauthCallback.
- */
-export type OauthCallbackOutput = JsonObject;
 
 /**
  * Input of syncMcpTools (POST /v1/connectors/{id}/sync-mcp-tools).
@@ -8985,69 +7512,6 @@ export type ExecuteWebhookSubscriptionInput = {
 export type ExecuteWebhookSubscriptionOutput = JsonObject;
 
 /**
- * Input of getUclWebhookConfigs (GET /v1/connectors/{id}/webhook-configs).
- */
-export type GetUclWebhookConfigsInput = {
-  id: string;
-  orgId: string;
-};
-/**
- * Output of getUclWebhookConfigs.
- */
-export type GetUclWebhookConfigsOutput = JsonObject;
-
-/**
- * Input of importUclWebhookConfigs (PUT /v1/connectors/{id}/webhook-configs).
- */
-export type ImportUclWebhookConfigsInput = {
-  id: string;
-  orgId: string;
-  userId?: string;
-  connectorSlug: string;
-  webhookConfigs: Record<string, any>[];
-  appRegistrations?: Record<string, any>[];
-};
-/**
- * Output of importUclWebhookConfigs.
- */
-export type ImportUclWebhookConfigsOutput = JsonObject;
-
-/**
- * Input of deleteUclWebhookConfigs (DELETE /v1/connectors/{id}/webhook-configs).
- */
-export type DeleteUclWebhookConfigsInput = {
-  id: string;
-};
-/**
- * Output of deleteUclWebhookConfigs.
- */
-export type DeleteUclWebhookConfigsOutput = JsonObject;
-
-/**
- * Input of exportConnector (GET /v1/connectors/{id}/export).
- */
-export type ExportConnectorInput = {
-  id: string;
-  includeSecrets?: boolean;
-};
-/**
- * Output of exportConnector.
- */
-export type ExportConnectorOutput = JsonObject;
-
-/**
- * Input of exportConnectors (POST /v1/connectors/export).
- */
-export type ExportConnectorsInput = {
-  ids: string[];
-  includeSecrets?: boolean;
-};
-/**
- * Output of exportConnectors.
- */
-export type ExportConnectorsOutput = JsonObject;
-
-/**
  * Input of importConnectors (POST /v1/connectors/import).
  */
 export type ImportConnectorsInput = {
@@ -9067,34 +7531,6 @@ export type ImportConnectorsInput = {
  * Output of importConnectors.
  */
 export type ImportConnectorsOutput = JsonObject;
-
-/**
- * Input of decryptConnection (GET /v1/connections/{id}/decrypt).
- */
-export type DecryptConnectionInput = {
-  /**
-   * Connection id (a ucl: id for a UCL-held connection).
-   */
-  id: string;
-};
-/**
- * Output of decryptConnection.
- */
-export type DecryptConnectionOutput = JsonObject;
-
-/**
- * Input of getConnectionCredentials (GET /v1/connections/{id}/credentials).
- */
-export type GetConnectionCredentialsInput = {
-  /**
-   * Connection id (a ucl: id for a UCL-held connection).
-   */
-  id: string;
-};
-/**
- * Output of getConnectionCredentials.
- */
-export type GetConnectionCredentialsOutput = JsonObject;
 
 /**
  * Input of setDefaultConnection (PATCH /v1/connections/{id}/default).
@@ -9144,17 +7580,6 @@ export type ExportActionsInput = {
  * Output of exportActions.
  */
 export type ExportActionsOutput = JsonObject;
-
-/**
- * Input of exportConnectorActions (GET /v1/connectors/{id}/actions/export).
- */
-export type ExportConnectorActionsInput = {
-  id: string;
-};
-/**
- * Output of exportConnectorActions.
- */
-export type ExportConnectorActionsOutput = JsonObject;
 
 /**
  * Input of exportAction (GET /v1/actions/{id}/export).
@@ -9207,80 +7632,6 @@ export type ImportActionsInput = {
  * Output of importActions.
  */
 export type ImportActionsOutput = JsonObject;
-
-/**
- * Input of importConnectorActions (POST /v1/connectors/{id}/actions/import).
- */
-export type ImportConnectorActionsInput = {
-  id: string;
-  /**
-   * Public URL of the spec to fetch (https:// is assumed when no scheme is given).
-   */
-  url?: string;
-  /**
-   * The spec as a string (JSON or YAML).
-   */
-  content?: string;
-  /**
-   * Format hint; detected when omitted.
-   */
-  format?: "openapi" | "postman" | "hub" | "fastn";
-  /**
-   * Overrides the spec's server URL.
-   */
-  baseUrl?: string;
-  /**
-   * What to do when an action slug already exists.
-   */
-  conflictResolution?: "skip" | "overwrite" | "rename";
-  /**
-   * Parse and return the actions without creating them.
-   */
-  preview?: boolean;
-  /**
-   * Import only these slugs.
-   */
-  selectedSlugs?: string[];
-  /** The spec allows fields it does not list; they are sent as given. */
-  [key: string]: any;
-};
-/**
- * Output of importConnectorActions.
- */
-export type ImportConnectorActionsOutput = JsonObject;
-
-/**
- * Input of importConnectorHubActions (POST /v1/connectors/{id}/actions/import-hub).
- */
-export type ImportConnectorHubActionsInput = {
-  id: string;
-  dataSources: ({
-    id: string;
-    name: string;
-    description?: string | null;
-    configurationLayer?: {
-      source?: string;
-      mapper: string;
-    };
-    contract?: {
-      action?: {
-        request?: {
-          schema: string;
-          uiSchema?: string;
-        };
-        success?: {
-          schema: string;
-          uiSchema?: string;
-        };
-      };
-    };
-  })[];
-  conflictResolution?: "skip" | "overwrite" | "rename";
-};
-/**
- * Output of importConnectorHubActions.
- */
-export type ImportConnectorHubActionsOutput = JsonObject;
 
 /**
  * Input of mockAction (POST /v1/actions/{id}/mock).
@@ -9372,32 +7723,6 @@ export type RevertConnectorInput = {
 export type RevertConnectorOutput = JsonObject;
 
 /**
- * Input of listEmbedShareLinks (GET /v1/embed/share-links).
- */
-export type ListEmbedShareLinksInput = {
-  endOrgId?: string;
-  kind?: "share" | "mcp";
-};
-/**
- * Output of listEmbedShareLinks.
- */
-export type ListEmbedShareLinksOutput = JsonObject;
-
-/**
- * Input of createEmbedShareLink (POST /v1/embed/share-links).
- */
-export type CreateEmbedShareLinkInput = {
-  endOrgId: string;
-  label?: string;
-  expiresInDays?: number;
-  metadata?: Record<string, any>;
-};
-/**
- * Output of createEmbedShareLink.
- */
-export type CreateEmbedShareLinkOutput = JsonObject;
-
-/**
  * Input of revokeEmbedShareLink (DELETE /v1/embed/share-links/{id}).
  */
 export type RevokeEmbedShareLinkInput = {
@@ -9407,29 +7732,6 @@ export type RevokeEmbedShareLinkInput = {
  * Output of revokeEmbedShareLink.
  */
 export type RevokeEmbedShareLinkOutput = JsonObject;
-
-/**
- * Input of getEmbedIframe (GET /v1/embed/iframe).
- */
-export type GetEmbedIframeInput = {
-  share?: string;
-  token?: string;
-};
-/**
- * Output of getEmbedIframe.
- */
-export type GetEmbedIframeOutput = JsonObject;
-
-/**
- * Input of getEmbedAsset (GET /v1/embed/assets/{file}).
- */
-export type GetEmbedAssetInput = {
-  file: string;
-};
-/**
- * Output of getEmbedAsset.
- */
-export type GetEmbedAssetOutput = JsonObject;
 
 /**
  * Input of listConfigs (GET /v1/configs).
@@ -9679,22 +7981,6 @@ export type GetConfigDraftInput = {
 export type GetConfigDraftOutput = JsonObject;
 
 /**
- * Input of approveConfigDraft (POST /v1/config-drafts/{id}/approve).
- */
-export type ApproveConfigDraftInput = {
-  /**
-   * Draft id (cdr_*).
-   */
-  id: string;
-  config: Record<string, any>;
-  plan?: Record<string, any>;
-};
-/**
- * Output of approveConfigDraft.
- */
-export type ApproveConfigDraftOutput = JsonObject;
-
-/**
  * Input of executeAction (POST /v1/actions/{id}/execute).
  */
 export type ExecuteActionInput = {
@@ -9740,40 +8026,6 @@ export type ExecuteActionInput = {
  * Output of executeAction.
  */
 export type ExecuteActionOutput = JsonObject;
-
-/**
- * Input of listGatewayRoutes (GET /v1/routes).
- */
-export type ListGatewayRoutesInput = Record<string, never>;
-/**
- * Output of listGatewayRoutes.
- */
-export type ListGatewayRoutesOutput = JsonObject;
-
-/**
- * Input of createMockToken (POST /v1/auth/mock-token).
- */
-export type CreateMockTokenInput = {
-  sub?: string;
-  email?: string;
-  role?: string;
-  org_id?: string;
-  org_name?: string;
-  name?: string;
-};
-/**
- * Output of createMockToken.
- */
-export type CreateMockTokenOutput = JsonObject;
-
-/**
- * Input of embedOauthDone (GET /v1/embed/oauth-done).
- */
-export type EmbedOauthDoneInput = Record<string, never>;
-/**
- * Output of embedOauthDone.
- */
-export type EmbedOauthDoneOutput = JsonObject;
 
 /**
  * Input of listActionFolders (GET /v1/action-folders).
@@ -9838,354 +8090,6 @@ export type DeleteActionFolderInput = {
  * Output of deleteActionFolder.
  */
 export type DeleteActionFolderOutput = JsonObject;
-
-/**
- * Input of getAiCostSummary (GET /v1/ai-costs/summary).
- */
-export type GetAiCostSummaryInput = {
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-  granularity?: "day" | "week" | "month";
-};
-/**
- * Output of getAiCostSummary.
- */
-export type GetAiCostSummaryOutput = JsonObject;
-
-/**
- * Input of listAiCostsGrouped (GET /v1/ai-costs/grouped).
- */
-export type ListAiCostsGroupedInput = {
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-  groupBy?: "agent" | "user" | "model" | "org";
-  page?: number;
-  pageSize?: number;
-};
-/**
- * Output of listAiCostsGrouped.
- */
-export type ListAiCostsGroupedOutput = JsonObject;
-
-/**
- * Input of listAiCostLogs (GET /v1/ai-costs/logs).
- */
-export type ListAiCostLogsInput = {
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-  page?: number;
-  pageSize?: number;
-};
-/**
- * Output of listAiCostLogs.
- */
-export type ListAiCostLogsOutput = JsonObject;
-
-/**
- * Input of getAiCostDrilldown (GET /v1/ai-costs/drilldown/{by}/{value}).
- */
-export type GetAiCostDrilldownInput = {
-  by: "agent" | "user" | "model" | "org";
-  value: string;
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-};
-/**
- * Output of getAiCostDrilldown.
- */
-export type GetAiCostDrilldownOutput = JsonObject;
-
-/**
- * Input of exportAiCostsCsv (GET /v1/ai-costs/export.csv).
- */
-export type ExportAiCostsCsvInput = {
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-};
-/**
- * Output of exportAiCostsCsv.
- */
-export type ExportAiCostsCsvOutput = JsonObject;
-
-/**
- * Input of listAiCostFilterOptions (GET /v1/ai-costs/filter-options).
- */
-export type ListAiCostFilterOptionsInput = {
-  /**
-   * Look-back window in days, used when from/to are not both given.
-   */
-  days?: number;
-  /**
-   * Range start; needs to. The range may not exceed 90 days.
-   */
-  from?: string;
-  to?: string;
-  agentId?: string;
-  userId?: string;
-  orgId?: string;
-  model?: string;
-  /**
-   * Upstream LLM vendor: the prefix of model (openai, anthropic, google, ...).
-   */
-  provider?: string;
-  /**
-   * Substring match over agent, user, org and model.
-   */
-  search?: string;
-  minCostCents?: number;
-};
-/**
- * Output of listAiCostFilterOptions.
- */
-export type ListAiCostFilterOptionsOutput = JsonObject;
-
-/**
- * Input of rollApiKey (POST /v1/api-keys/{id}/roll).
- */
-export type RollApiKeyInput = {
-  id: string;
-};
-/**
- * Output of rollApiKey.
- */
-export type RollApiKeyOutput = JsonObject;
-
-/**
- * Input of recordUsage (POST /v1/usage/record).
- */
-export type RecordUsageInput = {
-  endOrgId: string;
-  metric: string;
-  value: number;
-};
-/**
- * Output of recordUsage.
- */
-export type RecordUsageOutput = JsonObject;
-
-/**
- * Input of createSupportEscalation (POST /v1/support/escalations).
- */
-export type CreateSupportEscalationInput = {
-  summary: string;
-  impact?: "outage" | "degraded" | "data" | "security";
-  details: string;
-  startedAt?: string;
-  affected?: string;
-  callbackPhone?: string;
-  idempotencyKey: string;
-};
-/**
- * Output of createSupportEscalation.
- */
-export type CreateSupportEscalationOutput = JsonObject;
-
-/**
- * Input of listBugReportAssignees (GET /v1/bug-reports/assignees).
- */
-export type ListBugReportAssigneesInput = Record<string, never>;
-/**
- * Output of listBugReportAssignees.
- */
-export type ListBugReportAssigneesOutput = JsonObject;
-
-/**
- * Input of getMyContext (GET /v1/me/context).
- */
-export type GetMyContextInput = Record<string, never>;
-/**
- * Output of getMyContext.
- */
-export type GetMyContextOutput = JsonObject;
-
-/**
- * Input of getPlatformEntitlements (GET /v1/admin/entitlements).
- */
-export type GetPlatformEntitlementsInput = Record<string, never>;
-/**
- * Output of getPlatformEntitlements.
- */
-export type GetPlatformEntitlementsOutput = JsonObject;
-
-/**
- * Input of setPlatformEntitlements (PUT /v1/admin/entitlements).
- */
-export type SetPlatformEntitlementsInput = {
-  entitlements: Record<string, boolean>;
-};
-/**
- * Output of setPlatformEntitlements.
- */
-export type SetPlatformEntitlementsOutput = JsonObject;
-
-/**
- * Input of getEntitlementMatrix (GET /v1/admin/entitlements/matrix).
- */
-export type GetEntitlementMatrixInput = Record<string, never>;
-/**
- * Output of getEntitlementMatrix.
- */
-export type GetEntitlementMatrixOutput = JsonObject;
-
-/**
- * Input of getOrgEntitlements (GET /v1/admin/entitlements/orgs/{orgId}).
- */
-export type GetOrgEntitlementsInput = {
-  orgId: string;
-};
-/**
- * Output of getOrgEntitlements.
- */
-export type GetOrgEntitlementsOutput = JsonObject;
-
-/**
- * Input of setOrgEntitlements (PUT /v1/admin/entitlements/orgs/{orgId}).
- */
-export type SetOrgEntitlementsInput = {
-  orgId: string;
-  entitlements: Record<string, boolean>;
-};
-/**
- * Output of setOrgEntitlements.
- */
-export type SetOrgEntitlementsOutput = JsonObject;
-
-/**
- * Input of getFavicon (GET /v1/favicon).
- */
-export type GetFaviconInput = {
-  domain: string;
-  /**
-   * Icon size; an unsupported value falls back to the default.
-   */
-  sz?: string;
-};
-/**
- * Output of getFavicon.
- */
-export type GetFaviconOutput = JsonObject;
-
-/**
- * Input of githubInstallCallback (GET /v1/integrations/github/callback).
- */
-export type GithubInstallCallbackInput = {
-  state?: string;
-  installation_id?: string;
-  setup_action?: string;
-};
-/**
- * Output of githubInstallCallback.
- */
-export type GithubInstallCallbackOutput = JsonObject;
-
-/**
- * Input of githubWebhook (POST /v1/integrations/github/webhook).
- */
-export type GithubWebhookInput = Record<string, never>;
-/**
- * Output of githubWebhook.
- */
-export type GithubWebhookOutput = JsonObject;
 
 /**
  * Input of getGithubIntegrationStatus (GET /v1/integrations/github/status).
@@ -10267,46 +8171,6 @@ export type ListGithubReviewsInput = Record<string, never>;
  * Output of listGithubReviews.
  */
 export type ListGithubReviewsOutput = JsonObject;
-
-/**
- * Input of listProfileSessions (GET /v1/profile/sessions).
- */
-export type ListProfileSessionsInput = Record<string, never>;
-/**
- * Output of listProfileSessions.
- */
-export type ListProfileSessionsOutput = JsonObject;
-
-/**
- * Input of signOutAllProfileSessions (DELETE /v1/profile/sessions).
- */
-export type SignOutAllProfileSessionsInput = Record<string, never>;
-/**
- * Output of signOutAllProfileSessions.
- */
-export type SignOutAllProfileSessionsOutput = JsonObject;
-
-/**
- * Input of signOutProfileSession (DELETE /v1/profile/sessions/{id}).
- */
-export type SignOutProfileSessionInput = {
-  id: string;
-};
-/**
- * Output of signOutProfileSession.
- */
-export type SignOutProfileSessionOutput = JsonObject;
-
-/**
- * Input of deleteProfilePasskey (DELETE /v1/profile/security/passkeys/{id}).
- */
-export type DeleteProfilePasskeyInput = {
-  id: string;
-};
-/**
- * Output of deleteProfilePasskey.
- */
-export type DeleteProfilePasskeyOutput = JsonObject;
 
 /**
  * Input of createConnectLink (POST /v1/connect-links).
@@ -10419,15 +8283,6 @@ export type GetInstallationResolvedConfigInput = {
  * Output of getInstallationResolvedConfig.
  */
 export type GetInstallationResolvedConfigOutput = JsonObject;
-
-/**
- * Input of reconcileInstallationMirror (POST /v1/installations/reconcile-mirror).
- */
-export type ReconcileInstallationMirrorInput = Record<string, never>;
-/**
- * Output of reconcileInstallationMirror.
- */
-export type ReconcileInstallationMirrorOutput = JsonObject;
 
 /**
  * Input of listEventSubscriptions (GET /v1/event-subscriptions).
@@ -10599,40 +8454,6 @@ export type GetSetupLinkStatusInput = {
 export type GetSetupLinkStatusOutput = JsonObject;
 
 /**
- * Input of listPendingReviewOrgs (GET /v1/orgs/pending-review).
- */
-export type ListPendingReviewOrgsInput = Record<string, never>;
-/**
- * Output of listPendingReviewOrgs.
- */
-export type ListPendingReviewOrgsOutput = JsonObject;
-
-/**
- * Input of approveOrg (POST /v1/orgs/{id}/approve).
- */
-export type ApproveOrgInput = {
-  id: string;
-  plan?: "launch" | "scale" | "enterprise" | "growth" | "free";
-  notes?: string;
-};
-/**
- * Output of approveOrg.
- */
-export type ApproveOrgOutput = JsonObject;
-
-/**
- * Input of rejectOrg (POST /v1/orgs/{id}/reject).
- */
-export type RejectOrgInput = {
-  id: string;
-  notes?: string;
-};
-/**
- * Output of rejectOrg.
- */
-export type RejectOrgOutput = JsonObject;
-
-/**
  * Input of assignOrgAdmin (POST /v1/orgs/{id}/admin).
  */
 export type AssignOrgAdminInput = {
@@ -10645,18 +8466,6 @@ export type AssignOrgAdminInput = {
 export type AssignOrgAdminOutput = JsonObject;
 
 /**
- * Input of transferOrgOwnership (POST /v1/orgs/{id}/transfer-ownership).
- */
-export type TransferOrgOwnershipInput = {
-  id: string;
-  targetUserId: string;
-};
-/**
- * Output of transferOrgOwnership.
- */
-export type TransferOrgOwnershipOutput = JsonObject;
-
-/**
  * Input of getOrgDbConfig (GET /v1/orgs/{id}/db-config).
  */
 export type GetOrgDbConfigInput = {
@@ -10666,41 +8475,6 @@ export type GetOrgDbConfigInput = {
  * Output of getOrgDbConfig.
  */
 export type GetOrgDbConfigOutput = JsonObject;
-
-/**
- * Input of updateOrgDbConfig (PUT /v1/orgs/{id}/db-config).
- */
-export type UpdateOrgDbConfigInput = {
-  id: string;
-  poolMax?: number;
-  connectTimeoutMs?: number;
-  statementTimeoutMs?: number;
-  idleTimeoutMs?: number;
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  /**
-   * Omit to keep the stored password; only honoured when host, port, database and username are unchanged.
-   */
-  password?: string;
-  sslMode?: "disable" | "no-verify" | "prefer" | "require" | "verify-full";
-  /**
-   * PEM CA bundle; null clears it.
-   */
-  caCert?: string | null;
-  customSchema?: string | null;
-  limits?: {
-    poolMax?: number;
-    connectTimeoutMs?: number;
-    statementTimeoutMs?: number;
-    idleTimeoutMs?: number;
-  };
-};
-/**
- * Output of updateOrgDbConfig.
- */
-export type UpdateOrgDbConfigOutput = JsonObject;
 
 /**
  * Input of deleteOrgDbConfig (DELETE /v1/orgs/{id}/db-config).
@@ -10723,41 +8497,6 @@ export type ListOrgDbConfigOverridesInput = {
  * Output of listOrgDbConfigOverrides.
  */
 export type ListOrgDbConfigOverridesOutput = JsonObject;
-
-/**
- * Input of testOrgDbConfig (POST /v1/orgs/{id}/db-config/test).
- */
-export type TestOrgDbConfigInput = {
-  id: string;
-  poolMax?: number;
-  connectTimeoutMs?: number;
-  statementTimeoutMs?: number;
-  idleTimeoutMs?: number;
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  /**
-   * Omit to keep the stored password; only honoured when host, port, database and username are unchanged.
-   */
-  password?: string;
-  sslMode?: "disable" | "no-verify" | "prefer" | "require" | "verify-full";
-  /**
-   * PEM CA bundle; null clears it.
-   */
-  caCert?: string | null;
-  customSchema?: string | null;
-  limits?: {
-    poolMax?: number;
-    connectTimeoutMs?: number;
-    statementTimeoutMs?: number;
-    idleTimeoutMs?: number;
-  };
-};
-/**
- * Output of testOrgDbConfig.
- */
-export type TestOrgDbConfigOutput = JsonObject;
 
 /**
  * Input of enableOrgDbConfig (POST /v1/orgs/{id}/db-config/enable).
@@ -10816,17 +8555,6 @@ export type UpdateMyPreferencesInput = {
  * Output of updateMyPreferences.
  */
 export type UpdateMyPreferencesOutput = JsonObject;
-
-/**
- * Input of switchAccount (POST /v1/users/me/switch-account).
- */
-export type SwitchAccountInput = {
-  orgId: string;
-};
-/**
- * Output of switchAccount.
- */
-export type SwitchAccountOutput = JsonObject;
 
 /**
  * Input of resendInvite (POST /v1/users/{userId}/resend-invite).
@@ -10932,71 +8660,6 @@ export type ReactivateUserInput = {
 export type ReactivateUserOutput = JsonObject;
 
 /**
- * Input of searchPlatformUsers (GET /v1/admin/users/search).
- */
-export type SearchPlatformUsersInput = {
-  q: string;
-  /**
-   * Page size, clamped to 1-200.
-   */
-  limit?: number;
-  offset?: number;
-};
-/**
- * Output of searchPlatformUsers.
- */
-export type SearchPlatformUsersOutput = JsonObject;
-
-/**
- * Input of listPlatformAdmins (GET /v1/platform/users).
- */
-export type ListPlatformAdminsInput = Record<string, never>;
-/**
- * Output of listPlatformAdmins.
- */
-export type ListPlatformAdminsOutput = JsonObject;
-
-/**
- * Input of grantPlatformAdmin (POST /v1/platform/users).
- */
-export type GrantPlatformAdminInput = {
-  email: string;
-};
-/**
- * Output of grantPlatformAdmin.
- */
-export type GrantPlatformAdminOutput = JsonObject;
-
-/**
- * Input of revokePlatformAdmin (DELETE /v1/platform/users/{userId}).
- */
-export type RevokePlatformAdminInput = {
-  /**
-   * Keycloak user id of the platform admin.
-   */
-  userId: string;
-};
-/**
- * Output of revokePlatformAdmin.
- */
-export type RevokePlatformAdminOutput = JsonObject;
-
-/**
- * Input of updatePlatformAdmin (PATCH /v1/platform/users/{userId}).
- */
-export type UpdatePlatformAdminInput = {
-  /**
-   * Keycloak user id of the platform admin.
-   */
-  userId: string;
-  canSwitchPlatformOrg: boolean;
-};
-/**
- * Output of updatePlatformAdmin.
- */
-export type UpdatePlatformAdminOutput = JsonObject;
-
-/**
  * Input of getLiveWidgetInsights (GET /v1/widgets/insights/live).
  */
 export type GetLiveWidgetInsightsInput = {
@@ -11071,28 +8734,6 @@ export type ListAuditLogUsersInput = Record<string, never>;
 export type ListAuditLogUsersOutput = JsonObject;
 
 /**
- * Input of listOrchestratorFeedback (GET /v1/agent/orchestrator/feedback).
- */
-export type ListOrchestratorFeedbackInput = {
-  result?: "Pass" | "Fail";
-  agentId?: string;
-  category?: string;
-  orgId?: string;
-  /**
-   * Substring over feedback, message text and user email.
-   */
-  search?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  limit?: number;
-  offset?: number;
-};
-/**
- * Output of listOrchestratorFeedback.
- */
-export type ListOrchestratorFeedbackOutput = JsonObject;
-
-/**
  * Input of submitOrchestratorFeedback (POST /v1/agent/orchestrator/feedback).
  */
 export type SubmitOrchestratorFeedbackInput = {
@@ -11119,37 +8760,6 @@ export type SubmitOrchestratorFeedbackInput = {
  * Output of submitOrchestratorFeedback.
  */
 export type SubmitOrchestratorFeedbackOutput = JsonObject;
-
-/**
- * Input of updateUnifiedCatalogCategory (PUT /v1/unified-catalog/categories/{id}).
- */
-export type UpdateUnifiedCatalogCategoryInput = {
-  /**
-   * Category id.
-   */
-  id: string;
-  slug?: string;
-  name?: string;
-  description?: string | null;
-};
-/**
- * Output of updateUnifiedCatalogCategory.
- */
-export type UpdateUnifiedCatalogCategoryOutput = JsonObject;
-
-/**
- * Input of deleteUnifiedCatalogCategory (DELETE /v1/unified-catalog/categories/{id}).
- */
-export type DeleteUnifiedCatalogCategoryInput = {
-  /**
-   * Category id.
-   */
-  id: string;
-};
-/**
- * Output of deleteUnifiedCatalogCategory.
- */
-export type DeleteUnifiedCatalogCategoryOutput = JsonObject;
 
 /**
  * Input of createTestCaseDraft (POST /v1/test-case-drafts).
@@ -11188,27 +8798,6 @@ export type GetTestCaseDraftInput = {
 export type GetTestCaseDraftOutput = JsonObject;
 
 /**
- * Input of approveTestCaseDraft (POST /v1/test-case-drafts/{id}/approve).
- */
-export type ApproveTestCaseDraftInput = {
-  /**
-   * Draft id (tcr_...).
-   */
-  id: string;
-  testCases: ({
-    id: string;
-    group: string;
-    scenario: string;
-    pass: string;
-    mode?: "live" | "mock";
-  })[];
-};
-/**
- * Output of approveTestCaseDraft.
- */
-export type ApproveTestCaseDraftOutput = JsonObject;
-
-/**
  * Input of listQuotas (GET /v1/quotas).
  */
 export type ListQuotasInput = {
@@ -11225,20 +8814,6 @@ export type ListQuotasInput = {
  * Output of listQuotas.
  */
 export type ListQuotasOutput = JsonObject;
-
-/**
- * Input of incrementQuotaUsage (POST /v1/quotas/usage/increment).
- */
-export type IncrementQuotaUsageInput = {
-  dimension: string;
-  amount?: number;
-  orgId?: string;
-  endOrgId?: string;
-};
-/**
- * Output of incrementQuotaUsage.
- */
-export type IncrementQuotaUsageOutput = JsonObject;
 
 /**
  * Input of checkQuota (GET /v1/quotas/check/{dimension}).
@@ -11260,177 +8835,6 @@ export type CheckQuotaInput = {
 export type CheckQuotaOutput = JsonObject;
 
 /**
- * Input of getAiModels (GET /v1/platform/ai-models).
- */
-export type GetAiModelsInput = Record<string, never>;
-/**
- * Output of getAiModels.
- */
-export type GetAiModelsOutput = JsonObject;
-
-/**
- * Input of setAiModels (PUT /v1/platform/ai-models).
- */
-export type SetAiModelsInput = {
-  default?: string;
-  connector?: string;
-  orchestrator?: string;
-  planner?: string;
-  event?: string;
-  intelligence?: string;
-  browser?: string;
-  config?: string;
-  test_case?: string;
-  workflow?: string;
-};
-/**
- * Output of setAiModels.
- */
-export type SetAiModelsOutput = JsonObject;
-
-/**
- * Input of getSandboxMemoryLimit (GET /v1/admin/orgs/{orgId}/sandbox-memory-limit).
- */
-export type GetSandboxMemoryLimitInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of getSandboxMemoryLimit.
- */
-export type GetSandboxMemoryLimitOutput = JsonObject;
-
-/**
- * Input of setSandboxMemoryLimit (PUT /v1/admin/orgs/{orgId}/sandbox-memory-limit).
- */
-export type SetSandboxMemoryLimitInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-  instant?: number;
-  standard?: number;
-  long?: number;
-};
-/**
- * Output of setSandboxMemoryLimit.
- */
-export type SetSandboxMemoryLimitOutput = JsonObject;
-
-/**
- * Input of deleteSandboxMemoryLimit (DELETE /v1/admin/orgs/{orgId}/sandbox-memory-limit).
- */
-export type DeleteSandboxMemoryLimitInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of deleteSandboxMemoryLimit.
- */
-export type DeleteSandboxMemoryLimitOutput = JsonObject;
-
-/**
- * Input of getWorkspaceDbStatementTimeout (GET /v1/admin/orgs/{orgId}/workspace-db-statement-timeout).
- */
-export type GetWorkspaceDbStatementTimeoutInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of getWorkspaceDbStatementTimeout.
- */
-export type GetWorkspaceDbStatementTimeoutOutput = JsonObject;
-
-/**
- * Input of setWorkspaceDbStatementTimeout (PUT /v1/admin/orgs/{orgId}/workspace-db-statement-timeout).
- */
-export type SetWorkspaceDbStatementTimeoutInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-  statementTimeoutMs: number;
-};
-/**
- * Output of setWorkspaceDbStatementTimeout.
- */
-export type SetWorkspaceDbStatementTimeoutOutput = JsonObject;
-
-/**
- * Input of deleteWorkspaceDbStatementTimeout (DELETE /v1/admin/orgs/{orgId}/workspace-db-statement-timeout).
- */
-export type DeleteWorkspaceDbStatementTimeoutInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of deleteWorkspaceDbStatementTimeout.
- */
-export type DeleteWorkspaceDbStatementTimeoutOutput = JsonObject;
-
-/**
- * Input of listV1WorkspaceBindings (GET /v1/admin/v1-workspace/matrix).
- */
-export type ListV1WorkspaceBindingsInput = Record<string, never>;
-/**
- * Output of listV1WorkspaceBindings.
- */
-export type ListV1WorkspaceBindingsOutput = JsonObject;
-
-/**
- * Input of getV1Workspace (GET /v1/admin/orgs/{orgId}/v1-workspace).
- */
-export type GetV1WorkspaceInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of getV1Workspace.
- */
-export type GetV1WorkspaceOutput = JsonObject;
-
-/**
- * Input of setV1Workspace (PUT /v1/admin/orgs/{orgId}/v1-workspace).
- */
-export type SetV1WorkspaceInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-  connection: string;
-  workspaceId: string;
-  queryTimeoutMs?: number;
-};
-/**
- * Output of setV1Workspace.
- */
-export type SetV1WorkspaceOutput = JsonObject;
-
-/**
- * Input of deleteV1Workspace (DELETE /v1/admin/orgs/{orgId}/v1-workspace).
- */
-export type DeleteV1WorkspaceInput = {
-  /**
-   * Org id.
-   */
-  orgId: string;
-};
-/**
- * Output of deleteV1Workspace.
- */
-export type DeleteV1WorkspaceOutput = JsonObject;
-
-/**
  * Input of getBillingSubscription (GET /v1/billing/subscription).
  */
 export type GetBillingSubscriptionInput = Record<string, never>;
@@ -11438,19 +8842,6 @@ export type GetBillingSubscriptionInput = Record<string, never>;
  * Output of getBillingSubscription.
  */
 export type GetBillingSubscriptionOutput = JsonObject;
-
-/**
- * Input of createBillingCheckout (POST /v1/billing/checkout).
- */
-export type CreateBillingCheckoutInput = {
-  plan: string;
-  successUrl: string;
-  cancelUrl: string;
-};
-/**
- * Output of createBillingCheckout.
- */
-export type CreateBillingCheckoutOutput = JsonObject;
 
 /**
  * Input of listBillingInvoices (GET /v1/billing/invoices).
@@ -11469,49 +8860,6 @@ export type GetBillingPaymentMethodInput = Record<string, never>;
  * Output of getBillingPaymentMethod.
  */
 export type GetBillingPaymentMethodOutput = JsonObject;
-
-/**
- * Input of createBillingPortalSession (POST /v1/billing/portal).
- */
-export type CreateBillingPortalSessionInput = {
-  returnUrl: string;
-};
-/**
- * Output of createBillingPortalSession.
- */
-export type CreateBillingPortalSessionOutput = JsonObject;
-
-/**
- * Input of receiveStripeWebhook (POST /v1/billing/webhook).
- */
-export type ReceiveStripeWebhookInput = Record<string, never>;
-/**
- * Output of receiveStripeWebhook.
- */
-export type ReceiveStripeWebhookOutput = JsonObject;
-
-/**
- * Input of getMagicLinkContinuePage (GET /v1/auth/magic-link/continue).
- */
-export type GetMagicLinkContinuePageInput = Record<string, never>;
-/**
- * Output of getMagicLinkContinuePage.
- */
-export type GetMagicLinkContinuePageOutput = JsonObject;
-
-/**
- * Input of continueMagicLink (POST /v1/auth/magic-link/continue).
- */
-export type ContinueMagicLinkInput = {
-  /**
-   * The whole request body (application/x-www-form-urlencoded).
-   */
-  body: Record<string, any> | string;
-};
-/**
- * Output of continueMagicLink.
- */
-export type ContinueMagicLinkOutput = JsonObject;
 
 /**
  * Input of getOnboardingProductProfile (GET /v1/onboarding/product-profile).
@@ -11636,34 +8984,6 @@ export type ClaimOnboardingCreditsInput = Record<string, never>;
 export type ClaimOnboardingCreditsOutput = JsonObject;
 
 /**
- * Input of classifyOnboardingUseCase (POST /v1/onboarding/classify-usecase).
- */
-export type ClassifyOnboardingUseCaseInput = {
-  /**
-   * The whole request body (application/json).
-   */
-  body: Record<string, any>;
-};
-/**
- * Output of classifyOnboardingUseCase.
- */
-export type ClassifyOnboardingUseCaseOutput = JsonObject;
-
-/**
- * Input of lookupOnboardingDomain (POST /v1/onboarding/lookup).
- */
-export type LookupOnboardingDomainInput = {
-  /**
-   * The whole request body (application/json).
-   */
-  body: Record<string, any>;
-};
-/**
- * Output of lookupOnboardingDomain.
- */
-export type LookupOnboardingDomainOutput = JsonObject;
-
-/**
  * Input of joinOnboardingOrg (POST /v1/onboarding/join-org).
  */
 export type JoinOnboardingOrgInput = {
@@ -11673,68 +8993,6 @@ export type JoinOnboardingOrgInput = {
  * Output of joinOnboardingOrg.
  */
 export type JoinOnboardingOrgOutput = JsonObject;
-
-/**
- * Input of searchOnboarding (GET /v1/onboarding/search).
- */
-export type SearchOnboardingInput = {
-  email?: string;
-  domain?: string;
-  userId?: string;
-};
-/**
- * Output of searchOnboarding.
- */
-export type SearchOnboardingOutput = JsonObject;
-
-/**
- * Input of listOnboardingReviews (GET /v1/onboarding/admin/reviews).
- */
-export type ListOnboardingReviewsInput = {
-  filter?: "all" | "pending" | "blocked" | "completed";
-  /**
-   * Clamped to 1-500.
-   */
-  limit?: number;
-  offset?: number;
-};
-/**
- * Output of listOnboardingReviews.
- */
-export type ListOnboardingReviewsOutput = JsonObject;
-
-/**
- * Input of approveOnboarding (POST /v1/onboarding/admin/approve).
- */
-export type ApproveOnboardingInput = {
-  userId: string;
-};
-/**
- * Output of approveOnboarding.
- */
-export type ApproveOnboardingOutput = JsonObject;
-
-/**
- * Input of blockOnboarding (POST /v1/onboarding/admin/block).
- */
-export type BlockOnboardingInput = {
-  userId: string;
-};
-/**
- * Output of blockOnboarding.
- */
-export type BlockOnboardingOutput = JsonObject;
-
-/**
- * Input of listPlanChangeRequests (GET /v1/plan-change-requests).
- */
-export type ListPlanChangeRequestsInput = {
-  status?: "pending" | "approved" | "rejected" | "cancelled";
-};
-/**
- * Output of listPlanChangeRequests.
- */
-export type ListPlanChangeRequestsOutput = JsonObject;
 
 /**
  * Input of createPlanChangeRequest (POST /v1/plan-change-requests).
@@ -11758,30 +9016,6 @@ export type CancelMyPlanChangeRequestInput = Record<string, never>;
  * Output of cancelMyPlanChangeRequest.
  */
 export type CancelMyPlanChangeRequestOutput = JsonObject;
-
-/**
- * Input of approvePlanChangeRequest (POST /v1/plan-change-requests/{id}/approve).
- */
-export type ApprovePlanChangeRequestInput = {
-  id: string;
-  reviewerNote?: string;
-};
-/**
- * Output of approvePlanChangeRequest.
- */
-export type ApprovePlanChangeRequestOutput = JsonObject;
-
-/**
- * Input of rejectPlanChangeRequest (POST /v1/plan-change-requests/{id}/reject).
- */
-export type RejectPlanChangeRequestInput = {
-  id: string;
-  reviewerNote?: string;
-};
-/**
- * Output of rejectPlanChangeRequest.
- */
-export type RejectPlanChangeRequestOutput = JsonObject;
 
 /**
  * Input of probeConnector (POST /v1/probes).
@@ -11895,106 +9129,6 @@ export type GetAiUsageInput = {
  * Output of getAiUsage.
  */
 export type GetAiUsageOutput = JsonObject;
-
-/**
- * Input of getSystemHealth (GET /v1/admin/system-health).
- */
-export type GetSystemHealthInput = Record<string, never>;
-/**
- * Output of getSystemHealth.
- */
-export type GetSystemHealthOutput = JsonObject;
-
-/**
- * Input of getWorkflowMetricsSummary (GET /v1/workflow-metrics/summary).
- */
-export type GetWorkflowMetricsSummaryInput = {
-  /**
-   * Look-back window, 1-90. Ignored when from/to are given.
-   */
-  days?: number;
-  from?: string;
-  /**
-   * from-to may span at most 90 days.
-   */
-  to?: string;
-  tier?: "instant" | "standard" | "long";
-  accountId?: string;
-  granularity?: "hour" | "day" | "week";
-};
-/**
- * Output of getWorkflowMetricsSummary.
- */
-export type GetWorkflowMetricsSummaryOutput = JsonObject;
-
-/**
- * Input of getTopFailingWorkflows (GET /v1/workflow-metrics/top-failing).
- */
-export type GetTopFailingWorkflowsInput = {
-  /**
-   * Look-back window, 1-90. Ignored when from/to are given.
-   */
-  days?: number;
-  from?: string;
-  /**
-   * from-to may span at most 90 days.
-   */
-  to?: string;
-  tier?: "instant" | "standard" | "long";
-  accountId?: string;
-  limit?: number;
-};
-/**
- * Output of getTopFailingWorkflows.
- */
-export type GetTopFailingWorkflowsOutput = JsonObject;
-
-/**
- * Input of getRecentWorkflowFailures (GET /v1/workflow-metrics/recent-failures).
- */
-export type GetRecentWorkflowFailuresInput = {
-  tier?: "instant" | "standard" | "long";
-  accountId?: string;
-  limit?: number;
-};
-/**
- * Output of getRecentWorkflowFailures.
- */
-export type GetRecentWorkflowFailuresOutput = JsonObject;
-
-/**
- * Input of getSlowestWorkflowRuns (GET /v1/workflow-metrics/slowest).
- */
-export type GetSlowestWorkflowRunsInput = {
-  tier?: "instant" | "standard" | "long";
-  accountId?: string;
-  hours?: number;
-  limit?: number;
-};
-/**
- * Output of getSlowestWorkflowRuns.
- */
-export type GetSlowestWorkflowRunsOutput = JsonObject;
-
-/**
- * Input of getWorkflowEngineMetrics (GET /v1/workflow-metrics/engine).
- */
-export type GetWorkflowEngineMetricsInput = {
-  accountId?: string;
-};
-/**
- * Output of getWorkflowEngineMetrics.
- */
-export type GetWorkflowEngineMetricsOutput = JsonObject;
-
-/**
- * Input of listWorkflowMetricsAccounts (GET /v1/workflow-metrics/accounts).
- */
-export type ListWorkflowMetricsAccountsInput = Record<string, never>;
-/**
- * Output of listWorkflowMetricsAccounts.
- */
-export type ListWorkflowMetricsAccountsOutput = JsonObject;
 
 /**
  * Input of generateActionMock (GET /v1/mock/connectors/{connectorSlug}/actions/{actionSlug}).
@@ -12320,28 +9454,6 @@ export type CancelWorkflowPromotionInput = {
 export type CancelWorkflowPromotionOutput = JsonObject;
 
 /**
- * Input of completeWorkflowPromotion (POST /v1/workflows/{id}/promotions/{promotionId}/complete).
- */
-export type CompleteWorkflowPromotionInput = {
-  id: string;
-  promotionId: string;
-  status: "completed" | "rejected" | "stale";
-  resolvedBy?: string;
-  /**
-   * Required to complete a publish.
-   */
-  mergeCommitSha?: string;
-  /**
-   * Merged code; required to complete a publish.
-   */
-  code?: string;
-};
-/**
- * Output of completeWorkflowPromotion.
- */
-export type CompleteWorkflowPromotionOutput = JsonObject;
-
-/**
  * Input of listWorkflowVersions (GET /v1/workflows/{id}/versions).
  */
 export type ListWorkflowVersionsInput = {
@@ -12444,76 +9556,6 @@ export type RemoveEnvironmentConfigKeyInput = {
  * Output of removeEnvironmentConfigKey.
  */
 export type RemoveEnvironmentConfigKeyOutput = JsonObject;
-
-/**
- * Input of triggerSyncParallel (POST /v1/sync/jobs/{id}/trigger-parallel).
- */
-export type TriggerSyncParallelInput = {
-  id: string;
-  batchSize?: number;
-  maxConcurrency?: number;
-};
-/**
- * Output of triggerSyncParallel.
- */
-export type TriggerSyncParallelOutput = JsonObject;
-
-/**
- * Input of pauseSyncJob (POST /v1/sync/jobs/{id}/pause).
- */
-export type PauseSyncJobInput = {
-  id: string;
-  /**
-   * The runId returned by POST /api/v1/sync/jobs/{id}/trigger-parallel.
-   */
-  runId: string;
-};
-/**
- * Output of pauseSyncJob.
- */
-export type PauseSyncJobOutput = JsonObject;
-
-/**
- * Input of resumeSyncJob (POST /v1/sync/jobs/{id}/resume).
- */
-export type ResumeSyncJobInput = {
-  id: string;
-  /**
-   * The runId returned by POST /api/v1/sync/jobs/{id}/trigger-parallel.
-   */
-  runId: string;
-};
-/**
- * Output of resumeSyncJob.
- */
-export type ResumeSyncJobOutput = JsonObject;
-
-/**
- * Input of cancelSyncJob (POST /v1/sync/jobs/{id}/cancel).
- */
-export type CancelSyncJobInput = {
-  id: string;
-  /**
-   * The runId returned by POST /api/v1/sync/jobs/{id}/trigger-parallel.
-   */
-  runId: string;
-};
-/**
- * Output of cancelSyncJob.
- */
-export type CancelSyncJobOutput = JsonObject;
-
-/**
- * Input of listSyncPartitions (GET /v1/sync/jobs/{id}/partitions).
- */
-export type ListSyncPartitionsInput = {
-  id: string;
-  runId?: string;
-};
-/**
- * Output of listSyncPartitions.
- */
-export type ListSyncPartitionsOutput = JsonObject;
 
 /**
  * Input of listWebhookTriggers (GET /v1/webhooks).
@@ -13051,15 +10093,6 @@ export type ReplayAllTriggerDlqInput = {
 export type ReplayAllTriggerDlqOutput = JsonObject;
 
 /**
- * Input of getTriggerMonitoringOrgOverview (GET /v1/admin/triggers/monitoring/orgs).
- */
-export type GetTriggerMonitoringOrgOverviewInput = Record<string, never>;
-/**
- * Output of getTriggerMonitoringOrgOverview.
- */
-export type GetTriggerMonitoringOrgOverviewOutput = JsonObject;
-
-/**
  * Input of deleteDlqEntry (DELETE /v1/dlq/{id}).
  */
 export type DeleteDlqEntryInput = {
@@ -13111,41 +10144,6 @@ export type ListAlertChannelTargetsInput = {
  * Output of listAlertChannelTargets.
  */
 export type ListAlertChannelTargetsOutput = JsonObject;
-
-/**
- * Input of receiveWebhookTrigger (POST /v1/triggers/{orgId}/webhooks/{triggerId}).
- */
-export type ReceiveWebhookTriggerInput = {
-  orgId: string;
-  triggerId: string;
-  /**
-   * The whole request body (application/json).
-   * Any payload; delivered to the bound workflows as the trigger input.
-   */
-  body?: any;
-};
-/**
- * Output of receiveWebhookTrigger.
- */
-export type ReceiveWebhookTriggerOutput = JsonObject;
-
-/**
- * Input of receiveAppWebhook (POST /v1/triggers/{orgId}/webhooks/{connectorId}/{authProviderId}).
- */
-export type ReceiveAppWebhookInput = {
-  orgId: string;
-  connectorId: string;
-  authProviderId: string;
-  /**
-   * The whole request body (application/json).
-   * The provider's event payload.
-   */
-  body?: any;
-};
-/**
- * Output of receiveAppWebhook.
- */
-export type ReceiveAppWebhookOutput = JsonObject;
 
 /**
  * Input of sendTestAppEvent (POST /v1/triggers/{orgId}/{connectorId}/events).
@@ -13351,40 +10349,6 @@ export type AgentSuggestConnectorsInput = {
 export type AgentSuggestConnectorsOutput = JsonObject;
 
 /**
- * Input of agentReadMcpAppResource (POST /v1/agent/orchestrator/mcp-app/resource).
- */
-export type AgentReadMcpAppResourceInput = {
-  uri: string;
-};
-/**
- * Output of agentReadMcpAppResource.
- */
-export type AgentReadMcpAppResourceOutput = JsonObject;
-
-/**
- * Input of agentCallMcpAppTool (POST /v1/agent/orchestrator/mcp-app/call).
- */
-export type AgentCallMcpAppToolInput = {
-  name: string;
-  arguments?: Record<string, any>;
-};
-/**
- * Output of agentCallMcpAppTool.
- */
-export type AgentCallMcpAppToolOutput = JsonObject;
-
-/**
- * Input of agentParkOrchestratorCredentials (POST /v1/agent/orchestrator/credentials).
- */
-export type AgentParkOrchestratorCredentialsInput = {
-  values: Record<string, string>;
-};
-/**
- * Output of agentParkOrchestratorCredentials.
- */
-export type AgentParkOrchestratorCredentialsOutput = JsonObject;
-
-/**
  * Input of agentDeleteOrchestratorSession (DELETE /v1/agent/orchestrator/sessions/{id}).
  */
 export type AgentDeleteOrchestratorSessionInput = {
@@ -13412,24 +10376,6 @@ export type AgentRenameOrchestratorSessionInput = {
  * Output of agentRenameOrchestratorSession.
  */
 export type AgentRenameOrchestratorSessionOutput = JsonObject;
-
-/**
- * Input of agentResumeOrchestratorStream (GET /v1/agent/orchestrator/sessions/{id}/stream).
- */
-export type AgentResumeOrchestratorStreamInput = {
-  /**
-   * Session threadId
-   */
-  id: string;
-  /**
-   * The header header "Last-Event-ID".
-   */
-  lastEventID?: number;
-};
-/**
- * Output of agentResumeOrchestratorStream.
- */
-export type AgentResumeOrchestratorStreamOutput = JsonObject;
 
 /**
  * Input of agentGetOrchestratorFile (GET /v1/agent/orchestrator/sessions/{id}/files).
@@ -13464,20 +10410,6 @@ export type AgentStopOrchestratorSessionInput = {
 export type AgentStopOrchestratorSessionOutput = JsonObject;
 
 /**
- * Input of agentRefreshOrchestratorToken (POST /v1/agent/orchestrator/sessions/{id}/token).
- */
-export type AgentRefreshOrchestratorTokenInput = {
-  /**
-   * Session threadId
-   */
-  id: string;
-};
-/**
- * Output of agentRefreshOrchestratorToken.
- */
-export type AgentRefreshOrchestratorTokenOutput = JsonObject;
-
-/**
  * Input of agentInjectOrchestratorMessage (POST /v1/agent/orchestrator/sessions/{id}/inject).
  */
 export type AgentInjectOrchestratorMessageInput = {
@@ -13496,54 +10428,6 @@ export type AgentInjectOrchestratorMessageInput = {
  * Output of agentInjectOrchestratorMessage.
  */
 export type AgentInjectOrchestratorMessageOutput = JsonObject;
-
-/**
- * Input of agentAppendOrchestratorTranscript (POST /v1/agent/orchestrator/sessions/{id}/transcript).
- */
-export type AgentAppendOrchestratorTranscriptInput = {
-  /**
-   * Session threadId
-   */
-  id: string;
-  messages: ({
-    role: "user" | "assistant";
-    text: string;
-  })[];
-};
-/**
- * Output of agentAppendOrchestratorTranscript.
- */
-export type AgentAppendOrchestratorTranscriptOutput = JsonObject;
-
-/**
- * Input of agentSetOrchestratorAutoAccept (POST /v1/agent/orchestrator/sessions/{id}/auto-accept).
- */
-export type AgentSetOrchestratorAutoAcceptInput = {
-  /**
-   * Session threadId
-   */
-  id: string;
-  enabled: boolean;
-};
-/**
- * Output of agentSetOrchestratorAutoAccept.
- */
-export type AgentSetOrchestratorAutoAcceptOutput = JsonObject;
-
-/**
- * Input of agentAllowOrchestratorTool (POST /v1/agent/orchestrator/sessions/{id}/allow-tool).
- */
-export type AgentAllowOrchestratorToolInput = {
-  /**
-   * Session threadId
-   */
-  id: string;
-  toolName: string;
-};
-/**
- * Output of agentAllowOrchestratorTool.
- */
-export type AgentAllowOrchestratorToolOutput = JsonObject;
 
 /**
  * Input of researchSaas (POST /v1/agent/research/saas).
@@ -13611,12 +10495,3 @@ export type ReviseProductProfileInput = {
  * Output of reviseProductProfile.
  */
 export type ReviseProductProfileOutput = JsonObject;
-
-/**
- * Input of agentInvalidateModelCache (POST /v1/agent/cache/invalidate-models).
- */
-export type AgentInvalidateModelCacheInput = Record<string, never>;
-/**
- * Output of agentInvalidateModelCache.
- */
-export type AgentInvalidateModelCacheOutput = JsonObject;

@@ -86,8 +86,8 @@ describe("request shape", () => {
   });
   it("call() by operationId", async () => {
     const m = mockFetch([{ body: { data: 1 } }]);
-    expect(await client(m).call("healthCheck")).toEqual({ data: 1 });
-    expect(m.calls[0].url).toBe("https://api.fastn.dev/health");
+    expect(await client(m).call("listOrgs")).toEqual({ data: 1 });
+    expect(m.calls[0].url).toBe("https://api.fastn.dev/v1/orgs");
   });
 });
 
@@ -131,7 +131,7 @@ describe("errors and retries", () => {
   });
   it("empty 204 answers resolve to undefined", async () => {
     const m = mockFetch([{ status: 204, body: undefined }]);
-    expect(await client(m).auth.logout()).toBeUndefined();
+    expect(await client(m).orgs.deleteTenant({ id: "org_1" })).toBeUndefined();
   });
   it("apiKey is required", () => { expect(() => new FastnClient({} as any)).toThrow(/apiKey/); });
 });

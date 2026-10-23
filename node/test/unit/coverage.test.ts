@@ -9,10 +9,25 @@ const specFile = fs.readdirSync(specDir).filter((f) => /^openapi-v.*\.json$/.tes
 const spec = JSON.parse(fs.readFileSync(path.join(specDir, specFile), "utf8"));
 const METHODS = ["get", "put", "post", "delete", "patch", "head", "options", "trace"];
 
-describe("every spec operation is in the SDK", () => {
+// Same rule as scripts/generate.ts: platform-admin areas and backend-only routes are left out of the SDK.
+const HIDDEN_TAGS = new Set(["Admin", "Platform Config", "Platform", "Support"]);
+const PUBLIC_INTERNAL = new Set(["createEmbedToken", "getSetupLinkStatus"]);
+const isHidden = (op: any) => HIDDEN_TAGS.has(op.tags?.[0]) || (op["x-mcp"] === false && !PUBLIC_INTERNAL.has(op.operationId));
+
+describe("every partner-facing spec operation is in the SDK, nothing else", () => {
   const specOps: { id: string; method: string; path: string; tag: string }[] = [];
-  for (const [p, item] of Object.entries<any>(spec.paths)) for (const m of METHODS) if (item[m]?.operationId) specOps.push({ id: item[m].operationId, method: m.toUpperCase(), path: p, tag: item[m].tags?.[0] });
-  it("has the same count", () => { expect(Object.keys(OPS).length).toBe(specOps.length); expect(specOps.length).toBeGreaterThan(600); });
+  const hiddenOps: string[] = [];
+  for (const [p, item] of Object.entries<any>(spec.paths)) for (const m of METHODS) if (item[m]?.operationId) {
+    if (isHidden(item[m])) hiddenOps.push(item[m].operationId);
+    else specOps.push({ id: item[m].operationId, method: m.toUpperCase(), path: p, tag: item[m].tags?.[0] });
+  }
+  it("has the same count", () => { expect(Object.keys(OPS).length).toBe(specOps.length); expect(specOps.length).toBeGreaterThan(400); });
+  it("leaves platform-admin and backend-only routes out", () => {
+    expect(hiddenOps.length).toBeGreaterThan(150);
+    for (const id of hiddenOps) expect((OPS as any)[id], id).toBeUndefined();
+    for (const id of ["listPlatformConfig", "getAuthProviderCredentials", "oauthCallback", "listTeams"]) expect(hiddenOps).toContain(id);
+    expect((OPS as any).createEmbedToken).toBeDefined(); expect((OPS as any).getSetupLinkStatus).toBeDefined();
+  });
   it("matches method + path for each operationId", () => {
     for (const s of specOps) { const o = (OPS as any)[s.id]; expect(o, s.id).toBeDefined(); expect(`${o.method} ${o.path}`).toBe(`${s.method} ${s.path}`); }
   });

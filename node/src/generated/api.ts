@@ -36,564 +36,6 @@ export class ActivityApi {
 }
 
 /**
- * Admin: Platform administration
- */
-export class AdminApi {
-  constructor(private readonly _t: Transport) {}
-  /**
-   * Health check
-   * Liveness probe. Always 200 while the process is serving.
-   * GET /health
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  healthCheck(input: T.HealthCheckInput = {} as T.HealthCheckInput, opts?: RequestOptions): Promise<T.HealthCheckOutput> {
-    return this._t.call(OPS.healthCheck, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Readiness check
-   * Readiness probe. Fails when Postgres is not ready; Redis being down still reports 200 (degraded).
-   * GET /ready
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  readinessCheck(input: T.ReadinessCheckInput = {} as T.ReadinessCheckInput, opts?: RequestOptions): Promise<T.ReadinessCheckOutput> {
-    return this._t.call(OPS.readinessCheck, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Start impersonation
-   * Roles: platform_admin, owner, admin. platform_admin sends { orgId } and assumes that account's owner/admin. owner and admin send { userId } and may assume only a user whose active membership sits in their own account or a workspace beneath it, and only a persona strictly below their own (admin: developer/operator/viewer/end_user; owner: those plus admin).
-   * POST /v1/impersonate
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  startImpersonation(input: T.StartImpersonationInput = {} as T.StartImpersonationInput, opts?: RequestOptions): Promise<T.StartImpersonationOutput> {
-    return this._t.call(OPS.startImpersonation, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Stop impersonation
-   * Roles: platform_admin, owner, admin. Writes the audit row. Only platform_admin may name the account the row lands in; for owner/admin it is always their own.
-   * POST /v1/impersonate/stop
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  stopImpersonation(input: T.StopImpersonationInput = {} as T.StopImpersonationInput, opts?: RequestOptions): Promise<T.StopImpersonationOutput> {
-    return this._t.call(OPS.stopImpersonation, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get permission boundaries
-   * GET /v1/boundaries
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getBoundaries(input: T.GetBoundariesInput = {} as T.GetBoundariesInput, opts?: RequestOptions): Promise<T.GetBoundariesOutput> {
-    return this._t.call(OPS.getBoundaries, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update permission boundaries
-   * PUT /v1/boundaries
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateBoundaries(input: T.UpdateBoundariesInput, opts?: RequestOptions): Promise<T.UpdateBoundariesOutput> {
-    return this._t.call(OPS.updateBoundaries, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List SI assignments
-   * GET /v1/si-assignments
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listSiAssignments(input: T.ListSiAssignmentsInput = {} as T.ListSiAssignmentsInput, opts?: RequestOptions): Promise<T.ListSiAssignmentsOutput> {
-    return this._t.call(OPS.listSiAssignments, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create SI assignment
-   * POST /v1/si-assignments
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createSiAssignment(input: T.CreateSiAssignmentInput, opts?: RequestOptions): Promise<T.CreateSiAssignmentOutput> {
-    return this._t.call(OPS.createSiAssignment, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Extend SI assignment expiry
-   * PUT /v1/si-assignments/{id}/extend
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  extendSiAssignment(input: T.ExtendSiAssignmentInput, opts?: RequestOptions): Promise<T.ExtendSiAssignmentOutput> {
-    return this._t.call(OPS.extendSiAssignment, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete SI assignment
-   * DELETE /v1/si-assignments/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteSiAssignment(input: T.DeleteSiAssignmentInput, opts?: RequestOptions): Promise<T.DeleteSiAssignmentOutput> {
-    return this._t.call(OPS.deleteSiAssignment, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create a platform provider
-   * Registers a shared OAuth app for a platform. platform_admin only.
-   * POST /v1/platform-providers
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createPlatformProvider(input: T.CreatePlatformProviderInput, opts?: RequestOptions): Promise<T.CreatePlatformProviderOutput> {
-    return this._t.call(OPS.createPlatformProvider, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Platform-wide API traffic metrics
-   * platform_admin only. Request volume, active users/orgs, and endpoint-category mix aggregated from authenticated gateway traffic (user_activity, flushed every 5 minutes). Daily series is zero-filled across the range.
-   * GET /v1/platform-metrics/api-traffic
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getApiTrafficMetrics(input: T.GetApiTrafficMetricsInput = {} as T.GetApiTrafficMetricsInput, opts?: RequestOptions): Promise<T.GetApiTrafficMetricsOutput> {
-    return this._t.call(OPS.getApiTrafficMetrics, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Live Postgres health metrics
-   * platform_admin only. Database size, cache hit ratio, connection saturation, largest tables (dead-tuple bloat, scan pressure), and pg_stat_statements top offenders. statements.available is false when the extension is not enabled. Served from a 30s cache.
-   * GET /v1/platform-metrics/database
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getDatabaseMetrics(input: T.GetDatabaseMetricsInput = {} as T.GetDatabaseMetricsInput, opts?: RequestOptions): Promise<T.GetDatabaseMetricsOutput> {
-    return this._t.call(OPS.getDatabaseMetrics, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create a bug report (creates a Linear ticket)
-   * Files an internal QA bug report as a Linear issue. Only fastn employees (@fastn.ai / @fastn.dev) with platform_admin, owner, admin or developer; disabled in production (403). One submission per user per minute (429).
-   * POST /v1/bug-reports
-   */
-  createBugReport(input: T.CreateBugReportInput, opts?: RequestOptions): Promise<T.CreateBugReportOutput> {
-    return this._t.call(OPS.createBugReport, input as Record<string, unknown>, opts);
-  }
-  /**
-   * OpenAPI specification (JSON)
-   * This spec. Served only when the Host header is localhost; any other host gets 403.
-   * GET /v1/openapi.json
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getOpenApiSpec(input: T.GetOpenApiSpecInput = {} as T.GetOpenApiSpecInput, opts?: RequestOptions): Promise<T.GetOpenApiSpecOutput> {
-    return this._t.call(OPS.getOpenApiSpec, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Swagger UI (interactive API docs)
-   * Swagger UI over this spec. Served only when the Host header is localhost; any other host gets 403.
-   * GET /v1/docs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getApiDocs(input: T.GetApiDocsInput = {} as T.GetApiDocsInput, opts?: RequestOptions): Promise<T.GetApiDocsOutput> {
-    return this._t.call(OPS.getApiDocs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Connector audit timeline
-   * Who changed a connector and its actions, from the audit log. platform_admin only.
-   * GET /v1/connectors/{id}/activity
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getConnectorActivity(input: T.GetConnectorActivityInput, opts?: RequestOptions): Promise<T.GetConnectorActivityOutput> {
-    return this._t.call(OPS.getConnectorActivity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Ingest a vendor API change
-   * Receiver for Watchdog vendor-change events, authenticated by the watchdog-signature HMAC header. 503 when ingest is not configured.
-   * POST /v1/connector-changes/ingest
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  ingestConnectorChange(input: T.IngestConnectorChangeInput = {} as T.IngestConnectorChangeInput, opts?: RequestOptions): Promise<T.IngestConnectorChangeOutput> {
-    return this._t.call(OPS.ingestConnectorChange, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List Watchdog targets
-   * The vendors the managed catalog depends on and whether Watchdog watches each. refresh=1 re-derives the list. platform_admin only.
-   * GET /v1/connector-update-watch-targets
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listConnectorWatchTargets(input: T.ListConnectorWatchTargetsInput = {} as T.ListConnectorWatchTargetsInput, opts?: RequestOptions): Promise<T.ListConnectorWatchTargetsOutput> {
-    return this._t.call(OPS.listConnectorWatchTargets, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Push targets to Watchdog
-   * Sends the derived vendor list to Watchdog now and reports what it accepted. platform_admin only.
-   * POST /v1/connector-update-watch-targets/push
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  pushConnectorWatchTargets(input: T.PushConnectorWatchTargetsInput = {} as T.PushConnectorWatchTargetsInput, opts?: RequestOptions): Promise<T.PushConnectorWatchTargetsOutput> {
-    return this._t.call(OPS.pushConnectorWatchTargets, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Fan a fix out to consuming orgs
-   * Creates stage-2 (workflow) proposals in every org that consumes an applied stage-1 fix. platform_admin only.
-   * POST /v1/connector-update-proposals/{id}/fan-out
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  fanOutConnectorUpdateProposal(input: T.FanOutConnectorUpdateProposalInput, opts?: RequestOptions): Promise<T.FanOutConnectorUpdateProposalOutput> {
-    return this._t.call(OPS.fanOutConnectorUpdateProposal, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete a platform provider
-   * Hard-deletes a platform OAuth provider. platform_admin only.
-   * DELETE /v1/platform-providers/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deletePlatformProvider(input: T.DeletePlatformProviderInput, opts?: RequestOptions): Promise<T.DeletePlatformProviderOutput> {
-    return this._t.call(OPS.deletePlatformProvider, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List action reviews
-   * Actions awaiting platform review. platform_admin only.
-   * GET /v1/admin/action-reviews
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listActionReviews(input: T.ListActionReviewsInput = {} as T.ListActionReviewsInput, opts?: RequestOptions): Promise<T.ListActionReviewsOutput> {
-    return this._t.call(OPS.listActionReviews, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Approve an action review
-   * Approves an action pending review. platform_admin only.
-   * POST /v1/admin/action-reviews/{id}/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approveActionReview(input: T.ApproveActionReviewInput, opts?: RequestOptions): Promise<T.ApproveActionReviewOutput> {
-    return this._t.call(OPS.approveActionReview, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Reject an action review
-   * Rejects an action pending review. platform_admin only.
-   * POST /v1/admin/action-reviews/{id}/reject
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  rejectActionReview(input: T.RejectActionReviewInput, opts?: RequestOptions): Promise<T.RejectActionReviewOutput> {
-    return this._t.call(OPS.rejectActionReview, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List gateway proxy routes
-   * Lists the path prefixes the gateway proxies to upstream services and the host:port each one targets. Unauthenticated.
-   * GET /v1/routes
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listGatewayRoutes(input: T.ListGatewayRoutesInput = {} as T.ListGatewayRoutesInput, opts?: RequestOptions): Promise<T.ListGatewayRoutesOutput> {
-    return this._t.call(OPS.listGatewayRoutes, input as Record<string, unknown>, opts);
-  }
-  /**
-   * AI cost summary
-   * Aggregated LLM cost metrics and a time series over the filter window. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/summary
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getAiCostSummary(input: T.GetAiCostSummaryInput = {} as T.GetAiCostSummaryInput, opts?: RequestOptions): Promise<T.GetAiCostSummaryOutput> {
-    return this._t.call(OPS.getAiCostSummary, input as Record<string, unknown>, opts);
-  }
-  /**
-   * AI cost grouped
-   * LLM cost grouped by agent, user, model or org, paginated. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/grouped
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listAiCostsGrouped(input: T.ListAiCostsGroupedInput = {} as T.ListAiCostsGroupedInput, opts?: RequestOptions): Promise<T.ListAiCostsGroupedOutput> {
-    return this._t.call(OPS.listAiCostsGrouped, input as Record<string, unknown>, opts);
-  }
-  /**
-   * AI cost call ledger
-   * Per-call LLM cost ledger, paginated. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/logs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listAiCostLogs(input: T.ListAiCostLogsInput = {} as T.ListAiCostLogsInput, opts?: RequestOptions): Promise<T.ListAiCostLogsOutput> {
-    return this._t.call(OPS.listAiCostLogs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * AI cost drilldown
-   * Detail view of LLM cost for one agent, user, model or org. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/drilldown/{by}/{value}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getAiCostDrilldown(input: T.GetAiCostDrilldownInput, opts?: RequestOptions): Promise<T.GetAiCostDrilldownOutput> {
-    return this._t.call(OPS.getAiCostDrilldown, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Export AI cost ledger as CSV
-   * Streams the per-call ledger for the filter window as CSV. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/export.csv
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  exportAiCostsCsv(input: T.ExportAiCostsCsvInput = {} as T.ExportAiCostsCsvInput, opts?: RequestOptions): Promise<T.ExportAiCostsCsvOutput> {
-    return this._t.call(OPS.exportAiCostsCsv, input as Record<string, unknown>, opts);
-  }
-  /**
-   * AI cost filter options
-   * Distinct agents, users, models, providers and orgs to filter the AI cost views by. platform_admin only; any other role gets 403.
-   * GET /v1/ai-costs/filter-options
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listAiCostFilterOptions(input: T.ListAiCostFilterOptionsInput = {} as T.ListAiCostFilterOptionsInput, opts?: RequestOptions): Promise<T.ListAiCostFilterOptionsOutput> {
-    return this._t.call(OPS.listAiCostFilterOptions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List bug-report assignees
-   * Linear users a bug report can be assigned to. Same gate as createBugReport: fastn employees only, not in production.
-   * GET /v1/bug-reports/assignees
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listBugReportAssignees(input: T.ListBugReportAssigneesInput = {} as T.ListBugReportAssigneesInput, opts?: RequestOptions): Promise<T.ListBugReportAssigneesOutput> {
-    return this._t.call(OPS.listBugReportAssignees, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get platform default entitlements
-   * Every known entitlement key with its platform default value and whether it is explicitly set. platform_admin only; any other role gets 403.
-   * GET /v1/admin/entitlements
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getPlatformEntitlements(input: T.GetPlatformEntitlementsInput = {} as T.GetPlatformEntitlementsInput, opts?: RequestOptions): Promise<T.GetPlatformEntitlementsOutput> {
-    return this._t.call(OPS.getPlatformEntitlements, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Set platform default entitlements
-   * Writes platform default entitlement values. 400 on an unknown key. platform_admin only; any other role gets 403.
-   * PUT /v1/admin/entitlements
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setPlatformEntitlements(input: T.SetPlatformEntitlementsInput, opts?: RequestOptions): Promise<T.SetPlatformEntitlementsOutput> {
-    return this._t.call(OPS.setPlatformEntitlements, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Entitlement matrix
-   * Every org with its effective entitlement values and overrides. platform_admin only; any other role gets 403.
-   * GET /v1/admin/entitlements/matrix
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getEntitlementMatrix(input: T.GetEntitlementMatrixInput = {} as T.GetEntitlementMatrixInput, opts?: RequestOptions): Promise<T.GetEntitlementMatrixOutput> {
-    return this._t.call(OPS.getEntitlementMatrix, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get an org's entitlements
-   * One org's effective entitlements and which are overridden. platform_admin only; any other role gets 403.
-   * GET /v1/admin/entitlements/orgs/{orgId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getOrgEntitlements(input: T.GetOrgEntitlementsInput, opts?: RequestOptions): Promise<T.GetOrgEntitlementsOutput> {
-    return this._t.call(OPS.getOrgEntitlements, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Set an org's entitlement overrides
-   * Writes per-org entitlement overrides. 400 on an unknown key; 404 for an unknown org. platform_admin only; any other role gets 403.
-   * PUT /v1/admin/entitlements/orgs/{orgId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setOrgEntitlements(input: T.SetOrgEntitlementsInput, opts?: RequestOptions): Promise<T.SetOrgEntitlementsOutput> {
-    return this._t.call(OPS.setOrgEntitlements, input as Record<string, unknown>, opts);
-  }
-  /**
-   * GitHub App install callback
-   * Browser redirect target after installing the fastn GitHub App; records the installation and redirects back to the dashboard.
-   * GET /v1/integrations/github/callback
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  githubInstallCallback(input: T.GithubInstallCallbackInput = {} as T.GithubInstallCallbackInput, opts?: RequestOptions): Promise<T.GithubInstallCallbackOutput> {
-    return this._t.call(OPS.githubInstallCallback, input as Record<string, unknown>, opts);
-  }
-  /**
-   * GitHub App webhook receiver
-   * Receives GitHub App webhook deliveries (HMAC-verified) to complete workflow syncs and promotions when their pull request is merged or closed.
-   * POST /v1/integrations/github/webhook
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  githubWebhook(input: T.GithubWebhookInput = {} as T.GithubWebhookInput, opts?: RequestOptions): Promise<T.GithubWebhookOutput> {
-    return this._t.call(OPS.githubWebhook, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Search users across all orgs
-   * platform_admin only: searches every Keycloak user by name or email and returns each one's active org count and highest role.
-   * GET /v1/admin/users/search
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  searchPlatformUsers(input: T.SearchPlatformUsersInput, opts?: RequestOptions): Promise<T.SearchPlatformUsersOutput> {
-    return this._t.call(OPS.searchPlatformUsers, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List platform admins
-   * platform_admin only: lists users holding the platform_admin membership.
-   * GET /v1/platform/users
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPlatformAdmins(input: T.ListPlatformAdminsInput = {} as T.ListPlatformAdminsInput, opts?: RequestOptions): Promise<T.ListPlatformAdminsOutput> {
-    return this._t.call(OPS.listPlatformAdmins, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Grant platform_admin
-   * platform_admin only: grants platform_admin to an existing Keycloak user by email (membership plus realm role).
-   * POST /v1/platform/users
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  grantPlatformAdmin(input: T.GrantPlatformAdminInput, opts?: RequestOptions): Promise<T.GrantPlatformAdminOutput> {
-    return this._t.call(OPS.grantPlatformAdmin, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Revoke platform_admin
-   * platform_admin only: revokes platform_admin from a user, leaving their other memberships. Refuses the caller themselves and the last platform admin.
-   * DELETE /v1/platform/users/{userId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  revokePlatformAdmin(input: T.RevokePlatformAdminInput, opts?: RequestOptions): Promise<T.RevokePlatformAdminOutput> {
-    return this._t.call(OPS.revokePlatformAdmin, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update a platform admin
-   * platform_admin only: sets whether this platform admin may switch into org_platform from the dashboard.
-   * PATCH /v1/platform/users/{userId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updatePlatformAdmin(input: T.UpdatePlatformAdminInput, opts?: RequestOptions): Promise<T.UpdatePlatformAdminOutput> {
-    return this._t.call(OPS.updatePlatformAdmin, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get an org's sandbox memory override
-   * Returns the per-tier sandbox memory override (MB) stored for the org; {} when none. platform_admin only.
-   * GET /v1/admin/orgs/{orgId}/sandbox-memory-limit
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getSandboxMemoryLimit(input: T.GetSandboxMemoryLimitInput, opts?: RequestOptions): Promise<T.GetSandboxMemoryLimitOutput> {
-    return this._t.call(OPS.getSandboxMemoryLimit, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Set an org's sandbox memory override
-   * Sets the per-tier sandbox memory override (MB) for the org; at least one tier is required. platform_admin only.
-   * PUT /v1/admin/orgs/{orgId}/sandbox-memory-limit
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setSandboxMemoryLimit(input: T.SetSandboxMemoryLimitInput, opts?: RequestOptions): Promise<T.SetSandboxMemoryLimitOutput> {
-    return this._t.call(OPS.setSandboxMemoryLimit, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Clear an org's sandbox memory override
-   * Removes the org's sandbox memory override so tier defaults apply. platform_admin only.
-   * DELETE /v1/admin/orgs/{orgId}/sandbox-memory-limit
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteSandboxMemoryLimit(input: T.DeleteSandboxMemoryLimitInput, opts?: RequestOptions): Promise<T.DeleteSandboxMemoryLimitOutput> {
-    return this._t.call(OPS.deleteSandboxMemoryLimit, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get an org's fastn.db statement timeout
-   * Returns the platform-set statement timeout (ms) for the org's managed workspace database: the org's own value, and the one in force (its own, or its owning account's). platform_admin only.
-   * GET /v1/admin/orgs/{orgId}/workspace-db-statement-timeout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getWorkspaceDbStatementTimeout(input: T.GetWorkspaceDbStatementTimeoutInput, opts?: RequestOptions): Promise<T.GetWorkspaceDbStatementTimeoutOutput> {
-    return this._t.call(OPS.getWorkspaceDbStatementTimeout, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Set an org's fastn.db statement timeout
-   * Sets the statement timeout (1000-900000 ms) for fastn.db queries on the shared workspace database. Applies to the org's own workspace and to every tenant that inherits from it (a tenant's own value wins), replacing their own setting; BYODB workspaces are unaffected. Takes effect within the workspace config TTL (60s). platform_admin only.
-   * PUT /v1/admin/orgs/{orgId}/workspace-db-statement-timeout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setWorkspaceDbStatementTimeout(input: T.SetWorkspaceDbStatementTimeoutInput, opts?: RequestOptions): Promise<T.SetWorkspaceDbStatementTimeoutOutput> {
-    return this._t.call(OPS.setWorkspaceDbStatementTimeout, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Clear an org's fastn.db statement timeout
-   * Removes the org's own statement timeout, so it falls back to its owning account's value or the platform default. platform_admin only.
-   * DELETE /v1/admin/orgs/{orgId}/workspace-db-statement-timeout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteWorkspaceDbStatementTimeout(input: T.DeleteWorkspaceDbStatementTimeoutInput, opts?: RequestOptions): Promise<T.DeleteWorkspaceDbStatementTimeoutOutput> {
-    return this._t.call(OPS.deleteWorkspaceDbStatementTimeout, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List v1 workspace bindings
-   * Lists every end_org, company and personal org with its fastn.db.v1 workspace binding (null when unbound). platform_admin only.
-   * GET /v1/admin/v1-workspace/matrix
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listV1WorkspaceBindings(input: T.ListV1WorkspaceBindingsInput = {} as T.ListV1WorkspaceBindingsInput, opts?: RequestOptions): Promise<T.ListV1WorkspaceBindingsOutput> {
-    return this._t.call(OPS.listV1WorkspaceBindings, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get an org's v1 workspace binding
-   * Returns the org's fastn.db.v1 binding (platform connection, workspace id, query timeout), or null. platform_admin only.
-   * GET /v1/admin/orgs/{orgId}/v1-workspace
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getV1Workspace(input: T.GetV1WorkspaceInput, opts?: RequestOptions): Promise<T.GetV1WorkspaceOutput> {
-    return this._t.call(OPS.getV1Workspace, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Bind an org to a v1 workspace
-   * Binds the org's fastn.db.v1 calls to a workspace through an active org_platform connection. platform_admin only. 400 when the connection is not an active platform connection; 404 when the org does not exist.
-   * PUT /v1/admin/orgs/{orgId}/v1-workspace
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setV1Workspace(input: T.SetV1WorkspaceInput, opts?: RequestOptions): Promise<T.SetV1WorkspaceOutput> {
-    return this._t.call(OPS.setV1Workspace, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Unbind an org's v1 workspace
-   * Removes the org's fastn.db.v1 binding. platform_admin only.
-   * DELETE /v1/admin/orgs/{orgId}/v1-workspace
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteV1Workspace(input: T.DeleteV1WorkspaceInput, opts?: RequestOptions): Promise<T.DeleteV1WorkspaceOutput> {
-    return this._t.call(OPS.deleteV1Workspace, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Platform system health
-   * Checks Postgres, Redis and every upstream service and reports each one's status and latency. platform_admin only.
-   * GET /v1/admin/system-health
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getSystemHealth(input: T.GetSystemHealthInput = {} as T.GetSystemHealthInput, opts?: RequestOptions): Promise<T.GetSystemHealthOutput> {
-    return this._t.call(OPS.getSystemHealth, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Workflow execution summary
-   * Run counts, success rate and duration percentiles over a window, bucketed by granularity, plus the live in-flight count. platform_admin only.
-   * GET /v1/workflow-metrics/summary
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getWorkflowMetricsSummary(input: T.GetWorkflowMetricsSummaryInput = {} as T.GetWorkflowMetricsSummaryInput, opts?: RequestOptions): Promise<T.GetWorkflowMetricsSummaryOutput> {
-    return this._t.call(OPS.getWorkflowMetricsSummary, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Top failing workflows
-   * Workflows with the most failed runs over a window. platform_admin only.
-   * GET /v1/workflow-metrics/top-failing
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getTopFailingWorkflows(input: T.GetTopFailingWorkflowsInput = {} as T.GetTopFailingWorkflowsInput, opts?: RequestOptions): Promise<T.GetTopFailingWorkflowsOutput> {
-    return this._t.call(OPS.getTopFailingWorkflows, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Recent workflow failures
-   * The most recent failed runs with their error. platform_admin only.
-   * GET /v1/workflow-metrics/recent-failures
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getRecentWorkflowFailures(input: T.GetRecentWorkflowFailuresInput = {} as T.GetRecentWorkflowFailuresInput, opts?: RequestOptions): Promise<T.GetRecentWorkflowFailuresOutput> {
-    return this._t.call(OPS.getRecentWorkflowFailures, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Slowest workflow runs
-   * The slowest runs over the last hours (1-168). platform_admin only.
-   * GET /v1/workflow-metrics/slowest
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getSlowestWorkflowRuns(input: T.GetSlowestWorkflowRunsInput = {} as T.GetSlowestWorkflowRunsInput, opts?: RequestOptions): Promise<T.GetSlowestWorkflowRunsOutput> {
-    return this._t.call(OPS.getSlowestWorkflowRuns, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Workflow engine state
-   * Near-live queue and worker state of the execution engine. platform_admin only.
-   * GET /v1/workflow-metrics/engine
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getWorkflowEngineMetrics(input: T.GetWorkflowEngineMetricsInput = {} as T.GetWorkflowEngineMetricsInput, opts?: RequestOptions): Promise<T.GetWorkflowEngineMetricsOutput> {
-    return this._t.call(OPS.getWorkflowEngineMetrics, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Accounts with workflow runs
-   * Accounts that can be used as the accountId filter. platform_admin only.
-   * GET /v1/workflow-metrics/accounts
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listWorkflowMetricsAccounts(input: T.ListWorkflowMetricsAccountsInput = {} as T.ListWorkflowMetricsAccountsInput, opts?: RequestOptions): Promise<T.ListWorkflowMetricsAccountsOutput> {
-    return this._t.call(OPS.listWorkflowMetricsAccounts, input as Record<string, unknown>, opts);
-  }
-}
-
-/**
  * Agent: AI-powered assistant and tools
  */
 export class AgentApi {
@@ -663,15 +105,6 @@ export class AgentApi {
     return this._t.call(OPS.agentGenerateWorkflowDocs, input as Record<string, unknown>, opts);
   }
   /**
-   * List assistant feedback
-   * Lists assistant feedback across all orgs, newest first. platform_admin only.
-   * GET /v1/agent/orchestrator/feedback
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listOrchestratorFeedback(input: T.ListOrchestratorFeedbackInput = {} as T.ListOrchestratorFeedbackInput, opts?: RequestOptions): Promise<T.ListOrchestratorFeedbackOutput> {
-    return this._t.call(OPS.listOrchestratorFeedback, input as Record<string, unknown>, opts);
-  }
-  /**
    * Rate an assistant reply
    * Records Pass/Fail feedback on one assistant message; resubmitting for the same thread, message and user updates the earlier rating. 403 when the thread belongs to another org, 404 when it does not exist, 429 when the same message was rated moments ago.
    * POST /v1/agent/orchestrator/feedback
@@ -712,33 +145,6 @@ export class AgentApi {
     return this._t.call(OPS.agentSuggestConnectors, input as Record<string, unknown>, opts);
   }
   /**
-   * Read an MCP App view
-   * Reads the ui:// view a tool declared (MCP Apps), on the caller's own MCP session, so the chat can render it. Returns { resource: { uri, mimeType, html, meta }, tools }, where tools are the names the view may call (the caller's read-only tools). Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/mcp-app/resource
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentReadMcpAppResource(input: T.AgentReadMcpAppResourceInput, opts?: RequestOptions): Promise<T.AgentReadMcpAppResourceOutput> {
-    return this._t.call(OPS.agentReadMcpAppResource, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Call a tool from an MCP App view
-   * Runs a tool a rendered view asked for, as the caller and through the same governance as a model call. Only tools the caller's session lists; a write tool is refused (a view's button is not the approval card). Returns the MCP tool result. Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/mcp-app/call
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentCallMcpAppTool(input: T.AgentCallMcpAppToolInput, opts?: RequestOptions): Promise<T.AgentCallMcpAppToolOutput> {
-    return this._t.call(OPS.agentCallMcpAppTool, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Park credential values for a chat message
-   * Stores secret values from the in-chat credential form and returns opaque refs to put in the message instead, so the model, transcript and provider never see the values. Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/credentials
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentParkOrchestratorCredentials(input: T.AgentParkOrchestratorCredentialsInput, opts?: RequestOptions): Promise<T.AgentParkOrchestratorCredentialsOutput> {
-    return this._t.call(OPS.agentParkOrchestratorCredentials, input as Record<string, unknown>, opts);
-  }
-  /**
    * Delete an orchestrator session
    * Stops any turn running on the session, then deletes the session and its messages. Roles: admin, owner, developer, operator, end_user.
    * DELETE /v1/agent/orchestrator/sessions/{id}
@@ -753,15 +159,6 @@ export class AgentApi {
    */
   agentRenameOrchestratorSession(input: T.AgentRenameOrchestratorSessionInput, opts?: RequestOptions): Promise<T.AgentRenameOrchestratorSessionOutput> {
     return this._t.call(OPS.agentRenameOrchestratorSession, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Reattach to a running turn (SSE)
-   * Replays and then live-tails the UI message stream of a turn still in flight on the session, from the Last-Event-ID header onward. 204 when nothing is running. Roles: admin, owner, developer, operator, end_user.
-   * GET /v1/agent/orchestrator/sessions/{id}/stream
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentResumeOrchestratorStream(input: T.AgentResumeOrchestratorStreamInput, opts?: RequestOptions): Promise<T.AgentResumeOrchestratorStreamOutput> {
-    return this._t.call(OPS.agentResumeOrchestratorStream, input as Record<string, unknown>, opts);
   }
   /**
    * Read a file from a session's virtual filesystem
@@ -780,48 +177,12 @@ export class AgentApi {
     return this._t.call(OPS.agentStopOrchestratorSession, input as Record<string, unknown>, opts);
   }
   /**
-   * Hand a running turn a fresh access token
-   * No body: the bearer token on this request replaces the one a long-running turn captured at start, so its platform tool calls keep authenticating. Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/sessions/{id}/token
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentRefreshOrchestratorToken(input: T.AgentRefreshOrchestratorTokenInput, opts?: RequestOptions): Promise<T.AgentRefreshOrchestratorTokenOutput> {
-    return this._t.call(OPS.agentRefreshOrchestratorToken, input as Record<string, unknown>, opts);
-  }
-  /**
    * Queue a message into a running turn
    * Queues a user UIMessage for the running turn to pick up at its next step. When no turn is running it returns queued=false and the caller should send a normal POST /api/v1/agent/orchestrator/stream instead. Roles: admin, owner, developer, operator, end_user.
    * POST /v1/agent/orchestrator/sessions/{id}/inject
    */
   agentInjectOrchestratorMessage(input: T.AgentInjectOrchestratorMessageInput, opts?: RequestOptions): Promise<T.AgentInjectOrchestratorMessageOutput> {
     return this._t.call(OPS.agentInjectOrchestratorMessage, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Append a background job's transcript (internal)
-   * Appends text messages to a session on behalf of an in-cluster background job. Refused with 403 unless the request is a direct in-cluster call; the gateway strips the marker from client requests.
-   * POST /v1/agent/orchestrator/sessions/{id}/transcript
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentAppendOrchestratorTranscript(input: T.AgentAppendOrchestratorTranscriptInput, opts?: RequestOptions): Promise<T.AgentAppendOrchestratorTranscriptOutput> {
-    return this._t.call(OPS.agentAppendOrchestratorTranscript, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Toggle auto-accept for gated tools
-   * Turns auto-accept on or off for the session: when on, mutating tools that normally wait for the user's approval run without asking. Applies to a running turn from its next tool call. Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/sessions/{id}/auto-accept
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentSetOrchestratorAutoAccept(input: T.AgentSetOrchestratorAutoAcceptInput, opts?: RequestOptions): Promise<T.AgentSetOrchestratorAutoAcceptOutput> {
-    return this._t.call(OPS.agentSetOrchestratorAutoAccept, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Always allow a tool in a session
-   * Adds a tool name to the session's approval allowlist so later calls to it skip the approval prompt even with auto-accept off. Roles: admin, owner, developer, operator, end_user.
-   * POST /v1/agent/orchestrator/sessions/{id}/allow-tool
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentAllowOrchestratorTool(input: T.AgentAllowOrchestratorToolInput, opts?: RequestOptions): Promise<T.AgentAllowOrchestratorToolOutput> {
-    return this._t.call(OPS.agentAllowOrchestratorTool, input as Record<string, unknown>, opts);
   }
   /**
    * Research a SaaS company by domain
@@ -855,15 +216,6 @@ export class AgentApi {
   reviseProductProfile(input: T.ReviseProductProfileInput, opts?: RequestOptions): Promise<T.ReviseProductProfileOutput> {
     return this._t.call(OPS.reviseProductProfile, input as Record<string, unknown>, opts);
   }
-  /**
-   * Invalidate the AI model cache (internal)
-   * Drops the agent service's cached AI model slot resolution so the next call rereads platform_config.AI_MODELS. Called by the api service after an AI model change.
-   * POST /v1/agent/cache/invalidate-models
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  agentInvalidateModelCache(input: T.AgentInvalidateModelCacheInput = {} as T.AgentInvalidateModelCacheInput, opts?: RequestOptions): Promise<T.AgentInvalidateModelCacheOutput> {
-    return this._t.call(OPS.agentInvalidateModelCache, input as Record<string, unknown>, opts);
-  }
 }
 
 /**
@@ -878,15 +230,6 @@ export class ApiKeysApi {
    */
   listApiKeys(input: T.ListApiKeysInput = {} as T.ListApiKeysInput, opts?: RequestOptions): Promise<T.ListApiKeysOutput> {
     return this._t.call(OPS.listApiKeys, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create API key
-   * Creates an API key. By default the key belongs to the caller's own org. Pass `orgId` to target a different org the caller is an active member of; the grant is then capped by the caller's role in that org, and callers whose target-org role cannot create keys are rejected. Pinned credentials (API keys, tenant/embed sessions) cannot retarget. Note: a key created into another org is only listable/manageable from a session in that org — this session cannot see or revoke it afterward.
-   * POST /v1/api-keys
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createApiKey(input: T.CreateApiKeyInput, opts?: RequestOptions): Promise<T.CreateApiKeyOutput> {
-    return this._t.call(OPS.createApiKey, input as Record<string, unknown>, opts);
   }
   /**
    * Get API key
@@ -912,24 +255,6 @@ export class ApiKeysApi {
   revokeApiKey(input: T.RevokeApiKeyInput, opts?: RequestOptions): Promise<T.RevokeApiKeyOutput> {
     return this._t.call(OPS.revokeApiKey, input as Record<string, unknown>, opts);
   }
-  /**
-   * Configure identity verification (HMAC) for a key
-   * Enables, disables, or rotates the per-key identity-verification secret used to sign x-org-id/x-user-id identity headers (x-identity-hmac = hex HMAC-SHA256 of "{org}\n{user}"). Modes: off = trust the headers (ownership-checked only), optional = verify and log mismatches without blocking (rollout shake-out), required = reject a missing/invalid hash with 401. Enabling with no secret yet, or passing rotate:true, mints a new secret returned ONCE; the previous secret keeps verifying until the next rotation. Setting mode off deletes the stored secrets. Only valid on multi-tenant keys — a tenant-pinned or single-customer key is rejected with 400.
-   * PUT /v1/api-keys/{id}/identity-verification
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setApiKeyIdentityVerification(input: T.SetApiKeyIdentityVerificationInput, opts?: RequestOptions): Promise<T.SetApiKeyIdentityVerificationOutput> {
-    return this._t.call(OPS.setApiKeyIdentityVerification, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Roll an API key
-   * Issues a new secret for an API key, keeping its configuration, and returns the new key once. 400 for a revoked key; 403 when the key belongs to another tenant. Requires settings.update.
-   * POST /v1/api-keys/{id}/roll
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  rollApiKey(input: T.RollApiKeyInput, opts?: RequestOptions): Promise<T.RollApiKeyOutput> {
-    return this._t.call(OPS.rollApiKey, input as Record<string, unknown>, opts);
-  }
 }
 
 /**
@@ -937,24 +262,6 @@ export class ApiKeysApi {
  */
 export class AuthApi {
   constructor(private readonly _t: Transport) {}
-  /**
-   * Revoke the presented access token
-   * Adds the bearer token's jti to the revocation denylist until its own exp, so it cannot be replayed after logout. Revokes only the presented token — the whole session is revoked by Keycloak's back-channel logout callback. Always returns 204, including when no token is presented.
-   * POST /v1/auth/logout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  logout(input: T.LogoutInput = {} as T.LogoutInput, opts?: RequestOptions): Promise<T.LogoutOutput> {
-    return this._t.call(OPS.logout, input as Record<string, unknown>, opts);
-  }
-  /**
-   * OIDC back-channel logout callback
-   * Called by Keycloak, not by clients. Accepts a signed logout token and denylists its session id so every access token minted for that session stops verifying immediately. Unauthenticated by design — the logout token is the credential. See https://openid.net/specs/openid-connect-backchannel-1_0.html
-   * POST /v1/auth/backchannel-logout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  backchannelLogout(input: T.BackchannelLogoutInput, opts?: RequestOptions): Promise<T.BackchannelLogoutOutput> {
-    return this._t.call(OPS.backchannelLogout, input as Record<string, unknown>, opts);
-  }
   /**
    * Get current user profile
    * The calling user's Keycloak profile (name, email, job title, timezone). Needs a Keycloak bearer token; an API key or embed session gets 401 - use whoami for those.
@@ -978,69 +285,6 @@ export class AuthApi {
    */
   getProfileSecurity(input: T.GetProfileSecurityInput = {} as T.GetProfileSecurityInput, opts?: RequestOptions): Promise<T.GetProfileSecurityOutput> {
     return this._t.call(OPS.getProfileSecurity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Mint an unsigned mock token (AUTH_DISABLED only)
-   * Exists only when the gateway runs with AUTH_DISABLED. Returns an unsigned JWT with the given claims (defaults from MOCK_USER_* env). Loopback callers only, or private-network callers when MOCK_TOKEN_ALLOW_PRIVATE=true; anyone else gets 403.
-   * POST /v1/auth/mock-token
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createMockToken(input: T.CreateMockTokenInput = {} as T.CreateMockTokenInput, opts?: RequestOptions): Promise<T.CreateMockTokenOutput> {
-    return this._t.call(OPS.createMockToken, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List my login sessions
-   * The calling user's active Keycloak sessions. Needs a Keycloak bearer token.
-   * GET /v1/profile/sessions
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listProfileSessions(input: T.ListProfileSessionsInput = {} as T.ListProfileSessionsInput, opts?: RequestOptions): Promise<T.ListProfileSessionsOutput> {
-    return this._t.call(OPS.listProfileSessions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Sign out everywhere
-   * Ends every Keycloak session of the calling user. Needs a Keycloak bearer token.
-   * DELETE /v1/profile/sessions
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  signOutAllProfileSessions(input: T.SignOutAllProfileSessionsInput = {} as T.SignOutAllProfileSessionsInput, opts?: RequestOptions): Promise<T.SignOutAllProfileSessionsOutput> {
-    return this._t.call(OPS.signOutAllProfileSessions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Sign out one session
-   * Ends one of the calling user's Keycloak sessions. 404 when the session is not the caller's.
-   * DELETE /v1/profile/sessions/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  signOutProfileSession(input: T.SignOutProfileSessionInput, opts?: RequestOptions): Promise<T.SignOutProfileSessionOutput> {
-    return this._t.call(OPS.signOutProfileSession, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Remove a passkey
-   * Removes one of the calling user's passkeys. 404 when the credential is not one of the caller's passkeys.
-   * DELETE /v1/profile/security/passkeys/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteProfilePasskey(input: T.DeleteProfilePasskeyInput, opts?: RequestOptions): Promise<T.DeleteProfilePasskeyOutput> {
-    return this._t.call(OPS.deleteProfilePasskey, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Magic-link interstitial page
-   * HTML page that makes a human confirm a magic-link sign-in, so link scanners cannot consume the token. Browser flow only.
-   * GET /v1/auth/magic-link/continue
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getMagicLinkContinuePage(input: T.GetMagicLinkContinuePageInput = {} as T.GetMagicLinkContinuePageInput, opts?: RequestOptions): Promise<T.GetMagicLinkContinuePageOutput> {
-    return this._t.call(OPS.getMagicLinkContinuePage, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Continue a magic-link sign-in
-   * Form post from the interstitial page; 303-redirects to Keycloak's action-token URL. Browser flow only.
-   * POST /v1/auth/magic-link/continue
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  continueMagicLink(input: T.ContinueMagicLinkInput, opts?: RequestOptions): Promise<T.ContinueMagicLinkOutput> {
-    return this._t.call(OPS.continueMagicLink, input as Record<string, unknown>, opts);
   }
 }
 
@@ -1130,30 +374,12 @@ export class BillingApi {
     return this._t.call(OPS.getMyPlanChangeRequest, input as Record<string, unknown>, opts);
   }
   /**
-   * Record a usage event
-   * Appends one usage record (metric + value) for a tenant. Metering plumbing; requires settings.manage.
-   * POST /v1/usage/record
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  recordUsage(input: T.RecordUsageInput, opts?: RequestOptions): Promise<T.RecordUsageOutput> {
-    return this._t.call(OPS.recordUsage, input as Record<string, unknown>, opts);
-  }
-  /**
    * List quota limits with current usage
    * Returns every quota dimension with its effective limit (plan default, account or tenant override), enforcement and current-period usage. Roles: owner, admin, operator, viewer; operator and viewer only for their own tenant. 403 for another account or tenant.
    * GET /v1/quotas
    */
   listQuotas(input: T.ListQuotasInput = {} as T.ListQuotasInput, opts?: RequestOptions): Promise<T.ListQuotasOutput> {
     return this._t.call(OPS.listQuotas, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Increment a usage counter
-   * Adds amount (default 1) to the current period's usage counter for a dimension. Requires settings.manage; orgId/endOrgId are honoured only for platform_admin.
-   * POST /v1/quotas/usage/increment
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  incrementQuotaUsage(input: T.IncrementQuotaUsageInput, opts?: RequestOptions): Promise<T.IncrementQuotaUsageOutput> {
-    return this._t.call(OPS.incrementQuotaUsage, input as Record<string, unknown>, opts);
   }
   /**
    * Check a quota dimension
@@ -1172,15 +398,6 @@ export class BillingApi {
     return this._t.call(OPS.getBillingSubscription, input as Record<string, unknown>, opts);
   }
   /**
-   * Start a Stripe checkout
-   * Creates a Stripe Checkout session for a self-serve plan and returns its URL. Requires settings.manage. 409 when the account already has an active subscription; 400 when the plan is not self-serve.
-   * POST /v1/billing/checkout
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createBillingCheckout(input: T.CreateBillingCheckoutInput, opts?: RequestOptions): Promise<T.CreateBillingCheckoutOutput> {
-    return this._t.call(OPS.createBillingCheckout, input as Record<string, unknown>, opts);
-  }
-  /**
    * List Stripe invoices
    * Lists the account's Stripe invoices. owner and admin only; empty when the account has no billing customer.
    * GET /v1/billing/invoices
@@ -1197,33 +414,6 @@ export class BillingApi {
     return this._t.call(OPS.getBillingPaymentMethod, input as Record<string, unknown>, opts);
   }
   /**
-   * Open the Stripe billing portal
-   * Creates a Stripe customer-portal session and returns its URL. Requires settings.manage; 404 when the account has no billing customer.
-   * POST /v1/billing/portal
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createBillingPortalSession(input: T.CreateBillingPortalSessionInput, opts?: RequestOptions): Promise<T.CreateBillingPortalSessionOutput> {
-    return this._t.call(OPS.createBillingPortalSession, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Stripe webhook receiver
-   * Stripe-signed webhook (stripe-signature header) that applies subscription changes. Not for API callers.
-   * POST /v1/billing/webhook
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  receiveStripeWebhook(input: T.ReceiveStripeWebhookInput = {} as T.ReceiveStripeWebhookInput, opts?: RequestOptions): Promise<T.ReceiveStripeWebhookOutput> {
-    return this._t.call(OPS.receiveStripeWebhook, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List plan change requests
-   * Lists plan change requests across orgs. platform_admin only.
-   * GET /v1/plan-change-requests
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPlanChangeRequests(input: T.ListPlanChangeRequestsInput = {} as T.ListPlanChangeRequestsInput, opts?: RequestOptions): Promise<T.ListPlanChangeRequestsOutput> {
-    return this._t.call(OPS.listPlanChangeRequests, input as Record<string, unknown>, opts);
-  }
-  /**
    * Request a plan change
    * Files a request to move the caller's org to another plan, for platform review. owner and admin only. 400 for an unknown plan or the current plan; 409 when a request is already pending.
    * POST /v1/plan-change-requests
@@ -1238,24 +428,6 @@ export class BillingApi {
    */
   cancelMyPlanChangeRequest(input: T.CancelMyPlanChangeRequestInput = {} as T.CancelMyPlanChangeRequestInput, opts?: RequestOptions): Promise<T.CancelMyPlanChangeRequestOutput> {
     return this._t.call(OPS.cancelMyPlanChangeRequest, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Approve a plan change request
-   * Approves a pending request and moves the org to the requested plan. platform_admin only; 409 when the request is no longer pending.
-   * POST /v1/plan-change-requests/{id}/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approvePlanChangeRequest(input: T.ApprovePlanChangeRequestInput, opts?: RequestOptions): Promise<T.ApprovePlanChangeRequestOutput> {
-    return this._t.call(OPS.approvePlanChangeRequest, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Reject a plan change request
-   * Rejects a pending plan change request. platform_admin only; 404 when no pending request has this id.
-   * POST /v1/plan-change-requests/{id}/reject
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  rejectPlanChangeRequest(input: T.RejectPlanChangeRequestInput, opts?: RequestOptions): Promise<T.RejectPlanChangeRequestOutput> {
-    return this._t.call(OPS.rejectPlanChangeRequest, input as Record<string, unknown>, opts);
   }
   /**
    * AI usage this month
@@ -1345,15 +517,6 @@ export class ConnectionsApi {
     return this._t.call(OPS.deleteSaasConnector, input as Record<string, unknown>, opts);
   }
   /**
-   * Get a usable OAuth access token for a connection
-   * Returns only the access token — never the refresh token or client secret — refreshing it on demand when the stored token is at or past expiry. Ownership-scoped: callers reach only their own pool's connections (admin/owner additionally their child tenants'). Used by browser surfaces such as the config page's file pickers.
-   * POST /v1/connections/{id}/access-token
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getConnectionAccessToken(input: T.GetConnectionAccessTokenInput, opts?: RequestOptions): Promise<T.GetConnectionAccessTokenOutput> {
-    return this._t.call(OPS.getConnectionAccessToken, input as Record<string, unknown>, opts);
-  }
-  /**
    * Refresh this connection's OAuth tokens now
    * Asks the credential's owner (UCL for a migrated org, the connector service otherwise) to rotate the tokens immediately instead of waiting for the scheduled sweep. Returns the new access token. status is 'not_refreshed' when nothing was rotated: token still current, no refresh token on the credential (Slack bot tokens, API keys), or the provider declined. Requires connections.share (the same gate as /access-token, since it returns the same secret); not available to embed sessions.
    * POST /v1/connections/{id}/refresh
@@ -1368,33 +531,6 @@ export class ConnectionsApi {
    */
   initiateOauthConnection(input: T.InitiateOauthConnectionInput, opts?: RequestOptions): Promise<T.InitiateOauthConnectionOutput> {
     return this._t.call(OPS.initiateOauthConnection, input as Record<string, unknown>, opts);
-  }
-  /**
-   * OAuth provider callback
-   * Redirect target of the provider's authorization step; exchanges the code, stores the connection and redirects the browser on.
-   * GET /v1/oauth/callback
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  oauthCallback(input: T.OauthCallbackInput = {} as T.OauthCallbackInput, opts?: RequestOptions): Promise<T.OauthCallbackOutput> {
-    return this._t.call(OPS.oauthCallback, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Decrypt a connection's credentials
-   * Returns the connection with its decrypted credentials. Requires connections.share.
-   * GET /v1/connections/{id}/decrypt
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  decryptConnection(input: T.DecryptConnectionInput, opts?: RequestOptions): Promise<T.DecryptConnectionOutput> {
-    return this._t.call(OPS.decryptConnection, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Read a connection's credentials
-   * Returns the connection with its decrypted credentials, from Postgres only. Embed sessions get 403. Requires connections.decrypt.
-   * GET /v1/connections/{id}/credentials
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getConnectionCredentials(input: T.GetConnectionCredentialsInput, opts?: RequestOptions): Promise<T.GetConnectionCredentialsOutput> {
-    return this._t.call(OPS.getConnectionCredentials, input as Record<string, unknown>, opts);
   }
   /**
    * Make a connection the default
@@ -1528,15 +664,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
    */
   forkConnector(input: T.ForkConnectorInput, opts?: RequestOptions): Promise<T.ForkConnectorOutput> {
     return this._t.call(OPS.forkConnector, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List active platform-level providers
-   * Active platform OAuth providers (shared OAuth apps fastn manages per platform), without client secrets. Requires connectors.read.
-   * GET /v1/platform-providers
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPlatformProviders(input: T.ListPlatformProvidersInput = {} as T.ListPlatformProvidersInput, opts?: RequestOptions): Promise<T.ListPlatformProvidersOutput> {
-    return this._t.call(OPS.listPlatformProviders, input as Record<string, unknown>, opts);
   }
   /**
    * Get a connector version
@@ -1755,15 +882,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
     return this._t.call(OPS.listAuthProviderScopes, input as Record<string, unknown>, opts);
   }
   /**
-   * Read an auth provider's client secret
-   * Returns the OAuth app with its decrypted client secret. Requires connections.decrypt.
-   * GET /v1/auth-providers/{id}/credentials
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getAuthProviderCredentials(input: T.GetAuthProviderCredentialsInput, opts?: RequestOptions): Promise<T.GetAuthProviderCredentialsOutput> {
-    return this._t.call(OPS.getAuthProviderCredentials, input as Record<string, unknown>, opts);
-  }
-  /**
    * List auth methods
    * Auth methods of the connectors visible to the caller, or of one connector. Requires connectors.read.
    * GET /v1/auth-methods
@@ -1874,15 +992,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
    */
   createAction(input: T.CreateActionInput, opts?: RequestOptions): Promise<T.CreateActionOutput> {
     return this._t.call(OPS.createAction, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create an action on a connector
-   * Same as createAction; the path's connector id replaces any connectorId in the body.
-   * POST /v1/connectors/{id}/actions
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createConnectorAction(input: T.CreateConnectorActionInput, opts?: RequestOptions): Promise<T.CreateConnectorActionOutput> {
-    return this._t.call(OPS.createConnectorAction, input as Record<string, unknown>, opts);
   }
   /**
    * Get an action
@@ -2045,51 +1154,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
     return this._t.call(OPS.executeWebhookSubscription, input as Record<string, unknown>, opts);
   }
   /**
-   * Read webhook configs (UCL import)
-   * UCL's read-back of a connector's imported webhook configs. Authenticated by the UCL import credential.
-   * GET /v1/connectors/{id}/webhook-configs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getUclWebhookConfigs(input: T.GetUclWebhookConfigsInput, opts?: RequestOptions): Promise<T.GetUclWebhookConfigsOutput> {
-    return this._t.call(OPS.getUclWebhookConfigs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Replace webhook configs (UCL import)
-   * Called by UCL's Connector Hub when it imports a connector: replaces the connector's webhook configs and app registrations wholesale. Authenticated by the UCL import credential, not a session.
-   * PUT /v1/connectors/{id}/webhook-configs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  importUclWebhookConfigs(input: T.ImportUclWebhookConfigsInput, opts?: RequestOptions): Promise<T.ImportUclWebhookConfigsOutput> {
-    return this._t.call(OPS.importUclWebhookConfigs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete webhook configs (UCL import)
-   * UCL's removal of a connector's imported webhook configs. Authenticated by the UCL import credential.
-   * DELETE /v1/connectors/{id}/webhook-configs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteUclWebhookConfigs(input: T.DeleteUclWebhookConfigsInput, opts?: RequestOptions): Promise<T.DeleteUclWebhookConfigsOutput> {
-    return this._t.call(OPS.deleteUclWebhookConfigs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Export a connector bundle
-   * The connector with its actions, webhook configs and auth providers as a portable bundle. Includes OAuth client secrets unless includeSecrets=false; with secrets it is owner/admin/developer only, without it connectors.read.
-   * GET /v1/connectors/{id}/export
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  exportConnector(input: T.ExportConnectorInput, opts?: RequestOptions): Promise<T.ExportConnectorOutput> {
-    return this._t.call(OPS.exportConnector, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Export several connectors
-   * A bundle of several connectors; ids the caller cannot see are listed in notFound. Includes OAuth client secrets unless includeSecrets is false (then connectors.read suffices; otherwise owner/admin/developer).
-   * POST /v1/connectors/export
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  exportConnectors(input: T.ExportConnectorsInput, opts?: RequestOptions): Promise<T.ExportConnectorsOutput> {
-    return this._t.call(OPS.exportConnectors, input as Record<string, unknown>, opts);
-  }
-  /**
    * Import a connector bundle
    * Imports a bundle produced by export into the caller's org: { connector, actions, webhookConfigs, authProviders, slug?, name? } for one, or { connectors: [...] } for several. slug/name override the single connector's identity. ownerLevel: "fastn" (platform_admin only) imports into the managed catalog. owner, admin or developer.
    * POST /v1/connectors/import
@@ -2114,15 +1178,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
     return this._t.call(OPS.exportActions, input as Record<string, unknown>, opts);
   }
   /**
-   * Export a connector's actions (path form)
-   * Same as exportActions with the connector in the path.
-   * GET /v1/connectors/{id}/actions/export
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  exportConnectorActions(input: T.ExportConnectorActionsInput, opts?: RequestOptions): Promise<T.ExportConnectorActionsOutput> {
-    return this._t.call(OPS.exportConnectorActions, input as Record<string, unknown>, opts);
-  }
-  /**
    * Export one action
    * One action in the fastn export format. Requires connectors.read.
    * GET /v1/actions/{id}/export
@@ -2137,25 +1192,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
    */
   importActions(input: T.ImportActionsInput, opts?: RequestOptions): Promise<T.ImportActionsOutput> {
     return this._t.call(OPS.importActions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Import actions (path form)
-   * Same as importActions with the connector in the path.
-   * POST /v1/connectors/{id}/actions/import
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  importConnectorActions(input: T.ImportConnectorActionsInput, opts?: RequestOptions): Promise<T.ImportConnectorActionsOutput> {
-    return this._t.call(OPS.importConnectorActions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Import hub data sources (deprecated)
-   * Legacy import of marketplace/hub data sources; importActions detects this format itself. Requires connectors.create.
-   * POST /v1/connectors/{id}/actions/import-hub
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   * @deprecated
-   */
-  importConnectorHubActions(input: T.ImportConnectorHubActionsInput, opts?: RequestOptions): Promise<T.ImportConnectorHubActionsOutput> {
-    return this._t.call(OPS.importConnectorHubActions, input as Record<string, unknown>, opts);
   }
   /**
    * Generate a mock response
@@ -2244,15 +1280,6 @@ After the response, and unable to affect it, the write emits the `connector_requ
    */
   deleteActionFolder(input: T.DeleteActionFolderInput, opts?: RequestOptions): Promise<T.DeleteActionFolderOutput> {
     return this._t.call(OPS.deleteActionFolder, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Fetch a domain's favicon
-   * Image proxy for connector icons: returns the favicon of a domain, cached. Not an API call.
-   * GET /v1/favicon
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getFavicon(input: T.GetFaviconInput, opts?: RequestOptions): Promise<T.GetFaviconOutput> {
-    return this._t.call(OPS.getFavicon, input as Record<string, unknown>, opts);
   }
   /**
    * Probe a connector action's fields
@@ -2369,64 +1396,9 @@ export class EmbedApi {
    * Generate scoped embed token
    * Issues a short-lived (8 hour) token scoped to a tenant and end_user role. Requires connectors.read permission. Partner backends may send an EMPTY body together with the identity headers (x-org-id + x-user-id, proven with x-identity-hmac when the API key's identity-verification mode requires it) — the tenant and user then come from the headers. Without identity headers, endOrgId is required unless allowOrgLevel is true.
    * POST /v1/embed/token
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
    */
   createEmbedToken(input: T.CreateEmbedTokenInput = {} as T.CreateEmbedTokenInput, opts?: RequestOptions): Promise<T.CreateEmbedTokenOutput> {
     return this._t.call(OPS.createEmbedToken, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Validate an embed token
-   * Resolves a token to its (non-secret) session context. Accepts a token inside the refresh grace window and reports it with expired:true and remainingMs:0 — that grants strictly less than POST /embed/token/refresh would give the same caller, and stops a widget mounting with no identity at all. Validating never authenticates: every other path rejects an expired token outright.
-   * POST /v1/embed/token/validate
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  validateEmbedToken(input: T.ValidateEmbedTokenInput, opts?: RequestOptions): Promise<T.ValidateEmbedTokenOutput> {
-    return this._t.call(OPS.validateEmbedToken, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Refresh an embed token (silent re-auth)
-   * Rotates the session: the presented token is retired and a replacement issued with a fresh 8 hour TTL. Also accepts a token that expired less than 24 hours ago, so an idle embed session can silently re-establish; such a token still cannot authenticate any other request. Rotation cannot extend the session past its absolute lifetime (7 days from first issue), and the final token is clamped to that ceiling. Replaying an already-rotated token revokes the whole chain — but concurrent refreshes of the same token within a short race window are idempotent and all receive the same successor, so a parallel mount can never revoke a live session. Unauthenticated by design: the token in the body is the credential, and requiring a live one to reach this route would be circular.
-   * POST /v1/embed/token/refresh
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  refreshEmbedToken(input: T.RefreshEmbedTokenInput, opts?: RequestOptions): Promise<T.RefreshEmbedTokenOutput> {
-    return this._t.call(OPS.refreshEmbedToken, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Redeem an embed share link (UCL service channel)
-   * Used by UCL's share-link MCP connect. Unauthenticated: the share id is the credential, exactly as for GET /api/v1/embed/iframe?share=, which already hands its holder an embed token. mint:false reports whether the share link is live (UCL's MCP authorize and every gwt_ refresh). mint:true also issues a tracked 8 hour emb_ token for the link's tenant, which a revoke of the link kills. Never counted as an open of the link.
-   * POST /v1/embed/share-links/redeem
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  redeemEmbedShareLink(input: T.RedeemEmbedShareLinkInput, opts?: RequestOptions): Promise<T.RedeemEmbedShareLinkOutput> {
-    return this._t.call(OPS.redeemEmbedShareLink, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create a one-time Claude (MCP) connect URL
-   * Returns mcp.<zone>/fastn-workspace/c/<mcpc_code>, which works once and for 10 minutes. Pasted into an MCP client, it connects that client to Fastn Workspace as the tenant; redeeming it creates a Claude connection (listed by GET /api/v1/embed/share-links?kind=mcp, disconnected by DELETE /api/v1/embed/share-links/{id}). From an embed token the tenant and user are the token's and the body is ignored; from a dashboard session (owner/admin/developer) endOrgId names one of the caller's own tenants. Capability-scoped link tokens are refused.
-   * POST /v1/embed/mcp-connect-codes
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createMcpConnectCode(input: T.CreateMcpConnectCodeInput = {} as T.CreateMcpConnectCodeInput, opts?: RequestOptions): Promise<T.CreateMcpConnectCodeOutput> {
-    return this._t.call(OPS.createMcpConnectCode, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Redeem a one-time MCP connect code (UCL service channel)
-   * Used by UCL at OAuth authorize for /fastn-workspace/c/<code>. Unauthenticated: the code is the credential. Burns the code and creates a Claude connection (an embed_share_link row of kind mcp acting as the user who minted the code); UCL then uses its shareId exactly like a share link's. A used and an expired code give the same 404.
-   * POST /v1/embed/mcp-connect-codes/redeem
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  redeemMcpConnectCode(input: T.RedeemMcpConnectCodeInput, opts?: RequestOptions): Promise<T.RedeemMcpConnectCodeOutput> {
-    return this._t.call(OPS.redeemMcpConnectCode, input as Record<string, unknown>, opts);
-  }
-  /**
-   * The embedded widget's own crash and error telemetry
-   * Sent by the widget, never by a partner's backend. Widget sessions (emb_ tokens) only. Accepts up to 20 events from a fixed list (ui_crashed, chunk_load_failed, error_shown, api_request_failed, empty_state_viewed, connect_started); anything else, and any field outside an event's schema, is dropped. Every field is an enum, a code, a slug or a route whose ids are replaced. Events are attributed to the customer's account, never to a person. Rate-limited per session.
-   * POST /v1/embed/events
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  reportEmbedEvents(input: T.ReportEmbedEventsInput, opts?: RequestOptions): Promise<T.ReportEmbedEventsOutput> {
-    return this._t.call(OPS.reportEmbedEvents, input as Record<string, unknown>, opts);
   }
   /**
    * Create a setup link for widget installation
@@ -2621,48 +1593,12 @@ export class EmbedApi {
     return this._t.call(OPS.deleteConfigEntry, input as Record<string, unknown>, opts);
   }
   /**
-   * List embed share links
-   * The org's share links (newest 200), including revoked ones. kind=mcp lists Claude MCP connections instead of share links. Requires connectors.read.
-   * GET /v1/embed/share-links
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listEmbedShareLinks(input: T.ListEmbedShareLinksInput = {} as T.ListEmbedShareLinksInput, opts?: RequestOptions): Promise<T.ListEmbedShareLinksOutput> {
-    return this._t.call(OPS.listEmbedShareLinks, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create an embed share link
-   * Creates a durable, revocable link that opens one customer's embedded hub without a token in the URL; each load mints an end_user session for endOrgId. Optional metadata (partner only, at most 4KB) is handed back in the widget's installation lifecycle hooks for sessions opened from the link. Requires connectors.read.
-   * POST /v1/embed/share-links
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createEmbedShareLink(input: T.CreateEmbedShareLinkInput, opts?: RequestOptions): Promise<T.CreateEmbedShareLinkOutput> {
-    return this._t.call(OPS.createEmbedShareLink, input as Record<string, unknown>, opts);
-  }
-  /**
    * Revoke an embed share link
    * Revokes a share link and ends every session it already minted. The row is kept for audit. 404 when the link is not the org's or is already revoked. Requires connectors.read.
    * DELETE /v1/embed/share-links/{id}
    */
   revokeEmbedShareLink(input: T.RevokeEmbedShareLinkInput, opts?: RequestOptions): Promise<T.RevokeEmbedShareLinkOutput> {
     return this._t.call(OPS.revokeEmbedShareLink, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Embedded hub page
-   * The HTML shell of the embedded hub, for an iframe. ?share= opens a share link; ?token= an embed token. Not an API call.
-   * GET /v1/embed/iframe
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getEmbedIframe(input: T.GetEmbedIframeInput = {} as T.GetEmbedIframeInput, opts?: RequestOptions): Promise<T.GetEmbedIframeOutput> {
-    return this._t.call(OPS.getEmbedIframe, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Embed bundle asset
-   * Static file of the embed bundle (embed.js, embed.css, images). Not an API call.
-   * GET /v1/embed/assets/{file}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getEmbedAsset(input: T.GetEmbedAssetInput, opts?: RequestOptions): Promise<T.GetEmbedAssetOutput> {
-    return this._t.call(OPS.getEmbedAsset, input as Record<string, unknown>, opts);
   }
   /**
    * List configs
@@ -2753,24 +1689,6 @@ export class EmbedApi {
     return this._t.call(OPS.getConfigDraft, input as Record<string, unknown>, opts);
   }
   /**
-   * Approve a config draft
-   * Called by the review page when the user approves: saves the (possibly edited) configuration as a config and marks the draft approved. Approving again returns the same configId. Requires widgets.create.
-   * POST /v1/config-drafts/{id}/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approveConfigDraft(input: T.ApproveConfigDraftInput, opts?: RequestOptions): Promise<T.ApproveConfigDraftOutput> {
-    return this._t.call(OPS.approveConfigDraft, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Embed OAuth return page
-   * Browser landing page every embed OAuth connect is redirected to; posts the outcome back to the opener window and records the connect outcome metric. Not an API call.
-   * GET /v1/embed/oauth-done
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  embedOauthDone(input: T.EmbedOauthDoneInput = {} as T.EmbedOauthDoneInput, opts?: RequestOptions): Promise<T.EmbedOauthDoneOutput> {
-    return this._t.call(OPS.embedOauthDone, input as Record<string, unknown>, opts);
-  }
-  /**
    * List installations
    * Lists installations (a widget, workflow or trigger set up for one tenant) visible to the caller, newest first, each with a computed healthStatus. A tenant caller only sees its own. 403 when end_org_id is outside the caller's subtree. Requires widgets.read.
    * GET /v1/installations
@@ -2819,19 +1737,9 @@ export class EmbedApi {
     return this._t.call(OPS.getInstallationResolvedConfig, input as Record<string, unknown>, opts);
   }
   /**
-   * Re-push installations to UCL
-   * Re-publishes every installation in the caller's scope to the UCL mirror, repairing pins a failed push left missing. Requires workflows.update.
-   * POST /v1/installations/reconcile-mirror
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  reconcileInstallationMirror(input: T.ReconcileInstallationMirrorInput = {} as T.ReconcileInstallationMirrorInput, opts?: RequestOptions): Promise<T.ReconcileInstallationMirrorOutput> {
-    return this._t.call(OPS.reconcileInstallationMirror, input as Record<string, unknown>, opts);
-  }
-  /**
    * Setup link status (public)
    * Whether a setup link can still be used, so the setup page can say why it does not open. Needs no session and returns no link data beyond its state and expiry.
    * GET /v1/setup-links/{id}/status
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
    */
   getSetupLinkStatus(input: T.GetSetupLinkStatusInput, opts?: RequestOptions): Promise<T.GetSetupLinkStatusOutput> {
     return this._t.call(OPS.getSetupLinkStatus, input as Record<string, unknown>, opts);
@@ -2969,14 +1877,6 @@ export class EventsApi {
    */
   deleteInstallationTrigger(input: T.DeleteInstallationTriggerInput, opts?: RequestOptions): Promise<T.DeleteInstallationTriggerOutput> {
     return this._t.call(OPS.deleteInstallationTrigger, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Event service health check
-   * GET /v1/events/health
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  eventServiceHealth(input: T.EventServiceHealthInput = {} as T.EventServiceHealthInput, opts?: RequestOptions): Promise<T.EventServiceHealthOutput> {
-    return this._t.call(OPS.eventServiceHealth, input as Record<string, unknown>, opts);
   }
   /**
    * List app-event triggers
@@ -3451,15 +2351,6 @@ export class EventsApi {
     return this._t.call(OPS.replayAllTriggerDlq, input as Record<string, unknown>, opts);
   }
   /**
-   * Trigger counts per org (platform admin)
-   * Trigger and active-trigger counts and last activity for every org. platform_admin only; any other role is a 403.
-   * GET /v1/admin/triggers/monitoring/orgs
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getTriggerMonitoringOrgOverview(input: T.GetTriggerMonitoringOrgOverviewInput = {} as T.GetTriggerMonitoringOrgOverviewInput, opts?: RequestOptions): Promise<T.GetTriggerMonitoringOrgOverviewOutput> {
-    return this._t.call(OPS.getTriggerMonitoringOrgOverview, input as Record<string, unknown>, opts);
-  }
-  /**
    * Delete a DLQ entry
    * Discards one dead-letter entry without re-delivering it. Requires events.delete; 404 when the entry is not in the caller's org.
    * DELETE /v1/dlq/{id}
@@ -3492,24 +2383,6 @@ export class EventsApi {
     return this._t.call(OPS.listAlertChannelTargets, input as Record<string, unknown>, opts);
   }
   /**
-   * Webhook ingest (called by external systems)
-   * The public URL a webhook trigger hands out (its triggerUrl). Accepts any JSON or form body and dispatches it to the trigger's routes. A trigger with authMethod API_KEY requires a fastn API key header. Any other method is a 405.
-   * POST /v1/triggers/{orgId}/webhooks/{triggerId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  receiveWebhookTrigger(input: T.ReceiveWebhookTriggerInput, opts?: RequestOptions): Promise<T.ReceiveWebhookTriggerOutput> {
-    return this._t.call(OPS.receiveWebhookTrigger, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Connector webhook ingest (called by providers)
-   * The per-connector ingest URL of an APP-type webhook config with an auth provider. The provider posts events here; they are verified against the config and fanned out to the matching app-event triggers.
-   * POST /v1/triggers/{orgId}/webhooks/{connectorId}/{authProviderId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  receiveAppWebhook(input: T.ReceiveAppWebhookInput, opts?: RequestOptions): Promise<T.ReceiveAppWebhookOutput> {
-    return this._t.call(OPS.receiveAppWebhook, input as Record<string, unknown>, opts);
-  }
-  /**
    * Send an app event to a connector's ingest URL
    * The ingest URL of a connector's app registration, which the provider posts events to; posting a synthetic event here fires the matching app-event triggers end to end. The registration's verification applies: a connector whose method needs a signature rejects an unsigned request with 401. The event type and account id are read from the body with the registration's extractors. triggerId restricts delivery to one trigger. Not authenticated by fastn credentials.
    * POST /v1/triggers/{orgId}/{connectorId}/events
@@ -3539,15 +2412,6 @@ export class ExecutionApi {
    */
   listConnectorExecutions(input: T.ListConnectorExecutionsInput = {} as T.ListConnectorExecutionsInput, opts?: RequestOptions): Promise<T.ListConnectorExecutionsOutput> {
     return this._t.call(OPS.listConnectorExecutions, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Record an execution
-   * Writes one action execution into the execution log. Used by the connector data plane's write-back (authenticated by its own secret) and by sessions holding executions.create; it does not run anything.
-   * POST /v1/executions
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  recordConnectorExecution(input: T.RecordConnectorExecutionInput, opts?: RequestOptions): Promise<T.RecordConnectorExecutionOutput> {
-    return this._t.call(OPS.recordConnectorExecution, input as Record<string, unknown>, opts);
   }
   /**
    * Get execution
@@ -3788,68 +2652,12 @@ export class OnboardingApi {
     return this._t.call(OPS.claimOnboardingCredits, input as Record<string, unknown>, opts);
   }
   /**
-   * Classify an onboarding use case (agent proxy)
-   * Forwards the body to the agent service's onboarding classifier. The agent service no longer serves this route.
-   * POST /v1/onboarding/classify-usecase
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   * @deprecated
-   */
-  classifyOnboardingUseCase(input: T.ClassifyOnboardingUseCaseInput, opts?: RequestOptions): Promise<T.ClassifyOnboardingUseCaseOutput> {
-    return this._t.call(OPS.classifyOnboardingUseCase, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Look up a company domain (agent proxy)
-   * Forwards the body to the agent service's onboarding domain lookup. The agent service no longer serves this route.
-   * POST /v1/onboarding/lookup
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   * @deprecated
-   */
-  lookupOnboardingDomain(input: T.LookupOnboardingDomainInput, opts?: RequestOptions): Promise<T.LookupOnboardingDomainOutput> {
-    return this._t.call(OPS.lookupOnboardingDomain, input as Record<string, unknown>, opts);
-  }
-  /**
    * Join an existing org by email domain
    * Requests membership of an org whose domain matches the caller's email domain; approved immediately when the org auto-approves that domain, otherwise left pending. Signed-in dashboard user (Bearer JWT); end_user is refused. 403 when the org's domain does not match.
    * POST /v1/onboarding/join-org
    */
   joinOnboardingOrg(input: T.JoinOnboardingOrgInput, opts?: RequestOptions): Promise<T.JoinOnboardingOrgOutput> {
     return this._t.call(OPS.joinOnboardingOrg, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Find onboarding records
-   * Finds onboarding records by email, domain or user id (one is required). platform_admin only.
-   * GET /v1/onboarding/search
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  searchOnboarding(input: T.SearchOnboardingInput = {} as T.SearchOnboardingInput, opts?: RequestOptions): Promise<T.SearchOnboardingOutput> {
-    return this._t.call(OPS.searchOnboarding, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List onboarding records for review
-   * Lists onboarding records, filtered by review state. platform_admin only.
-   * GET /v1/onboarding/admin/reviews
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listOnboardingReviews(input: T.ListOnboardingReviewsInput = {} as T.ListOnboardingReviewsInput, opts?: RequestOptions): Promise<T.ListOnboardingReviewsOutput> {
-    return this._t.call(OPS.listOnboardingReviews, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Approve a held signup
-   * Marks a user's onboarding completed and releases it from review. platform_admin only; 404 when the user has no onboarding record.
-   * POST /v1/onboarding/admin/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approveOnboarding(input: T.ApproveOnboardingInput, opts?: RequestOptions): Promise<T.ApproveOnboardingOutput> {
-    return this._t.call(OPS.approveOnboarding, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Hold a signup for review
-   * Puts a user's onboarding back into review, blocking access until approved. platform_admin only.
-   * POST /v1/onboarding/admin/block
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  blockOnboarding(input: T.BlockOnboardingInput, opts?: RequestOptions): Promise<T.BlockOnboardingOutput> {
-    return this._t.call(OPS.blockOnboarding, input as Record<string, unknown>, opts);
   }
 }
 
@@ -3979,33 +2787,6 @@ export class OrgsApi {
     return this._t.call(OPS.deleteSecret, input as Record<string, unknown>, opts);
   }
   /**
-   * List orgs pending review
-   * Platform admin only: orgs in pending_review with their onboarding gate decision.
-   * GET /v1/orgs/pending-review
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPendingReviewOrgs(input: T.ListPendingReviewOrgsInput = {} as T.ListPendingReviewOrgsInput, opts?: RequestOptions): Promise<T.ListPendingReviewOrgsOutput> {
-    return this._t.call(OPS.listPendingReviewOrgs, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Approve a pending org
-   * Platform admin only: activates an org in pending_review, optionally setting its plan.
-   * POST /v1/orgs/{id}/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approveOrg(input: T.ApproveOrgInput, opts?: RequestOptions): Promise<T.ApproveOrgOutput> {
-    return this._t.call(OPS.approveOrg, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Reject a pending org
-   * Platform admin only: blocks an org in pending_review.
-   * POST /v1/orgs/{id}/reject
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  rejectOrg(input: T.RejectOrgInput, opts?: RequestOptions): Promise<T.RejectOrgOutput> {
-    return this._t.call(OPS.rejectOrg, input as Record<string, unknown>, opts);
-  }
-  /**
    * Assign an org admin
    * Makes the user with this email the org's admin, creating and inviting them when they have no account. Requires users.create on the caller's own org or a child of it.
    * POST /v1/orgs/{id}/admin
@@ -4014,30 +2795,12 @@ export class OrgsApi {
     return this._t.call(OPS.assignOrgAdmin, input as Record<string, unknown>, opts);
   }
   /**
-   * Transfer org ownership
-   * Atomically makes an existing admin of the org its owner and demotes the current owner to admin. Only the current owner (or platform_admin) may call it; the target must be an admin member other than the caller.
-   * POST /v1/orgs/{id}/transfer-ownership
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  transferOrgOwnership(input: T.TransferOrgOwnershipInput, opts?: RequestOptions): Promise<T.TransferOrgOwnershipOutput> {
-    return this._t.call(OPS.transferOrgOwnership, input as Record<string, unknown>, opts);
-  }
-  /**
    * Get the org's database config
    * Where this org's fastn.db calls go (bring-your-own Postgres or the shared schema). Never returns a password. owner/admin/developer.
    * GET /v1/orgs/{id}/db-config
    */
   getOrgDbConfig(input: T.GetOrgDbConfigInput, opts?: RequestOptions): Promise<T.GetOrgDbConfigOutput> {
     return this._t.call(OPS.getOrgDbConfig, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Save the org's database config
-   * Saves connection details and/or pool limits; does not enable external routing (see enableOrgDbConfig). owner/admin only.
-   * PUT /v1/orgs/{id}/db-config
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateOrgDbConfig(input: T.UpdateOrgDbConfigInput, opts?: RequestOptions): Promise<T.UpdateOrgDbConfigOutput> {
-    return this._t.call(OPS.updateOrgDbConfig, input as Record<string, unknown>, opts);
   }
   /**
    * Revert to the shared database
@@ -4054,15 +2817,6 @@ export class OrgsApi {
    */
   listOrgDbConfigOverrides(input: T.ListOrgDbConfigOverridesInput, opts?: RequestOptions): Promise<T.ListOrgDbConfigOverridesOutput> {
     return this._t.call(OPS.listOrgDbConfigOverrides, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Test a database connection
-   * Tests the given connection merged over the stored one without saving. A failed connection is a 200 with ok: false and the driver message. owner/admin only; 20 tests per minute per org.
-   * POST /v1/orgs/{id}/db-config/test
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  testOrgDbConfig(input: T.TestOrgDbConfigInput, opts?: RequestOptions): Promise<T.TestOrgDbConfigOutput> {
-    return this._t.call(OPS.testOrgDbConfig, input as Record<string, unknown>, opts);
   }
   /**
    * Enable the external database
@@ -4087,135 +2841,6 @@ export class OrgsApi {
    */
   updateOrgV1Bridge(input: T.UpdateOrgV1BridgeInput, opts?: RequestOptions): Promise<T.UpdateOrgV1BridgeOutput> {
     return this._t.call(OPS.updateOrgV1Bridge, input as Record<string, unknown>, opts);
-  }
-}
-
-/**
- * Platform:
- */
-export class PlatformApi {
-  constructor(private readonly _t: Transport) {}
-  /**
-   * Content-Security-Policy violation sink
-   * Receives CSP violation reports from the dashboard. The policy is ENFORCED on the live.fastn.ai/gcp CloudFront edge and Report-Only on the Firebase-hosted hosts, so a report's `disposition` field decides how urgent it is: "enforce" means a real user's page had something blocked, "report" means it would have been. Called by the browser, never by a partner: it is referenced from the policy's own report-uri and report-to directives. Unauthenticated by design — a violation report carries no credentials and is often sent from a page whose scripts were just blocked. Accepts both wire formats: the report-uri body ({ "csp-report": {...} }) and a Reporting API batch ([{ type: "csp-violation", body: {...} }]). Answers 204 to everything, including a malformed body: the browser cannot act on an error and a parse failure must not register as an application 4xx. Reports are sanitised (query strings and fragments stripped from every URI before logging) and logged, not stored. Rate-limited per IP in the route itself, because public routes are dispatched ahead of the gateway's pre-auth limiter.
-   * POST /v1/csp-report
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  reportCspViolation(input: T.ReportCspViolationInput = {} as T.ReportCspViolationInput, opts?: RequestOptions): Promise<T.ReportCspViolationOutput> {
-    return this._t.call(OPS.reportCspViolation, input as Record<string, unknown>, opts);
-  }
-}
-
-/**
- * Platform Config: Dynamic platform key-value config (platform_admin only)
- */
-export class PlatformConfigApi {
-  constructor(private readonly _t: Transport) {}
-  /**
-   * List all platform config keys (secrets masked)
-   * Requires root platform_admin (accountId = tenant_platform).
-   * GET /v1/platform/config
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPlatformConfig(input: T.ListPlatformConfigInput = {} as T.ListPlatformConfigInput, opts?: RequestOptions): Promise<T.ListPlatformConfigOutput> {
-    return this._t.call(OPS.listPlatformConfig, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Upsert a platform config key
-   * Creates or updates a platform-wide config key (values of secret-looking keys are vault-encrypted). platform_admin only.
-   * PUT /v1/platform/config
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setPlatformConfig(input: T.SetPlatformConfigInput, opts?: RequestOptions): Promise<T.SetPlatformConfigOutput> {
-    return this._t.call(OPS.setPlatformConfig, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Deprecate a platform config key
-   * Marks a platform config key deprecated so it is no longer served. platform_admin only.
-   * POST /v1/platform/config/deprecate
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deprecatePlatformConfig(input: T.DeprecatePlatformConfigInput, opts?: RequestOptions): Promise<T.DeprecatePlatformConfigOutput> {
-    return this._t.call(OPS.deprecatePlatformConfig, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Toggle secret status for a config key
-   * Sets whether a platform config key is treated as a secret (masked on read). platform_admin only.
-   * PATCH /v1/platform/config/secret
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  togglePlatformConfigSecret(input: T.TogglePlatformConfigSecretInput, opts?: RequestOptions): Promise<T.TogglePlatformConfigSecretOutput> {
-    return this._t.call(OPS.togglePlatformConfigSecret, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get config change history
-   * Lists platform config changes from the audit log, newest first (50 for one key, 100 overall). platform_admin only.
-   * GET /v1/platform/config/history
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getPlatformConfigHistory(input: T.GetPlatformConfigHistoryInput = {} as T.GetPlatformConfigHistoryInput, opts?: RequestOptions): Promise<T.GetPlatformConfigHistoryOutput> {
-    return this._t.call(OPS.getPlatformConfigHistory, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Run the proactive OAuth refresh sweep now
-   * Refreshes OAuth access tokens that are expiring soon across EVERY workspace, instead of waiting for the next scheduled run. Delegates to the same sweep the cron runs (UCL owns the credential for a migrated org, and only one system may refresh it). platform_admin only.
-   * POST /v1/platform/oauth/refresh-due
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  refreshDueOAuthTokens(input: T.RefreshDueOAuthTokensInput = {} as T.RefreshDueOAuthTokensInput, opts?: RequestOptions): Promise<T.RefreshDueOAuthTokensOutput> {
-    return this._t.call(OPS.refreshDueOAuthTokens, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List registered agents with effective config
-   * Lists the registered platform agents with their defaults, overrides and effective config. platform_admin only.
-   * GET /v1/platform/agents
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listPlatformAgents(input: T.ListPlatformAgentsInput = {} as T.ListPlatformAgentsInput, opts?: RequestOptions): Promise<T.ListPlatformAgentsOutput> {
-    return this._t.call(OPS.listPlatformAgents, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update agent config overrides
-   * Sets or clears (null) an agent's model, temperature, token, prompt and tool overrides. platform_admin only.
-   * PATCH /v1/platform/agents/{agentId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updatePlatformAgent(input: T.UpdatePlatformAgentInput, opts?: RequestOptions): Promise<T.UpdatePlatformAgentOutput> {
-    return this._t.call(OPS.updatePlatformAgent, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get the AI model per agent slot
-   * Returns the platform-wide AI model chosen for each agent slot (default always present). platform_admin only.
-   * GET /v1/platform/ai-models
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getAiModels(input: T.GetAiModelsInput = {} as T.GetAiModelsInput, opts?: RequestOptions): Promise<T.GetAiModelsOutput> {
-    return this._t.call(OPS.getAiModels, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Set the AI model per agent slot
-   * Merges the given slot -> model pairs into the platform AI model config and invalidates the agent service's cache. platform_admin only. 400 on an unknown slot or an empty model.
-   * PUT /v1/platform/ai-models
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  setAiModels(input: T.SetAiModelsInput = {} as T.SetAiModelsInput, opts?: RequestOptions): Promise<T.SetAiModelsOutput> {
-    return this._t.call(OPS.setAiModels, input as Record<string, unknown>, opts);
-  }
-}
-
-/**
- * Support: Customer escalations to fastn's on-call engineer
- */
-export class SupportApi {
-  constructor(private readonly _t: Transport) {}
-  /**
-   * Escalate to on-call support (pages the on-call engineer)
-   * Pages fastn's on-call engineer for a customer's on-call support escalation by opening a Spike incident. owner and admin only, signed in to the dashboard (an API key, an embed session or a platform admin impersonating the customer gets 403), and only for an org with the support.priorityEscalation entitlement (403 otherwise). At most 3 per org per hour (429). idempotencyKey makes a repeat return the first result (200) instead of paging again; a repeat while the first is still in flight gets 409. 201 carries the Spike incident reference; 502 when Spike could not be reached after retries (the failure raises an alert), 503 when the Spike webhook is not configured.
-   * POST /v1/support/escalations
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createSupportEscalation(input: T.CreateSupportEscalationInput, opts?: RequestOptions): Promise<T.CreateSupportEscalationOutput> {
-    return this._t.call(OPS.createSupportEscalation, input as Record<string, unknown>, opts);
   }
 }
 
@@ -4265,51 +2890,6 @@ export class SyncApi {
   triggerSync(input: T.TriggerSyncInput, opts?: RequestOptions): Promise<T.TriggerSyncOutput> {
     return this._t.call(OPS.triggerSync, input as Record<string, unknown>, opts);
   }
-  /**
-   * Start a parallel sync run
-   * Starts a partitioned sync run on Temporal and returns its runId immediately (202); poll the partitions route for progress. batchSize defaults to 500 and maxConcurrency to 20. Currently refused with 403 for every caller: the handler checks a permission string the RBAC layer cannot parse.
-   * POST /v1/sync/jobs/{id}/trigger-parallel
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  triggerSyncParallel(input: T.TriggerSyncParallelInput, opts?: RequestOptions): Promise<T.TriggerSyncParallelOutput> {
-    return this._t.call(OPS.triggerSyncParallel, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Pause a parallel sync run
-   * Pauses an in-flight parallel sync run. Currently refused with 403 for every caller: the handler checks a permission string the RBAC layer cannot parse.
-   * POST /v1/sync/jobs/{id}/pause
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  pauseSyncJob(input: T.PauseSyncJobInput, opts?: RequestOptions): Promise<T.PauseSyncJobOutput> {
-    return this._t.call(OPS.pauseSyncJob, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Resume a parallel sync run
-   * Resumes a paused parallel sync run. Currently refused with 403 for every caller: the handler checks a permission string the RBAC layer cannot parse.
-   * POST /v1/sync/jobs/{id}/resume
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  resumeSyncJob(input: T.ResumeSyncJobInput, opts?: RequestOptions): Promise<T.ResumeSyncJobOutput> {
-    return this._t.call(OPS.resumeSyncJob, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Cancel a parallel sync run
-   * Cancels an in-flight parallel sync run. Currently refused with 403 for every caller: the handler checks a permission string the RBAC layer cannot parse.
-   * POST /v1/sync/jobs/{id}/cancel
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  cancelSyncJob(input: T.CancelSyncJobInput, opts?: RequestOptions): Promise<T.CancelSyncJobOutput> {
-    return this._t.call(OPS.cancelSyncJob, input as Record<string, unknown>, opts);
-  }
-  /**
-   * List sync partitions
-   * Partition progress of a parallel sync job, optionally for one run, with a summary of counts and processed records. Currently refused with 403 for every caller: the handler checks a permission string the RBAC layer cannot parse.
-   * GET /v1/sync/jobs/{id}/partitions
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listSyncPartitions(input: T.ListSyncPartitionsInput, opts?: RequestOptions): Promise<T.ListSyncPartitionsOutput> {
-    return this._t.call(OPS.listSyncPartitions, input as Record<string, unknown>, opts);
-  }
 }
 
 /**
@@ -4317,62 +2897,6 @@ export class SyncApi {
  */
 export class TeamsApi {
   constructor(private readonly _t: Transport) {}
-  /**
-   * List teams
-   * GET /v1/teams
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  listTeams(input: T.ListTeamsInput = {} as T.ListTeamsInput, opts?: RequestOptions): Promise<T.ListTeamsOutput> {
-    return this._t.call(OPS.listTeams, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Create team
-   * POST /v1/teams
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createTeam(input: T.CreateTeamInput = {} as T.CreateTeamInput, opts?: RequestOptions): Promise<T.CreateTeamOutput> {
-    return this._t.call(OPS.createTeam, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Get team with members
-   * GET /v1/teams/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getTeam(input: T.GetTeamInput, opts?: RequestOptions): Promise<T.GetTeamOutput> {
-    return this._t.call(OPS.getTeam, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update team
-   * PUT /v1/teams/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateTeam(input: T.UpdateTeamInput, opts?: RequestOptions): Promise<T.UpdateTeamOutput> {
-    return this._t.call(OPS.updateTeam, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete team
-   * DELETE /v1/teams/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteTeam(input: T.DeleteTeamInput, opts?: RequestOptions): Promise<T.DeleteTeamOutput> {
-    return this._t.call(OPS.deleteTeam, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Add team member
-   * POST /v1/teams/{id}/members
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  addTeamMember(input: T.AddTeamMemberInput, opts?: RequestOptions): Promise<T.AddTeamMemberOutput> {
-    return this._t.call(OPS.addTeamMember, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Remove team member
-   * DELETE /v1/teams/{id}/members/{userId}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  removeTeamMember(input: T.RemoveTeamMemberInput, opts?: RequestOptions): Promise<T.RemoveTeamMemberOutput> {
-    return this._t.call(OPS.removeTeamMember, input as Record<string, unknown>, opts);
-  }
   /**
    * List system-defined grants
    * GET /v1/grants/system
@@ -4496,15 +3020,6 @@ export class UnifiedApi {
     return this._t.call(OPS.loadUnifiedConfigFieldOptions, input as Record<string, unknown>, opts);
   }
   /**
-   * Execute a raw options snippet while authoring a widget config form (developer/admin/owner/platform_admin only)
-   * Runs client-supplied snippet code in the workflow sandbox to preview a config field's options while authoring. Partner roles only (developer, admin, owner, platform_admin); endOrgId must be a tenant of the caller's org.
-   * POST /v1/unified-config/options-preview
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  previewUnifiedConfigFieldOptions(input: T.PreviewUnifiedConfigFieldOptionsInput, opts?: RequestOptions): Promise<T.PreviewUnifiedConfigFieldOptionsOutput> {
-    return this._t.call(OPS.previewUnifiedConfigFieldOptions, input as Record<string, unknown>, opts);
-  }
-  /**
    * Merge per-customer unified config values into an installation's inline config (end_user-callable; scoped by org_id or end_org_id)
    * Writes per-connector unified-API field values into the installation's inline config (connectorSlug -> fieldKey -> value). Requires unified.execute.
    * PUT /v1/installations/{id}/unified-values
@@ -4521,15 +3036,6 @@ export class UnifiedApi {
     return this._t.call(OPS.listUnifiedCatalogCategories, input as Record<string, unknown>, opts);
   }
   /**
-   * Create a category (platform_admin only)
-   * Creates a platform catalog category. platform_admin only; edits the platform catalog every org reads. 409 when the slug exists.
-   * POST /v1/unified-catalog/categories
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createUnifiedCatalogCategory(input: T.CreateUnifiedCatalogCategoryInput, opts?: RequestOptions): Promise<T.CreateUnifiedCatalogCategoryOutput> {
-    return this._t.call(OPS.createUnifiedCatalogCategory, input as Record<string, unknown>, opts);
-  }
-  /**
    * List catalog entities
    * Lists the platform catalog's entities with their mapping counts. Requires unified.read.
    * GET /v1/unified-catalog/entities
@@ -4538,75 +3044,12 @@ export class UnifiedApi {
     return this._t.call(OPS.listUnifiedCatalogEntities, input as Record<string, unknown>, opts);
   }
   /**
-   * Create an entity with a canonical schema (platform_admin only)
-   * Creates a platform catalog entity with its canonical schema. platform_admin only; edits the platform catalog every org reads. 400 for an unknown categoryId; 409 when the slug exists in the category.
-   * POST /v1/unified-catalog/entities
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createUnifiedCatalogEntity(input: T.CreateUnifiedCatalogEntityInput, opts?: RequestOptions): Promise<T.CreateUnifiedCatalogEntityOutput> {
-    return this._t.call(OPS.createUnifiedCatalogEntity, input as Record<string, unknown>, opts);
-  }
-  /**
    * Get an entity with its connector mappings
    * Returns a platform catalog entity with all its connector mappings. Requires unified.read; 404 when not found.
    * GET /v1/unified-catalog/entities/{id}
    */
   getUnifiedCatalogEntity(input: T.GetUnifiedCatalogEntityInput, opts?: RequestOptions): Promise<T.GetUnifiedCatalogEntityOutput> {
     return this._t.call(OPS.getUnifiedCatalogEntity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update an entity (platform_admin only)
-   * Updates a platform catalog entity. platform_admin only; edits the platform catalog every org reads. 400 when no field is given; 404 when not found.
-   * PUT /v1/unified-catalog/entities/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateUnifiedCatalogEntity(input: T.UpdateUnifiedCatalogEntityInput, opts?: RequestOptions): Promise<T.UpdateUnifiedCatalogEntityOutput> {
-    return this._t.call(OPS.updateUnifiedCatalogEntity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete an entity and its mappings (platform_admin only)
-   * Deletes a platform catalog entity and its mappings. platform_admin only; edits the platform catalog every org reads. 404 when not found.
-   * DELETE /v1/unified-catalog/entities/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteUnifiedCatalogEntity(input: T.DeleteUnifiedCatalogEntityInput, opts?: RequestOptions): Promise<T.DeleteUnifiedCatalogEntityOutput> {
-    return this._t.call(OPS.deleteUnifiedCatalogEntity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Bind a connector mapping to an entity (platform_admin only)
-   * Binds a connector mapping (operations and field mappings) to a platform catalog entity. platform_admin only; edits the platform catalog every org reads. 409 when the connector is already mapped.
-   * POST /v1/unified-catalog/entities/{id}/mappings
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  createUnifiedConnectorMapping(input: T.CreateUnifiedConnectorMappingInput, opts?: RequestOptions): Promise<T.CreateUnifiedConnectorMappingOutput> {
-    return this._t.call(OPS.createUnifiedConnectorMapping, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update a connector mapping (platform_admin only)
-   * Updates a platform catalog connector mapping. platform_admin only; edits the platform catalog every org reads. 404 when not found.
-   * PUT /v1/unified-catalog/mappings/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateUnifiedConnectorMapping(input: T.UpdateUnifiedConnectorMappingInput, opts?: RequestOptions): Promise<T.UpdateUnifiedConnectorMappingOutput> {
-    return this._t.call(OPS.updateUnifiedConnectorMapping, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete a connector mapping (platform_admin only)
-   * Deletes a platform catalog connector mapping. platform_admin only; edits the platform catalog every org reads. 404 when not found.
-   * DELETE /v1/unified-catalog/mappings/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteUnifiedConnectorMapping(input: T.DeleteUnifiedConnectorMappingInput, opts?: RequestOptions): Promise<T.DeleteUnifiedConnectorMappingOutput> {
-    return this._t.call(OPS.deleteUnifiedConnectorMapping, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Test-execute an entity mapping against the caller's own connections (platform_admin only)
-   * Runs list, get or create for a catalog entity against the caller's own connections. platform_admin only; edits the platform catalog every org reads. 404 when the entity has no enabled mappings.
-   * POST /v1/unified-catalog/entities/{id}/test
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  testUnifiedEntityOperation(input: T.TestUnifiedEntityOperationInput, opts?: RequestOptions): Promise<T.TestUnifiedEntityOperationOutput> {
-    return this._t.call(OPS.testUnifiedEntityOperation, input as Record<string, unknown>, opts);
   }
   /**
    * The caller's catalog orgs' own entities (with mappings) and extensions of platform entities. editable marks rows the caller's org owns.
@@ -4687,24 +3130,6 @@ export class UnifiedApi {
    */
   testUnifiedCustomEntity(input: T.TestUnifiedCustomEntityInput, opts?: RequestOptions): Promise<T.TestUnifiedCustomEntityOutput> {
     return this._t.call(OPS.testUnifiedCustomEntity, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Update a catalog category (platform_admin only)
-   * Updates a platform catalog category. platform_admin only; edits the platform catalog every org reads. 400 when no field is given; 404 when not found.
-   * PUT /v1/unified-catalog/categories/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  updateUnifiedCatalogCategory(input: T.UpdateUnifiedCatalogCategoryInput, opts?: RequestOptions): Promise<T.UpdateUnifiedCatalogCategoryOutput> {
-    return this._t.call(OPS.updateUnifiedCatalogCategory, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Delete a catalog category (platform_admin only)
-   * Deletes an empty platform catalog category. platform_admin only; edits the platform catalog every org reads. 409 while it still has entities; 404 when not found.
-   * DELETE /v1/unified-catalog/categories/{id}
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  deleteUnifiedCatalogCategory(input: T.DeleteUnifiedCatalogCategoryInput, opts?: RequestOptions): Promise<T.DeleteUnifiedCatalogCategoryOutput> {
-    return this._t.call(OPS.deleteUnifiedCatalogCategory, input as Record<string, unknown>, opts);
   }
 }
 
@@ -4850,15 +3275,6 @@ export class UsersApi {
     return this._t.call(OPS.getMySuggestions, input as Record<string, unknown>, opts);
   }
   /**
-   * Get the caller's gateway context
-   * The (sub, role, orgId, endOrgId) the gateway resolved from the caller's credential. Plumbing for services proxying with a tenant-scoped key; agents should call whoami.
-   * GET /v1/me/context
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  getMyContext(input: T.GetMyContextInput = {} as T.GetMyContextInput, opts?: RequestOptions): Promise<T.GetMyContextOutput> {
-    return this._t.call(OPS.getMyContext, input as Record<string, unknown>, opts);
-  }
-  /**
    * Get the caller's UI preferences
    * Returns the calling person's stored dashboard preferences object ({} when none are stored).
    * GET /v1/users/me/preferences
@@ -4873,15 +3289,6 @@ export class UsersApi {
    */
   updateMyPreferences(input: T.UpdateMyPreferencesInput = {} as T.UpdateMyPreferencesInput, opts?: RequestOptions): Promise<T.UpdateMyPreferencesOutput> {
     return this._t.call(OPS.updateMyPreferences, input as Record<string, unknown>, opts);
-  }
-  /**
-   * Switch the dashboard session's active account
-   * Rewrites the caller's Keycloak org attributes and default membership so the next dashboard token resolves to orgId. Dashboard sessions only: an API/MCP session gets 409 and must send the target-org header per request instead.
-   * POST /v1/users/me/switch-account
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  switchAccount(input: T.SwitchAccountInput, opts?: RequestOptions): Promise<T.SwitchAccountOutput> {
-    return this._t.call(OPS.switchAccount, input as Record<string, unknown>, opts);
   }
   /**
    * Resend a member's invite email
@@ -5323,15 +3730,6 @@ export class WorkflowsApi {
     return this._t.call(OPS.getTestCaseDraft, input as Record<string, unknown>, opts);
   }
   /**
-   * Approve a test-case draft
-   * Records the user's edited test cases and marks the draft approved. The human review step behind createTestCaseDraft; not for agents.
-   * POST /v1/test-case-drafts/{id}/approve
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  approveTestCaseDraft(input: T.ApproveTestCaseDraftInput, opts?: RequestOptions): Promise<T.ApproveTestCaseDraftOutput> {
-    return this._t.call(OPS.approveTestCaseDraft, input as Record<string, unknown>, opts);
-  }
-  /**
    * Count executions by status
    * Per-status execution totals for the same scope and filters as GET /api/v1/workflows/executions, minus status, so each count is what that status filter would list (requires workflows.read). With a search the scan is capped and isLowerBound marks a floor.
    * GET /v1/workflows/executions/counts
@@ -5420,15 +3818,6 @@ export class WorkflowsApi {
     return this._t.call(OPS.cancelWorkflowPromotion, input as Record<string, unknown>, opts);
   }
   /**
-   * Complete a promotion (internal)
-   * Called by the api service's GitHub webhook handler when a promotion pull request is merged or closed. Requires an internal x-promotion-internal-token; any other caller gets 403.
-   * POST /v1/workflows/{id}/promotions/{promotionId}/complete
-   * Backend-only route (not exposed as an MCP tool): callbacks, credentials or platform administration.
-   */
-  completeWorkflowPromotion(input: T.CompleteWorkflowPromotionInput, opts?: RequestOptions): Promise<T.CompleteWorkflowPromotionOutput> {
-    return this._t.call(OPS.completeWorkflowPromotion, input as Record<string, unknown>, opts);
-  }
-  /**
    * List workflow versions
    * The workflow's last 50 published versions, newest first, without code unless include=code (requires workflows.read). A tenant reading a parent-owned workflow never gets code.
    * GET /v1/workflows/{id}/versions
@@ -5442,56 +3831,47 @@ export class WorkflowsApi {
 export interface FastnApis {
   /** Activity (3 operations) */
   activity: ActivityApi;
-  /** Admin (62 operations) */
-  admin: AdminApi;
-  /** Agent (32 operations) */
+  /** Agent (22 operations) */
   agent: AgentApi;
-  /** API Keys (7 operations) */
+  /** API Keys (4 operations) */
   apiKeys: ApiKeysApi;
-  /** Auth (12 operations) */
+  /** Auth (3 operations) */
   auth: AuthApi;
-  /** Billing (26 operations) */
+  /** Billing (18 operations) */
   billing: BillingApi;
-  /** Connections (18 operations) */
+  /** Connections (14 operations) */
   connections: ConnectionsApi;
-  /** Connectors (114 operations) */
+  /** Connectors (102 operations) */
   connectors: ConnectorsApi;
-  /** Embed (58 operations) */
+  /** Embed (45 operations) */
   embed: EmbedApi;
   /** Environments (10 operations) */
   environments: EnvironmentsApi;
-  /** Events (72 operations) */
+  /** Events (68 operations) */
   events: EventsApi;
-  /** Execution (6 operations) */
+  /** Execution (5 operations) */
   execution: ExecutionApi;
   /** Observe (14 operations) */
   observe: ObserveApi;
-  /** Onboarding (18 operations) */
+  /** Onboarding (12 operations) */
   onboarding: OnboardingApi;
-  /** Orgs (28 operations) */
+  /** Orgs (22 operations) */
   orgs: OrgsApi;
-  /** Platform (1 operations) */
-  platform: PlatformApi;
-  /** Platform Config (10 operations) */
-  platformConfig: PlatformConfigApi;
-  /** Support (1 operations) */
-  support: SupportApi;
-  /** Sync (10 operations) */
+  /** Sync (5 operations) */
   sync: SyncApi;
-  /** Teams (12 operations) */
+  /** Teams (5 operations) */
   teams: TeamsApi;
-  /** Unified API (35 operations) */
+  /** Unified API (24 operations) */
   unified: UnifiedApi;
-  /** Users (27 operations) */
+  /** Users (25 operations) */
   users: UsersApi;
-  /** Workflows (62 operations) */
+  /** Workflows (60 operations) */
   workflows: WorkflowsApi;
 }
 
 export function buildApis(t: Transport): FastnApis {
   return {
     activity: new ActivityApi(t),
-    admin: new AdminApi(t),
     agent: new AgentApi(t),
     apiKeys: new ApiKeysApi(t),
     auth: new AuthApi(t),
@@ -5505,9 +3885,6 @@ export function buildApis(t: Transport): FastnApis {
     observe: new ObserveApi(t),
     onboarding: new OnboardingApi(t),
     orgs: new OrgsApi(t),
-    platform: new PlatformApi(t),
-    platformConfig: new PlatformConfigApi(t),
-    support: new SupportApi(t),
     sync: new SyncApi(t),
     teams: new TeamsApi(t),
     unified: new UnifiedApi(t),
