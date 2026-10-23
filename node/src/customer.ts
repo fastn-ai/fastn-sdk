@@ -67,7 +67,7 @@ export class Customer {
     const parent = await this.ctx.callerOrgId();
     const res = await this.root.orgs.listOrgs({ type: "end_org", parent_id: parent });
     const rows: any[] = Array.isArray(res?.data) ? res.data : [];
-    const row = rows.find((r) => (r.externalRef === this.ref || r.orgId === this.ref || r.external_ref === this.ref) && (r.parentId ?? r.parent_id ?? parent) === parent);
+    const row = rows.find((r) => (r.externalRef === this.ref || r.orgId === this.ref || r.external_ref === this.ref) && (r.parentId ?? r.parent_id) === parent);   // fail closed: a row without a parent is not ours
     if (row) this.fastnId = row.id;
     return row;
   }
