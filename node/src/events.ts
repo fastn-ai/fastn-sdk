@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { withoutInternalIds } from "./tools.js";
 
 /** What fastn puts on every event delivery (POST to your subscription URL). */
 export interface EventHeaders {
@@ -39,6 +40,8 @@ export interface VerifyOptions {
   toleranceSeconds?: number;
   /** For tests: the current unix time in seconds. */
   now?: number;
+  /** Keep fastn's internal customer id (`endOrgId`) in the parsed event. Default false: partners use `tenantRef`. */
+  internalIds?: boolean;
 }
 
 /**
@@ -70,5 +73,8 @@ export function parseEvent(secret: string, headers: Record<string, string | stri
   const h = readEventHeaders(headers);
   if (!verifyEventSignature(secret, h, rawBody, opts)) throw new Error("fastn event signature does not match (wrong secret, altered body, or stale timestamp)");
   const parsed = JSON.parse(typeof rawBody === "string" ? rawBody : rawBody.toString("utf8"));
-  return { ...parsed, headers: h };
+  // The body names the customer by the id the partner chose (tenantRef) and by fastn's internal id (endOrgId);
+  // the internal one is left out unless asked for, so partner code never sees two ids for one customer.
+  const event = opts?.internalIds ? parsed : withoutInternalIds(parsed);
+  return { ...event, headers: h };
 }

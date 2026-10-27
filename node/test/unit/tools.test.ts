@@ -190,6 +190,16 @@ describe("tools client: the customer named once", () => {
     await c.call("fastnPlatform__createAppEventTrigger", { name: "t", orgId: "acme-1", endOrgId: "other" });
     expect(m.calls[5].json.params.arguments).toEqual({ name: "t", orgId: "acme-1", endOrgId: "other" });
   });
+  it("Workspace answers come back without the internal customer id keys; other tools untouched", async () => {
+    const body = { data: [{ id: "c1", endOrgId: "7c9e", orgId: "acme", nested: { end_org_id: "7c9e", keep: 1 }, list: [{ endOrgId: "x" }] }] };
+    const m = mockFetch([{ body: list(1) }, { body: toolOk(2, JSON.stringify(body)) }, { body: toolOk(3, JSON.stringify({ endOrgId: "kept" })) }]);
+    const c = ucl(m).customer("acme-1");
+    const r = await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(r.data).toEqual({ data: [{ id: "c1", orgId: "acme", nested: { keep: 1 }, list: [{}] }] });
+    expect(r.text).toContain("endOrgId");                       // the raw text is as the gateway sent it
+    const g = await c.call("googleCalendar__listEvents", {});
+    expect(g.data).toEqual({ endOrgId: "kept" });
+  });
   it("after the TTL the cached schemas keep serving and one refresh runs in the background; a failed refresh keeps the old map", async () => {
     vi.useFakeTimers();
     try {

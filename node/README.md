@@ -171,6 +171,9 @@ r.data                                                     // the tool's answer,
 - One name for the customer: write `orgId` in the arguments of any Fastn Workspace tool. Where the tool spells it
   `endOrgId` or `end_org_id` (and has no `orgId` of its own), the SDK passes the value under that spelling, so your
   code never carries the older names; a value you pass under the old name is left as it is.
+- Answers of Fastn Workspace tools and parsed events come back without fastn's internal customer id keys
+  (`endOrgId`, `end_org_id`): the only customer id you see is the one you chose (`orgId` / `tenantRef`). `r.text` keeps
+  the raw answer; `parseEvent(..., { internalIds: true })` keeps the id in an event.
 
 ## Events (webhooks)
 

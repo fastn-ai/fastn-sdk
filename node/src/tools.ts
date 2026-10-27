@@ -109,6 +109,20 @@ const SCHEMA_TTL_MS = 10 * 60_000;
 /** The connector that exposes the platform's own API in a workspace; only its tools take `endOrgRef`. */
 const PLATFORM_CONNECTOR = "fastnPlatform";
 
+/** The keys under which the platform returns its internal customer id; partners use their own id instead. */
+export const INTERNAL_ID_KEYS: readonly string[] = ["endOrgId", "end_org_id"];
+
+/** A deep copy of `value` without the platform's internal customer id keys (objects and arrays only; strings untouched). */
+export function withoutInternalIds<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(withoutInternalIds) as unknown as T;
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) if (!INTERNAL_ID_KEYS.includes(k)) out[k] = withoutInternalIds(v);
+    return out as T;
+  }
+  return value;
+}
+
 export class ToolsClient {
   readonly url: string;
   private readonly cfg: ToolsClientConfig;
@@ -256,7 +270,10 @@ export class ToolsClient {
       }
       throw new ToolError(errorInfo(data, text).message || `${name} failed`, "tool", 200, undefined, name, data);
     }
-    return { data, text, content, structuredContent: res?.structuredContent, isError: false };
+    // Fastn Workspace answers carry fastn's internal customer id (endOrgId / end_org_id) next to the id the
+    // partner chose; the partner never needs it, so it is left out of `data` (the raw text keeps it).
+    const clean = this.cfg.customerArg !== false && name.startsWith(`${PLATFORM_CONNECTOR}__`);
+    return { data: clean ? withoutInternalIds(data) : data, text, content, structuredContent: clean ? withoutInternalIds(res?.structuredContent) : res?.structuredContent, isError: false };
   }
 
   /** A raw JSON-RPC call to the workspace; returns the `result`. Use for methods this class does not wrap. */

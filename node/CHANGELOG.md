@@ -6,6 +6,7 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [0.2.0] - 2026-10-27
 
+- Changed: answers of Fastn Workspace tools (`ToolResult.data` / `structuredContent`) and events parsed with `parseEvent` no longer carry fastn's internal customer id keys (`endOrgId`, `end_org_id`); the partner's own id (`orgId`, `externalRef`, `tenantRef`) is what remains. `r.text` keeps the raw answer; `parseEvent(..., { internalIds: true })` keeps the id; `customerArg: false` keeps answers untouched.
 - Added: `orgId` is the one name for the customer on workspace tools: a Fastn Workspace tool that spells it `endOrgId` or `end_org_id` (with no `orgId` of its own) receives the value under its own spelling, so partner code never carries the older names.
 - Added: the customer is named once on workspace tools. `ToolsClient.customer(ref)` (and the `customer` call option) fills `endOrgRef: ref` into every Fastn Workspace tool whose input schema takes it (the unified record tools), from one tools/list per workspace shared by every `customer()` clone and kept for 10 minutes. An `endOrgRef` / `endOrgId` passed by the caller wins; `customerArg: false` turns the fill off; tools of other connectors are untouched. Before this, a call scoped with `customer(ref)` still had to repeat the customer in its arguments or the platform answered "No connected provider".
 
