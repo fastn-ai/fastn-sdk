@@ -91,3 +91,138 @@ describe("tools client", () => {
     expect(e.message).toContain("not connected");
   });
 });
+
+describe("tools client: the customer named once", () => {
+  const list = (id: number) => rpcOk(id, { tools: [
+    { name: "fastnPlatform__searchUnifiedRecords", inputSchema: { type: "object", properties: { category: {}, entity: {}, filters: {}, endOrgRef: {}, endOrgId: {} } } },
+    { name: "fastnPlatform__createTenant", inputSchema: { type: "object", properties: { name: {}, orgId: {} } } },
+    { name: "googleCalendar__listEvents", inputSchema: { type: "object", properties: { calendarId: {}, endOrgRef: {} } } },
+  ] });
+  const rpcCalls = (m: ReturnType<typeof mockFetch>) => m.calls.map((c) => c.json.method);
+
+  it("fills endOrgRef on a Workspace tool that takes it, from one tools/list shared by every customer", async () => {
+    const m = mockFetch([{ body: list(1) }, { body: toolOk(2, "{}") }, { body: toolOk(3, "{}") }, { body: toolOk(4, "{}") }]);
+    const c = ucl(m);
+    await c.customer("acme-1").call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: { phone: "+1" } });
+    await c.customer("acme-2").call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: { phone: "+2" } });
+    await c.call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: { phone: "+3" } }, { customer: { ref: "acme-3" } });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/call", "tools/call"]);
+    expect(m.calls[0].init.headers["x-org-id"]).toBe("acme-1");
+    expect(m.calls[1].json.params.arguments).toEqual({ category: "crm", entity: "contact", filters: { phone: "+1" }, endOrgRef: "acme-1" });
+    expect(m.calls[2].json.params.arguments.endOrgRef).toBe("acme-2");
+    expect(m.calls[3].json.params.arguments.endOrgRef).toBe("acme-3");
+  });
+  it("leaves the args alone when the tool does not take endOrgRef, when the caller named the customer, or without a customer", async () => {
+    const m = mockFetch([{ body: list(1) }, { body: toolOk(2, "{}") }, { body: toolOk(3, "{}") }, { body: toolOk(4, "{}") }, { body: toolOk(5, "{}") }, { body: toolOk(6, "{}") }]);
+    const c = ucl(m).customer("acme-1");
+    await c.call("fastnPlatform__createTenant", { name: "Acme", orgId: "acme-1" });
+    await c.call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: {}, endOrgRef: "other" });
+    await c.call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: {}, endOrgId: "7c9e6679" });
+    await c.call("googleCalendar__listEvents", { calendarId: "primary" });
+    await ucl(m).call("fastnPlatform__searchUnifiedRecords", { category: "crm", entity: "contact", filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/call", "tools/call", "tools/call", "tools/call"]);
+    expect(m.calls[1].json.params.arguments).toEqual({ name: "Acme", orgId: "acme-1" });
+    expect(m.calls[2].json.params.arguments.endOrgRef).toBe("other");
+    expect(m.calls[3].json.params.arguments).toEqual({ category: "crm", entity: "contact", filters: {}, endOrgId: "7c9e6679" });
+    expect(m.calls[4].json.params.arguments).toEqual({ calendarId: "primary" });
+    expect(m.calls[5].json.params.arguments).toEqual({ category: "crm", entity: "contact", filters: {} });
+  });
+  it("customerArg: false turns the fill off; a failed first listing fails the call closed and is retried on the next call", async () => {
+    const m = mockFetch([{ body: toolOk(1, "{}") }, { status: 503, body: { error: "down" } }, { body: list(3) }, { body: toolOk(4, "{}") }]);
+    await ucl(m, { customerArg: false }).customer("acme-1").call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/call"]);
+    expect(m.calls[0].json.params.arguments).toEqual({ filters: {} });
+    const c = ucl(m).customer("acme-1");
+    // The listing fails: the call is NOT sent without the customer; the listing's error is what the caller sees.
+    await expect(c.call("fastnPlatform__searchUnifiedRecords", { filters: {} })).rejects.toMatchObject({ kind: "http", status: 503 });
+    expect(rpcCalls(m)).toEqual(["tools/call", "tools/list"]);
+    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/call", "tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[3].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
+  it("an empty first listing is a failure: the call is refused, nothing is cached, the next call lists again", async () => {
+    const m = mockFetch([{ body: rpcOk(1, { tools: [] }) }, { body: list(2) }, { body: toolOk(3, "{}") }]);
+    const c = ucl(m).customer("acme-1");
+    await expect(c.call("fastnPlatform__searchUnifiedRecords", { filters: {} })).rejects.toMatchObject({ kind: "rpc", message: /no tools/ });
+    expect(rpcCalls(m)).toEqual(["tools/list"]);
+    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
+  it("a platform tool missing from the cached map triggers one fresh listing; still missing, it is refused as unknown", async () => {
+    const later = rpcOk(9, { tools: [{ name: "fastnPlatform__newRecordTool", inputSchema: { type: "object", properties: { endOrgRef: {} } } }, { name: "fastnPlatform__createTenant", inputSchema: { type: "object", properties: { name: {} } } }] });
+    const m = mockFetch([{ body: list(1) }, { body: later }, { body: toolOk(3, "{}") }, { body: later }]);
+    const c = ucl(m).customer("acme-1");
+    // Enabled after the first listing: found on the fresh listing and filled.
+    await c.call("fastnPlatform__newRecordTool", { x: 1 });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ x: 1, endOrgRef: "acme-1" });
+    // Not in the workspace at all: one fresh listing, then refused; never sent unscoped.
+    await expect(c.call("fastnPlatform__noSuchTool", { x: 1 })).rejects.toMatchObject({ kind: "rpc", code: -32601, isUnknownTool: true });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call", "tools/list"]);
+  });
+  it("retries cover a gateway hiccup on the first listing too", async () => {
+    const m = mockFetch([{ status: 503, body: { error: "down" } }, { body: list(2) }, { body: toolOk(3, "{}") }]);
+    const c = ucl(m, { defaults: { retries: 1 } }).customer("acme-1");
+    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
+  it("orgId is the one name for the customer: mapped to endOrgId / end_org_id where a tool spells it so", async () => {
+    const schemas = rpcOk(1, { tools: [
+      { name: "fastnPlatform__createAppEventTrigger", inputSchema: { type: "object", properties: { name: {}, endOrgId: {}, connectionId: {} } } },
+      { name: "fastnPlatform__listAppEventTriggers", inputSchema: { type: "object", properties: { end_org_id: {} } } },
+      { name: "fastnPlatform__listConnections", inputSchema: { type: "object", properties: { orgId: {}, endOrgId: {} } } },
+      { name: "fastnPlatform__createTenant", inputSchema: { type: "object", properties: { name: {}, orgId: {} } } },
+    ] });
+    const m = mockFetch([{ body: schemas }, { body: toolOk(2, "{}") }, { body: toolOk(3, "{}") }, { body: toolOk(4, "{}") }, { body: toolOk(5, "{}") }, { body: toolOk(6, "{}") }]);
+    const c = ucl(m).customer("acme-1");
+    await c.call("fastnPlatform__createAppEventTrigger", { name: "t", orgId: "acme-1", connectionId: "ucl:x" });
+    expect(m.calls[1].json.params.arguments).toEqual({ name: "t", connectionId: "ucl:x", endOrgId: "acme-1" });
+    await c.call("fastnPlatform__listAppEventTriggers", { orgId: "acme-1" });
+    expect(m.calls[2].json.params.arguments).toEqual({ end_org_id: "acme-1" });
+    // A tool with its own orgId keeps it.
+    await c.call("fastnPlatform__listConnections", { orgId: "acme-1" });
+    expect(m.calls[3].json.params.arguments).toEqual({ orgId: "acme-1" });
+    await c.call("fastnPlatform__createTenant", { name: "Acme", orgId: "acme-1" });
+    expect(m.calls[4].json.params.arguments).toEqual({ name: "Acme", orgId: "acme-1" });
+    // An explicit endOrgId wins over the alias.
+    await c.call("fastnPlatform__createAppEventTrigger", { name: "t", orgId: "acme-1", endOrgId: "other" });
+    expect(m.calls[5].json.params.arguments).toEqual({ name: "t", orgId: "acme-1", endOrgId: "other" });
+  });
+  it("Workspace answers come back without the internal customer id keys; other tools untouched", async () => {
+    const body = { data: [{ id: "c1", endOrgId: "7c9e", orgId: "acme", nested: { end_org_id: "7c9e", keep: 1 }, list: [{ endOrgId: "x" }] }] };
+    const m = mockFetch([{ body: list(1) }, { body: toolOk(2, JSON.stringify(body)) }, { body: toolOk(3, JSON.stringify({ endOrgId: "kept" })) }]);
+    const c = ucl(m).customer("acme-1");
+    const r = await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(r.data).toEqual({ data: [{ id: "c1", orgId: "acme", nested: { keep: 1 }, list: [{}] }] });
+    expect(r.text).toContain("endOrgId");                       // the raw text is as the gateway sent it
+    const g = await c.call("googleCalendar__listEvents", {});
+    expect(g.data).toEqual({ endOrgId: "kept" });
+  });
+  it("after the TTL the cached schemas keep serving and one refresh runs in the background; a failed refresh keeps the old map", async () => {
+    vi.useFakeTimers();
+    try {
+      // Reply order = fetch order: on a stale call the refresh (tools/list) is sent first, then the call itself.
+      const m = mockFetch([{ body: list(1) }, { body: toolOk(2, "{}") }, { status: 503, body: { error: "down" } }, { body: toolOk(4, "{}") }, { body: list(5) }, { body: toolOk(6, "{}") }, { body: toolOk(7, "{}") }]);
+      const c = ucl(m).customer("acme-1");
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call"]);
+      vi.advanceTimersByTime(11 * 60_000);
+      // Stale: the call goes out at once with the cached schema; the refresh (which fails here) runs alongside.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      await vi.runAllTimersAsync();
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/list", "tools/call"]);
+      expect(m.calls[3].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+      // Still stale after the failed refresh: the next call starts another one, and still goes out with the old map.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      await vi.runAllTimersAsync();
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/list", "tools/call", "tools/list", "tools/call"]);
+      expect(m.calls[5].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+      // Fresh again: no listing on the next call.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      expect(rpcCalls(m).filter((x) => x === "tools/list")).toHaveLength(3);
+      expect(m.calls[6].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+    } finally { vi.useRealTimers(); }
+  });
+});

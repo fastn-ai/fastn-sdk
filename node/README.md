@@ -162,8 +162,18 @@ r.data                                                     // the tool's answer,
   so an agent can ask the user to connect at runtime instead of failing.
 - In "one shared account" mode every call runs as that one account, whatever customer you name. Per-customer accounts
   need the "each customer org" mode in the workspace.
-- The gateway does not yet pass X-Org-Id on to the platform, so Fastn Workspace tools that act for a customer (unified
-  records, setup links) still take the customer in their arguments (`endOrgRef`) until that gateway change ships.
+- The customer is named once. Fastn Workspace tools that act for a customer (unified records) take it as the
+  `endOrgRef` argument, and `customer(ref)` fills that in for every tool whose input schema has it, from one
+  tools/list per workspace (shared by every `customer()` clone, kept for 10 minutes). An `endOrgRef` or `endOrgId`
+  you pass yourself wins; `customerArg: false` on the client turns the fill off. Tools of other connectors are left
+  alone: the customer reaches them through X-Org-Id. Call `await connect.tools()` once at startup if the first call
+  must not pay for the listing.
+- One name for the customer: write `orgId` in the arguments of any Fastn Workspace tool. Where the tool spells it
+  `endOrgId` or `end_org_id` (and has no `orgId` of its own), the SDK passes the value under that spelling, so your
+  code never carries the older names; a value you pass under the old name is left as it is.
+- Answers of Fastn Workspace tools and parsed events come back without fastn's internal customer id keys
+  (`endOrgId`, `end_org_id`): the only customer id you see is the one you chose (`orgId` / `tenantRef`). `r.text` keeps
+  the raw answer; `parseEvent(..., { internalIds: true })` keeps the id in an event.
 
 ## Events (webhooks)
 

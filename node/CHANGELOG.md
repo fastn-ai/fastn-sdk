@@ -4,6 +4,16 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-27
+
+- Changed: answers of Fastn Workspace tools (`ToolResult.data` / `structuredContent`) and events parsed with `parseEvent` no longer carry fastn's internal customer id keys (`endOrgId`, `end_org_id`); the partner's own id (`orgId`, `externalRef`, `tenantRef`) is what remains. `r.text` keeps the raw answer; `parseEvent(..., { internalIds: true })` keeps the id; `customerArg: false` keeps answers untouched.
+- Added: `orgId` is the one name for the customer on workspace tools: a Fastn Workspace tool that spells it `endOrgId` or `end_org_id` (with no `orgId` of its own) receives the value under its own spelling, so partner code never carries the older names.
+- Added: the customer is named once on workspace tools. `ToolsClient.customer(ref)` (and the `customer` call option) fills `endOrgRef: ref` into every Fastn Workspace tool whose input schema takes it (the unified record tools), from one tools/list per workspace shared by every `customer()` clone and kept for 10 minutes. An `endOrgRef` / `endOrgId` passed by the caller wins; `customerArg: false` turns the fill off; tools of other connectors are untouched. Before this, a call scoped with `customer(ref)` still had to repeat the customer in its arguments or the platform answered "No connected provider".
+
+## [0.1.0] - 2026-10-24
+
+First working client.
+
 - Fixed: `customer.connectWithCredentials()` no longer checks credential fields on the client. The platform checks them for INPUT auth methods only (400 CREDENTIALS_INCOMPLETE, `body.missing`); the other auth types store one fixed key per type that the method's contract does not always name, so the client-side check refused connections the platform accepts.
 - Fixed: `customer.api.*` leaves `externalRef` alone on `createTenant` / `updateTenant` (there it names the org being edited, not the customer), and sends the ref itself as `endOrgId` on `createEmbedToken`, so `createIfMissing` works through `customer.api` for a customer that is not registered yet.
 - Fixed: `customer.runAction()` lists only the customer's installations (`end_org_id`) and runs from the customer's connection alone when it has no installation (a connection made with `connect()` / `connectWithCredentials()`).
@@ -25,9 +35,8 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 - Added: `scripts/sweep`, a live run that calls every published operation once (reads, writes, deletes) and writes a per-operation report; live suites run on the development environment by default (`FASTN_BASE_URL`, `LIVE_PROD=1` for production) and one file at a time.
 - Changed: `Records` methods are typed with the generated unified input/output types (no more `as any`).
 
-## [0.1.0] - 2026-10-22
-
-- First working client. Platform API client generated from the fastn OpenAPI spec v1.8.2 (461 partner-facing operations in 19 areas, typed inputs; platform-administration and backend-only routes are left out).
+From the first cut (never published):
+- Platform API client generated from the fastn OpenAPI spec v1.8.2 (461 partner-facing operations in 19 areas, typed inputs; platform-administration and backend-only routes are left out).
 - `fastn.customer(ref)`: register, setup links, embed tokens, connections, unified records, with one customer id.
 - `ToolsClient` / `fastn.tools`: list and run every tool a fastn Connect workspace has turned on (MCP tools/list, tools/call), typed `ToolError`.
 - Event signature verification (`parseEvent`, `verifyEventSignature`), `paginate`, retries with Retry-After, `FastnApiError` / `FastnNetworkError`.

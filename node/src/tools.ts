@@ -22,10 +22,21 @@ export interface ToolsClientConfig {
   userAgent?: string;
   /** Options applied to every call, e.g. { customer: { ref: "acme-42" } }. */
   defaults?: ToolCallOptions;
+  /**
+   * When a call is scoped to a customer, fill that customer's ref into the `endOrgRef` argument of every tool whose
+   * input schema has one (the Fastn Workspace record tools), unless the call already names a customer. Default true.
+   * The workspace's tool list is fetched once for this (shared by every customer() clone, refreshed in the
+   * background every 10 minutes). A call whose listing cannot be fetched fails with that error rather than going
+   * out without the customer.
+   */
+  customerArg?: boolean;
 }
 
 export interface ToolCallOptions {
-  /** The customer the call is for: the id you use for them, sent as X-Org-Id. */
+  /**
+   * The customer the call is for: the id you use for them. Sent as X-Org-Id, and filled into the `endOrgRef`
+   * argument of tools that take one (see ToolsClientConfig.customerArg), so the customer is named once.
+   */
   customer?: { ref: string };
   /** The end user the call is for, sent as X-User-Id (needed when the workspace runs calls as each person). */
   userId?: string;
@@ -92,22 +103,49 @@ export class ToolError extends Error {
   get isUnknownTool() { return (this.kind === "rpc" && this.code === -32601) || ((this.kind === "rpc" || this.kind === "tool") && /unknown tool|is not a tool/i.test(this.message)); }
 }
 
+/** Tool name -> argument names, fetched once per workspace; `refreshing` is the background re-listing in flight. */
+interface SchemaBox { list?: Promise<Map<string, Set<string>>>; at?: number; refreshing?: Promise<unknown> }
+const SCHEMA_TTL_MS = 10 * 60_000;
+/** The connector that exposes the platform's own API in a workspace; only its tools take `endOrgRef`. */
+const PLATFORM_CONNECTOR = "fastnPlatform";
+
+/** The keys under which the platform returns its internal customer id; partners use their own id instead. */
+export const INTERNAL_ID_KEYS: readonly string[] = ["endOrgId", "end_org_id"];
+
+/** A deep copy of `value` without the platform's internal customer id keys (objects and arrays only; strings untouched). */
+export function withoutInternalIds<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(withoutInternalIds) as unknown as T;
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) if (!INTERNAL_ID_KEYS.includes(k)) out[k] = withoutInternalIds(v);
+    return out as T;
+  }
+  return value;
+}
+
 export class ToolsClient {
   readonly url: string;
   private readonly cfg: ToolsClientConfig;
   private nextId = 1;
 
-  constructor(cfg: ToolsClientConfig) {
+  /** The workspace's tool schemas, shared by every customer() clone of this client. */
+  private readonly schemas: SchemaBox;
+
+  constructor(cfg: ToolsClientConfig, schemas?: SchemaBox) {
     if (!cfg?.key || typeof cfg.key !== "string") throw new TypeError("ToolsClient: key is required");
     if (!cfg?.url || !/^https?:\/\//.test(cfg.url)) throw new TypeError("ToolsClient: url must be the workspace endpoint, e.g. https://mcp.fastn.dev/<workspace>");
     this.cfg = cfg;
     this.url = cfg.url.replace(/\/+$/, "");
+    this.schemas = schemas ?? {};
   }
 
-  /** The same client scoped to one customer: every call carries X-Org-Id = ref. */
+  /**
+   * The same client scoped to one customer: every call carries X-Org-Id = ref, and tools that take an `endOrgRef`
+   * argument get it filled with ref (ToolsClientConfig.customerArg).
+   */
   customer(ref: string): ToolsClient {
     if (!ref) throw new TypeError("customer(ref): ref is required");
-    return new ToolsClient({ ...this.cfg, defaults: { ...this.cfg.defaults, customer: { ref } } });
+    return new ToolsClient({ ...this.cfg, defaults: { ...this.cfg.defaults, customer: { ref } } }, this.schemas);
   }
 
   /** Every tool the workspace has turned on, across all connectors (follows paging). */
@@ -151,12 +189,74 @@ export class ToolsClient {
     const retries = opts.retries ?? this.cfg.defaults?.retries ?? 0;
     for (let attempt = 0; ; attempt++) {
       try {
-        return await this.callOnce<T>(name, args, opts);
+        // Inside the loop so that `retries` also covers a gateway hiccup on the schema listing.
+        return await this.callOnce<T>(name, await this.withCustomerArg(name, args, opts), opts);
       } catch (e) {
         if (attempt >= retries || !isGatewayHiccup(e)) throw e;
         await sleep(backoff(attempt));
       }
     }
+  }
+
+  /**
+   * The customer named once: when the call is scoped to a customer and a Fastn Workspace tool's input schema has
+   * `endOrgRef`, the args get `endOrgRef: ref` unless they already name a customer (endOrgRef or endOrgId). Other
+   * connectors' tools are left alone (the customer reaches them through X-Org-Id). The schemas come from one
+   * tools/list per workspace (shared across customer() clones, refreshed in the background after SCHEMA_TTL_MS).
+   * When no listing can be had, the call fails closed: the listing's error is thrown, because a call sent without
+   * the customer would run against the partner's own account, not the customer's.
+   */
+  private async withCustomerArg(name: string, args: Record<string, unknown>, opts: ToolCallOptions): Promise<Record<string, unknown>> {
+    if (this.cfg.customerArg === false || !name.startsWith(`${PLATFORM_CONNECTOR}__`)) return args;
+    const ref = opts.customer?.ref ?? this.cfg.defaults?.customer?.ref;
+    const wantsAlias = args.orgId !== undefined;
+    if (!wantsAlias && (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined)) return args;
+    let props = (await this.schemaMap(opts)).get(name);
+    if (!props) {
+      // Not in the cached map: the map may predate the tool. One fresh listing, then it is an unknown tool;
+      // the call is never sent unscoped on a guess.
+      props = (await this.schemaMap(opts, true)).get(name);
+      if (!props) throw new ToolError(`${name}: not a tool of this workspace (tools/list does not include it)`, "rpc", 200, -32601, name, undefined);
+    }
+    // `orgId` is the one name for the customer: a tool that spells it `endOrgId` or `end_org_id` (and has no
+    // `orgId` of its own) gets the value under its own spelling, so callers never write the older names.
+    if (wantsAlias && !props.has("orgId")) {
+      const alias = props.has("endOrgId") ? "endOrgId" : props.has("end_org_id") ? "end_org_id" : undefined;
+      if (alias && args[alias] === undefined) { const { orgId, ...rest } = args; args = { ...rest, [alias]: orgId }; }
+    }
+    if (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined) return args;
+    return props.has("endOrgRef") ? { ...args, endOrgRef: ref } : args;
+  }
+
+  /**
+   * Tool name -> argument names, from the shared cache. The first call waits for the listing; after SCHEMA_TTL_MS a
+   * call keeps using the cached map and starts one refresh in the background, so no call pays for a re-listing. A
+   * refresh that fails keeps the old map; a first listing that fails is thrown to the caller and retried on the
+   * next call.
+   */
+  private async schemaMap(opts: ToolCallOptions, force = false): Promise<Map<string, Set<string>>> {
+    const box = this.schemas;
+    const stale = !box.list || Date.now() - box.at! > SCHEMA_TTL_MS;
+    if (force && box.refreshing) await box.refreshing.catch(() => {});
+    if ((stale || force) && !box.refreshing) {
+      const list = this.tools(opts).then((tools) => {
+        const m = new Map<string, Set<string>>();
+        for (const t of tools) m.set(t.name, new Set(Object.keys(t.inputSchema?.properties ?? {})));
+        // An empty listing is a failure, not a workspace with no tools: cached, it would send every record
+        // call unscoped for the whole TTL.
+        if (m.size === 0) throw new ToolError("tools/list: the workspace answered with no tools", "rpc", 200, undefined, undefined, tools);
+        return m;
+      });
+      if (!box.list || force) {
+        const prev = box.list;
+        box.list = list; box.at = Date.now();
+        list.catch(() => { if (box.list === list) box.list = prev; });
+      } else {
+        box.refreshing = list;
+        list.then((m) => { box.list = Promise.resolve(m); box.at = Date.now(); }, () => {}).finally(() => { box.refreshing = undefined; });
+      }
+    }
+    return box.list!;
   }
 
   private async callOnce<T>(name: string, args: Record<string, unknown>, opts: ToolCallOptions): Promise<ToolResult<T>> {
@@ -170,7 +270,10 @@ export class ToolsClient {
       }
       throw new ToolError(errorInfo(data, text).message || `${name} failed`, "tool", 200, undefined, name, data);
     }
-    return { data, text, content, structuredContent: res?.structuredContent, isError: false };
+    // Fastn Workspace answers carry fastn's internal customer id (endOrgId / end_org_id) next to the id the
+    // partner chose; the partner never needs it, so it is left out of `data` (the raw text keeps it).
+    const clean = this.cfg.customerArg !== false && name.startsWith(`${PLATFORM_CONNECTOR}__`);
+    return { data: clean ? withoutInternalIds(data) : data, text, content, structuredContent: clean ? withoutInternalIds(res?.structuredContent) : res?.structuredContent, isError: false };
   }
 
   /** A raw JSON-RPC call to the workspace; returns the `result`. Use for methods this class does not wrap. */

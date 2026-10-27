@@ -27,3 +27,16 @@ describe("event signatures", () => {
     expect(readEventHeaders({ "X-Fastn-Timestamp": ["1"], "x-fastn-signature": "s" })).toEqual({ timestamp: "1", signature: "s", eventId: undefined, redelivery: false });
   });
 });
+
+describe("parseEvent leaves the internal customer id out", () => {
+  it("drops endOrgId by default and keeps it with internalIds: true", async () => {
+    const { parseEvent, signEventBody } = await import("../../src/index.js");
+    const raw = JSON.stringify({ id: "evt_1", type: "connection.connected", tenantRef: "acme-1", endOrgId: "7c9e", app: "hubspot" });
+    const ts = String(Math.floor(Date.now() / 1000));
+    const headers = { "x-fastn-event-id": "evt_1", "x-fastn-timestamp": ts, "x-fastn-signature": signEventBody("whsec_t", ts, raw) };
+    const e = parseEvent("whsec_t", headers, raw);
+    expect(e).toMatchObject({ id: "evt_1", tenantRef: "acme-1", app: "hubspot" });
+    expect("endOrgId" in e).toBe(false);
+    expect(parseEvent("whsec_t", headers, raw, { internalIds: true })).toMatchObject({ endOrgId: "7c9e" });
+  });
+});
