@@ -127,16 +127,42 @@ describe("tools client: the customer named once", () => {
     expect(m.calls[4].json.params.arguments).toEqual({ calendarId: "primary" });
     expect(m.calls[5].json.params.arguments).toEqual({ category: "crm", entity: "contact", filters: {} });
   });
-  it("customerArg: false turns the fill off; a failed listing sends the args as given and is retried on the next call", async () => {
-    const m = mockFetch([{ body: toolOk(1, "{}") }, { status: 503, body: { error: "down" } }, { body: toolOk(3, "{}") }, { body: list(4) }, { body: toolOk(5, "{}") }]);
+  it("customerArg: false turns the fill off; a failed first listing fails the call closed and is retried on the next call", async () => {
+    const m = mockFetch([{ body: toolOk(1, "{}") }, { status: 503, body: { error: "down" } }, { body: list(3) }, { body: toolOk(4, "{}") }]);
     await ucl(m, { customerArg: false }).customer("acme-1").call("fastnPlatform__searchUnifiedRecords", { filters: {} });
     expect(rpcCalls(m)).toEqual(["tools/call"]);
     expect(m.calls[0].json.params.arguments).toEqual({ filters: {} });
     const c = ucl(m).customer("acme-1");
+    // The listing fails: the call is NOT sent without the customer; the listing's error is what the caller sees.
+    await expect(c.call("fastnPlatform__searchUnifiedRecords", { filters: {} })).rejects.toMatchObject({ kind: "http", status: 503 });
+    expect(rpcCalls(m)).toEqual(["tools/call", "tools/list"]);
     await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
-    expect(m.calls[2].json.params.arguments).toEqual({ filters: {} });
-    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
-    expect(rpcCalls(m)).toEqual(["tools/call", "tools/list", "tools/call", "tools/list", "tools/call"]);
-    expect(m.calls[4].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+    expect(rpcCalls(m)).toEqual(["tools/call", "tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[3].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
+  it("after the TTL the cached schemas keep serving and one refresh runs in the background; a failed refresh keeps the old map", async () => {
+    vi.useFakeTimers();
+    try {
+      // Reply order = fetch order: on a stale call the refresh (tools/list) is sent first, then the call itself.
+      const m = mockFetch([{ body: list(1) }, { body: toolOk(2, "{}") }, { status: 503, body: { error: "down" } }, { body: toolOk(4, "{}") }, { body: list(5) }, { body: toolOk(6, "{}") }, { body: toolOk(7, "{}") }]);
+      const c = ucl(m).customer("acme-1");
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call"]);
+      vi.advanceTimersByTime(11 * 60_000);
+      // Stale: the call goes out at once with the cached schema; the refresh (which fails here) runs alongside.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      await vi.runAllTimersAsync();
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/list", "tools/call"]);
+      expect(m.calls[3].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+      // Still stale after the failed refresh: the next call starts another one, and still goes out with the old map.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      await vi.runAllTimersAsync();
+      expect(rpcCalls(m)).toEqual(["tools/list", "tools/call", "tools/list", "tools/call", "tools/list", "tools/call"]);
+      expect(m.calls[5].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+      // Fresh again: no listing on the next call.
+      await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+      expect(rpcCalls(m).filter((x) => x === "tools/list")).toHaveLength(3);
+      expect(m.calls[6].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+    } finally { vi.useRealTimers(); }
   });
 });

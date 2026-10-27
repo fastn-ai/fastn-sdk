@@ -25,7 +25,9 @@ export interface ToolsClientConfig {
   /**
    * When a call is scoped to a customer, fill that customer's ref into the `endOrgRef` argument of every tool whose
    * input schema has one (the Fastn Workspace record tools), unless the call already names a customer. Default true.
-   * The workspace's tool list is fetched once for this (shared by every customer() clone, kept for 10 minutes).
+   * The workspace's tool list is fetched once for this (shared by every customer() clone, refreshed in the
+   * background every 10 minutes). A call whose listing cannot be fetched fails with that error rather than going
+   * out without the customer.
    */
   customerArg?: boolean;
 }
@@ -101,8 +103,8 @@ export class ToolError extends Error {
   get isUnknownTool() { return (this.kind === "rpc" && this.code === -32601) || ((this.kind === "rpc" || this.kind === "tool") && /unknown tool|is not a tool/i.test(this.message)); }
 }
 
-/** Tool name -> argument names, fetched once per workspace. */
-interface SchemaBox { list?: Promise<Map<string, Set<string>>>; at?: number }
+/** Tool name -> argument names, fetched once per workspace; `refreshing` is the background re-listing in flight. */
+interface SchemaBox { list?: Promise<Map<string, Set<string>>>; at?: number; refreshing?: Promise<unknown> }
 const SCHEMA_TTL_MS = 10 * 60_000;
 /** The connector that exposes the platform's own API in a workspace; only its tools take `endOrgRef`. */
 const PLATFORM_CONNECTOR = "fastnPlatform";
@@ -186,30 +188,42 @@ export class ToolsClient {
    * The customer named once: when the call is scoped to a customer and a Fastn Workspace tool's input schema has
    * `endOrgRef`, the args get `endOrgRef: ref` unless they already name a customer (endOrgRef or endOrgId). Other
    * connectors' tools are left alone (the customer reaches them through X-Org-Id). The schemas come from one
-   * tools/list per workspace (shared across customer() clones, kept SCHEMA_TTL_MS); when that listing fails the
-   * args go out as given, and the call reports its own error.
+   * tools/list per workspace (shared across customer() clones, refreshed in the background after SCHEMA_TTL_MS).
+   * When no listing can be had, the call fails closed: the listing's error is thrown, because a call sent without
+   * the customer would run against the partner's own account, not the customer's.
    */
   private async withCustomerArg(name: string, args: Record<string, unknown>, opts: ToolCallOptions): Promise<Record<string, unknown>> {
     if (this.cfg.customerArg === false || !name.startsWith(`${PLATFORM_CONNECTOR}__`)) return args;
     const ref = opts.customer?.ref ?? this.cfg.defaults?.customer?.ref;
     if (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined) return args;
-    const props = await this.argsOf(name, opts);
+    const props = (await this.schemaMap(opts)).get(name);
     return props?.has("endOrgRef") ? { ...args, endOrgRef: ref } : args;
   }
 
-  /** The argument names of one tool, from the shared schema cache; undefined when the listing failed. */
-  private async argsOf(name: string, opts: ToolCallOptions): Promise<Set<string> | undefined> {
+  /**
+   * Tool name -> argument names, from the shared cache. The first call waits for the listing; after SCHEMA_TTL_MS a
+   * call keeps using the cached map and starts one refresh in the background, so no call pays for a re-listing. A
+   * refresh that fails keeps the old map; a first listing that fails is thrown to the caller and retried on the
+   * next call.
+   */
+  private async schemaMap(opts: ToolCallOptions): Promise<Map<string, Set<string>>> {
     const box = this.schemas;
-    if (!box.list || Date.now() - box.at! > SCHEMA_TTL_MS) {
+    const stale = !box.list || Date.now() - box.at! > SCHEMA_TTL_MS;
+    if (stale && !box.refreshing) {
       const list = this.tools(opts).then((tools) => {
         const m = new Map<string, Set<string>>();
         for (const t of tools) m.set(t.name, new Set(Object.keys(t.inputSchema?.properties ?? {})));
         return m;
       });
-      box.list = list; box.at = Date.now();
-      list.catch(() => { if (box.list === list) box.list = undefined; });
+      if (!box.list) {
+        box.list = list; box.at = Date.now();
+        list.catch(() => { if (box.list === list) box.list = undefined; });
+      } else {
+        box.refreshing = list;
+        list.then((m) => { if (m.size > 0) { box.list = Promise.resolve(m); box.at = Date.now(); } }, () => {}).finally(() => { box.refreshing = undefined; });
+      }
     }
-    try { return (await box.list).get(name); } catch { return undefined; }
+    return box.list!;
   }
 
   private async callOnce<T>(name: string, args: Record<string, unknown>, opts: ToolCallOptions): Promise<ToolResult<T>> {
