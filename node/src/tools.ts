@@ -173,10 +173,10 @@ export class ToolsClient {
   async call<T = any>(name: string, args: Record<string, unknown> = {}, opts: ToolCallOptions = {}): Promise<ToolResult<T>> {
     if (!name) throw new TypeError("call(name): tool name is required");
     const retries = opts.retries ?? this.cfg.defaults?.retries ?? 0;
-    args = await this.withCustomerArg(name, args, opts);
     for (let attempt = 0; ; attempt++) {
       try {
-        return await this.callOnce<T>(name, args, opts);
+        // Inside the loop so that `retries` also covers a gateway hiccup on the schema listing.
+        return await this.callOnce<T>(name, await this.withCustomerArg(name, args, opts), opts);
       } catch (e) {
         if (attempt >= retries || !isGatewayHiccup(e)) throw e;
         await sleep(backoff(attempt));
@@ -196,8 +196,14 @@ export class ToolsClient {
     if (this.cfg.customerArg === false || !name.startsWith(`${PLATFORM_CONNECTOR}__`)) return args;
     const ref = opts.customer?.ref ?? this.cfg.defaults?.customer?.ref;
     if (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined) return args;
-    const props = (await this.schemaMap(opts)).get(name);
-    return props?.has("endOrgRef") ? { ...args, endOrgRef: ref } : args;
+    let props = (await this.schemaMap(opts)).get(name);
+    if (!props) {
+      // Not in the cached map: the map may predate the tool. One fresh listing, then it is an unknown tool;
+      // the call is never sent unscoped on a guess.
+      props = (await this.schemaMap(opts, true)).get(name);
+      if (!props) throw new ToolError(`${name}: not a tool of this workspace (tools/list does not include it)`, "rpc", 200, -32601, name, undefined);
+    }
+    return props.has("endOrgRef") ? { ...args, endOrgRef: ref } : args;
   }
 
   /**
@@ -206,21 +212,26 @@ export class ToolsClient {
    * refresh that fails keeps the old map; a first listing that fails is thrown to the caller and retried on the
    * next call.
    */
-  private async schemaMap(opts: ToolCallOptions): Promise<Map<string, Set<string>>> {
+  private async schemaMap(opts: ToolCallOptions, force = false): Promise<Map<string, Set<string>>> {
     const box = this.schemas;
     const stale = !box.list || Date.now() - box.at! > SCHEMA_TTL_MS;
-    if (stale && !box.refreshing) {
+    if (force && box.refreshing) await box.refreshing.catch(() => {});
+    if ((stale || force) && !box.refreshing) {
       const list = this.tools(opts).then((tools) => {
         const m = new Map<string, Set<string>>();
         for (const t of tools) m.set(t.name, new Set(Object.keys(t.inputSchema?.properties ?? {})));
+        // An empty listing is a failure, not a workspace with no tools: cached, it would send every record
+        // call unscoped for the whole TTL.
+        if (m.size === 0) throw new ToolError("tools/list: the workspace answered with no tools", "rpc", 200, undefined, undefined, tools);
         return m;
       });
-      if (!box.list) {
+      if (!box.list || force) {
+        const prev = box.list;
         box.list = list; box.at = Date.now();
-        list.catch(() => { if (box.list === list) box.list = undefined; });
+        list.catch(() => { if (box.list === list) box.list = prev; });
       } else {
         box.refreshing = list;
-        list.then((m) => { if (m.size > 0) { box.list = Promise.resolve(m); box.at = Date.now(); } }, () => {}).finally(() => { box.refreshing = undefined; });
+        list.then((m) => { box.list = Promise.resolve(m); box.at = Date.now(); }, () => {}).finally(() => { box.refreshing = undefined; });
       }
     }
     return box.list!;

@@ -140,6 +140,34 @@ describe("tools client: the customer named once", () => {
     expect(rpcCalls(m)).toEqual(["tools/call", "tools/list", "tools/list", "tools/call"]);
     expect(m.calls[3].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
   });
+  it("an empty first listing is a failure: the call is refused, nothing is cached, the next call lists again", async () => {
+    const m = mockFetch([{ body: rpcOk(1, { tools: [] }) }, { body: list(2) }, { body: toolOk(3, "{}") }]);
+    const c = ucl(m).customer("acme-1");
+    await expect(c.call("fastnPlatform__searchUnifiedRecords", { filters: {} })).rejects.toMatchObject({ kind: "rpc", message: /no tools/ });
+    expect(rpcCalls(m)).toEqual(["tools/list"]);
+    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
+  it("a platform tool missing from the cached map triggers one fresh listing; still missing, it is refused as unknown", async () => {
+    const later = rpcOk(9, { tools: [{ name: "fastnPlatform__newRecordTool", inputSchema: { type: "object", properties: { endOrgRef: {} } } }, { name: "fastnPlatform__createTenant", inputSchema: { type: "object", properties: { name: {} } } }] });
+    const m = mockFetch([{ body: list(1) }, { body: later }, { body: toolOk(3, "{}") }, { body: later }]);
+    const c = ucl(m).customer("acme-1");
+    // Enabled after the first listing: found on the fresh listing and filled.
+    await c.call("fastnPlatform__newRecordTool", { x: 1 });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ x: 1, endOrgRef: "acme-1" });
+    // Not in the workspace at all: one fresh listing, then refused; never sent unscoped.
+    await expect(c.call("fastnPlatform__noSuchTool", { x: 1 })).rejects.toMatchObject({ kind: "rpc", code: -32601, isUnknownTool: true });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call", "tools/list"]);
+  });
+  it("retries cover a gateway hiccup on the first listing too", async () => {
+    const m = mockFetch([{ status: 503, body: { error: "down" } }, { body: list(2) }, { body: toolOk(3, "{}") }]);
+    const c = ucl(m, { defaults: { retries: 1 } }).customer("acme-1");
+    await c.call("fastnPlatform__searchUnifiedRecords", { filters: {} });
+    expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
+    expect(m.calls[2].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
+  });
   it("after the TTL the cached schemas keep serving and one refresh runs in the background; a failed refresh keeps the old map", async () => {
     vi.useFakeTimers();
     try {
