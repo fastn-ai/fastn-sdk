@@ -195,7 +195,8 @@ export class ToolsClient {
   private async withCustomerArg(name: string, args: Record<string, unknown>, opts: ToolCallOptions): Promise<Record<string, unknown>> {
     if (this.cfg.customerArg === false || !name.startsWith(`${PLATFORM_CONNECTOR}__`)) return args;
     const ref = opts.customer?.ref ?? this.cfg.defaults?.customer?.ref;
-    if (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined) return args;
+    const wantsAlias = args.orgId !== undefined;
+    if (!wantsAlias && (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined)) return args;
     let props = (await this.schemaMap(opts)).get(name);
     if (!props) {
       // Not in the cached map: the map may predate the tool. One fresh listing, then it is an unknown tool;
@@ -203,6 +204,13 @@ export class ToolsClient {
       props = (await this.schemaMap(opts, true)).get(name);
       if (!props) throw new ToolError(`${name}: not a tool of this workspace (tools/list does not include it)`, "rpc", 200, -32601, name, undefined);
     }
+    // `orgId` is the one name for the customer: a tool that spells it `endOrgId` or `end_org_id` (and has no
+    // `orgId` of its own) gets the value under its own spelling, so callers never write the older names.
+    if (wantsAlias && !props.has("orgId")) {
+      const alias = props.has("endOrgId") ? "endOrgId" : props.has("end_org_id") ? "end_org_id" : undefined;
+      if (alias && args[alias] === undefined) { const { orgId, ...rest } = args; args = { ...rest, [alias]: orgId }; }
+    }
+    if (!ref || args.endOrgRef !== undefined || args.endOrgId !== undefined) return args;
     return props.has("endOrgRef") ? { ...args, endOrgRef: ref } : args;
   }
 

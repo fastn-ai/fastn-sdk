@@ -168,6 +168,9 @@ r.data                                                     // the tool's answer,
   you pass yourself wins; `customerArg: false` on the client turns the fill off. Tools of other connectors are left
   alone: the customer reaches them through X-Org-Id. Call `await connect.tools()` once at startup if the first call
   must not pay for the listing.
+- One name for the customer: write `orgId` in the arguments of any Fastn Workspace tool. Where the tool spells it
+  `endOrgId` or `end_org_id` (and has no `orgId` of its own), the SDK passes the value under that spelling, so your
+  code never carries the older names; a value you pass under the old name is left as it is.
 
 ## Events (webhooks)
 

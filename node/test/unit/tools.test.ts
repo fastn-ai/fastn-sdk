@@ -168,6 +168,28 @@ describe("tools client: the customer named once", () => {
     expect(rpcCalls(m)).toEqual(["tools/list", "tools/list", "tools/call"]);
     expect(m.calls[2].json.params.arguments).toEqual({ filters: {}, endOrgRef: "acme-1" });
   });
+  it("orgId is the one name for the customer: mapped to endOrgId / end_org_id where a tool spells it so", async () => {
+    const schemas = rpcOk(1, { tools: [
+      { name: "fastnPlatform__createAppEventTrigger", inputSchema: { type: "object", properties: { name: {}, endOrgId: {}, connectionId: {} } } },
+      { name: "fastnPlatform__listAppEventTriggers", inputSchema: { type: "object", properties: { end_org_id: {} } } },
+      { name: "fastnPlatform__listConnections", inputSchema: { type: "object", properties: { orgId: {}, endOrgId: {} } } },
+      { name: "fastnPlatform__createTenant", inputSchema: { type: "object", properties: { name: {}, orgId: {} } } },
+    ] });
+    const m = mockFetch([{ body: schemas }, { body: toolOk(2, "{}") }, { body: toolOk(3, "{}") }, { body: toolOk(4, "{}") }, { body: toolOk(5, "{}") }, { body: toolOk(6, "{}") }]);
+    const c = ucl(m).customer("acme-1");
+    await c.call("fastnPlatform__createAppEventTrigger", { name: "t", orgId: "acme-1", connectionId: "ucl:x" });
+    expect(m.calls[1].json.params.arguments).toEqual({ name: "t", connectionId: "ucl:x", endOrgId: "acme-1" });
+    await c.call("fastnPlatform__listAppEventTriggers", { orgId: "acme-1" });
+    expect(m.calls[2].json.params.arguments).toEqual({ end_org_id: "acme-1" });
+    // A tool with its own orgId keeps it.
+    await c.call("fastnPlatform__listConnections", { orgId: "acme-1" });
+    expect(m.calls[3].json.params.arguments).toEqual({ orgId: "acme-1" });
+    await c.call("fastnPlatform__createTenant", { name: "Acme", orgId: "acme-1" });
+    expect(m.calls[4].json.params.arguments).toEqual({ name: "Acme", orgId: "acme-1" });
+    // An explicit endOrgId wins over the alias.
+    await c.call("fastnPlatform__createAppEventTrigger", { name: "t", orgId: "acme-1", endOrgId: "other" });
+    expect(m.calls[5].json.params.arguments).toEqual({ name: "t", orgId: "acme-1", endOrgId: "other" });
+  });
   it("after the TTL the cached schemas keep serving and one refresh runs in the background; a failed refresh keeps the old map", async () => {
     vi.useFakeTimers();
     try {
