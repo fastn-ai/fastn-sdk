@@ -1,6 +1,6 @@
 {
   "name": "@fastn-ai/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official fastn SDK for Node.js and TypeScript: the platform API (generated from the OpenAPI spec) and workspace tool calls",
   "license": "MIT",
   "author": "fastn",

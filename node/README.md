@@ -162,8 +162,12 @@ r.data                                                     // the tool's answer,
   so an agent can ask the user to connect at runtime instead of failing.
 - In "one shared account" mode every call runs as that one account, whatever customer you name. Per-customer accounts
   need the "each customer org" mode in the workspace.
-- The gateway does not yet pass X-Org-Id on to the platform, so Fastn Workspace tools that act for a customer (unified
-  records, setup links) still take the customer in their arguments (`endOrgRef`) until that gateway change ships.
+- The customer is named once. Fastn Workspace tools that act for a customer (unified records) take it as the
+  `endOrgRef` argument, and `customer(ref)` fills that in for every tool whose input schema has it, from one
+  tools/list per workspace (shared by every `customer()` clone, kept for 10 minutes). An `endOrgRef` or `endOrgId`
+  you pass yourself wins; `customerArg: false` on the client turns the fill off. Tools of other connectors are left
+  alone: the customer reaches them through X-Org-Id. Call `await connect.tools()` once at startup if the first call
+  must not pay for the listing.
 
 ## Events (webhooks)
 
