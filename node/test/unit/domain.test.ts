@@ -15,7 +15,9 @@ describe("provider resolution", () => {
     const m = fx((url) => url.includes("/providers") ? providers([hubspot()]) : { body: { records: [], hasMore: false, provider: "hubspot" } });
     const c = client(m).customer("acme-1");
     await c.crm.contacts.find({ email: "a@b.co" }, { page_size: 5 });
+    await c.crm.contacts.find({ email: "a@b.co" }, { page_size: 5, cursor: undefined } as any);   // a paging helper's first page: not a cursor
     await expect(c.crm.contacts.find({ email: "a@b.co" }, { cursor: "abc" } as any)).rejects.toThrow(/find\(\) has no cursor/);
+    expect(m.urls().filter((u) => u.includes("/search")).length).toBe(2);
     expect(m.urls().at(-1)).toBe("/v1/unified/crm/contact/search?provider=hubspot&page_size=5");
   });
 

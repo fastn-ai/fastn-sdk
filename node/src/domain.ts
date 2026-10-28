@@ -28,7 +28,7 @@ export interface UnifiedRecord<D> {
   [key: string]: unknown;
 }
 
-/** One page of records. Pass `nextCursor` as `cursor` to read the next page while `hasMore` is true. */
+/** One page of records. From `list`, pass `nextCursor` as `cursor` to read the next page while `hasMore` is true; `find` answers one page and takes no cursor. */
 export interface UnifiedPage<D> {
   records: UnifiedRecord<D>[];
   nextCursor?: string | null;
@@ -105,7 +105,7 @@ export class Entity<C extends object, R, F extends object = Record<string, never
   /** Records matching the filters (the provider's own search). One page only: the search route has no cursor, so
    *  narrow the filters or raise `page_size` to see more; `list` pages with a cursor. */
   find(filters: F, input: FindInput = {}, opts?: DomainCallOptions): Promise<UnifiedPage<R>> {
-    if ("cursor" in input) return Promise.reject(new TypeError("find() has no cursor: the search route answers one page; narrow the filters, raise page_size, or page with list()"));
+    if ((input as { cursor?: unknown }).cursor !== undefined) return Promise.reject(new TypeError("find() has no cursor: the search route answers one page; narrow the filters, raise page_size, or page with list()"));
     return this.run("search", opts, (s, o) => this.u.searchUnifiedRecords({ ...s, ...input, filters: wireRecord(filters) as any }, o));
   }
   /** Changes the given fields and leaves the rest. */
