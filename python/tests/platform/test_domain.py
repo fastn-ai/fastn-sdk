@@ -302,6 +302,30 @@ class TestFreeIntervalArithmetic:
         assert parse_iso_ms(None) is None and parse_iso_ms("2026-13-40") is None
         assert wire_record({"a": datetime(2026, 1, 1, tzinfo=timezone.utc), "b": None, "c": "x"}) == {"a": "2026-01-01T00:00:00.000Z", "c": "x"}
 
+    def test_a_naive_datetime_is_local_time_not_utc(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        import time
+
+        monkeypatch.setenv("TZ", "Asia/Karachi")  # UTC+5, no daylight saving
+        time.tzset()
+        try:
+            assert wire_record({"t": datetime(2026, 10, 29, 10, 0)}) == {"t": "2026-10-29T05:00:00.000Z"}
+            assert parse_iso_ms("2026-10-29T10:00:00") == parse_iso_ms("2026-10-29T05:00:00Z")
+            assert parse_iso_ms("2026-10-29") == parse_iso_ms("2026-10-29T00:00:00Z")  # a bare date stays UTC, as in JavaScript
+            assert parse_iso_ms(datetime(2026, 10, 29, 10, 0)) == parse_iso_ms("2026-10-29T05:00:00Z")
+            assert wire_record({"t": datetime(2026, 10, 29, 10, 0, tzinfo=timezone.utc)}) == {"t": "2026-10-29T10:00:00.000Z"}
+        finally:
+            monkeypatch.delenv("TZ")
+            time.tzset()
+
+    def test_find_takes_one_page_and_no_cursor(self, mock: Callable[..., Mock]) -> None:
+        m = fx(mock, lambda url, req: providers([hubspot()]) if "/providers" in url else {"body": {"records": [], "hasMore": False, "provider": "hubspot"}})
+        c = client().customer("acme-1")
+        c.crm.contacts.find({"email": "a@b.co"}, page_size=5)
+        with pytest.raises(TypeError, match="find\\(\\) has no cursor"):
+            c.crm.contacts.find({"email": "a@b.co"}, cursor="abc")  # type: ignore[call-arg]
+        assert "page_size=5" in str(m.calls[-1].url) and "cursor" not in str(m.calls[-1].url)
+
+
 
 class TestReviewFixes:
     gcal_row = {"connectorSlug": "googleCalendar", "connectorName": "Google Calendar", "operations": ALL_OPS, "connected": True}

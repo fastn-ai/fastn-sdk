@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, 
 from ._generated.api import build_apis
 from .catalog import Catalog, rows_of
 from .domain import Calendar, Crm
-from .errors import FastnApiError
+from .errors import FastnApiError, FastnNetworkError
 
 if TYPE_CHECKING:
     from typing_extensions import Unpack
@@ -350,6 +350,8 @@ class Customer:
                 gone = False
             except FastnApiError as e:
                 gone = e.is_not_found
+            except FastnNetworkError:
+                gone = False  # unknown: put the org back to active and report the delete error
             if gone:
                 self._set_id(None)
                 return

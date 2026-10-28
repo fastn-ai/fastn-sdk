@@ -84,7 +84,9 @@ def _id_of(id: str) -> str:
 
 
 def parse_iso_ms(value: Any) -> Optional[float]:
-    """Unix milliseconds of an ISO 8601 timestamp (Z, an offset, or none = UTC), or None when it does not parse."""
+    """Unix milliseconds of an ISO 8601 timestamp, or None when it does not parse. Read as JavaScript's Date reads
+    it: Z or an offset as given, a date-time with no zone as the machine's local time (a naive datetime too), a bare
+    date as UTC midnight."""
     if isinstance(value, datetime):
         value = to_iso(value)
     if not isinstance(value, str):
@@ -94,9 +96,11 @@ def parse_iso_ms(value: Any) -> Optional[float]:
         return None
     y, mo, d, hh, mm, ss, frac, tz = m.groups()
     try:
-        dt = datetime(int(y), int(mo), int(d), int(hh or 0), int(mm or 0), int(ss or 0), int((frac or "0")[:3].ljust(3, "0")) * 1000, tzinfo=timezone.utc)
+        dt = datetime(int(y), int(mo), int(d), int(hh or 0), int(mm or 0), int(ss or 0), int((frac or "0")[:3].ljust(3, "0")) * 1000, tzinfo=timezone.utc if tz else None)
     except ValueError:
         return None
+    if dt.tzinfo is None:
+        dt = dt.astimezone(timezone.utc) if hh is not None else dt.replace(tzinfo=timezone.utc)  # as JavaScript: date-time without a zone = local, a bare date = UTC
     ms = dt.timestamp() * 1000
     if tz and tz.upper() != "Z":
         sign = 1 if tz[0] == "+" else -1
@@ -208,9 +212,12 @@ class Entity:
         page = _page(page_size, cursor)
         return self._run("list", opts, lambda s, o: self._cust.api.unified.list_unified_records(_in({**s, **page}), **o))
 
-    def find(self, filters: Mapping[str, Any], page_size: Optional[int] = None, cursor: Optional[str] = None, **opts: Unpack[DomainCallOptions]) -> UnifiedPage:
-        """Records matching the filters (the provider's own search)."""
-        page = _page(page_size, cursor)
+    def find(self, filters: Mapping[str, Any], page_size: Optional[int] = None, **opts: Unpack[DomainCallOptions]) -> UnifiedPage:
+        """Records matching the filters (the provider's own search). One page only: the search route has no cursor,
+        so narrow the filters or raise `page_size` to see more; `list` pages with a cursor."""
+        if "cursor" in opts:
+            raise TypeError("find() has no cursor: the search route answers one page; narrow the filters, raise page_size, or page with list()")
+        page = _page(page_size, None)
         return self._run("search", opts, lambda s, o: self._cust.api.unified.search_unified_records(_in({**s, **page, "filters": wire_record(filters)}), **o))
 
     def update(self, id: str, patch: Mapping[str, Any], **opts: Unpack[DomainCallOptions]) -> UnifiedRecord:

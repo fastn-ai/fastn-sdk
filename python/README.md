@@ -811,7 +811,7 @@ print(booked["id"], booked["provider"], booked["data"].get("web_url"))
 customer.calendar.reschedule(booked["id"], {"start_time": "2026-11-03T16:00:00Z", "end_time": "2026-11-03T16:30:00Z"})
 customer.calendar.cancel(booked["id"], idempotency_key="cancel-123")
 
-page = customer.crm.contacts.find({"email": "jane@example.com"})
+page = customer.crm.contacts.find({"email": "jane@example.com"})  # one page (the search route has no cursor); list() pages
 contact = page["records"][0] if page["records"] else customer.crm.contacts.create({"first_name": "Jane", "last_name": "Doe", "email": "jane@example.com"})
 customer.crm.notes.add({"body": "Booked an intro call", "parent_id": contact["id"], "parent_type": "contact"})
 

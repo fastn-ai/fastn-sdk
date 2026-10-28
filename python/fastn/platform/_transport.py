@@ -125,10 +125,10 @@ CROSS_HEADERS: Tuple[Tuple[str, str], ...] = (
 
 
 def to_iso(v: Any) -> Any:
-    """datetime -> ISO 8601 like JavaScript's Date.toISOString() (UTC, milliseconds, Z); date -> YYYY-MM-DD."""
+    """datetime -> ISO 8601 like JavaScript's Date.toISOString() (UTC, milliseconds, Z); date -> YYYY-MM-DD.
+    A naive datetime is read as the machine's local time (Python's convention), never as UTC."""
     if isinstance(v, datetime):
-        if v.tzinfo is not None:
-            v = v.astimezone(_UTC).replace(tzinfo=None)
+        v = v.astimezone(_UTC).replace(tzinfo=None)  # astimezone() on a naive value assumes local time
         return v.strftime("%Y-%m-%dT%H:%M:%S.") + f"{v.microsecond // 1000:03d}Z"
     if isinstance(v, date):
         return v.isoformat()

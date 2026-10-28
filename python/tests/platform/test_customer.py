@@ -173,6 +173,23 @@ def test_remove_reports_still_suspended_when_the_rollback_fails_too(mock: Callab
         client(retries=0).customer("acme-1").remove()
 
 
+def test_remove_puts_the_org_back_to_active_when_the_check_after_a_failed_delete_hits_a_network_error(mock: Callable[..., Mock]) -> None:
+    def handler(url: str, req: httpx.Request) -> Reply:
+        if "/v1/orgs?" in url:
+            return {"body": {"data": [org_row]}}
+        if req.method == "DELETE":
+            return {"status": 500, "body": {"error": "delete failed"}}
+        if req.method == "GET":
+            return httpx.ReadError("socket hang up")  # the check itself fails
+        return {"body": {"data": org_row}}
+
+    m = fx(mock, handler)
+    with pytest.raises(FastnApiError, match="delete failed.*it is active again"):
+        client(retries=0).customer("acme-1").remove()
+    puts = [c for c in m.calls if c.method == "PUT"]
+    assert len(puts) == 2 and b"active" in puts[-1].content   # suspended, then set back to active
+
+
 def test_setup_link_and_embed_token_carry_the_ref_records_carry_x_end_org_ref(mock: Callable[..., Mock]) -> None:
     m = fx(mock, lambda url, req: {"body": {"data": {}}})
     c = client().customer("acme-1")
