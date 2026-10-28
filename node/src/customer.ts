@@ -18,11 +18,14 @@ export interface CustomerContext {
   ids: Map<string, string>;
   /** ref -> lookup in flight, so concurrent id() calls share one listOrgs. */
   lookups: Map<string, Promise<CustomerRow | undefined>>;
-  /** "ref/category/entity" -> the providers the customer has connected for that entity (one lookup per client). */
-  providers: Map<string, Promise<EntityProvider[]>>;
-  /** The account's widgets (listWidgets), read once per client for connect(app). */
-  widgets?: Promise<any[]>;
+  /** "ref/category/entity" -> the providers the customer has connected for that entity, kept for PROVIDER_TTL_MS. */
+  providers: Map<string, { at: number; p: Promise<EntityProvider[]> }>;
+  /** The account's own widgets (listWidgets, inherited and inactive rows left out), kept for WIDGET_TTL_MS; re-read on a miss. */
+  widgets?: { at: number; p: Promise<any[]> };
 }
+/** How long a customer's provider list and the account's widget list are reused before being read again. */
+export const PROVIDER_TTL_MS = 60_000;
+export const WIDGET_TTL_MS = 60_000;
 
 /** What `customer.connect(app)` takes besides the app. */
 export interface ConnectOptions {
@@ -119,16 +122,18 @@ export class Customer implements ProviderResolver {
    */
   async providerFor(category: string, entity: string, op: UnifiedOperation): Promise<string> {
     const key = `${this.ref}/${category}/${entity}`;
-    let p = this.ctx.providers.get(key);
-    if (!p) {
-      p = this.catalog.providers(category, entity);
-      this.ctx.providers.set(key, p);
+    let entry = this.ctx.providers.get(key);
+    if (!entry || Date.now() - entry.at > PROVIDER_TTL_MS) {
+      const p = this.catalog.providers(category, entity);
+      entry = { at: Date.now(), p };
+      this.ctx.providers.set(key, entry);
       p.catch(() => this.ctx.providers.delete(key));
     }
-    const connected = (await p).filter((x) => x.connected);
+    const connected = (await entry.p).filter((x) => x.connected);
     const able = connected.filter((x) => !Array.isArray(x.operations) || x.operations.includes(op));
     const path = `/v1/unified/${category}/${entity}/providers`;
     if (able.length === 1) return able[0].connectorSlug;
+    this.ctx.providers.delete(key);                              // the next call reads the list again: a reconnect is picked up at once
     if (connected.length === 0) throw new FastnApiError(`customer "${this.ref}" has no connected provider for ${category}/${entity}; send them a setup link (customer.connect(app))`, { status: 404, code: "NO_CONNECTED_PROVIDER", method: "GET", path, details: { category, entity, op } });
     if (able.length === 0) throw new FastnApiError(`none of the providers customer "${this.ref}" connected for ${category}/${entity} (${connected.map((x) => x.connectorSlug).join(", ")}) supports ${op}`, { status: 404, code: "OPERATION_NOT_SUPPORTED", method: "GET", path, details: { category, entity, op, connected: connected.map((x) => x.connectorSlug) } });
     throw new FastnApiError(`customer "${this.ref}" has ${able.length} providers connected for ${category}/${entity} (${able.map((x) => x.connectorSlug).join(", ")}); pass { provider } on the call`, { status: 409, code: "PROVIDER_AMBIGUOUS", method: "GET", path, details: { category, entity, op, providers: able.map((x) => x.connectorSlug) } });
@@ -249,18 +254,34 @@ export class Customer implements ProviderResolver {
     return { ...d, setupId: d.setupId, url: setupUrl ?? d.url, status: d.status, widgetId: widget.id };
   }
 
-  /** The account's widget for an app (by connector slug), or the one named by `widgetId`. */
-  private async widgetFor(app: string, widgetId?: string, opts?: RequestOptions): Promise<{ id: string; name?: string }> {
-    this.ctx.widgets ??= this.root.embed.listWidgets({} as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : Array.isArray(r) ? r : []) as any[], (e) => { this.ctx.widgets = undefined; throw e; });
-    const widgets = await this.ctx.widgets;
-    const slugOf = (w: any): string[] => [...(Array.isArray(w.connectorRefs) ? w.connectorRefs.map((c: any) => c?.slug) : []), ...(Array.isArray(w.connectorSlugs) ? w.connectorSlugs : [])].filter((x) => typeof x === "string");
-    if (widgetId) {
-      const w = widgets.find((x) => x.id === widgetId);
-      if (!w) throw new FastnApiError(`widget ${widgetId} not found on your account`, { status: 404, code: "WIDGET_NOT_FOUND", method: "GET", path: "/v1/widgets", details: { widgetId } });
-      return w;
+  /**
+   * The account's own widgets that a customer can be offered: rows inherited from the parent account are read-only
+   * and left out, as is any row that is not the caller's org's, and of a customised integration (two rows, the
+   * original and the copy) only the active version is kept. Read once and reused for WIDGET_TTL_MS; `fresh` reads again.
+   */
+  private async ownWidgets(fresh: boolean, opts?: RequestOptions): Promise<any[]> {
+    let entry = this.ctx.widgets;
+    if (fresh || !entry || Date.now() - entry.at > WIDGET_TTL_MS) {
+      const p = Promise.all([this.root.embed.listWidgets({} as any, opts), this.ctx.callerOrgId().catch(() => undefined)]).then(([r, me]: [any, string | undefined]) => {
+        const rows: any[] = Array.isArray(r?.data) ? r.data : Array.isArray(r) ? r : [];
+        return rows.filter((w) => !w.inheritedFrom && (!me || !w.orgId || w.orgId === me) && (!w.version || typeof w.version !== "object" || w.version.active !== false));
+      });
+      entry = { at: Date.now(), p };
+      this.ctx.widgets = entry;
+      p.catch(() => { if (this.ctx.widgets === entry) this.ctx.widgets = undefined; });
     }
-    const matches = widgets.filter((w) => slugOf(w).includes(app));
+    return entry.p;
+  }
+
+  /** The account's widget for an app (by connector slug), or the one named by `widgetId`. A miss reads the list once more. */
+  private async widgetFor(app: string, widgetId?: string, opts?: RequestOptions): Promise<{ id: string; name?: string }> {
+    const slugOf = (w: any): string[] => [...(Array.isArray(w.connectorRefs) ? w.connectorRefs.map((c: any) => c?.slug) : []), ...(Array.isArray(w.connectorSlugs) ? w.connectorSlugs : [])].filter((x) => typeof x === "string");
+    let widgets = await this.ownWidgets(false, opts);
+    const pick = () => (widgetId ? widgets.filter((x) => x.id === widgetId) : widgets.filter((w) => slugOf(w).includes(app)));
+    let matches = pick();
+    if (matches.length === 0) { widgets = await this.ownWidgets(true, opts); matches = pick(); }   // made after the last read?
     if (matches.length === 1) return matches[0];
+    if (widgetId) throw new FastnApiError(`widget ${widgetId} is not one of your account's own active widgets`, { status: 404, code: "WIDGET_NOT_FOUND", method: "GET", path: "/v1/widgets", details: { widgetId } });
     if (matches.length === 0) throw new FastnApiError(`no widget on your account connects "${app}"; create one in fastn (Widgets) or pass widgetId`, { status: 404, code: "WIDGET_NOT_FOUND", method: "GET", path: "/v1/widgets", details: { app, widgets: widgets.map((w) => ({ id: w.id, name: w.name, connectors: slugOf(w) })) } });
     throw new FastnApiError(`${matches.length} widgets on your account connect "${app}" (${matches.map((w) => w.id).join(", ")}); pass widgetId`, { status: 409, code: "WIDGET_AMBIGUOUS", method: "GET", path: "/v1/widgets", details: { app, widgets: matches.map((w) => ({ id: w.id, name: w.name })) } });
   }

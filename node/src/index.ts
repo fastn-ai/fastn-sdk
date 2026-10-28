@@ -92,7 +92,7 @@ export class FastnClient {
 // Every API area is also reachable directly: fastn.orgs.listOrgs(...) === fastn.api.orgs.listOrgs(...)
 export interface FastnClient extends FastnApis {}
 
-export { Customer, Records, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink } from "./customer.js";
+export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink } from "./customer.js";
 export { Catalog, type CatalogCategory, type CatalogEntity, type CatalogField, type EntityProvider, type UnifiedOperation } from "./catalog.js";
 export {
   Entity, Calendar, Crm, Notes, Tasks, Deals, freeIntervals, slotsOf,

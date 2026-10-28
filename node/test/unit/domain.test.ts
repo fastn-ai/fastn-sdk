@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { FastnClient, FastnApiError, freeIntervals, slotsOf } from "../../src/index.js";
+import { describe, it, expect, vi } from "vitest";
+import { FastnClient, FastnApiError, freeIntervals, slotsOf, PROVIDER_TTL_MS } from "../../src/index.js";
 import { mockFetch, type Reply } from "../helpers.js";
 
 // whoami answers the partner org; the providers route answers what each test says; everything else echoes.
@@ -199,5 +199,65 @@ describe("free interval arithmetic", () => {
     expect(free).toEqual([iv("2026-11-02T09:20:00.000Z", "2026-11-02T11:50:00.000Z")]);
     expect(slotsOf(free, 60)).toEqual([iv("2026-11-02T09:20:00.000Z", "2026-11-02T10:20:00.000Z"), iv("2026-11-02T10:20:00.000Z", "2026-11-02T11:20:00.000Z")]);
     expect(slotsOf(free, 200)).toEqual([]);
+  });
+});
+
+describe("review fixes (PR 5)", () => {
+  const gcalRow = { connectorSlug: "googleCalendar", connectorName: "Google Calendar", operations: ["get", "list", "create", "delete", "search", "update"], connected: true };
+  it("slot minutes must be a positive number: slotsOf and freeSlots refuse 0, negatives and NaN before any loop", async () => {
+    const free = [{ start_time: "2026-11-02T09:00:00.000Z", end_time: "2026-11-02T12:00:00.000Z" }];
+    for (const bad of [0, -30, NaN, Infinity, "30" as any]) expect(() => slotsOf(free, bad)).toThrow(TypeError);
+    const m = fx(() => ({ body: { data: [gcalRow] } }));
+    await expect(client(m).customer("acme-1").calendar.freeSlots({ start_time: "2026-11-02T09:00:00Z", end_time: "2026-11-02T12:00:00Z", slot_minutes: -30 })).rejects.toThrow(TypeError);
+    expect(m.calls.length).toBe(0);                                                   // refused before any request
+  });
+  it("notes: created_at present but undefined still gets the default", async () => {
+    const m = fx((url) => url.includes("/providers") ? providers([hubspot()]) : { body: { id: "n1", provider: "hubspot", data: {} } });
+    await client(m).customer("acme-1").crm.notes.add({ body: "x", parent_id: "c1", created_at: undefined });
+    expect(Date.parse(m.calls[1].json.created_at)).toBeGreaterThan(Date.now() - 60_000);
+    await client(m).customer("acme-2").crm.notes.add({ body: "x", parent_id: "c1", created_at: "2026-01-01T00:00:00Z" });
+    expect(m.calls[3].json.created_at).toBe("2026-01-01T00:00:00Z");                  // an explicit value wins
+  });
+  it("provider cache: cleared when no provider fits (so a later connect is seen), and re-read after the TTL", async () => {
+    let rows: any[] = [{ ...gcalRow, connected: false }];
+    const m = fx((url) => url.includes("/providers") ? providers(rows) : { body: { records: [] } });
+    const fastn = client(m);
+    await expect(fastn.customer("acme-1").calendar.list()).rejects.toMatchObject({ code: "NO_CONNECTED_PROVIDER" });
+    rows = [{ ...gcalRow, operations: ["get"] }];
+    await expect(fastn.customer("acme-1").calendar.list()).rejects.toMatchObject({ code: "OPERATION_NOT_SUPPORTED" });
+    rows = [gcalRow];
+    await fastn.customer("acme-1").calendar.list();                                   // the customer connected: works without a new client
+    expect(m.urls().filter((u) => u.endsWith("/providers")).length).toBe(3);
+    await fastn.customer("acme-1").calendar.list();                                   // within the TTL: no new lookup
+    expect(m.urls().filter((u) => u.endsWith("/providers")).length).toBe(3);
+    const spy = vi.spyOn(Date, "now").mockReturnValue(Date.now() + PROVIDER_TTL_MS + 1);
+    try { await fastn.customer("acme-1").calendar.list(); } finally { spy.mockRestore(); }
+    expect(m.urls().filter((u) => u.endsWith("/providers")).length).toBe(4);          // after the TTL: read again (a second provider connected later is seen)
+  });
+  it("widgets: a miss re-reads the list once, so a widget made after the first read is found; an explicit widgetId too", async () => {
+    let rows: any[] = [{ id: "wgt_cal", name: "Google Calendar", orgId: "partner-1", connectorRefs: [{ slug: "googleCalendar" }] }];
+    const m = fx((url, init) => url.includes("/v1/widgets") ? { body: { data: rows } } : init.method === "POST" ? { status: 201, body: { data: { setupId: "stp_1", setupUrl: "https://x/s", status: "pending" } } } : { body: { data: {} } });
+    const fastn = client(m);
+    await expect(fastn.customer("acme-1").connect("hubspot")).rejects.toMatchObject({ code: "WIDGET_NOT_FOUND" });
+    rows = [...rows, { id: "wgt_hs", name: "HubSpot", orgId: "partner-1", connectorRefs: [{ slug: "hubspot" }] }];
+    expect((await fastn.customer("acme-1").connect("hubspot")).widgetId).toBe("wgt_hs");
+    expect((await fastn.customer("acme-1").connect("hubspot", { widgetId: "wgt_hs" })).widgetId).toBe("wgt_hs");
+    const reads = m.urls().filter((u) => u.startsWith("/v1/widgets")).length;
+    expect(reads).toBe(3);                                                            // first read, the re-read on the miss, the re-read on the next miss; then cached
+  });
+  it("widgets: inherited rows, other orgs' rows and the inactive version of a customised integration are never offered", async () => {
+    const rows = [
+      { id: "wgt_parent_cal", name: "Google Calendar", orgId: "platform", inheritedFrom: { orgId: "platform" }, connectorRefs: [{ slug: "googleCalendar" }] },
+      { id: "wgt_cal", name: "Google Calendar", orgId: "partner-1", connectorRefs: [{ slug: "googleCalendar" }] },
+      { id: "wgt_hs_orig", name: "HubSpot", orgId: "partner-1", version: { groupId: "g1", kind: "original", active: false, originalAvailable: true }, connectorRefs: [{ slug: "hubspot" }] },
+      { id: "wgt_hs_copy", name: "HubSpot (ours)", orgId: "partner-1", version: { groupId: "g1", kind: "custom", active: true }, customisedFrom: { sourceWidgetId: "wgt_hs_orig" }, connectorRefs: [{ slug: "hubspot" }] },
+      { id: "wgt_other", name: "Salesforce", orgId: "partner-2", connectorRefs: [{ slug: "salesforce" }] },
+    ];
+    const m = fx((url, init) => url.includes("/v1/widgets") ? { body: { data: rows } } : init.method === "POST" ? { status: 201, body: { data: { setupId: "stp_1", setupUrl: "https://x/s", status: "pending" } } } : { body: { data: {} } });
+    const fastn = client(m);
+    expect((await fastn.customer("acme-1").connect("googleCalendar")).widgetId).toBe("wgt_cal");            // not ambiguous with the parent's row
+    expect((await fastn.customer("acme-1").connect("hubspot")).widgetId).toBe("wgt_hs_copy");               // the active version only
+    await expect(fastn.customer("acme-1").connect("salesforce")).rejects.toMatchObject({ code: "WIDGET_NOT_FOUND" });
+    await expect(fastn.customer("acme-1").connect("googleCalendar", { widgetId: "wgt_parent_cal" })).rejects.toMatchObject({ code: "WIDGET_NOT_FOUND" });
   });
 });

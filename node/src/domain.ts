@@ -195,8 +195,9 @@ export function freeIntervals(start: string, end: string, busy: Interval[]): Int
   return free.filter((f) => Date.parse(f.end_time) > Date.parse(f.start_time));
 }
 
-/** Cuts every free interval into back-to-back slots of `minutes`; a remainder shorter than a slot is dropped. */
+/** Cuts every free interval into back-to-back slots of `minutes` (a positive number); a remainder shorter than a slot is dropped. */
 export function slotsOf(free: Interval[], minutes: number): Interval[] {
+  if (typeof minutes !== "number" || !Number.isFinite(minutes) || minutes <= 0) throw new TypeError(`slot minutes must be a positive number, got ${String(minutes)}`);
   const len = minutes * 60_000, out: Interval[] = [];
   for (const f of free) {
     for (let t = Date.parse(f.start_time); t + len <= Date.parse(f.end_time); t += len) out.push({ start_time: new Date(t).toISOString(), end_time: new Date(t + len).toISOString() });
@@ -210,13 +211,14 @@ export class Calendar extends Entity<MeetingCreate, Meeting, MeetingFilters> {
   /** Busy and free time in a window (scheduling/availability), from the customer's connected calendar. */
   async freeSlots(input: FreeSlotsInput, opts?: DomainCallOptions): Promise<FreeSlots> {
     const { slot_minutes, ...record } = input;
+    if (slot_minutes !== undefined && (typeof slot_minutes !== "number" || !Number.isFinite(slot_minutes) || slot_minutes <= 0)) throw new TypeError(`freeSlots: slot_minutes must be a positive number, got ${String(slot_minutes)}`);
     const availability = new Entity<Omit<FreeSlotsInput, "slot_minutes">, { start_time?: string; end_time?: string; busy?: Interval[] }>(this.cust, "scheduling", "availability");
     const r: any = await availability.create(record as any, opts);
     const data = r?.data ?? {};
     const start = data.start_time ?? wireRecord({ v: input.start_time }).v, end = data.end_time ?? wireRecord({ v: input.end_time }).v;
     const busy: Interval[] = Array.isArray(data.busy) ? data.busy.map((b: any) => ({ start_time: b.start_time ?? b.start, end_time: b.end_time ?? b.end })) : [];
     const free = freeIntervals(start, end, busy);
-    return { start_time: start, end_time: end, busy, free, ...(slot_minutes ? { slots: slotsOf(free, slot_minutes) } : {}), provider: r?.provider, ...(r?.warnings ? { warnings: r.warnings } : {}) };
+    return { start_time: start, end_time: end, busy, free, ...(slot_minutes !== undefined ? { slots: slotsOf(free, slot_minutes) } : {}), provider: r?.provider, ...(r?.warnings ? { warnings: r.warnings } : {}) };
   }
   /** Books a meeting. Pass `opts.idempotencyKey` (e.g. your call id) so a retry cannot book it twice. */
   book(meeting: MeetingCreate, opts?: DomainCallOptions): Promise<UnifiedRecord<Meeting>> { return this.create(meeting, opts); }
@@ -304,7 +306,7 @@ export class Notes extends Entity<NoteCreate, Note> {
   constructor(cust: ProviderResolver) { super(cust, "crm", "note"); }
   /** Adds a note to a contact or deal; `created_at` defaults to now. */
   add(note: NoteCreate, opts?: DomainCallOptions): Promise<UnifiedRecord<Note>> { return this.create(note, opts); }
-  override create(note: NoteCreate, opts?: DomainCallOptions): Promise<UnifiedRecord<Note>> { return super.create({ created_at: new Date(), ...note }, opts); }
+  override create(note: NoteCreate, opts?: DomainCallOptions): Promise<UnifiedRecord<Note>> { return super.create({ ...note, created_at: note.created_at ?? new Date() }, opts); }
 }
 
 export class Tasks extends Entity<TaskCreate, Task> {
