@@ -48,8 +48,8 @@ export interface UnifiedDeleted {
 }
 
 export interface PageInput { page_size?: number; cursor?: string }
-/** `find` takes a page size only: the search route has no cursor. */
-export interface FindInput { page_size?: number }
+/** `find` takes a page size only: the search route has no cursor. `cursor` may be present as `undefined` (a paging helper's first page); a cursor with a value is refused. */
+export interface FindInput { page_size?: number; cursor?: undefined }
 
 /** Who answers provider questions for one customer (the Customer object). */
 export interface ProviderResolver {
