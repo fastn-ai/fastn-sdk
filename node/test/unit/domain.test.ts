@@ -11,6 +11,14 @@ const fx = (handler: (url: string, init: any) => Reply) => mockFetch((url, init)
 const client = (m: ReturnType<typeof mockFetch>) => new FastnClient({ apiKey: "k", fetch: m.fetch });
 
 describe("provider resolution", () => {
+  it("find() answers one page: a cursor is refused before any request, page_size still goes on the query", async () => {
+    const m = fx((url) => url.includes("/providers") ? providers([hubspot()]) : { body: { records: [], hasMore: false, provider: "hubspot" } });
+    const c = client(m).customer("acme-1");
+    await c.crm.contacts.find({ email: "a@b.co" }, { page_size: 5 });
+    await expect(c.crm.contacts.find({ email: "a@b.co" }, { cursor: "abc" } as any)).rejects.toThrow(/find\(\) has no cursor/);
+    expect(m.urls().at(-1)).toBe("/v1/unified/crm/contact/search?provider=hubspot&page_size=5");
+  });
+
   it("pins the one connected provider on the call, reads the providers list once per entity, and sends the customer header", async () => {
     const m = fx((url) => url.includes("/providers") ? providers([hubspot(), notConnected]) : { body: { records: [], hasMore: false, provider: "hubspot" } });
     const fastn = client(m);

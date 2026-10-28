@@ -4,6 +4,10 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [Unreleased]
+
+- Changed: `find(filters, { page_size })` answers one page. The search route has no cursor, so a `cursor` now throws `TypeError` instead of being dropped and answering page one again; `list({ page_size, cursor })` is the paging call (`FindInput` type).
+
 ## [0.4.0] - 2026-10-28
 
 - Added: `customer.watch("hubspot", ["contact.created", "deal.stageChanged"], { accountId })` turns on an app's change events for a customer (a `connector.event` and a `unified.event` per change on your webhook). Events are named in plain words (`EVENT_ALIASES`) or as the app names them; an unknown name answers 400 `EVENT_NOT_FOUND` with the valid list (`customer.watchableEvents(app)`). The connector is found by slug and the customer's account on it by their connections (none: 404 `CONNECTION_NOT_FOUND`; several: 409 `CONNECTION_AMBIGUOUS`, pass `connectionId`). `customer.watches(app?)` lists (every page), `customer.unwatch(app | id)` removes; a watch id that is not this customer's answers 404 `WATCH_NOT_FOUND`. Two plain names that map to one app event are sent once; a `connectionId` of another app answers 400 `CONNECTION_MISMATCH`. Answers carry the app's event ids and no internal customer id. HubSpot has no stage-only event: `deal.stageChanged` maps to `deal.propertyChange`, filter on `propertyName === "dealstage"` in the event.

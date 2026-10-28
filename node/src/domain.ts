@@ -48,6 +48,8 @@ export interface UnifiedDeleted {
 }
 
 export interface PageInput { page_size?: number; cursor?: string }
+/** `find` takes a page size only: the search route has no cursor. */
+export interface FindInput { page_size?: number }
 
 /** Who answers provider questions for one customer (the Customer object). */
 export interface ProviderResolver {
@@ -100,8 +102,10 @@ export class Entity<C extends object, R, F extends object = Record<string, never
   get(id: string, opts?: DomainCallOptions): Promise<UnifiedRecord<R>> { return this.run("get", opts, (s, o) => this.u.getUnifiedRecord({ ...s, id: idOf(id) }, o)); }
   /** A page of records. */
   list(input: PageInput = {}, opts?: DomainCallOptions): Promise<UnifiedPage<R>> { return this.run("list", opts, (s, o) => this.u.listUnifiedRecords({ ...s, ...input }, o)); }
-  /** Records matching the filters (the provider's own search). */
-  find(filters: F, input: PageInput = {}, opts?: DomainCallOptions): Promise<UnifiedPage<R>> {
+  /** Records matching the filters (the provider's own search). One page only: the search route has no cursor, so
+   *  narrow the filters or raise `page_size` to see more; `list` pages with a cursor. */
+  find(filters: F, input: FindInput = {}, opts?: DomainCallOptions): Promise<UnifiedPage<R>> {
+    if ("cursor" in input) return Promise.reject(new TypeError("find() has no cursor: the search route answers one page; narrow the filters, raise page_size, or page with list()"));
     return this.run("search", opts, (s, o) => this.u.searchUnifiedRecords({ ...s, ...input, filters: wireRecord(filters) as any }, o));
   }
   /** Changes the given fields and leaves the rest. */

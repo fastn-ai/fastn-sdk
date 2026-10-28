@@ -113,7 +113,7 @@ export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, EVENT_ALIASES, type 
 export { Catalog, type CatalogCategory, type CatalogEntity, type CatalogField, type EntityProvider, type UnifiedOperation } from "./catalog.js";
 export {
   Entity, Calendar, Crm, Notes, Tasks, Deals, freeIntervals, slotsOf,
-  type DomainCallOptions, type DateInput, type UnifiedRecord, type UnifiedPage, type UnifiedDeleted, type PageInput, type ProviderResolver,
+  type DomainCallOptions, type DateInput, type UnifiedRecord, type UnifiedPage, type UnifiedDeleted, type PageInput, type FindInput, type ProviderResolver,
   type MeetingCreate, type Meeting, type MeetingFilters, type FreeSlotsInput, type FreeSlots, type Interval,
   type ContactCreate, type Contact, type ContactFilters, type NoteCreate, type Note, type TaskCreate, type Task, type DealCreate, type Deal, type Stage,
 } from "./domain.js";
