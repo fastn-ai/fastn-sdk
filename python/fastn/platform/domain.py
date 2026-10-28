@@ -72,8 +72,9 @@ _ISO = re.compile(r"^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:
 
 
 def wire_record(record: Mapping[str, Any]) -> Dict[str, Any]:
-    """datetime/date values become ISO strings and None values are left out; everything else is sent as given."""
-    return {k: to_iso(v) for k, v in record.items() if v is not None}
+    """datetime/date values become ISO strings; everything else is sent as given. A key set to None is sent as null,
+    which clears the field (as Node sends null); only a key that is absent is left out."""
+    return {k: to_iso(v) for k, v in record.items()}
 
 
 def _id_of(id: str) -> str:

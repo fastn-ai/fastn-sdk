@@ -252,12 +252,12 @@ class HttpxTransport:
                 obj: Dict[str, Any] = {}
                 keys = op.body.keys or {}
                 for key, name in keys.items():
-                    if input.get(key) is not None:
+                    if key in input:  # a key set to None is sent as null (it clears the field); only a missing key is left out
                         obj[name] = input[key]
                 if op.body.open:
                     taken = set(keys) | {p.key for p in op.params}
                     for key, v in input.items():
-                        if key not in taken and v is not None:
+                        if key not in taken:
                             obj[key] = v
                 for k, v in extra_body.items():
                     obj[k] = v

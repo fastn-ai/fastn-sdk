@@ -35,11 +35,11 @@ class TestRequestShape:
         with pytest.raises(TypeError, match='"id" is required'):
             client().orgs.get_tenant({})  # type: ignore[typeddict-item]
 
-    def test_body_fields_are_mapped_to_wire_names_and_none_is_dropped(self, mock: Callable[..., Mock]) -> None:
+    def test_body_fields_are_mapped_to_wire_names_and_none_is_sent_as_null(self, mock: Callable[..., Mock]) -> None:
         m = mock([{"status": 201, "body": {"data": {"id": "org_1"}}}])
         res = client().orgs.create_tenant({"name": "Acme", "orgId": "acme-1", "slug": None})  # type: ignore[typeddict-item]
         assert res == {"data": {"id": "org_1"}}
-        assert m.json(0) == {"name": "Acme", "orgId": "acme-1"}
+        assert m.json(0) == {"name": "Acme", "orgId": "acme-1", "slug": None}  # None is sent as null (it clears a field); a missing key is left out
         assert m.calls[0].headers["content-type"] == "application/json"
 
     def test_open_bodies_pass_extra_fields_through_closed_bodies_drop_them(self, mock: Callable[..., Mock]) -> None:
@@ -188,6 +188,14 @@ class TestErrorsAndRetries:
             client().orgs.list_orgs({}, retries=0, timeout=5)
         assert len(m.calls) == 1
         assert m.calls[0].extensions["timeout"]["read"] == 5
+
+    def test_a_body_field_set_to_none_is_sent_as_null_and_a_missing_one_is_left_out(self, mock: Callable[..., Mock]) -> None:
+        m = mock([{"body": {"data": {}}}, {"body": {"data": {}}}])
+        c = client(retries=0)
+        c.connections.update_connection({"id": "conn-1", "name": None})         # a mapped body field
+        c.orgs.update_tenant({"id": "t-1", "name": "Acme", "externalRef": None})  # an open body
+        assert m.json(0) == {"name": None}
+        assert m.json(1)["externalRef"] is None and "name" in m.json(1)
 
     def test_client_defaults_set_retries_and_timeout_and_a_call_still_overrides_them(self, mock: Callable[..., Mock]) -> None:
         m = mock([{"status": 503, "body": ""}, {"status": 503, "body": ""}, {"status": 503, "body": ""}])

@@ -300,7 +300,13 @@ class TestFreeIntervalArithmetic:
         assert parse_iso_ms("2026-11-02") == parse_iso_ms("2026-11-02T00:00:00.000Z")
         assert parse_iso_ms("2026-11-02T10:00:00.1234567Z") == parse_iso_ms("2026-11-02T10:00:00.123Z")
         assert parse_iso_ms(None) is None and parse_iso_ms("2026-13-40") is None
-        assert wire_record({"a": datetime(2026, 1, 1, tzinfo=timezone.utc), "b": None, "c": "x"}) == {"a": "2026-01-01T00:00:00.000Z", "c": "x"}
+        assert wire_record({"a": datetime(2026, 1, 1, tzinfo=timezone.utc), "b": None, "c": "x"}) == {"a": "2026-01-01T00:00:00.000Z", "b": None, "c": "x"}
+
+    def test_a_none_value_is_sent_as_null_so_an_update_can_clear_a_field(self, mock: Callable[..., Mock]) -> None:
+        assert wire_record({"phone": None, "email": "a@b.co"}) == {"phone": None, "email": "a@b.co"}
+        m = fx(mock, lambda url, req: providers([hubspot()]) if "/providers" in url else {"body": {"id": "1", "provider": "hubspot", "data": {}}})
+        client().customer("acme-1").crm.contacts.update("1", {"phone": None})
+        assert m.json(-1) == {"phone": None}  # the key reaches the wire as null; it is not dropped
 
     def test_a_naive_datetime_is_local_time_not_utc(self, monkeypatch: pytest.MonkeyPatch) -> None:
         import time
