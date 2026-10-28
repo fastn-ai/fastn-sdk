@@ -6,13 +6,14 @@
 //
 //   const customer = fastn.customer("acme-42");                  // the id YOU use for this customer
 //   await customer.register({ name: "Acme Dental" });
-//   const link = await customer.setupLink({ widgetId, connectionName: "Google Calendar" });
-//   const meetings = customer.records({ category: "scheduling", entity: "meeting", provider: "googleCalendar" });
-//   await meetings.create({ title: "Intro call", start_time: "...", end_time: "..." }, { idempotencyKey: "booking-123" });
+//   const link = await customer.connect("googleCalendar");                          // { url } to send the customer to
+//   await customer.calendar.book({ title: "Intro call", start_time: "...", end_time: "..." }, { idempotencyKey: "booking-123" });
+//   const { records } = await customer.crm.contacts.find({ email: "jane@example.com" });
 
 import { buildApis, type FastnApis } from "./generated/api.js";
 import { FetchTransport, type RequestOptions, type RequestLog, type Transport } from "./transport.js";
 import { Customer, type CustomerContext } from "./customer.js";
+import { Catalog } from "./catalog.js";
 import { OPS } from "./generated/ops.js";
 import { ToolsClient, type ToolsClientConfig } from "./tools.js";
 import { VERSION } from "./version.js";
@@ -50,6 +51,7 @@ export class FastnClient {
   readonly tools?: ToolsClient;
   private readonly customers: CustomerContext;
   private meCache: Promise<any> | undefined;
+  private catalogCache: Catalog | undefined;
 
   constructor(cfg: FastnClientConfig) {
     if (!cfg?.apiKey || typeof cfg.apiKey !== "string") throw new TypeError("FastnClient: apiKey is required");
@@ -61,7 +63,7 @@ export class FastnClient {
     this.api = buildApis(this.transport);
     Object.assign(this, this.api);
     if (cfg.tools) this.tools = new ToolsClient({ ...cfg.tools, fetch: cfg.fetch, userAgent: cfg.userAgent });
-    this.customers = { ids: new Map(), lookups: new Map(), callerOrgId: async () => { const me = await this.me(); const id = me?.org?.id; if (typeof id !== "string" || !id) throw new TypeError("whoami did not answer the caller's org id"); return id; } };
+    this.customers = { ids: new Map(), lookups: new Map(), providers: new Map(), callerOrgId: async () => { const me = await this.me(); const id = me?.org?.id; if (typeof id !== "string" || !id) throw new TypeError("whoami did not answer the caller's org id"); return id; } };
   }
 
   /** Who this API key is (GET /v1/me): actor, role, org, parentOrg. Cached for the life of the client. */
@@ -69,6 +71,9 @@ export class FastnClient {
     this.meCache ??= this.api.users.whoami().then((r: any) => r?.data ?? r, (e) => { this.meCache = undefined; throw e; });
     return this.meCache;
   }
+
+  /** The unified catalog: fastn.catalog.categories(), .entity("crm", "contact"), .fields(...), .providers(...). */
+  get catalog(): Catalog { return (this.catalogCache ??= new Catalog(this.api)); }
 
   /** One of your customers, by the id you use for them. */
   customer(ref: string): Customer {
@@ -87,7 +92,14 @@ export class FastnClient {
 // Every API area is also reachable directly: fastn.orgs.listOrgs(...) === fastn.api.orgs.listOrgs(...)
 export interface FastnClient extends FastnApis {}
 
-export { Customer, Records, type RecordScope, type CustomerRow } from "./customer.js";
+export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink } from "./customer.js";
+export { Catalog, type CatalogCategory, type CatalogEntity, type CatalogField, type EntityProvider, type UnifiedOperation } from "./catalog.js";
+export {
+  Entity, Calendar, Crm, Notes, Tasks, Deals, freeIntervals, slotsOf,
+  type DomainCallOptions, type DateInput, type UnifiedRecord, type UnifiedPage, type UnifiedDeleted, type PageInput, type ProviderResolver,
+  type MeetingCreate, type Meeting, type MeetingFilters, type FreeSlotsInput, type FreeSlots, type Interval,
+  type ContactCreate, type Contact, type ContactFilters, type NoteCreate, type Note, type TaskCreate, type Task, type DealCreate, type Deal, type Stage,
+} from "./domain.js";
 export { FastnApiError, FastnNetworkError, type FastnApiErrorInfo } from "./errors.js";
 export { verifyEventSignature, signEventBody, parseEvent, readEventHeaders, type EventHeaders, type FastnEvent, type VerifyOptions } from "./events.js";
 export { paginate, type PaginateOptions } from "./paginate.js";

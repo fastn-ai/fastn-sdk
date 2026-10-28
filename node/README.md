@@ -27,27 +27,54 @@ const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });   // http
 const customer = fastn.customer("acme-42");
 await customer.register({ name: "Acme Dental" });              // idempotent: returns the existing org on repeat
 
-// 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...).
-const link = await customer.setupLink({ widgetId: "wgt_...", connectionName: "Google Calendar" });
-console.log(link.data.setupUrl);                               // send this to the customer
+// 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...), by connector slug.
+const link = await customer.connect("googleCalendar");
+console.log(link.url);                                         // send this to the customer
 
-// 3. Read and write through the unified API, same field names as the catalog.
-const meetings = customer.records({ category: "scheduling", entity: "meeting", provider: "googleCalendar" });
-const booked = await meetings.create(
+// 3. Typed methods on whatever the customer connected: the provider is picked from their connections.
+const booked = await customer.calendar.book(
   { title: "Intro call", start_time: "2026-11-03T15:00:00Z", end_time: "2026-11-03T15:30:00Z", timezone: "Europe/London", attendee_email: "jane@example.com" },
   { idempotencyKey: "booking-123", correlationId: "req-abc" },  // safe to retry; traceable later
 );
 console.log(booked.id, booked.provider, booked.data.web_url);
 
-await meetings.update(booked.id, { start_time: "2026-11-03T16:00:00Z", end_time: "2026-11-03T16:30:00Z" });
-await meetings.search({ start_time: "2026-11-03T00:00:00Z", query: "Intro call" });
-await meetings.delete(booked.id, { idempotencyKey: "cancel-123" });
+await customer.calendar.reschedule(booked.id, { start_time: "2026-11-03T16:00:00Z", end_time: "2026-11-03T16:30:00Z" });
+await customer.calendar.cancel(booked.id, { idempotencyKey: "cancel-123" });
 
-const contacts = customer.records({ category: "crm", entity: "contact", provider: "hubspot" });
-await contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@example.com" });
+const { records } = await customer.crm.contacts.find({ email: "jane@example.com" });
+const contact = records[0] ?? await customer.crm.contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@example.com" });
+await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.id, parent_type: "contact" });
 
 // 4. What did fastn do for my request id?
 await fastn.unified.listUnifiedCalls({ correlation_id: "req-abc" });
+```
+
+## Calendar and CRM, typed
+
+`customer.calendar` and `customer.crm` are the unified API with the fields named: each method takes a TypeScript
+interface (the catalog's own field names, `start_time`, `first_name`, ...; `Date` values are sent as ISO strings) and
+answers `{ id, provider, data, warnings? }` or a page `{ records, nextCursor, hasMore }`. The provider is the one the
+customer has connected for that entity: no connected provider answers 404 `NO_CONNECTED_PROVIDER` (send them a setup
+link), several answer 409 `PROVIDER_AMBIGUOUS` (pass `{ provider }`). `warnings` lists fields the provider does not
+map and therefore dropped. Every method takes `{ provider?, connectionId?, idempotencyKey?, correlationId?, ... }` last.
+
+| Method | Underneath |
+| --- | --- |
+| `calendar.freeSlots({ start_time, end_time, timezone?, slot_minutes? })` | scheduling/availability; answers `busy`, `free`, and `slots` of that length |
+| `calendar.book(meeting)`, `get(id)`, `find({ start_time, end_time })`, `list({ page_size, cursor })`, `reschedule(id, { start_time, end_time })`, `cancel(id)` | scheduling/meeting |
+| `crm.contacts.create / get / find({ email, phone, first_name, last_name }) / list / update / delete` | crm/contact |
+| `crm.notes.add({ body, parent_id, parent_type })`, `update`, `delete` | crm/note (`created_at` defaults to now) |
+| `crm.tasks.add({ subject, due_date, status, ... })`, `get`, `list`, `update`, `delete` | crm/task |
+| `crm.deals.create({ name, amount, stage, ... })`, `get`, `list`, `update`, `moveStage(id, stage)`, `delete`, `stages()` | crm/opportunity, crm/stage |
+
+What they do not cover is still one call away: `customer.records({ category, entity, provider })` takes any entity
+in the catalog with untyped input, and `customer.runAction(...)` runs a connector's own action.
+
+```ts
+// The catalog: which categories and entities exist, the fields each takes, which providers a customer connected.
+const categories = await fastn.catalog.categories();                 // [{ slug: "crm", entities: [{ slug: "contact", operations, createFields }] }]
+const fields = await fastn.catalog.fields("crm", "contact");         // [{ field: "email", type: "string", required: false }, ...]
+const providers = await customer.catalog.providers("crm", "contact"); // [{ connectorSlug: "hubspot", connected: true, operations: [...] }]
 ```
 
 Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`. Platform-administration areas (admin, platform config, support) and backend-only routes (OAuth callbacks, credential reads, staff approvals) are not generated: a partner key cannot call them, and leaving them out keeps the surface the SDK promises to keep stable small. The generator's `HIDDEN_TAGS` / `PUBLIC_INTERNAL` lists in `scripts/generate.ts` are the single place that rule lives.
@@ -74,8 +101,8 @@ rejects the customer headers on a single-tenant key (not exercised by the tests 
 | `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names       | filled in for you                 |
 | `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `await customer.id()` (cached) |
 
-`customer.register()`, `setupLink()`, `embedToken()`, `connect()`, `connectWithCredentials()`, `connections()`, `get()`,
-`remove()` and `records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
+`customer.register()`, `connect(app)`, `links`, `setupLink()`, `embedToken()`, `connectWithCredentials()`, `connections()`,
+`get()`, `remove()`, `calendar`, `crm` and `records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
 limited to orgs under your own org, so a key that can see more than your account can still never resolve someone
 else's customer; the resolved id is cached per client.
 
@@ -85,6 +112,11 @@ subscriptions, secrets, setup links, ...), fills that field in too. The platform
 and workflow execute routes; without the body field those calls would silently run as your own org.
 
 ```ts
+// A setup link by app: the account's widget for that connector is found for you (several: pass widgetId).
+const link = await customer.connect("hubspot", { connectionName: "Main CRM", redirectUrl: "https://app.acme.com/connected" });
+redirect(link.url);                                                   // then customer.links.get(link.setupId) / links.cancel(...)
+
+// Or start OAuth directly, without a widget:
 const { data } = await customer.connect({ connectorId: "googleCalendar", returnUrl: "https://app.acme.com/connected" });
 redirect(data.authorizationUrl);                                      // the connection lands on the customer org
 
@@ -201,7 +233,7 @@ Works for `limit`/`offset` lists and cursor lists; stops on a short page, a miss
 
 ```bash
 npm run generate     # spec/openapi-*.json -> src/generated (ops, types, api)
-npm test             # unit tests with a mocked fetch (42)
+npm test             # unit tests with a mocked fetch
 LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... npm run test:live   # live run on api.fastn-test.dev (creates and removes test data)
 # FASTN_BASE_URL=https://api.fastn.dev LIVE_PROD=1 ... runs the same suite on production
 # FASTN_API_KEY=... npx tsx scripts/sweep/run.ts   # calls every published operation once on dev and writes a per-operation report
