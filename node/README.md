@@ -101,8 +101,9 @@ rejects the customer headers on a single-tenant key (not exercised by the tests 
 | `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names       | filled in for you                 |
 | `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `await customer.id()` (cached) |
 
-`customer.register()`, `connect(app)`, `links`, `setupLink()`, `embedToken()`, `connectWithCredentials()`, `connections()`,
-`get()`, `remove()`, `calendar`, `crm` and `records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
+`customer.register()`, `connect(app)`, `links`, `watch()`, `disconnect()`, `renameAccount()`, `update()`, `callLog()`,
+`setupLink()`, `embedToken()`, `connectWithCredentials()`, `connections()`, `get()`, `remove()`, `calendar`, `crm` and
+`records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
 limited to orgs under your own org, so a key that can see more than your account can still never resolve someone
 else's customer; the resolved id is cached per client.
 
@@ -124,6 +125,23 @@ redirect(data.authorizationUrl);                                      // the con
 // them; an incomplete set answers 400 CREDENTIALS_INCOMPLETE with the missing names (err.body.missing).
 const fields = await customer.authFields("acme-crm");                 // { names, required, schema, authMethodId }
 await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { apiKey: "..." }, name: "Acme CRM" });
+```
+
+```ts
+// Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
+const w = await customer.watch("hubspot", ["contact.created", "deal.stageChanged"], { accountId: hubspotPortalId });
+await customer.watches("hubspot");                                    // [{ id, app, events, status }]
+await customer.unwatch("hubspot");                                    // or unwatch(w.id)
+
+await customer.disconnect(accountId);                                 // the customer gets connection.revoked
+await customer.renameAccount(accountId, "Front desk calendar");
+await customer.update({ name: "Acme Dental Ltd" });                   // or { status: "suspended" }
+await customer.callLog("req-abc");                                    // what fastn did for your request id
+
+// Your webhook, once for the whole account.
+const hook = await fastn.webhooks.create({ url: "https://app.acme.com/fastn", eventTypes: ["connection.connected", "setup_link.completed", "connector.event", "unified.event"] });
+hook.secret                                                           // shown once: the signing secret for parseEvent
+await fastn.webhooks.test(hook.id); await fastn.webhooks.deliveries(hook.id); await fastn.webhooks.rotateSecret(hook.id);
 ```
 
 ```ts
@@ -206,6 +224,47 @@ r.data                                                     // the tool's answer,
 - Answers of Fastn Workspace tools and parsed events come back without fastn's internal customer id keys
   (`endOrgId`, `end_org_id`): the only customer id you see is the one you chose (`orgId` / `tenantRef`). `r.text` keeps
   the raw answer; `parseEvent(..., { internalIds: true })` keeps the id in an event.
+
+### Typed methods for your workspace: `npx fastn-sdk-tools`
+
+Tool names as strings work, but your editor cannot check them. The generator turns your workspace's tool list into one
+TypeScript module with a class per connector and a method per tool, each input typed from the tool's schema:
+
+```sh
+# once, and again whenever the workspace changes (commit the file)
+export FASTN_TOOLS_KEY=...                                        # the workspace key; it never ends up in the file
+npx fastn-sdk-tools --url https://mcp.fastn.dev/<workspace> --out src/fastn-tools.ts
+npx fastn-sdk-tools --url https://mcp.fastn.dev/<workspace> --out src/fastn-tools.ts --check   # CI: exit 1 on drift
+```
+
+```ts
+import { ToolsClient } from "@fastn-ai/sdk";
+import { createTools } from "./fastn-tools.js";
+
+const tools = createTools(new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: "https://mcp.fastn.dev/<workspace>" }));
+// or createTools(fastn) with a FastnClient created with tools: { key, url }
+
+const acme = tools.customer("acme-42");                                       // X-Org-Id on every call, endOrgRef filled where a tool takes it
+const cals = await acme.googleCalendar.listCalendars({});                     // tools.<connector>.<tool>(args, opts?)
+const created = await acme.hubspot.createContact({ email: "jane@example.com", firstname: "Jane" });   // args typed from the schema
+const cats = await tools.fastnPlatform.listUnifiedCategories();               // a tool with no inputs takes no argument
+created.data                                                                  // ToolResult, as from call(); ToolError on failure
+```
+
+- `--url` + `--key` (or `FASTN_TOOLS_URL` / `FASTN_TOOLS_KEY`) fetch the listing; `--from tools-list.json` generates
+  offline from a saved tools/list (the same list gives the same file). `--customer <ref>` fetches the listing as that
+  customer. The header records the url, customer and tool count, never the key.
+- The module exports `createTools`, `Tools`, one class per connector (`GoogleCalendarTools`), one input interface per
+  tool (`GoogleCalendarListEventsInput`), an output type where the tool publishes an `outputSchema` (else the answer is
+  `unknown`), and `TOOL_NAMES`. Tools without a connector prefix (`skill`, `feedback`) are methods on the root.
+- Names are made identifiers (`google-calendar` -> `googleCalendar`, `create-contact` -> `createContact`); a clash after
+  that gets a name-derived variant (`create_contact`, `createContactTool`). Property names stay as the schema spells
+  them (quoted when needed). A tool whose schema says nothing about a field types it `unknown`; an object with no
+  declared properties is `Record<string, unknown>`.
+- `tools.client` is the `ToolsClient` under the methods, for a tool the file does not know yet.
+- Programmatic use: `import { generateToolsModule } from "@fastn-ai/sdk/codegen"`. The schema-to-type step is
+  `json-schema-to-typescript`, the package's one runtime dependency (the CLI runs from the installed package, so it
+  cannot be a devDependency); it is loaded by the generator only, never by the client.
 
 ## Events (webhooks)
 

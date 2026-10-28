@@ -40,6 +40,7 @@ export interface FastnClientConfig {
 }
 
 export const DEFAULT_BASE_URL = "https://api.fastn.dev";
+const dataOf = (r: any): any => (r && typeof r === "object" && "data" in r ? r.data : r);
 export { VERSION };
 
 export class FastnClient {
@@ -75,6 +76,22 @@ export class FastnClient {
   /** The unified catalog: fastn.catalog.categories(), .entity("crm", "contact"), .fields(...), .providers(...). */
   get catalog(): Catalog { return (this.catalogCache ??= new Catalog(this.api)); }
 
+  /** Your webhook: fastn.webhooks.create({ url, eventTypes }), list(), get(id), update(id, {...}), delete(id), test(id), rotateSecret(id), deliveries(id), replay(deliveryId). */
+  readonly webhooks = {
+    create: (input: import("./generated/types.js").CreateEventSubscriptionInput, opts?: RequestOptions) => this.api.events.createEventSubscription(input, opts).then(dataOf),
+    list: (opts?: RequestOptions) => this.api.events.listEventSubscriptions({} as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : []) as any[]),
+    get: (id: string, opts?: RequestOptions) => this.api.events.getEventSubscription({ id }, opts).then(dataOf),
+    update: (id: string, changes: Omit<import("./generated/types.js").UpdateEventSubscriptionInput, "id">, opts?: RequestOptions) => this.api.events.updateEventSubscription({ id, ...changes } as any, opts).then(dataOf),
+    delete: (id: string, opts?: RequestOptions) => this.api.events.deleteEventSubscription({ id }, opts).then(dataOf),
+    /** Sends an endpoint.test event now. */
+    test: (id: string, opts?: RequestOptions) => this.api.events.testEventSubscription({ id }, opts).then(dataOf),
+    /** A new signing secret; deliveries are signed with it from now on. */
+    rotateSecret: (id: string, opts?: RequestOptions) => this.api.events.rotateEventSubscriptionSecret({ id }, opts).then(dataOf),
+    /** Deliveries of one webhook, newest first (the route pages by `limit` only). */
+    deliveries: (id: string, input: { limit?: number; status?: "pending" | "delivered" | "dead" } = {}, opts?: RequestOptions) => this.api.events.listEventDeliveries({ id, ...input } as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : []) as any[]),
+    replay: (deliveryId: string, opts?: RequestOptions) => this.api.events.replayEventDelivery({ id: deliveryId }, opts).then(dataOf),
+  };
+
   /** One of your customers, by the id you use for them. */
   customer(ref: string): Customer {
     if (!ref) throw new TypeError("customer(ref): ref is required");
@@ -92,7 +109,7 @@ export class FastnClient {
 // Every API area is also reachable directly: fastn.orgs.listOrgs(...) === fastn.api.orgs.listOrgs(...)
 export interface FastnClient extends FastnApis {}
 
-export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink } from "./customer.js";
+export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, EVENT_ALIASES, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink, type WatchOptions, type Watch, type HubSpotEvent, type CallLogEntry } from "./customer.js";
 export { Catalog, type CatalogCategory, type CatalogEntity, type CatalogField, type EntityProvider, type UnifiedOperation } from "./catalog.js";
 export {
   Entity, Calendar, Crm, Notes, Tasks, Deals, freeIntervals, slotsOf,

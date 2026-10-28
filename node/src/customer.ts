@@ -22,6 +22,8 @@ export interface CustomerContext {
   providers: Map<string, { at: number; p: Promise<EntityProvider[]> }>;
   /** The account's own widgets (listWidgets, inherited and inactive rows left out), kept for WIDGET_TTL_MS; re-read on a miss. */
   widgets?: { at: number; p: Promise<any[]> };
+  /** connector slug -> connector row, for watch(). */
+  connectors?: Map<string, Promise<{ id: string; name?: string; slug?: string }>>;
 }
 /** How long a customer's provider list and the account's widget list are reused before being read again. */
 export const PROVIDER_TTL_MS = 60_000;
@@ -39,6 +41,58 @@ export interface ConnectOptions {
   expiresInMinutes?: number;
   metadata?: Record<string, any>;
   allowAdditionalConnection?: boolean;
+}
+
+/**
+ * Event names a partner can watch on an app, in plain words, mapped to the app's own event ids. Any id from the
+ * app's catalog (customer.watchableEvents(app)) is accepted as well.
+ */
+export const EVENT_ALIASES: Record<string, Record<string, string>> = {
+  hubspot: {
+    "contact.created": "contact.creation", "contact.updated": "contact.propertyChange", "contact.deleted": "contact.deletion",
+    "company.created": "company.creation", "company.updated": "company.propertyChange", "company.deleted": "company.deletion",
+    "deal.created": "deal.creation", "deal.updated": "deal.propertyChange", "deal.deleted": "deal.deletion",
+    // HubSpot has no stage-only event: a stage move arrives as deal.propertyChange with propertyName "dealstage".
+    "deal.stageChanged": "deal.propertyChange",
+    "ticket.created": "ticket.creation", "ticket.updated": "ticket.propertyChange", "ticket.deleted": "ticket.deletion",
+  },
+};
+/** HubSpot change events, in plain words or as HubSpot names them. */
+export type HubSpotEvent = keyof (typeof EVENT_ALIASES)["hubspot"] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange";
+
+/** What `customer.watch(app, events)` takes besides the app and the events. */
+export interface WatchOptions {
+  /** The customer's account number at the app, when the app needs it to route events (HubSpot: the portal id). */
+  accountId?: string;
+  /** Which of the customer's accounts on the app, when they have several (ids from customer.connections()). */
+  connectionId?: string;
+  /** A label; default "<app> changes for <ref>". */
+  name?: string;
+}
+/** A watch on an app's changes for one customer, as created or listed. */
+export interface Watch {
+  id: string;
+  app: string;
+  /** The app's own event ids being watched. */
+  events: string[];
+  status?: string;
+  name?: string;
+  connectionId?: string;
+  accountId?: string;
+  [key: string]: unknown;
+}
+/** One app call made during a request, from customer.callLog(correlationId). */
+export interface CallLogEntry {
+  id: string;
+  correlationId?: string;
+  category?: string;
+  entity?: string;
+  operation?: string;
+  connectorSlug?: string;
+  status?: number;
+  durationMs?: number;
+  createdAt?: string;
+  [key: string]: unknown;
 }
 
 /** A setup link, as created. */
@@ -68,6 +122,15 @@ const NOT_A_CUSTOMER_FIELD = new Set(["createTenant", "updateTenant"]);
 const TAKES_REF_AS_END_ORG_ID = new Set(["createEmbedToken"]);
 /** Setup-link answers carry fastn's internal customer id; the partner's own ref is the one name for the customer. */
 const withoutInternalId = (d: any): any => { if (!d || typeof d !== "object") return d; const { endOrgId: _e, end_org_id: _f, ...rest } = d; return rest; };
+/** A trigger row as the API returns it, as a Watch (the app's event ids, no internal customer id). */
+const toWatch = (t: any, app: string): Watch => {
+  const { endOrgId: _e, end_org_id: _f, appTrigger, ...rest } = t ?? {};
+  const inner = appTrigger && typeof appTrigger === "object" ? appTrigger : {};          // the API nests the app part of a trigger
+  const rawEvents = inner.events ?? t?.events;
+  const events: string[] = Array.isArray(rawEvents) ? rawEvents.map((e: any) => (typeof e === "string" ? e : e?.id)).filter(Boolean) : [];
+  return { ...rest, id: t?.id, app, events, status: t?.status, name: t?.name, connectionId: inner.connectionId ?? t?.connectionId, accountId: inner.accountId ?? t?.accountId, connectorId: inner.connectorId ?? t?.connectorId };
+};
+const connectorIdOf = (t: any): string | undefined => t?.appTrigger?.connectorId ?? t?.connectorId;
 
 /**
  * Everything about one of your customers, addressed by the id YOU gave fastn (the `orgId` of createTenant,
@@ -114,6 +177,139 @@ export class Customer implements ProviderResolver {
     get: (setupId: string, opts?: RequestOptions) => this.root.embed.getSetupLink({ id: setupId }, opts).then((r: any) => withoutInternalId(r?.data ?? r) as Omit<NonNullable<T.GetSetupLinkOutput["data"]>, "endOrgId">),
     cancel: (setupId: string, opts?: RequestOptions) => this.root.embed.cancelSetupLink({ id: setupId }, opts).then((r: any) => withoutInternalId(r?.data ?? r) as Omit<NonNullable<T.CancelSetupLinkOutput["data"]>, "endOrgId">),
   };
+
+  /**
+   * Starts sending this customer's changes at an app (a new HubSpot contact, a deal moved) to your webhook, as
+   * `connector.event` and `unified.event` events. Events are named in plain words (`"contact.created"`,
+   * `"deal.stageChanged"`) or as the app names them (`"contact.creation"`); unknown names are refused with the
+   * list of valid ones. The connector is found by slug, the customer's account on it by its connections; apps that
+   * route events by account number (HubSpot: the portal id) take it in `options.accountId`.
+   */
+  async watch(app: "hubspot", events: HubSpotEvent[], options?: WatchOptions, opts?: RequestOptions): Promise<Watch>;
+  async watch(app: string, events: string[], options?: WatchOptions, opts?: RequestOptions): Promise<Watch>;
+  async watch(app: string, events: string[], options: WatchOptions = {}, opts?: RequestOptions): Promise<Watch> {
+    if (!Array.isArray(events) || events.length === 0) throw new TypeError("watch(app, events): at least one event name is required");
+    const [connector, catalog, id, conns] = await Promise.all([this.connectorBySlug(app, opts), this.watchableEvents(app, opts), this.id(), this.connections(undefined, opts)]);
+    const byId = new Map(catalog.map((e: any) => [e.id, e]));
+    const aliases = EVENT_ALIASES[app] ?? {};
+    const picked = events.map((name) => {
+      const eventId = aliases[name] ?? name;
+      const row: any = byId.get(eventId);
+      if (!row) throw new FastnApiError(`"${name}" is not an event of ${app}; valid: ${[...Object.keys(aliases), ...catalog.map((e: any) => e.id)].join(", ")}`, { status: 400, code: "EVENT_NOT_FOUND", method: "GET", path: "/v1/connector-events", details: { app, event: name, valid: catalog.map((e: any) => e.id) } });
+      return { id: row.id, label: row.label ?? row.id, ...(row.description ? { description: row.description } : {}) };
+    });
+    const uniq = new Map<string, (typeof picked)[number]>(); for (const e of picked) uniq.set(e.id, e);   // two plain names can map to one id
+    const eventsOut = [...uniq.values()];
+    const rows: any[] = Array.isArray((conns as any)?.data) ? (conns as any).data : [];
+    const ofApp = rows.filter((c) => c.connectorId === connector.id || c.connector?.slug === app);
+    let connection: any;
+    if (options.connectionId) {
+      connection = rows.find((c) => c.id === options.connectionId);
+      if (!connection) throw new FastnApiError(`connection ${options.connectionId} is not one of customer "${this.ref}"'s accounts`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { app, connectionId: options.connectionId } });
+      if (!ofApp.includes(connection)) throw new FastnApiError(`connection ${options.connectionId} is a ${connection.connector?.slug ?? connection.connectorId} account, not ${app}`, { status: 400, code: "CONNECTION_MISMATCH", method: "GET", path: "/v1/connections", details: { app, connectionId: options.connectionId, connector: connection.connector?.slug ?? connection.connectorId } });
+    } else {
+      if (ofApp.length === 0) throw new FastnApiError(`customer "${this.ref}" has no ${app} account to watch; send them a setup link first`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { app, connections: [] } });
+      if (ofApp.length > 1) throw new FastnApiError(`customer "${this.ref}" has ${ofApp.length} ${app} accounts; pass { connectionId }`, { status: 409, code: "CONNECTION_AMBIGUOUS", method: "GET", path: "/v1/connections", details: { app, connections: ofApp.map((c: any) => c.id) } });
+      connection = ofApp[0];
+    }
+    const r: any = await this.root.events.createAppEventTrigger({
+      name: options.name ?? `${app} changes for ${this.ref}`, status: "ACTIVE", type: "WEBHOOK", routes: [], endOrgId: id,
+      connectorId: connector.id, connectorName: connector.name ?? app, connectionId: connection.id, events: eventsOut,
+      ...(options.accountId ? { accountId: options.accountId } : {}),
+    } as any, opts);
+    return toWatch(r?.data ?? r, app);
+  }
+
+  /** The watches on this customer's apps (every app, or one). */
+  async watches(app?: string, opts?: RequestOptions): Promise<Watch[]> {
+    const id = await this.id();
+    const connector = app ? await this.connectorBySlug(app, opts) : undefined;
+    // every page: the list is 20 per page by default, and the connectorId query does not match the nested app part, so filter here
+    const rows: any[] = [];
+    let cursor: string | undefined;
+    for (let page = 0; page < 1000; page++) {
+      const r: any = await this.root.events.listAppEventTriggers({ end_org_id: id, limit: 100, ...(cursor ? { cursor } : {}) } as any, opts);
+      rows.push(...(Array.isArray(r?.data) ? r.data : []));
+      cursor = r?.meta?.nextCursor ?? r?.nextCursor ?? undefined;
+      if (!cursor) break;
+    }
+    return rows.filter((t) => !connector || connectorIdOf(t) === connector.id).map((t) => toWatch(t, app ?? t.appTrigger?.connectorSlug ?? t.connectorSlug ?? ""));
+  }
+
+  /** Stops a watch: by its id, or every watch on an app. Answers the ids removed. */
+  async unwatch(appOrWatchId: string, opts?: RequestOptions): Promise<string[]> {
+    const byId = /^[0-9a-f-]{36}$|^trg_/i.test(appOrWatchId);
+    const mine = await this.watches(byId ? undefined : appOrWatchId, opts);
+    const ids = byId ? mine.filter((w) => w.id === appOrWatchId).map((w) => w.id) : mine.map((w) => w.id);
+    if (byId && ids.length === 0) throw new FastnApiError(`watch ${appOrWatchId} is not one of customer "${this.ref}"'s watches`, { status: 404, code: "WATCH_NOT_FOUND", method: "GET", path: "/v1/app-triggers", details: { watchId: appOrWatchId } });
+    for (const id of ids) await this.root.events.deleteAppEventTrigger({ id }, opts);
+    return ids;
+  }
+
+  /** The events an app can report (its own ids, labels and payload shapes), from the connector's catalog. */
+  async watchableEvents(app: string, opts?: RequestOptions): Promise<Array<{ id: string; label?: string; description?: string; [key: string]: unknown }>> {
+    const connector = await this.connectorBySlug(app, opts);
+    const r: any = await this.root.events.listConnectorEvents({ connectorId: connector.id }, opts);
+    return Array.isArray(r?.data) ? r.data : Array.isArray(r?.data?.events) ? r.data.events : [];
+  }
+
+  /**
+   * Removes one of the customer's accounts (they get `connection.revoked`); calls on that app stop working. The id
+   * must be one of this customer's accounts (404 CONNECTION_NOT_FOUND otherwise): one key serves every customer, so
+   * an id mixed up on your side can never touch another customer.
+   */
+  async disconnect(accountId: string, opts?: RequestOptions): Promise<void> {
+    if (!accountId) throw new TypeError("disconnect(accountId): the account id is required (customer.connections())");
+    await this.ownAccount(accountId, opts);
+    await this.root.connections.deleteConnections({ id: accountId }, opts);
+  }
+
+  /** Renames one of the customer's accounts (the name shown to them). The id must be one of this customer's accounts. */
+  async renameAccount(accountId: string, name: string, opts?: RequestOptions): Promise<T.JsonObject> {
+    if (!accountId || !name) throw new TypeError("renameAccount(accountId, name): both are required");
+    await this.ownAccount(accountId, opts);
+    const r: any = await this.root.connections.updateConnection({ id: accountId, name }, opts);
+    return r?.data ?? r;
+  }
+
+  /** The customer's connection row for an account id, or 404 CONNECTION_NOT_FOUND when it is not theirs. */
+  private async ownAccount(accountId: string, opts?: RequestOptions): Promise<any> {
+    const r: any = await this.connections(undefined, opts);
+    const row = (Array.isArray(r?.data) ? r.data : []).find((c: any) => c.id === accountId);
+    if (!row) throw new FastnApiError(`account ${accountId} is not one of customer "${this.ref}"'s accounts`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { accountId } });
+    return row;
+  }
+
+  /** Changes the customer's display name, or pauses and resumes them (`status: "suspended" | "active"`). */
+  async update(changes: { name?: string; status?: "active" | "suspended" }, opts?: RequestOptions): Promise<CustomerRow> {
+    const r: any = await this.root.orgs.updateTenant({ id: await this.id(), ...changes } as any, opts);
+    return r?.data ?? r;
+  }
+
+  /** What fastn did for one of your request ids (sent as `correlationId`): one entry per app call. */
+  async callLog(correlationId: string, opts?: RequestOptions): Promise<CallLogEntry[]> {
+    if (!correlationId) throw new TypeError("callLog(correlationId): the id is required");
+    const r: any = await this.api.unified.listUnifiedCalls({ correlation_id: correlationId }, opts);
+    const rows: any[] = Array.isArray(r?.data) ? r.data : [];
+    return rows.map((x) => { const { endOrgId: _e, end_org_id: _f, ...rest } = x; return rest as CallLogEntry; });
+  }
+
+  /** The connector row for an app slug (id, name), read once per client. */
+  private async connectorBySlug(app: string, opts?: RequestOptions): Promise<{ id: string; name?: string; slug?: string }> {
+    this.ctx.connectors ??= new Map();
+    let p = this.ctx.connectors.get(app);
+    if (!p) {
+      p = this.root.connectors.listConnectors({ slug: app } as any, opts).then((r: any) => {
+        const rows: any[] = Array.isArray(r?.data) ? r.data : Array.isArray(r?.data?.items) ? r.data.items : [];
+        const row = rows.find((c) => c.slug === app) ?? (rows.length === 1 ? rows[0] : undefined);
+        if (!row?.id) throw new FastnApiError(`no connector with slug "${app}"`, { status: 404, code: "CONNECTOR_NOT_FOUND", method: "GET", path: "/v1/connectors", details: { app } });
+        return row;
+      });
+      this.ctx.connectors.set(app, p);
+      p.catch(() => this.ctx.connectors?.delete(app));
+    }
+    return p;
+  }
 
   /**
    * The one provider this customer has connected for an entity that supports `op`, from the catalog's providers

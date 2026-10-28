@@ -1,6 +1,6 @@
 {
   "name": "@fastn-ai/sdk",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Official fastn SDK for Node.js and TypeScript: the platform API (generated from the OpenAPI spec) and workspace tool calls",
   "license": "MIT",
   "author": "fastn",
@@ -28,6 +28,16 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "codegen": [
+        "./dist/codegen.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "fastn-sdk-tools": "./dist/cli/fastn-sdk-tools.js"
+  },
   "exports": {
     ".": {
       "import": {
@@ -37,6 +47,16 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./codegen": {
+      "import": {
+        "types": "./dist/codegen.d.ts",
+        "default": "./dist/codegen.js"
+      },
+      "require": {
+        "types": "./dist/codegen.d.cts",
+        "default": "./dist/codegen.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -53,11 +73,15 @@
     "generate": "tsx scripts/generate.ts",
     "generate:check": "tsx scripts/generate.ts --check",
     "test:live": "LIVE=1 vitest run test/live --no-file-parallelism",
-    "spec:refresh": "tsx scripts/refresh-spec.ts"
+    "spec:refresh": "tsx scripts/refresh-spec.ts",
+    "generate:tools": "tsx src/cli/fastn-sdk-tools.ts"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "dependencies": {
+    "json-schema-to-typescript": "^16.0.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.0",
