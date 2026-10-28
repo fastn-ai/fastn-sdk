@@ -2,7 +2,7 @@
 
 All notable changes to `@fastn-ai/sdk` are documented here.
 
-## [Unreleased]
+## [0.4.1] - 2026-10-28
 
 ## [Unreleased]
 
