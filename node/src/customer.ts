@@ -198,16 +198,23 @@ export class Customer implements ProviderResolver {
       if (!row) throw new FastnApiError(`"${name}" is not an event of ${app}; valid: ${[...Object.keys(aliases), ...catalog.map((e: any) => e.id)].join(", ")}`, { status: 400, code: "EVENT_NOT_FOUND", method: "GET", path: "/v1/connector-events", details: { app, event: name, valid: catalog.map((e: any) => e.id) } });
       return { id: row.id, label: row.label ?? row.id, ...(row.description ? { description: row.description } : {}) };
     });
+    const uniq = new Map<string, (typeof picked)[number]>(); for (const e of picked) uniq.set(e.id, e);   // two plain names can map to one id
+    const eventsOut = [...uniq.values()];
     const rows: any[] = Array.isArray((conns as any)?.data) ? (conns as any).data : [];
-    const conn = options.connectionId ? rows.find((c) => c.id === options.connectionId) : rows.filter((c) => c.connectorId === connector.id || c.connector?.slug === app);
-    const connection = Array.isArray(conn) ? (conn.length === 1 ? conn[0] : undefined) : conn;
-    if (!connection) {
-      const n = Array.isArray(conn) ? conn.length : 0;
-      throw new FastnApiError(n === 0 ? `customer "${this.ref}" has no ${app} account to watch; send them a setup link first` : `customer "${this.ref}" has ${n} ${app} accounts; pass { connectionId }`, { status: n === 0 ? 404 : 409, code: n === 0 ? "CONNECTION_NOT_FOUND" : "CONNECTION_AMBIGUOUS", method: "GET", path: "/v1/connections", details: { app, connections: Array.isArray(conn) ? conn.map((c: any) => c.id) : [] } });
+    const ofApp = rows.filter((c) => c.connectorId === connector.id || c.connector?.slug === app);
+    let connection: any;
+    if (options.connectionId) {
+      connection = rows.find((c) => c.id === options.connectionId);
+      if (!connection) throw new FastnApiError(`connection ${options.connectionId} is not one of customer "${this.ref}"'s accounts`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { app, connectionId: options.connectionId } });
+      if (!ofApp.includes(connection)) throw new FastnApiError(`connection ${options.connectionId} is a ${connection.connector?.slug ?? connection.connectorId} account, not ${app}`, { status: 400, code: "CONNECTION_MISMATCH", method: "GET", path: "/v1/connections", details: { app, connectionId: options.connectionId, connector: connection.connector?.slug ?? connection.connectorId } });
+    } else {
+      if (ofApp.length === 0) throw new FastnApiError(`customer "${this.ref}" has no ${app} account to watch; send them a setup link first`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { app, connections: [] } });
+      if (ofApp.length > 1) throw new FastnApiError(`customer "${this.ref}" has ${ofApp.length} ${app} accounts; pass { connectionId }`, { status: 409, code: "CONNECTION_AMBIGUOUS", method: "GET", path: "/v1/connections", details: { app, connections: ofApp.map((c: any) => c.id) } });
+      connection = ofApp[0];
     }
     const r: any = await this.root.events.createAppEventTrigger({
       name: options.name ?? `${app} changes for ${this.ref}`, status: "ACTIVE", type: "WEBHOOK", routes: [], endOrgId: id,
-      connectorId: connector.id, connectorName: connector.name ?? app, connectionId: connection.id, events: picked,
+      connectorId: connector.id, connectorName: connector.name ?? app, connectionId: connection.id, events: eventsOut,
       ...(options.accountId ? { accountId: options.accountId } : {}),
     } as any, opts);
     return toWatch(r?.data ?? r, app);
@@ -217,14 +224,24 @@ export class Customer implements ProviderResolver {
   async watches(app?: string, opts?: RequestOptions): Promise<Watch[]> {
     const id = await this.id();
     const connector = app ? await this.connectorBySlug(app, opts) : undefined;
-    const r: any = await this.root.events.listAppEventTriggers({ end_org_id: id } as any, opts);   // the connectorId query does not match the nested app part; filter here
-    const rows: any[] = Array.isArray(r?.data) ? r.data : [];
+    // every page: the list is 20 per page by default, and the connectorId query does not match the nested app part, so filter here
+    const rows: any[] = [];
+    let cursor: string | undefined;
+    for (let page = 0; page < 1000; page++) {
+      const r: any = await this.root.events.listAppEventTriggers({ end_org_id: id, limit: 100, ...(cursor ? { cursor } : {}) } as any, opts);
+      rows.push(...(Array.isArray(r?.data) ? r.data : []));
+      cursor = r?.meta?.nextCursor ?? r?.nextCursor ?? undefined;
+      if (!cursor) break;
+    }
     return rows.filter((t) => !connector || connectorIdOf(t) === connector.id).map((t) => toWatch(t, app ?? t.appTrigger?.connectorSlug ?? t.connectorSlug ?? ""));
   }
 
   /** Stops a watch: by its id, or every watch on an app. Answers the ids removed. */
   async unwatch(appOrWatchId: string, opts?: RequestOptions): Promise<string[]> {
-    const ids = /^[0-9a-f-]{36}$|^trg_/i.test(appOrWatchId) ? [appOrWatchId] : (await this.watches(appOrWatchId, opts)).map((w) => w.id);
+    const byId = /^[0-9a-f-]{36}$|^trg_/i.test(appOrWatchId);
+    const mine = await this.watches(byId ? undefined : appOrWatchId, opts);
+    const ids = byId ? mine.filter((w) => w.id === appOrWatchId).map((w) => w.id) : mine.map((w) => w.id);
+    if (byId && ids.length === 0) throw new FastnApiError(`watch ${appOrWatchId} is not one of customer "${this.ref}"'s watches`, { status: 404, code: "WATCH_NOT_FOUND", method: "GET", path: "/v1/app-triggers", details: { watchId: appOrWatchId } });
     for (const id of ids) await this.root.events.deleteAppEventTrigger({ id }, opts);
     return ids;
   }
@@ -236,17 +253,31 @@ export class Customer implements ProviderResolver {
     return Array.isArray(r?.data) ? r.data : Array.isArray(r?.data?.events) ? r.data.events : [];
   }
 
-  /** Removes one of the customer's accounts (they get `connection.revoked`); calls on that app stop working. */
+  /**
+   * Removes one of the customer's accounts (they get `connection.revoked`); calls on that app stop working. The id
+   * must be one of this customer's accounts (404 CONNECTION_NOT_FOUND otherwise): one key serves every customer, so
+   * an id mixed up on your side can never touch another customer.
+   */
   async disconnect(accountId: string, opts?: RequestOptions): Promise<void> {
     if (!accountId) throw new TypeError("disconnect(accountId): the account id is required (customer.connections())");
+    await this.ownAccount(accountId, opts);
     await this.root.connections.deleteConnections({ id: accountId }, opts);
   }
 
-  /** Renames one of the customer's accounts (the name shown to them). */
+  /** Renames one of the customer's accounts (the name shown to them). The id must be one of this customer's accounts. */
   async renameAccount(accountId: string, name: string, opts?: RequestOptions): Promise<T.JsonObject> {
     if (!accountId || !name) throw new TypeError("renameAccount(accountId, name): both are required");
+    await this.ownAccount(accountId, opts);
     const r: any = await this.root.connections.updateConnection({ id: accountId, name }, opts);
     return r?.data ?? r;
+  }
+
+  /** The customer's connection row for an account id, or 404 CONNECTION_NOT_FOUND when it is not theirs. */
+  private async ownAccount(accountId: string, opts?: RequestOptions): Promise<any> {
+    const r: any = await this.connections(undefined, opts);
+    const row = (Array.isArray(r?.data) ? r.data : []).find((c: any) => c.id === accountId);
+    if (!row) throw new FastnApiError(`account ${accountId} is not one of customer "${this.ref}"'s accounts`, { status: 404, code: "CONNECTION_NOT_FOUND", method: "GET", path: "/v1/connections", details: { accountId } });
+    return row;
   }
 
   /** Changes the customer's display name, or pauses and resumes them (`status: "suspended" | "active"`). */

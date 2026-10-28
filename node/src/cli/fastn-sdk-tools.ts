@@ -25,7 +25,7 @@ const USAGE = `usage: fastn-sdk-tools --out <file.ts> (--url <workspace endpoint
 interface Args { url?: string; key?: string; from?: string; customer?: string; out?: string; check: boolean; import?: string; help: boolean }
 
 export function parseArgs(argv: string[], env: NodeJS.ProcessEnv = {}): Args {
-  const a: Args = { check: false, help: false, url: env.FASTN_TOOLS_URL || undefined, key: env.FASTN_TOOLS_KEY || undefined };
+  const a: Args = { check: false, help: false, key: env.FASTN_TOOLS_KEY || undefined };
   for (let i = 0; i < argv.length; i++) {
     const x = argv[i];
     const take = (name: keyof Args) => { const v = argv[++i]; if (v === undefined || v.startsWith("--")) throw new TypeError(`${x} needs a value`); (a as any)[name] = v; };
@@ -40,6 +40,9 @@ export function parseArgs(argv: string[], env: NodeJS.ProcessEnv = {}): Args {
     else if (x.startsWith("--") && x.includes("=")) { const [k, v] = x.slice(2).split(/=(.*)/s); argv.splice(i + 1, 0, v ?? ""); argv[i] = `--${k}`; i--; }
     else throw new TypeError(x.startsWith("--") ? `unknown argument ${x}` : "unexpected value on the command line (a key goes after --key, or in FASTN_TOOLS_KEY)");
   }
+  // FASTN_TOOLS_URL stands in for --url only when the list is fetched: with --from, the same file must give the same
+  // output wherever it runs, so the env must not leak into the generated header.
+  if (!a.url && !a.from && env.FASTN_TOOLS_URL) a.url = env.FASTN_TOOLS_URL;
   return a;
 }
 

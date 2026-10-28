@@ -404,6 +404,32 @@ describe("CLI", () => {
   });
 });
 
+describe("reserved names and the env url", () => {
+  it("tools named constructor or client get a variant on a connector class and at the root, and the file still compiles", async () => {
+    const list = [tool("acme__constructor", { type: "object", properties: {} }), tool("acme__client", { type: "object", properties: {} }), tool("acme__listThings"), tool("constructor"), tool("client")];
+    const g = await gen(list);
+    const names = g.methods.map((m) => `${m.group ?? ""}.${m.method}`);
+    expect(names).not.toContain("acme.constructor"); expect(names).not.toContain("acme.client"); expect(names).not.toContain(".constructor"); expect(names).not.toContain(".client");
+    expect(g.methods.filter((m) => m.group === "acme")).toHaveLength(3);
+    tsc(write("reserved", g.source));
+    const mod = await load("reserved-rt", g.source);
+    const m = workspace(list);
+    const tools = mod.createTools(new ToolsClient({ key: "ucl_test", url: "https://mcp.fastn.dev/acme", fetch: m.fetch }));
+    const ctorMethod = g.methods.find((x) => x.tool === "acme__constructor")!.method;
+    await tools.acme[ctorMethod]({});
+    expect(m.calls.at(-1)!.json.params.name).toBe("acme__constructor");
+    expect(tools.acme.client).toBeDefined();                                             // the property is untouched
+  });
+  it("FASTN_TOOLS_URL is used only when the list is fetched: with --from the header does not change with the env", () => {
+    const a = parseArgs(["--from", "x.json", "--out", "o.ts"], { FASTN_TOOLS_URL: "https://mcp.fastn.dev/env" });
+    expect(a.url).toBeUndefined();
+    const b = parseArgs(["--out", "o.ts"], { FASTN_TOOLS_URL: "https://mcp.fastn.dev/env", FASTN_TOOLS_KEY: "k" });
+    expect(b.url).toBe("https://mcp.fastn.dev/env");
+    const c = parseArgs(["--from", "x.json", "--url", "https://mcp.fastn.dev/explicit", "--out", "o.ts"], { FASTN_TOOLS_URL: "https://mcp.fastn.dev/env" });
+    expect(c.url).toBe("https://mcp.fastn.dev/explicit");
+  });
+});
+
 describe("every Trillet tool, generated and called", () => {
   it("each of the 265 generated methods sends its own tool name with the arguments as given, and no two methods share a tool", async () => {
     const list = fixture();

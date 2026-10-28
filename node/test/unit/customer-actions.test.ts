@@ -51,11 +51,34 @@ describe("watch / unwatch", () => {
     const c = client(m).customer("acme-1");
     const list = await c.watches("hubspot");
     expect(list.map((w) => w.id)).toEqual(["trg-1"]); expect(list[0]).not.toHaveProperty("endOrgId");
-    expect(m.urls().find((u) => u.includes("/app-triggers?"))).toBe("/v1/app-triggers?end_org_id=11111111-aaaa");   // no connectorId query: the API does not match it against the nested app part
+    expect(m.urls().find((u) => u.includes("/app-triggers?"))).toBe("/v1/app-triggers?limit=100&end_org_id=11111111-aaaa");   // no connectorId query: the API does not match it against the nested app part
     expect(list[0]).not.toHaveProperty("appTrigger"); expect(list[0].connectionId).toBeUndefined();
     expect(await c.unwatch("hubspot")).toEqual(["trg-1"]);
-    expect(await c.unwatch("3ffc9b08-0000-4000-8000-000000000000")).toEqual(["3ffc9b08-0000-4000-8000-000000000000"]);
-    expect(m.calls.filter((x) => x.init.method === "DELETE").map((x) => x.url.replace("https://api.fastn.dev", ""))).toEqual(["/v1/app-triggers/trg-1", "/v1/app-triggers/3ffc9b08-0000-4000-8000-000000000000"]);
+    expect(await c.unwatch("trg-1")).toEqual(["trg-1"]);                                      // by id: only when it is this customer's
+    expect(m.calls.filter((x) => x.init.method === "DELETE").map((x) => x.url.replace("https://api.fastn.dev", ""))).toEqual(["/v1/app-triggers/trg-1", "/v1/app-triggers/trg-1"]);
+  });
+  it("two plain names that map to one id are sent once; a connectionId of another app is refused; one that is not the customer's is refused", async () => {
+    const m = mockFetch(base);
+    const c = client(m).customer("acme-1");
+    await c.watch("hubspot", ["deal.updated", "deal.stageChanged", "deal.propertyChange"], { accountId: "245765780" });
+    expect(m.calls.find((x) => x.init.method === "POST")!.json.events.map((e: any) => e.id)).toEqual(["deal.propertyChange"]);
+    await expect(c.watch("hubspot", ["contact.created"], { connectionId: calConn.id })).rejects.toMatchObject({ code: "CONNECTION_MISMATCH", status: 400 });
+    await expect(c.watch("hubspot", ["contact.created"], { connectionId: "ucl:p:9:9036:someone-else" })).rejects.toMatchObject({ code: "CONNECTION_NOT_FOUND", status: 404 });
+    expect(m.calls.filter((x) => x.init.method === "POST").length).toBe(1);
+  });
+  it("watches() reads every page, so unwatch(app) removes watches past the first page", async () => {
+    const pages: Record<string, any[]> = { "": Array.from({ length: 3 }, (_, i) => ({ id: `trg-other-${i}`, status: "ACTIVE", appTrigger: { connectorId: "other", events: [] } })), p2: [{ id: "trg-hs-old", status: "ACTIVE", appTrigger: { connectorId: "9036", events: [{ id: "contact.creation" }] } }] };
+    const m = mockFetch((url, init) => {
+      if (url.includes("/app-triggers?")) { const cur = new URL(url).searchParams.get("cursor") ?? ""; return { body: { data: pages[cur], meta: { nextCursor: cur === "" ? "p2" : null } } }; }
+      return base(url, init);
+    });
+    const c = client(m).customer("acme-1");
+    expect((await c.watches("hubspot")).map((w) => w.id)).toEqual(["trg-hs-old"]);
+    expect(await c.unwatch("hubspot")).toEqual(["trg-hs-old"]);
+    const lists = m.urls().filter((u) => u.includes("/app-triggers?"));
+    expect(lists.length).toBe(4); expect(lists[0]).toContain("limit=100"); expect(lists[1]).toContain("cursor=p2");
+    await expect(c.unwatch("3ffc9b08-0000-4000-8000-000000000000")).rejects.toMatchObject({ code: "WATCH_NOT_FOUND", status: 404 });   // not this customer's
+    expect(m.calls.filter((x) => x.init.method === "DELETE").map((x) => x.url.replace("https://api.fastn.dev", ""))).toEqual(["/v1/app-triggers/trg-hs-old"]);
   });
   it("the connector row is read once per client", async () => {
     const m = mockFetch(base);
@@ -79,7 +102,9 @@ describe("disconnect, renameAccount, update, callLog, webhooks", () => {
     await c.update({ name: "Acme Dental Ltd", status: "suspended" });
     const log = await c.callLog("c1");
     expect(log).toEqual([{ id: "ucall_1", correlationId: "c1", operation: "create", status: 201 }]);   // no internal customer id
-    const calls = m.calls.filter((x) => !x.url.endsWith("/v1/me") && !x.url.includes("/v1/orgs?")).map((x) => `${x.init.method} ${x.url.replace("https://api.fastn.dev", "")} ${JSON.stringify(x.json ?? null)}`);
+    await expect(c.disconnect("ucl:p:9:9036:someone-else")).rejects.toMatchObject({ code: "CONNECTION_NOT_FOUND", status: 404 });   // another customer's account: refused before any write
+    await expect(c.renameAccount("ucl:p:9:9036:someone-else", "x")).rejects.toMatchObject({ code: "CONNECTION_NOT_FOUND" });
+    const calls = m.calls.filter((x) => !x.url.endsWith("/v1/me") && !x.url.includes("/v1/orgs?") && !x.url.includes("/v1/connections?")).map((x) => `${x.init.method} ${x.url.replace("https://api.fastn.dev", "")} ${JSON.stringify(x.json ?? null)}`);
     expect(calls).toEqual([
       `DELETE /v1/connections/${encodeURIComponent(hsConn.id)} null`,
       `PUT /v1/connections/${encodeURIComponent(hsConn.id)} {"name":"Front desk"}`,
@@ -97,6 +122,8 @@ describe("disconnect, renameAccount, update, callLog, webhooks", () => {
     expect((await fastn.webhooks.list()).map((s: any) => s.id)).toEqual(["esub_1"]);
     await fastn.webhooks.get("esub_1"); await fastn.webhooks.update("esub_1", { description: "d" }); await fastn.webhooks.test("esub_1"); await fastn.webhooks.rotateSecret("esub_1");
     expect((await fastn.webhooks.deliveries("esub_1", { limit: 5, status: "delivered" }))[0].id).toBe("evd_1");
+    // @ts-expect-error cursor is not a parameter of the deliveries route, so the type refuses it instead of dropping it silently
+    void (() => fastn.webhooks.deliveries("esub_1", { cursor: "x" }));
     await fastn.webhooks.replay("evd_1"); await fastn.webhooks.delete("esub_1");
     expect(m.calls.map((x) => `${x.init.method} ${x.url.replace("https://api.fastn.dev", "")}`)).toEqual([
       "POST /v1/event-subscriptions", "GET /v1/event-subscriptions", "GET /v1/event-subscriptions/esub_1", "PATCH /v1/event-subscriptions/esub_1",

@@ -87,7 +87,8 @@ export class FastnClient {
     test: (id: string, opts?: RequestOptions) => this.api.events.testEventSubscription({ id }, opts).then(dataOf),
     /** A new signing secret; deliveries are signed with it from now on. */
     rotateSecret: (id: string, opts?: RequestOptions) => this.api.events.rotateEventSubscriptionSecret({ id }, opts).then(dataOf),
-    deliveries: (id: string, input: { limit?: number; status?: string; cursor?: string } = {}, opts?: RequestOptions) => this.api.events.listEventDeliveries({ id, ...input } as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : []) as any[]),
+    /** Deliveries of one webhook, newest first (the route pages by `limit` only). */
+    deliveries: (id: string, input: { limit?: number; status?: "pending" | "delivered" | "dead" } = {}, opts?: RequestOptions) => this.api.events.listEventDeliveries({ id, ...input } as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : []) as any[]),
     replay: (deliveryId: string, opts?: RequestOptions) => this.api.events.replayEventDelivery({ id: deliveryId }, opts).then(dataOf),
   };
 

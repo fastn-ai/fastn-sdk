@@ -45,7 +45,9 @@ export interface GeneratedToolsModule {
 const DEFAULT_IMPORT = "@fastn-ai/sdk";
 const ROOT_PLACEHOLDER = "GeneratedRoot";
 /** Names on the Tools object that a prefix-less tool or a connector cannot take. */
-const ROOT_RESERVED = new Set(["client", "customer"]);
+const ROOT_RESERVED = new Set(["client", "customer", "constructor"]);
+/** Names a connector class already has: its constructor and the `client` property. */
+const CLASS_RESERVED = new Set(["constructor", "client"]);
 const IDENT = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 /** Identifiers the generated module declares or imports itself. */
 const MODULE_NAMES = ["run", "Tools", "ToolName", "TOOL_NAMES", "WorkspaceTools", "ClientLike", "createTools", "toolsClientOf", "ToolsClient", "ToolCallOptions", "ToolResult"];
@@ -208,7 +210,7 @@ export async function generateToolsModule(toolsIn: Tool[], opts: GenerateToolsOp
     const { connector, action } = splitName(t.name);
     const group = connector === undefined ? undefined : groupOf.get(connector)!;
     const taken = group === undefined ? rootTaken : (methodTaken.get(group) ?? methodTaken.set(group, new Set()).get(group)!);
-    const method = group === undefined ? unique(action, taken, ROOT_RESERVED) : unique(action, taken);
+    const method = group === undefined ? unique(action, taken, ROOT_RESERVED) : unique(action, taken, CLASS_RESERVED);
     const base = `${group === undefined ? "" : pascal(group)}${pascal(method)}`;
     const inputType = uniqueType(`${base}Input`, typeNames);
     const shape = argShape(t.inputSchema);
