@@ -4,6 +4,14 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-28
+
+- Added: typed calendar and CRM methods on a customer. `customer.calendar.freeSlots / book / get / find / list / reschedule / cancel` (scheduling/availability and scheduling/meeting) and `customer.crm.contacts`, `crm.notes`, `crm.tasks`, `crm.deals` (`create / get / find / list / update / delete`, plus `notes.add`, `tasks.add`, `deals.moveStage`, `deals.stages`). Inputs are TypeScript interfaces with the catalog's field names (`Date` values are sent as ISO strings); answers are `{ id, provider, data, warnings? }` records or `{ records, nextCursor, hasMore }` pages. The provider is resolved from the customer's connected providers for that entity, once per client: none answers 404 `NO_CONNECTED_PROVIDER`, several 409 `PROVIDER_AMBIGUOUS`, and `{ provider }` on the call overrides. A provider or connection error forgets the cached answer. `notes.add` defaults `created_at` to now (HubSpot requires it). An empty record id throws before any request.
+- Added: `customer.connect("googleCalendar")` makes a setup link by connector slug: the account's widget for that connector is looked up once per client (`listWidgets`, matched on `connectorRefs`), `connectionName` defaults to the widget's name, and the answer is `{ setupId, url, status, expiresAt, widgetId }`. No widget: 404 `WIDGET_NOT_FOUND`; several: 409 `WIDGET_AMBIGUOUS` (pass `widgetId`). The object form `connect({ connectorId, ... })` (direct OAuth) is unchanged. `customer.links.get(setupId)` and `links.cancel(setupId)` read and revoke a link.
+- Added: the unified catalog. `fastn.catalog.categories()`, `.category(slug)`, `.entity(category, entity)`, `.fields(category, entity)` (create fields with `required`), and `.providers(category, entity)`; `customer.catalog.providers(...)` reports the customer's own connections.
+- Added: `freeIntervals(start, end, busy)` and `slotsOf(free, minutes)`, the arithmetic behind `freeSlots`.
+
+
 ## [0.2.0] - 2026-10-27
 
 - Changed: answers of Fastn Workspace tools (`ToolResult.data` / `structuredContent`) and events parsed with `parseEvent` no longer carry fastn's internal customer id keys (`endOrgId`, `end_org_id`); the partner's own id (`orgId`, `externalRef`, `tenantRef`) is what remains. `r.text` keeps the raw answer; `parseEvent(..., { internalIds: true })` keeps the id; `customerArg: false` keeps answers untouched.

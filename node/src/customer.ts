@@ -4,6 +4,8 @@ import type { RequestOptions, Transport, OpDef } from "./transport.js";
 import type { ToolsClient } from "./tools.js";
 import { buildApis } from "./generated/api.js";
 import { FastnApiError } from "./errors.js";
+import { Catalog, type EntityProvider, type UnifiedOperation } from "./catalog.js";
+import { Calendar, Crm, type ProviderResolver } from "./domain.js";
 
 /** One customer org row as GET /v1/orgs returns it. */
 export type CustomerRow = T.JsonObject & { id: string; externalRef?: string };
@@ -16,6 +18,35 @@ export interface CustomerContext {
   ids: Map<string, string>;
   /** ref -> lookup in flight, so concurrent id() calls share one listOrgs. */
   lookups: Map<string, Promise<CustomerRow | undefined>>;
+  /** "ref/category/entity" -> the providers the customer has connected for that entity (one lookup per client). */
+  providers: Map<string, Promise<EntityProvider[]>>;
+  /** The account's widgets (listWidgets), read once per client for connect(app). */
+  widgets?: Promise<any[]>;
+}
+
+/** What `customer.connect(app)` takes besides the app. */
+export interface ConnectOptions {
+  /** The widget to open when the account has several for the app (ids from fastn.embed.listWidgets). */
+  widgetId?: string;
+  /** Name of the connection as it will show in fastn; default the widget's name. */
+  connectionName?: string;
+  label?: string;
+  /** Where the customer lands after connecting; must be on the account's allowed list (orgs.updateOrgConfig). */
+  redirectUrl?: string;
+  expiresInMinutes?: number;
+  metadata?: Record<string, any>;
+  allowAdditionalConnection?: boolean;
+}
+
+/** A setup link, as created. */
+export interface SetupLink {
+  setupId: string;
+  /** Send the customer here. */
+  url: string;
+  status: string;
+  expiresAt?: string;
+  widgetId: string;
+  [key: string]: unknown;
 }
 
 /** A unified record call scoped to one customer; `category`/`entity`/`provider` come from the catalog. */
@@ -37,10 +68,13 @@ const TAKES_REF_AS_END_ORG_ID = new Set(["createEmbedToken"]);
  * Everything about one of your customers, addressed by the id YOU gave fastn (the `orgId` of createTenant,
  * also called externalRef / endOrgRef). fastn's own org id is resolved and cached when a call needs it.
  */
-export class Customer {
+export class Customer implements ProviderResolver {
   private readonly scoped: Transport;
   private apiCache?: FastnApis;
   private toolsCache?: ToolsClient;
+  private catalogCache?: Catalog;
+  private calendarCache?: Calendar;
+  private crmCache?: Crm;
 
   constructor(private readonly root: FastnApis, t: Transport, readonly ref: string, private readonly ctx: CustomerContext, private readonly toolsClient?: ToolsClient) {
     this.scoped = {
@@ -63,6 +97,45 @@ export class Customer {
    * on unified record and workflow execute routes. Pass the field yourself to override. Built on first use.
    */
   get api(): FastnApis { return (this.apiCache ??= buildApis(this.scoped)); }
+
+  /** The unified catalog as this customer sees it: categories, entities, fields, and which providers they connected. */
+  get catalog(): Catalog { return (this.catalogCache ??= new Catalog(this.api)); }
+  /** Typed calendar methods on the customer's connected calendar: freeSlots, book, find, get, reschedule, cancel. */
+  get calendar(): Calendar { return (this.calendarCache ??= new Calendar(this)); }
+  /** Typed CRM methods on the customer's connected CRM: contacts, notes, tasks, deals. */
+  get crm(): Crm { return (this.crmCache ??= new Crm(this)); }
+  /** Setup links this customer was sent: links.get(setupId), links.cancel(setupId). */
+  readonly links = {
+    get: (setupId: string, opts?: RequestOptions) => this.root.embed.getSetupLink({ id: setupId }, opts).then((r: any) => (r?.data ?? r) as NonNullable<T.GetSetupLinkOutput["data"]>),
+    cancel: (setupId: string, opts?: RequestOptions) => this.root.embed.cancelSetupLink({ id: setupId }, opts).then((r: any) => (r?.data ?? r) as NonNullable<T.CancelSetupLinkOutput["data"]>),
+  };
+
+  /**
+   * The one provider this customer has connected for an entity that supports `op`, from the catalog's providers
+   * list (cached per client). No connected provider: 404 NO_CONNECTED_PROVIDER (send the customer a setup link).
+   * Several: 409 PROVIDER_AMBIGUOUS (pass `provider` on the call).
+   */
+  async providerFor(category: string, entity: string, op: UnifiedOperation): Promise<string> {
+    const key = `${this.ref}/${category}/${entity}`;
+    let p = this.ctx.providers.get(key);
+    if (!p) {
+      p = this.catalog.providers(category, entity);
+      this.ctx.providers.set(key, p);
+      p.catch(() => this.ctx.providers.delete(key));
+    }
+    const connected = (await p).filter((x) => x.connected);
+    const able = connected.filter((x) => !Array.isArray(x.operations) || x.operations.includes(op));
+    const path = `/v1/unified/${category}/${entity}/providers`;
+    if (able.length === 1) return able[0].connectorSlug;
+    if (connected.length === 0) throw new FastnApiError(`customer "${this.ref}" has no connected provider for ${category}/${entity}; send them a setup link (customer.connect(app))`, { status: 404, code: "NO_CONNECTED_PROVIDER", method: "GET", path, details: { category, entity, op } });
+    if (able.length === 0) throw new FastnApiError(`none of the providers customer "${this.ref}" connected for ${category}/${entity} (${connected.map((x) => x.connectorSlug).join(", ")}) supports ${op}`, { status: 404, code: "OPERATION_NOT_SUPPORTED", method: "GET", path, details: { category, entity, op, connected: connected.map((x) => x.connectorSlug) } });
+    throw new FastnApiError(`customer "${this.ref}" has ${able.length} providers connected for ${category}/${entity} (${able.map((x) => x.connectorSlug).join(", ")}); pass { provider } on the call`, { status: 409, code: "PROVIDER_AMBIGUOUS", method: "GET", path, details: { category, entity, op, providers: able.map((x) => x.connectorSlug) } });
+  }
+  /** Forgets the cached providers of one entity (or all of this customer's), so the next call reads them again. */
+  forgetProvider(category?: string, entity?: string): void {
+    if (category && entity) this.ctx.providers.delete(`${this.ref}/${category}/${entity}`);
+    else for (const k of [...this.ctx.providers.keys()]) if (k.startsWith(`${this.ref}/`)) this.ctx.providers.delete(k);
+  }
 
   private get fastnId(): string | undefined { return this.ctx.ids.get(this.ref); }
   private set fastnId(v: string | undefined) { if (v) this.ctx.ids.set(this.ref, v); else this.ctx.ids.delete(this.ref); }
@@ -154,11 +227,40 @@ export class Customer {
   }
 
   /**
-   * Starts an OAuth connection for this customer: returns the URL to send the customer to. The connection is stored
-   * on the customer org (endOrgId is filled in), never on your own org.
+   * `connect("googleCalendar")`: a setup link for the app, by connector slug. The account's widget for that app is
+   * looked up once per client (listWidgets, matched on connectorRefs), the link is created for this customer (the
+   * org is created on the fly when it does not exist yet) and `url` is where to send the customer. No widget for
+   * the app: 404 WIDGET_NOT_FOUND; several: 409 WIDGET_AMBIGUOUS (pass `widgetId`).
+   *
+   * `connect({ connectorId, ... })`: starts an OAuth connection directly (initiateOauthConnection) and returns the
+   * URL to send the customer to. The connection is stored on the customer org (endOrgId is filled in).
    */
-  async connect(input: Omit<T.InitiateOauthConnectionInput, "endOrgId">, opts?: RequestOptions): Promise<T.InitiateOauthConnectionOutput> {
-    return this.root.connections.initiateOauthConnection({ ...input, endOrgId: await this.id() }, opts);
+  connect(app: string, options?: ConnectOptions, opts?: RequestOptions): Promise<SetupLink>;
+  connect(input: Omit<T.InitiateOauthConnectionInput, "endOrgId">, opts?: RequestOptions): Promise<T.InitiateOauthConnectionOutput>;
+  async connect(appOrInput: string | Omit<T.InitiateOauthConnectionInput, "endOrgId">, a?: ConnectOptions | RequestOptions, b?: RequestOptions): Promise<SetupLink | T.InitiateOauthConnectionOutput> {
+    if (typeof appOrInput !== "string") return this.root.connections.initiateOauthConnection({ ...appOrInput, endOrgId: await this.id() }, a as RequestOptions | undefined);
+    const app = appOrInput, options = (a ?? {}) as ConnectOptions, opts = b;
+    const widget = await this.widgetFor(app, options.widgetId, opts);
+    const { widgetId: _w, connectionName, ...rest } = options;
+    const r: any = await this.root.embed.createSetupLink({ createIfMissing: true, ...rest, widgetId: widget.id, externalRef: this.ref, connectionName: connectionName ?? widget.name ?? app }, opts);
+    const d = r?.data ?? r ?? {};
+    return { ...d, setupId: d.setupId, url: d.setupUrl ?? d.url, status: d.status, widgetId: widget.id };
+  }
+
+  /** The account's widget for an app (by connector slug), or the one named by `widgetId`. */
+  private async widgetFor(app: string, widgetId?: string, opts?: RequestOptions): Promise<{ id: string; name?: string }> {
+    this.ctx.widgets ??= this.root.embed.listWidgets({} as any, opts).then((r: any) => (Array.isArray(r?.data) ? r.data : Array.isArray(r) ? r : []) as any[], (e) => { this.ctx.widgets = undefined; throw e; });
+    const widgets = await this.ctx.widgets;
+    const slugOf = (w: any): string[] => [...(Array.isArray(w.connectorRefs) ? w.connectorRefs.map((c: any) => c?.slug) : []), ...(Array.isArray(w.connectorSlugs) ? w.connectorSlugs : [])].filter((x) => typeof x === "string");
+    if (widgetId) {
+      const w = widgets.find((x) => x.id === widgetId);
+      if (!w) throw new FastnApiError(`widget ${widgetId} not found on your account`, { status: 404, code: "WIDGET_NOT_FOUND", method: "GET", path: "/v1/widgets", details: { widgetId } });
+      return w;
+    }
+    const matches = widgets.filter((w) => slugOf(w).includes(app));
+    if (matches.length === 1) return matches[0];
+    if (matches.length === 0) throw new FastnApiError(`no widget on your account connects "${app}"; create one in fastn (Widgets) or pass widgetId`, { status: 404, code: "WIDGET_NOT_FOUND", method: "GET", path: "/v1/widgets", details: { app, widgets: widgets.map((w) => ({ id: w.id, name: w.name, connectors: slugOf(w) })) } });
+    throw new FastnApiError(`${matches.length} widgets on your account connect "${app}" (${matches.map((w) => w.id).join(", ")}); pass widgetId`, { status: 409, code: "WIDGET_AMBIGUOUS", method: "GET", path: "/v1/widgets", details: { app, widgets: matches.map((w) => ({ id: w.id, name: w.name })) } });
   }
 
   /**
