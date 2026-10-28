@@ -150,8 +150,8 @@ export interface Meeting {
   [key: string]: unknown;
 }
 
-/** Search window for meetings. */
-export interface MeetingFilters { start_time: DateInput; end_time: DateInput }
+/** Search window for meetings, and words to match (title, description, attendee email). */
+export interface MeetingFilters { start_time: DateInput; end_time: DateInput; query?: string }
 
 export interface FreeSlotsInput {
   start_time: DateInput;
