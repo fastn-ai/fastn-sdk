@@ -41,7 +41,7 @@ console.log(booked.id, booked.provider, booked.data.web_url);
 await customer.calendar.reschedule(booked.id, { start_time: "2026-11-03T16:00:00Z", end_time: "2026-11-03T16:30:00Z" });
 await customer.calendar.cancel(booked.id, { idempotencyKey: "cancel-123" });
 
-const { records } = await customer.crm.contacts.find({ email: "jane@example.com" });
+const { records } = await customer.crm.contacts.find({ email: "jane@example.com" }); // one page (the search route has no cursor); list() pages
 const contact = records[0] ?? await customer.crm.contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@example.com" });
 await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.id, parent_type: "contact" });
 
