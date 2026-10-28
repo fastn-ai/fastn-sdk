@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastn-ai"
-version = "0.3.7"
+version = "0.4.0"
 description = "Fastn — The fastest way to add enterprise integrations to any AI agent or app."
 readme = "README.md"
 license = "MIT"
@@ -69,11 +69,12 @@ packages = ["fastn"]
 include = ["fastn/", "fastn/py.typed", "LICENSE", "README.md"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests/sdk", "tests/cli"]
+testpaths = ["tests/sdk", "tests/cli", "tests/platform"]
 asyncio_mode = "auto"
 markers = [
     "sdk: SDK core tests (client, config, connector, exceptions, auth, oauth)",
     "cli: CLI command and helper tests",
+    "platform: fastn.platform (platform REST API client) tests",
 ]
 
 [tool.ruff]
