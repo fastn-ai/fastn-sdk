@@ -2,9 +2,13 @@
 
 All notable changes to `@fastn-ai/sdk` are documented here.
 
-## [0.4.1] - 2026-10-28
-
 ## [Unreleased]
+
+## [0.4.2] - 2026-10-29
+
+- Fixed: `find(filters, { page_size, cursor: undefined })`, the first page of a paging helper, is no longer refused; only a cursor with a value is. The `UnifiedPage` doc says that `list` takes the cursor and `find` answers one page.
+
+## [0.4.1] - 2026-10-28
 
 - Changed: `find(filters, { page_size })` answers one page. The search route has no cursor, so a `cursor` now throws `TypeError` instead of being dropped and answering page one again; `list({ page_size, cursor })` is the paging call (`FindInput` type).
 
