@@ -63,6 +63,8 @@ const NOT_A_CUSTOMER_FIELD = new Set(["createTenant", "updateTenant"]);
  * is, so no lookup is needed and createIfMissing works for a customer that is not registered yet.
  */
 const TAKES_REF_AS_END_ORG_ID = new Set(["createEmbedToken"]);
+/** Setup-link answers carry fastn's internal customer id; the partner's own ref is the one name for the customer. */
+const withoutInternalId = (d: any): any => { if (!d || typeof d !== "object") return d; const { endOrgId: _e, end_org_id: _f, ...rest } = d; return rest; };
 
 /**
  * Everything about one of your customers, addressed by the id YOU gave fastn (the `orgId` of createTenant,
@@ -106,8 +108,8 @@ export class Customer implements ProviderResolver {
   get crm(): Crm { return (this.crmCache ??= new Crm(this)); }
   /** Setup links this customer was sent: links.get(setupId), links.cancel(setupId). */
   readonly links = {
-    get: (setupId: string, opts?: RequestOptions) => this.root.embed.getSetupLink({ id: setupId }, opts).then((r: any) => (r?.data ?? r) as NonNullable<T.GetSetupLinkOutput["data"]>),
-    cancel: (setupId: string, opts?: RequestOptions) => this.root.embed.cancelSetupLink({ id: setupId }, opts).then((r: any) => (r?.data ?? r) as NonNullable<T.CancelSetupLinkOutput["data"]>),
+    get: (setupId: string, opts?: RequestOptions) => this.root.embed.getSetupLink({ id: setupId }, opts).then((r: any) => withoutInternalId(r?.data ?? r) as Omit<NonNullable<T.GetSetupLinkOutput["data"]>, "endOrgId">),
+    cancel: (setupId: string, opts?: RequestOptions) => this.root.embed.cancelSetupLink({ id: setupId }, opts).then((r: any) => withoutInternalId(r?.data ?? r) as Omit<NonNullable<T.CancelSetupLinkOutput["data"]>, "endOrgId">),
   };
 
   /**
@@ -243,8 +245,8 @@ export class Customer implements ProviderResolver {
     const widget = await this.widgetFor(app, options.widgetId, opts);
     const { widgetId: _w, connectionName, ...rest } = options;
     const r: any = await this.root.embed.createSetupLink({ createIfMissing: true, ...rest, widgetId: widget.id, externalRef: this.ref, connectionName: connectionName ?? widget.name ?? app }, opts);
-    const d = r?.data ?? r ?? {};
-    return { ...d, setupId: d.setupId, url: d.setupUrl ?? d.url, status: d.status, widgetId: widget.id };
+    const { setupUrl, ...d } = withoutInternalId(r?.data ?? r ?? {});
+    return { ...d, setupId: d.setupId, url: setupUrl ?? d.url, status: d.status, widgetId: widget.id };
   }
 
   /** The account's widget for an app (by connector slug), or the one named by `widgetId`. */

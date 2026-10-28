@@ -74,7 +74,7 @@ describe("calendar", () => {
   it("find, reschedule and cancel map to search, PATCH and DELETE on scheduling/meeting", async () => {
     const m = fx((url) => url.includes("/providers") ? providers([gcal]) : { body: { records: [], id: "m1", provider: "googleCalendar", data: {} } });
     const c = client(m).customer("acme-1");
-    await c.calendar.find({ start_time: "2026-11-01T00:00:00Z", end_time: "2026-11-08T00:00:00Z" }, { page_size: 50 });
+    await c.calendar.find({ start_time: "2026-11-01T00:00:00Z", end_time: "2026-11-08T00:00:00Z", query: "Jane" }, { page_size: 50 });
     await c.calendar.reschedule("m1", { start_time: "2026-11-03T10:00:00Z", end_time: "2026-11-03T10:30:00Z" });
     await c.calendar.cancel("m1", { idempotencyKey: "c1" });
     const calls = m.calls.slice(1);
@@ -83,7 +83,7 @@ describe("calendar", () => {
       "PATCH /v1/unified/scheduling/meeting/m1?provider=googleCalendar",
       "DELETE /v1/unified/scheduling/meeting/m1?provider=googleCalendar",
     ]);
-    expect(calls[0].json).toEqual({ start_time: "2026-11-01T00:00:00Z", end_time: "2026-11-08T00:00:00Z" });
+    expect(calls[0].json).toEqual({ start_time: "2026-11-01T00:00:00Z", end_time: "2026-11-08T00:00:00Z", query: "Jane" });
     expect(calls[1].json).toEqual({ start_time: "2026-11-03T10:00:00Z", end_time: "2026-11-03T10:30:00Z" });
     expect(calls[2].init.headers["idempotency-key"]).toBe("c1");
   });
@@ -127,7 +127,7 @@ describe("connect(app) and links", () => {
     { id: "wgt_cal", name: "Google Calendar", slug: "google-calendar", connectorRefs: [{ slug: "googleCalendar", connectorId: "867f" }] },
     { id: "wgt_hs", name: "HubSpot", slug: "hubspot", connectorRefs: [{ slug: "hubspot", connectorId: "9036" }] },
   ];
-  const wfx = (extra: any[] = []) => fx((url, init) => url.includes("/v1/widgets") ? { body: { data: [...widgets, ...extra] } } : init.method === "POST" ? { status: 201, body: { data: { setupId: "stp_1", setupUrl: "https://connect.fastn.dev/s/stp_1", status: "pending", expiresAt: "2026-11-04T00:00:00Z" } } } : { body: { data: { setupId: "stp_1", status: "revoked" } } });
+  const wfx = (extra: any[] = []) => fx((url, init) => url.includes("/v1/widgets") ? { body: { data: [...widgets, ...extra] } } : init.method === "POST" ? { status: 201, body: { data: { setupId: "stp_1", setupUrl: "https://connect.fastn.dev/s/stp_1", status: "pending", expiresAt: "2026-11-04T00:00:00Z", endOrgId: "11111111-aaaa" } } } : { body: { data: { setupId: "stp_1", status: "revoked", endOrgId: "11111111-aaaa" } } });
   it("finds the widget by connector slug once per client and creates the setup link for the customer", async () => {
     const m = wfx();
     const fastn = client(m);
@@ -135,6 +135,7 @@ describe("connect(app) and links", () => {
     const again = await fastn.customer("acme-2").connect("hubspot", { connectionName: "Main CRM", redirectUrl: "https://app.acme.com/done", expiresInMinutes: 60 });
     expect(link).toMatchObject({ setupId: "stp_1", url: "https://connect.fastn.dev/s/stp_1", status: "pending", widgetId: "wgt_cal", expiresAt: "2026-11-04T00:00:00Z" });
     expect(again.widgetId).toBe("wgt_hs");
+    expect(link).not.toHaveProperty("endOrgId"); expect(link).not.toHaveProperty("setupUrl");   // fastn's internal customer id never reaches the partner
     const posts = m.calls.filter((x) => x.init.method === "POST");
     expect(posts[0].json).toEqual({ createIfMissing: true, widgetId: "wgt_cal", externalRef: "acme-1", connectionName: "Google Calendar" });
     expect(posts[1].json).toEqual({ createIfMissing: true, widgetId: "wgt_hs", externalRef: "acme-2", connectionName: "Main CRM", redirectUrl: "https://app.acme.com/done", expiresInMinutes: 60 });
@@ -162,6 +163,7 @@ describe("connect(app) and links", () => {
     expect((await c.links.get("stp_1")).status).toBe("revoked");
     expect((await c.links.cancel("stp_1")).setupId).toBe("stp_1");
     expect(m.calls.map((x) => `${x.init.method} ${x.url.replace("https://api.fastn.dev", "")}`)).toEqual(["GET /v1/setup-links/stp_1", "DELETE /v1/setup-links/stp_1"]);
+    expect(await c.links.get("stp_1")).not.toHaveProperty("endOrgId");                    // fastn's internal customer id is left out
   });
 });
 
