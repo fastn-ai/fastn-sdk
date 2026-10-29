@@ -781,6 +781,88 @@ See [`examples/`](examples/) for runnable scripts:
 | [`examples/sdk/`](examples/sdk/) | SDK usage — basic, async, LLM agents (OpenAI/Claude/Gemini/Bedrock), multi-tenant, flows, auth, environments, error handling |
 | [`examples/cli/`](examples/cli/) | CLI usage — all commands with examples |
 
+## Platform API client (`fastn.platform`)
+
+The fastn platform REST API for Python: every endpoint, generated from fastn's OpenAPI spec, plus a small hand-written
+layer that makes the common partner flow easy. It is the same surface as the Node SDK (`@fastn-ai/sdk`), so the
+Node guide maps 1:1: every operation is a snake_case method (`create_setup_link`) and its operationId is an alias
+(`createSetupLink`); per-call options are keyword arguments.
+
+```python
+from fastn.platform import FastnClient
+
+fastn = FastnClient(api_key=os.environ["FASTN_API_KEY"])          # https://api.fastn.dev
+
+# 1. Register a customer under your account, using YOUR id for them.
+customer = fastn.customer("acme-42")
+customer.register({"name": "Acme Dental"})                        # idempotent: returns the existing org on repeat
+
+# 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...), by connector slug.
+link = customer.connect("googleCalendar")
+print(link["url"])                                                # send this to the customer
+
+# 3. Typed methods on whatever the customer connected: the provider is picked from their connections.
+booked = customer.calendar.book(
+    {"title": "Intro call", "start_time": "2026-11-03T15:00:00Z", "end_time": "2026-11-03T15:30:00Z", "timezone": "Europe/London", "attendee_email": "jane@example.com"},
+    idempotency_key="booking-123", correlation_id="req-abc",      # safe to retry; traceable later
+)
+print(booked["id"], booked["provider"], booked["data"].get("web_url"))
+
+customer.calendar.reschedule(booked["id"], {"start_time": "2026-11-03T16:00:00Z", "end_time": "2026-11-03T16:30:00Z"})
+customer.calendar.cancel(booked["id"], idempotency_key="cancel-123")
+
+page = customer.crm.contacts.find({"email": "jane@example.com"})  # one page (the search route has no cursor); list() pages
+contact = page["records"][0] if page["records"] else customer.crm.contacts.create({"first_name": "Jane", "last_name": "Doe", "email": "jane@example.com"})
+customer.crm.notes.add({"body": "Booked an intro call", "parent_id": contact["id"], "parent_type": "contact"})
+
+# 4. What did fastn do for my request id?
+customer.call_log("req-abc")
+
+# Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
+w = customer.watch("hubspot", ["contact.created", "deal.stageChanged"], account_id=hubspot_portal_id)
+customer.watches("hubspot")                                       # [{"id", "app", "events", "status", ...}]
+customer.unwatch("hubspot")                                       # or unwatch(w["id"])
+
+customer.disconnect(account_id)                                   # the customer gets connection.revoked
+customer.rename_account(account_id, "Front desk calendar")
+customer.update({"name": "Acme Dental Ltd"})                      # or {"status": "suspended"}
+
+# Your webhook, once for the whole account.
+hook = fastn.webhooks.create({"url": "https://app.acme.com/fastn", "eventTypes": ["connection.connected", "setup_link.completed", "connector.event", "unified.event"]})
+hook["secret"]                                                    # shown once: the signing secret for parse_event
+fastn.webhooks.test(hook["id"]); fastn.webhooks.deliveries(hook["id"]); fastn.webhooks.rotate_secret(hook["id"])
+```
+
+- `customer.calendar` and `customer.crm` are the unified API with the fields named (the catalog's own names,
+  `start_time`, `first_name`, ...; `datetime` values are sent as ISO strings). Answers are `{"id", "provider", "data",
+  "warnings"?}` records or `{"records", "nextCursor", "hasMore"}` pages. No connected provider raises 404
+  `NO_CONNECTED_PROVIDER`, several raise 409 `PROVIDER_AMBIGUOUS` (pass `provider=`).
+- Every area is on the client directly with typed inputs: `fastn.orgs.list_orgs({"type": "end_org"})`,
+  `fastn.embed.get_setup_link({"id": "stp_..."})`, `fastn.call("getTenant", {"id": "..."})`, `fastn.me()`.
+  `fastn.catalog.categories()` / `.fields("crm", "contact")` / `customer.catalog.providers("crm", "contact")` read the
+  unified catalog. `customer.records("crm", "contact", provider="hubspot")` runs any catalog entity with untyped input;
+  `customer.run_action("hubspot", "updateDeal", {...})` runs a connector's own action with the customer's connection.
+- `customer.watch(app, events, account_id=, connection_id=, name=)`: events in plain words (`EVENT_ALIASES`:
+  `contact.created`, `deal.stageChanged`, ...) or as the app names them; unknown names raise 400 `EVENT_NOT_FOUND`
+  with the valid list (`customer.watchable_events(app)`). No account on the app raises 404 `CONNECTION_NOT_FOUND`,
+  several raise 409 `CONNECTION_AMBIGUOUS` (pass `connection_id=`; one of another app is 400 `CONNECTION_MISMATCH`).
+  `watches(app=None)` lists every page, `unwatch(app | id)` removes (an id that is not this customer's is 404
+  `WATCH_NOT_FOUND`); `disconnect` / `rename_account` refuse an account id that is not the customer's. HubSpot has no stage-only event: `deal.stageChanged` is `deal.propertyChange`; check `propertyName ==
+  "dealstage"` in the event.
+- Per-call options: `idempotency_key`, `correlation_id`, `customer={"ref": ...}` or `{"id": ...}`, `installation_id`,
+  `target_org`, `headers`, `extra_body`, `extra_query`, `timeout`, `retries`. `FastnClient(defaults={...})` applies
+  options to every call.
+- Errors: non-2xx raises `FastnApiError` with `status`, `code`, `message`, `details`, `request_id` and `body`; network
+  failures raise `FastnNetworkError`. GET calls are retried on 429/502/503/504 (default 2 retries, honouring
+  `Retry-After`); a write is retried only when it carries an `idempotency_key` and the platform de-duplicates that
+  operation by it (unified record writes, workflow execute).
+- Events: `parse_event(secret, request.headers, raw_body)` verifies `sha256=HMAC-SHA256(secret, "<ts>.<body>")` and
+  parses the delivery (5-minute tolerance). `paginate(fastn.events.list_events, {"status": "failed"}, page_size=100)`
+  walks `limit`/`offset` and cursor lists.
+- Regenerate after a spec refresh with `python3 scripts/generate_platform.py` (`--check` in CI). The live suite runs
+  with `LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... pytest tests/platform/live` against api.fastn-test.dev;
+  `FASTN_BASE_URL=https://api.fastn.dev LIVE_PROD=1` runs it on production.
+
 ## Development
 
 ```bash
