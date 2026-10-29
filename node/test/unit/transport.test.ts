@@ -106,6 +106,17 @@ describe("errors and retries", () => {
     const err = await client(m).orgs.listOrgs().catch((e) => e);
     expect(err.status).toBe(403); expect(err.message).toContain("Forbidden"); expect(err.isAuth).toBe(true);
   });
+  it("a 502 that carries the app's own 4xx refusal is not retried; a 502 with a 5xx providerStatus still is", async () => {
+    const refusal = { error: "Provider request failed", code: "UNIFIED_PROVIDER_ERROR", providerStatus: 400, providerError: "Missing attendee email." };
+    const m1 = mockFetch([{ status: 502, body: refusal }, { status: 502, body: refusal }, { status: 502, body: refusal }]);
+    const err = await client(m1).unified.createUnifiedRecord({ category: "scheduling", entity: "meeting", record: { title: "x" } } as any, { idempotencyKey: "k" }).catch((e) => e);
+    expect(err).toBeInstanceOf(FastnApiError); expect(err.status).toBe(502); expect(err.code).toBe("UNIFIED_PROVIDER_ERROR"); expect(err.body.providerStatus).toBe(400);
+    expect(m1.calls.length).toBe(1);
+    const upstream = { ...refusal, providerStatus: 503 };
+    const m2 = mockFetch([{ status: 502, body: upstream }, { body: { id: "1", provider: "googleCalendar", data: {} } }]);
+    expect((await client(m2).unified.createUnifiedRecord({ category: "scheduling", entity: "meeting", record: { title: "x" } } as any, { idempotencyKey: "k" })).id).toBe("1");
+    expect(m2.calls.length).toBe(2);
+  });
   it("GET retries on 503 then succeeds", async () => {
     const m = mockFetch([{ status: 503, body: { error: "down" } }, { body: { data: [] } }]);
     expect(await client(m).orgs.listOrgs()).toEqual({ data: [] });

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4] - 2026-10-30
+
+### Fixed
+
+- A `502 UNIFIED_PROVIDER_ERROR` whose `providerStatus` is 4xx (the app refused the request, for example Google's "Missing attendee email") is no longer retried; the same request can never succeed. A 502 with a 5xx `providerStatus` or no provider status is retried as before.
+
 ## [0.4.3] - 2026-10-30
 
 ### Changed

@@ -152,6 +152,17 @@ class TestErrorsAndRetries:
         assert e3.value.is_conflict and e3.value.message.endswith("HTTP 409") and e3.value.body == {"x": 1}
         assert len(m.calls) == 3
 
+    def test_a_502_with_the_apps_own_4xx_refusal_is_not_retried_but_a_5xx_provider_status_is(self, mock: Callable[..., Mock], no_sleep: List[float]) -> None:
+        refusal = {"error": "Provider request failed", "code": "UNIFIED_PROVIDER_ERROR", "providerStatus": 400, "providerError": "Missing attendee email."}
+        m = mock([{"status": 502, "body": refusal}, {"status": 502, "body": refusal}, {"status": 502, "body": refusal}])
+        with pytest.raises(FastnApiError) as ei:
+            client().unified.create_unified_record({"category": "scheduling", "entity": "meeting", "record": {"title": "x"}}, idempotency_key="k")
+        assert ei.value.status == 502 and ei.value.code == "UNIFIED_PROVIDER_ERROR" and ei.value.body["providerStatus"] == 400
+        assert len(m.calls) == 1 and no_sleep == []
+        m2 = mock([{"status": 502, "body": {**refusal, "providerStatus": 503}}, {"body": {"id": "1", "provider": "googleCalendar", "data": {}}}])
+        assert client().unified.create_unified_record({"category": "scheduling", "entity": "meeting", "record": {"title": "x"}}, idempotency_key="k")["id"] == "1"
+        assert len(m2.calls) == 2
+
     def test_get_retries_on_503_then_succeeds(self, mock: Callable[..., Mock], no_sleep: List[float]) -> None:
         m = mock([{"status": 503, "body": {"error": "down"}}, {"body": {"data": []}}])
         assert client().orgs.list_orgs() == {"data": []}

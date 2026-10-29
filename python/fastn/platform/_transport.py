@@ -307,7 +307,7 @@ class HttpxTransport:
             parsed = parse_loose(text, res.headers.get("content-type", ""))
             if 200 <= res.status_code < 300:
                 return None if text == "" else parsed
-            if attempt < max_retries and res.status_code in RETRY_STATUS:
+            if attempt < max_retries and res.status_code in RETRY_STATUS and not _http.is_provider_refusal(parsed):
                 _http.sleep(retry_delay(res.headers, attempt))
                 attempt += 1
                 continue

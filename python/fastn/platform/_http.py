@@ -94,3 +94,16 @@ def error_info(body: Any, fallback: str = "") -> Tuple[str, Optional[Any], Any, 
         return message, code, details, has_details
     text = fallback or (body if isinstance(body, str) else ("" if body is None else str(body)))
     return str(text)[:300], None, None, False
+
+
+def is_provider_refusal(body: Any) -> bool:
+    """A 502 that carries the app's own refusal (UNIFIED_PROVIDER_ERROR with a 4xx providerStatus) is final: the same
+    request can never succeed, so it is not retried."""
+    if not isinstance(body, dict) or body.get("code") != "UNIFIED_PROVIDER_ERROR":
+        return False
+    raw = body.get("providerStatus")
+    try:
+        ps = int(raw) if raw is not None else -1
+    except (TypeError, ValueError):
+        return False
+    return 400 <= ps < 500

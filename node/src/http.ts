@@ -66,3 +66,11 @@ export function errorInfo(body: unknown, fallback = ""): { message: string; code
   }
   return { message: String(fallback || body || "").slice(0, 300) };
 }
+
+/** A 502 that carries the app's own refusal (UNIFIED_PROVIDER_ERROR with a 4xx providerStatus) is final: the same request can never succeed, so it is not retried. */
+export function isProviderRefusal(body: unknown): boolean {
+  if (!body || typeof body !== "object") return false;
+  const b = body as { code?: unknown; providerStatus?: unknown };
+  const ps = typeof b.providerStatus === "number" ? b.providerStatus : Number(b.providerStatus);
+  return b.code === "UNIFIED_PROVIDER_ERROR" && Number.isFinite(ps) && ps >= 400 && ps < 500;
+}
