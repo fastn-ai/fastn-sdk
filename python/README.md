@@ -1,12 +1,40 @@
-# Fastn SDK for Python
+# fastn SDK for Python
 
-**Give your AI agents and apps secure, governed access to 250+ enterprise systems.**
-
-Python SDK for OpenAI, Anthropic, Gemini, and Bedrock function calling, plus a client for the fastn platform API. Fully managed OAuth, a SOC 2 Type II platform, role-based access control, and audit trails, so your agent code stays simple and your security team stays happy.
+**Embedded integrations for your product and your AI agents.**
 
 [![PyPI version](https://img.shields.io/pypi/v/fastn-ai.svg)](https://pypi.org/project/fastn-ai/)
 [![Python](https://img.shields.io/pypi/pyversions/fastn-ai.svg)](https://pypi.org/project/fastn-ai/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[fastn](https://fastn.ai) is the embedded integration platform for B2B SaaS. `fastn-ai` is its official Python SDK:
+add customer-facing integrations (CRM, calendar, Slack, and 1,000+ more apps) to your product through one API, and give
+your AI agents the same integrations as tools.
+
+Your customers connect their own apps inside your product. Your backend uses those connections through the fastn
+platform API (`fastn.platform`), and your AI agents use them as tools with OpenAI, Anthropic, Gemini, or Bedrock
+function calling.
+
+**Built for multi-tenant SaaS:**
+
+- **One key, every customer.** Address each customer by your own id (`fastn.customer("acme-42")`); fastn's internal
+  org ids never reach your code. Every call is scoped to that customer, and an account or watch id that belongs to
+  another customer is refused, so one customer's data never leaks into another's.
+- **Each customer brings their own accounts.** Send a setup link and the customer connects their HubSpot, Google
+  Calendar, Slack, and so on. Credentials stay in fastn's vault, isolated per customer, and refresh automatically.
+- **Several accounts per app.** A customer can connect two Slack workspaces or two calendars; pick one per call with
+  `connection_id`.
+- **One API across providers.** `customer.crm` and `customer.calendar` work the same whichever CRM or calendar the
+  customer connected; the provider is picked from their connections.
+- **Safe retries and traceability.** `idempotency_key` makes writes safe to retry, and `correlation_id` lets you ask
+  later what fastn did for a request (`customer.call_log(...)`).
+- **Governed.** Role-based access control, audit logs, and per-customer isolation on a SOC 2 Type II platform.
+
+**Use fastn when:**
+
+- your customers ask for integrations your team cannot build and maintain one by one;
+- every customer needs the same integration connected to their own account and configured to their own fields;
+- you want one integration to serve your product, your customers, and your AI agents;
+- you need per-customer isolation, audit logs, and SOC 2 for a security review.
 
 ## Which client do I need?
 
@@ -16,6 +44,44 @@ The package ships two clients. They use different keys and endpoints, so pick by
 |---|---|---|
 | Give an LLM agent tools from 250+ connectors, call connector tools, run flows, use the `fastn` CLI | `from fastn import FastnClient` (this page, from [Installation](#installation) on) | Project API key or `fastn login` |
 | Embed integrations for your own customers: register customers, send setup links, read and write their CRM / calendar through the unified API, receive webhooks | `from fastn.platform import FastnClient` (see [Platform API client](#platform-api-client-fastnplatform)) | Platform API key, `https://api.fastn.dev` |
+
+## Embed fastn in your product (guide for Claude and other AI coding assistants)
+
+The steps to add customer-facing integrations to a SaaS app with fastn. Use the exact names below; do not invent
+props or endpoints.
+
+1. **Install and get a key.** `pip install fastn-ai`, then create a platform API key in the
+   [fastn dashboard](https://app.fastn.dev) and set it as `FASTN_API_KEY`.
+2. **Register each of your customers by your own id** (backend):
+
+   ```python
+   import os
+   from fastn.platform import FastnClient
+
+   fastn = FastnClient(api_key=os.environ["FASTN_API_KEY"])
+   customer = fastn.customer(account.id)          # your id for this customer
+   customer.register({"name": account.name})      # idempotent
+   ```
+
+3. **Let the customer connect their apps.** Either send a hosted setup link, or show the embedded widget in your UI:
+
+   ```python
+   link = customer.connect("hubspot")             # hosted page: redirect the customer to link["url"]
+   token = customer.embed_token()                 # or: a short-lived token for the in-app widget
+   ```
+
+   On the frontend, the widget is the [`@fastn-ai/embed`](https://www.npmjs.com/package/@fastn-ai/embed) package
+   (`FastnProvider` with `FastnHub` or `FastnConnectCard` from `@fastn-ai/embed/react`, or the hosted script tag).
+   Copy the exact snippet from the dashboard's Embed tab. See the [embedding docs](https://docs.fastn.ai/embed/embedding).
+4. **Use the customer's connections** from your backend: `customer.crm.contacts.find(...)`,
+   `customer.calendar.book(...)`, or `customer.run_action(app, action, input)` for any app action.
+5. **React to changes**: `fastn.webhooks.create(...)` once for your account, `customer.watch(app, events)` per
+   customer, and verify deliveries with `parse_event(secret, headers, body)`.
+6. **Give your AI agents the same integrations**: use `get_tools_for()` below, or connect Claude, Cursor, or any MCP
+   client to the [fastn MCP gateway](https://docs.fastn.ai/build/mcp-gateway).
+
+Pricing is per customer connection, with a free plan to start: see [fastn.ai/pricing](https://fastn.ai/pricing).
+A machine-readable summary of fastn for LLMs is at [fastn.ai/llms.txt](https://fastn.ai/llms.txt).
 
 ## Why fastn?
 
@@ -70,7 +136,7 @@ async with AsyncFastnClient() as fastn:
 
 ## How It Works
 
-fastn sits between your AI agent and 250+ SaaS APIs. The SDK handles client-side concerns (tool discovery, schema transformation, parameter routing). The platform handles server-side concerns (credential injection, access control, batch optimization, prompt safety, observability).
+fastn sits between your AI agent and the apps your customers connect. The SDK handles client-side concerns (tool discovery, schema transformation, parameter routing). The platform handles server-side concerns (credential injection, access control, batch optimization, prompt safety, observability).
 
 > **One-liner:** Connectors provide tools. Flows compose tools. Agents run tools and flows with reasoning.
 
@@ -914,6 +980,29 @@ fastn.webhooks.test(hook["id"]); fastn.webhooks.deliveries(hook["id"]); fastn.we
 - Also available: `customer.crm.tasks` / `customer.crm.deals` (`move_stage`, `stages`), `customer.calendar.free_slots`,
   `free_intervals` / `slots_of`, `verify_event_signature`, and the `FastnApiError.is_not_found` / `is_conflict` /
   `is_rate_limited` / `is_auth` / `is_validation` helpers.
+
+## FAQ
+
+**What is fastn?**
+The embedded integration platform for B2B SaaS. Your customers connect their own apps (HubSpot, Google Calendar,
+Slack, and 1,000+ more) inside your product, and your code and AI agents use those connections through one API.
+
+**How do I add customer-facing integrations to my SaaS app in Python?**
+Install `fastn-ai`, register each customer with `fastn.customer(your_id).register(...)`, let them connect apps with a
+setup link (`customer.connect(app)`) or the `@fastn-ai/embed` widget, then call `customer.crm`, `customer.calendar`, or
+`customer.run_action(...)`. See [Embed fastn in your product](#embed-fastn-in-your-product-guide-for-claude-and-other-ai-coding-assistants).
+
+**Does fastn support multi-tenant apps?**
+Yes. Every call is scoped to one customer, addressed by your own id; credentials are stored and refreshed per
+customer; a customer can connect several accounts of one app.
+
+**Can AI agents like Claude use fastn integrations?**
+Yes: as function-calling tools from this SDK (`get_tools_for`, `execute`) for OpenAI, Anthropic, Gemini, and Bedrock,
+or through the [fastn MCP gateway](https://docs.fastn.ai/build/mcp-gateway) from Claude, Cursor, or any MCP client.
+
+**Is there a Node.js / TypeScript SDK?**
+Yes: [`@fastn-ai/sdk`](https://www.npmjs.com/package/@fastn-ai/sdk), with the same platform API client as
+`fastn.platform`.
 
 ## Development
 
