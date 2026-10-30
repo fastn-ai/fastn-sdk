@@ -1,4 +1,4 @@
-"""CLI command: fastn skill — list skills agents can load."""
+"""CLI command: fastn skill - list skills agents can load."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from fastn._constants import LIST_SKILLS_QUERY
 
 @cli.command()
 def skill():
-    """List skills in this project — tools and knowledge that agents load to handle tasks."""
+    """List skills in this project - tools and knowledge that agents load to handle tasks."""
     config = load_config()
     if not config.auth_token and not config.api_key:
         raise click.ClickException("Not authenticated. Run `fastn login` first.")

@@ -10,7 +10,6 @@ import click
 from fastn.cli import (
     connector,
     API_BASE_URL,
-    COMMUNITY_CONNECTOR_ID,
     SOURCE_COMMUNITY,
     SOURCE_ORG,
     SOURCE_WORKSPACE,
@@ -60,13 +59,13 @@ def _save_snapshot_and_generate_package_stubs(registry: dict) -> None:
     package_dir = sdk_root / "python"
 
     if not snapshot_path.parent.exists():
-        click.echo("  (Skipping package stub generation — not in SDK repo)")
+        click.echo("  (Skipping package stub generation - not in SDK repo)")
         return
 
     try:
         from generator.generate import StubGenerator, _sanitize_identifier
     except ImportError:
-        click.echo("  (Skipping package stub generation — generator not found)")
+        click.echo("  (Skipping package stub generation - generator not found)")
         return
 
     # Load existing snapshot for comparison
@@ -86,7 +85,7 @@ def _save_snapshot_and_generate_package_stubs(registry: dict) -> None:
         result = None
 
     if result is not None and not result.changes:
-        click.echo("  Package stubs up to date — no changes detected.")
+        click.echo("  Package stubs up to date - no changes detected.")
         return
 
     # Show what changed
@@ -112,6 +111,16 @@ def _save_snapshot_and_generate_package_stubs(registry: dict) -> None:
     all_names = [_sanitize_identifier(k) for k in registry.get("connectors", {}).keys()]
     generator = StubGenerator("python")
     files = generator.generate_all(registry, all_names, str(package_dir))
+
+    # The shipped fastn/__init__.pyi also types the client API, which the
+    # generator's index template does not: rebuild it from the connector stubs.
+    import subprocess
+    import sys
+
+    subprocess.run(
+        [sys.executable, str(package_dir / "scripts" / "generate_client_stub.py")],
+        check=True,
+    )
 
     with_tools = sum(1 for c in registry.get("connectors", {}).values() if c.get("tools"))
     click.echo(f"\u2713 Generated {len(files)} package stubs ({with_tools} with typed methods)")
@@ -257,7 +266,7 @@ def add(connector_names: tuple) -> None:
 
         if connector_name not in reg_connectors:
             click.echo(f"  \u2717 Connector '{connector_name}' not found in registry.")
-            click.echo(f"    Run `fastn connector sync` to refresh, then try again.")
+            click.echo("    Run `fastn connector sync` to refresh, then try again.")
             continue
 
         connector_data = reg_connectors[connector_name]
@@ -613,7 +622,7 @@ def _show_active_connectors(
     click.echo()
     app_url = _workspace_url(workspace_id)
     click.echo(f"  {total_connectors} connectors active. Manage at: {app_url}")
-    click.echo(f"  Run `fastn connector add <name>` to fetch full tool schemas.")
+    click.echo("  Run `fastn connector add <name>` to fetch full tool schemas.")
     click.echo()
 
 

@@ -137,7 +137,7 @@ def run(ctx: click.Context, connector_name: str, tool_name: Optional[str], tenan
     params = _parse_extra_args(ctx.args)
 
     # If no args were passed and there are fields, prompt interactively
-    # (skip prompting when all fields are optional — just run with defaults)
+    # (skip prompting when all fields are optional - just run with defaults)
     if not params and fields:
         desc = tool_info.get("description", "")
         click.echo()
@@ -147,10 +147,10 @@ def run(ctx: click.Context, connector_name: str, tool_name: Optional[str], tenan
         if required_fields:
             params = _prompt_for_params(fields, required_fields)
         else:
-            click.echo("  (all fields optional — running with defaults)")
+            click.echo("  (all fields optional - running with defaults)")
             params = {}
 
-    # Build execute payload — dynamically route params based on the schema
+    # Build execute payload - dynamically route params based on the schema
     from fastn.client import _build_params_from_schema
 
     workspace_id = config.resolve_project_id()
@@ -171,7 +171,7 @@ def run(ctx: click.Context, connector_name: str, tool_name: Optional[str], tenan
     if effective_tenant:
         config.tenant_id = effective_tenant
 
-    # Refresh token right before the call (not earlier — interactive
+    # Refresh token right before the call (not earlier - interactive
     # prompting above can take long enough for the token to expire).
     _ensure_fresh_token(config)
     headers = config.get_headers()
@@ -183,7 +183,7 @@ def run(ctx: click.Context, connector_name: str, tool_name: Optional[str], tenan
     _handle_execute_error(resp, f"{connector_name}.{tool_name}", workspace_id, config=config)
 
     data = resp.json()
-    # Unwrap: API returns {body, statusCode, rawBody} — show the body
+    # Unwrap: API returns {body, statusCode, rawBody} - show the body
     if isinstance(data, dict) and "body" in data:
         result = data["body"]
     else:

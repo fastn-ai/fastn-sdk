@@ -1,4 +1,4 @@
-"""Authentication commands — login, logout, whoami."""
+"""Authentication commands - login, logout, whoami."""
 
 from __future__ import annotations
 

@@ -2,41 +2,62 @@
 
 **Give your AI agents and apps secure, governed access to 250+ enterprise systems.**
 
-Production-ready Python SDK for OpenAI, Anthropic, Gemini, and Bedrock function calling. Fully managed OAuth 2.1, SOC 2 certified platform, role-based access control, audit trails, and sub-second execution — so your agent code stays simple and your security team stays happy.
+Python SDK for OpenAI, Anthropic, Gemini, and Bedrock function calling, plus a client for the fastn platform API. Fully managed OAuth, a SOC 2 Type II platform, role-based access control, and audit trails, so your agent code stays simple and your security team stays happy.
 
 [![PyPI version](https://img.shields.io/pypi/v/fastn-ai.svg)](https://pypi.org/project/fastn-ai/)
 [![Python](https://img.shields.io/pypi/pyversions/fastn-ai.svg)](https://pypi.org/project/fastn-ai/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-## Why Fastn?
+## Which client do I need?
 
-| Problem | Fastn Solution |
+The package ships two clients. They use different keys and endpoints, so pick by what you are building:
+
+| You want to... | Use | Key |
+|---|---|---|
+| Give an LLM agent tools from 250+ connectors, call connector tools, run flows, use the `fastn` CLI | `from fastn import FastnClient` (this page, from [Installation](#installation) on) | Project API key or `fastn login` |
+| Embed integrations for your own customers: register customers, send setup links, read and write their CRM / calendar through the unified API, receive webhooks | `from fastn.platform import FastnClient` (see [Platform API client](#platform-api-client-fastnplatform)) | Platform API key, `https://api.fastn.dev` |
+
+## Why fastn?
+
+| Problem | fastn Solution |
 |---------|---------------|
-| Agents receive all tool schemas, burning tokens and increasing hallucination | `get_tools_for(prompt, limit=5)` returns only the most relevant tools — 250+ connectors, but only 5 reach the LLM |
-| API schemas are deeply nested, wasting context on structure | SDK auto-unwraps schemas for LLMs and re-wraps for execution — flat params in, correct API structure out |
-| Each SaaS API has its own OAuth flow, token refresh, and credential storage | Fully managed OAuth 2.1 vault — acquisition, auto-refresh, tenant isolation. No token management code. |
-| Security and compliance are afterthoughts in most agent tooling | SOC 2 certified platform, role-based access control, audit trails, PII filtering |
+| Agents receive all tool schemas, burning tokens and increasing hallucination | `get_tools_for(prompt, limit=5)` returns only the most relevant tools: 250+ connectors, but only 5 reach the LLM |
+| API schemas are deeply nested, wasting context on structure | SDK auto-unwraps schemas for LLMs and re-wraps for execution: flat params in, correct API structure out |
+| Each SaaS API has its own OAuth flow, token refresh, and credential storage | Fully managed OAuth vault: acquisition, auto-refresh, tenant isolation. No token management code. |
+| Security and compliance are afterthoughts in most agent tooling | SOC 2 Type II platform, role-based access control, audit trails |
 | LLM agents need tool schemas in provider-specific formats | `get_tools_for("Send a Slack message", format="openai")` returns ready-to-use schemas for OpenAI, Anthropic, Gemini, Bedrock |
 | Managing connections per customer in multi-tenant apps is complex | First-class `tenant_id` and `connection_id` support at every level |
-| Building automation workflows requires stitching APIs together | `fastn.flows.create("When a PR is opened, post to Slack")` handles orchestration |
+| Building automation workflows requires stitching APIs together | `fastn.flows.generate("When a PR is opened, post to Slack")` builds the flow for you |
 
 ## Installation
 
 ```bash
-pip install fastn-ai
+pip install "fastn-ai[cli]"   # SDK + the fastn CLI (recommended)
+pip install fastn-ai          # SDK only, no CLI
 ```
 
-Installs the SDK, CLI, and type stubs for 250+ connectors. Requires Python 3.8+.
-IDE autocomplete works immediately — no extra setup needed.
+Requires Python 3.8+. The package includes type stubs for 250+ connectors, so IDE autocomplete works out of the box. The `fastn` command needs the `[cli]` extra.
 
 ## Quick Start
+
+Log in once and add the connectors you want to call. This writes your credentials and the connector tool schemas to `.fastn/` in the current directory:
+
+```bash
+fastn login                  # opens the browser, then pick a project
+fastn connector sync         # fetch the connector registry
+fastn connector add slack    # fetch Slack's tool schemas
+```
+
+Then call the connector from Python:
 
 ```python
 from fastn import FastnClient
 
-fastn = FastnClient()
-fastn.slack.send_message(channel="general", text="Hello from Fastn!")
+fastn = FastnClient()        # reads .fastn/config.json
+fastn.slack.send_message(channel="general", text="Hello from fastn!")
 ```
+
+Calling a connector that has not been added raises `ConnectorNotFoundError`. On a server, pass `api_key=` and `project_id=` (or set `FASTN_API_KEY` and `FASTN_PROJECT_ID`) instead of `fastn login`. [`get_tools_for()`](#llm-agent-integration) needs no local registry.
 
 Async:
 
@@ -49,7 +70,7 @@ async with AsyncFastnClient() as fastn:
 
 ## How It Works
 
-Fastn sits between your AI agent and 250+ SaaS APIs. The SDK handles client-side concerns (tool discovery, schema transformation, parameter routing). The platform handles server-side concerns (credential injection, access control, batch optimization, prompt safety, observability).
+fastn sits between your AI agent and 250+ SaaS APIs. The SDK handles client-side concerns (tool discovery, schema transformation, parameter routing). The platform handles server-side concerns (credential injection, access control, batch optimization, prompt safety, observability).
 
 > **One-liner:** Connectors provide tools. Flows compose tools. Agents run tools and flows with reasoning.
 
@@ -58,42 +79,41 @@ Fastn sits between your AI agent and 250+ SaaS APIs. The SDK handles client-side
 | Capability | What It Does | Where It Runs |
 |-----------|-------------|---------------|
 | **Dynamic tool filtering** | Returns only tools that match the current prompt or intent | Platform |
-| **Context optimization** | Composes tools/skills, filters schema I/O, strips PII — minimizes tokens and hallucination | Platform + SDK |
+| **Context optimization** | Composes tools/skills and filters schema I/O to minimize tokens and hallucination | Platform + SDK |
 | **Schema transformer** | Flattens nested API schemas for LLMs, re-wraps for execution | SDK |
 | **Intent routing** | Determines which tool to use based on agent request | Platform + SDK |
-| **Managed OAuth 2.1** | Full token lifecycle — acquisition, refresh, revocation, tenant isolation | Platform |
-| **Governed access** | RBAC, audit trails, and enterprise compliance controls (SOC 2 certified) | Platform |
+| **Managed OAuth** | Full token lifecycle: acquisition, refresh, revocation, tenant isolation | Platform |
+| **Governed access** | RBAC, audit trails, and enterprise compliance controls (SOC 2 Type II) | Platform |
 | **Batch optimizer** | Groups similar calls to reduce cost and time | Platform |
 | **Prompt safety** | Blocks unsafe or injected tool commands | Platform |
 | **Observability layer** | Tracks cost, latency, and errors per tool call | Platform + SDK CLI |
 
 ### Dynamic Tool Filtering
 
-`get_tools_for(prompt)` sends a semantic search to the platform, which matches the prompt against the full connector registry and returns only the top N tools (default: 5). This reduces tool context from ~125K tokens to ~2,500 tokens — fewer tools also means fewer hallucinated tool calls.
+`get_tools_for(prompt)` sends a semantic search to the platform, which matches the prompt against the full connector registry and returns only the top N tools (default: 5). Sending a handful of tools instead of hundreds keeps the tool context small, and fewer tools also means fewer hallucinated tool calls.
 
 ```python
-# Semantic discovery — only the most relevant tools reach the LLM
+# Semantic discovery: only the most relevant tools reach the LLM
 tools = fastn.get_tools_for("Send a Slack message", format="openai", limit=5)
 
-# Direct lookup — bypass semantic search when you know the connector name
+# Direct lookup: bypass semantic search when you know the connector name
 tools = fastn.get_tools_for("slack tools", connector="slack", format="openai")
 ```
 
 ### Context Optimization
 
-Fastn minimizes what reaches the LLM — fewer tokens, less hallucination, better compliance:
+fastn minimizes what reaches the LLM: fewer tokens, less hallucination, better compliance.
 
-- **Tool and skill composition** — the platform composes tools and skills into efficient chains, so agents receive focused context instead of raw API surface area
-- **Schema I/O filtering** — strips unnecessary fields from tool input and output schemas before they reach the LLM, reducing token cost
-- **PII filtering** — removes personally identifiable information from context for security and compliance
-- **Schema transformation** — the SDK flattens nested API wrappers (`body`, `param`) for the LLM and re-wraps them for execution:
+- **Tool and skill composition**: the platform composes tools and skills into efficient chains, so agents receive focused context instead of raw API surface area
+- **Schema I/O filtering**: strips unnecessary fields from tool input and output schemas before they reach the LLM, reducing token cost
+- **Schema transformation**: the SDK flattens nested API wrappers (`body`, `param`) for the LLM and re-wraps them for execution:
 
 ```
 What the API expects:   {"body": {"channel": "#general", "text": "hello"}}
 What the LLM sees:      {"channel": "#general", "text": "hello"}
 ```
 
-Combined with [Dynamic Tool Filtering](#dynamic-tool-filtering), this reduces agent context from ~125K tokens to a focused, compliant payload.
+Combined with [Dynamic Tool Filtering](#dynamic-tool-filtering), the agent gets a focused payload instead of the full API surface.
 
 ### Architecture
 
@@ -130,7 +150,7 @@ Combined with [Dynamic Tool Filtering](#dynamic-tool-filtering), this reduces ag
 | **Tool** | A callable action within a connector, exposed to agents/LLMs. The callable unit in MCP. | `slack.send_message`, `jira.create_issue` |
 | **Flow** | Orchestration of multiple tools with logic, branching, retries, scheduling. | "When a Jira ticket is created, post to Slack" |
 | **Connection** | An authenticated link between a connector and a specific account. | OAuth connection to a Slack workspace |
-| **Tenant** | A customer, organization, or team in a multi-tenant app. | `tenant_id: "acme-corp"` |
+| **Tenant** | One of your customers (an organization or team) in a multi-tenant app. The platform API calls this a *customer*. | `tenant_id: "acme-corp"` |
 | **Skill** | A reusable agent configuration stored in a project. | `fastn.skills.list()` |
 | **Agent** | A goal-driven executor that calls tools/flows with reasoning. | `fastn agent "Send hello to Slack"` |
 | **Project** | A container that groups connectors, flows, and tenants. | `project_id: "proj_xyz"` |
@@ -140,9 +160,9 @@ Combined with [Dynamic Tool Filtering](#dynamic-tool-filtering), this reduces ag
 
 | Package | What It Does | Language | Status |
 |---------|-------------|----------|--------|
-| [`fastn-ai`](https://pypi.org/project/fastn-ai/) | Backend SDK — triggers connectors and flows, discovers tools, executes tool calls | Python | Available |
-| `@fastn/sdk` | Backend SDK — same capabilities as the Python SDK | TypeScript | Coming soon |
-| [`fastn-connect`](https://github.com/fastnai/fastn-connect) | Frontend widget — captures OAuth credentials and connector config for the platform | JavaScript | Available |
+| [`fastn-ai`](https://pypi.org/project/fastn-ai/) | Backend SDK: tool discovery and execution for agents, flows, CLI, and the platform API client (`fastn.platform`) | Python | Available |
+| [`@fastn-ai/sdk`](https://www.npmjs.com/package/@fastn-ai/sdk) | Backend SDK: the platform API client (same surface as `fastn.platform`) and workspace tool calls. No CLI, flows, or `get_tools_for` | TypeScript | Available |
+| [`@fastn-ai/embed`](https://www.npmjs.com/package/@fastn-ai/embed) | Frontend widget: lets your end users connect their apps (OAuth and connector config) inside your product | JavaScript / React | Available |
 
 ## Configuration
 
@@ -167,11 +187,11 @@ fastn = FastnClient(api_key="your-api-key", project_id="your-project-id")
 
 ## LLM Agent Integration
 
-Fastn handles the three hardest parts of giving LLMs access to tools:
+fastn handles the three hardest parts of giving LLMs access to tools:
 
-1. **Discovery** — `get_tools_for(prompt)` semantically matches tools from 250+ connectors. Only the top N reach the LLM, keeping context small and hallucination low.
-2. **Schema translation** — Schemas are flattened for LLM consumption and formatted for your provider (OpenAI, Anthropic, Gemini, Bedrock).
-3. **Execution** — `execute(tool, params)` routes through the platform, which handles credential injection, parameter re-wrapping, retries, and logging.
+1. **Discovery**: `get_tools_for(prompt)` semantically matches tools from 250+ connectors. Only the top N reach the LLM, keeping context small and hallucination low.
+2. **Schema translation**: schemas are flattened for LLM consumption and formatted for your provider (OpenAI, Anthropic, Gemini, Bedrock).
+3. **Execution**: `execute(tool, params)` routes through the platform, which handles credential injection, parameter re-wrapping, retries, and logging.
 
 ```python
 import json
@@ -180,7 +200,7 @@ from fastn import FastnClient
 
 fastn = FastnClient()
 
-# 1. Describe what you need — Fastn discovers the right tools
+# 1. Describe what you need and fastn discovers the right tools
 tools = fastn.get_tools_for(
     "Send a message on Slack and create a Jira ticket",
     format="openai",   # also: anthropic, gemini, bedrock, raw
@@ -196,7 +216,7 @@ response = openai.chat.completions.create(
 # 3. The LLM returns a tool_call when it wants to use a tool
 tool_call = response.choices[0].message.tool_calls[0]
 
-# 4. Execute the tool call through Fastn
+# 4. Execute the tool call through fastn
 result = fastn.execute(
     tool=tool_call.function.name,                      # e.g. "send_message"
     params=json.loads(tool_call.function.arguments),    # e.g. {"channel": "general", "text": "hello"}
@@ -212,7 +232,7 @@ print(result)
 | `"anthropic"` | Anthropic Claude | `get_tools_for("Create a Jira issue", format="anthropic")` |
 | `"gemini"` | Google Gemini / Vertex AI | `get_tools_for("List GitHub repos", format="gemini")` |
 | `"bedrock"` | AWS Bedrock Converse API | `get_tools_for("Send an email", format="bedrock")` |
-| `"raw"` | Any (raw Fastn schemas) | `get_tools_for("Notify team", format="raw")` |
+| `"raw"` | Any (raw fastn schemas) | `get_tools_for("Notify team", format="raw")` |
 
 ### Anthropic Claude Example
 
@@ -250,7 +270,10 @@ client = genai.Client()
 response = client.models.generate_content(
     model="gemini-2.0-flash",
     contents="Send a greeting to #general on Slack",
-    config=genai.types.GenerateContentConfig(tools=tools),
+    # format="gemini" returns function declarations; wrap them in a Tool
+    config=genai.types.GenerateContentConfig(
+        tools=[genai.types.Tool(function_declarations=tools)],
+    ),
 )
 
 for part in response.candidates[0].content.parts:
@@ -290,7 +313,7 @@ For local registry lookup without an API call, pass connector names:
 # Single connector
 tools = fastn.get_tools_for("slack tools", connector="slack", format="openai")
 
-# Multiple connectors — limit applies to the total across all
+# Multiple connectors: limit applies to the total across all
 tools = fastn.get_tools_for(
     "project tools",
     connector=["slack", "jira", "github"],
@@ -325,61 +348,55 @@ print(tool["inputSchema"])
 
 ## Flows
 
-Flows chain tools across multiple connectors. Describe the workflow in natural language and Fastn generates, schedules, and executes it.
+Flows (called *workflows* in the fastn dashboard) chain tools across connectors. Describe one in plain English and the flow builder agent generates it; then deploy it and run it by name.
 
 ```python
-# Create a flow from a natural language description
-result = fastn.flows.create(
-    prompt="When a Jira ticket is created, post a summary to #engineering on Slack"
+import uuid
+
+# Generate a flow with the flow builder agent. It is a conversation: reuse the
+# session id to answer its follow-up questions.
+session = str(uuid.uuid4())
+reply = fastn.flows.generate(
+    "When a Jira ticket is created, post a summary to #engineering on Slack",
+    session_id=session,
 )
-print(result["flow_id"])  # "flow_abc123"
+print(reply)  # the agent's answer: the flow it built, or questions for you
+fastn.flows.generate("Use the ENG project and the #engineering channel", session_id=session)
 
-# If Fastn needs more info, it returns questions
-if "questions" in result:
-    result = fastn.flows.create(
-        prompt="When a Jira ticket is created, post to Slack",
-        answers={"channel": "#engineering", "jira_project": "ENG"},
-    )
-
-# List all flows
+# List flows (status filter is case-insensitive: "DEPLOYED", "DRAFT", ...)
 flows = fastn.flows.list()
-active_flows = fastn.flows.list(status="active")
+deployed = fastn.flows.list(status="DEPLOYED")
 
-# Run a flow manually
-run = fastn.flows.run(flow_id="flow_abc123")
-print(run["run_id"])  # "run_xyz"
+# Inspect a flow and the input it expects
+flow = fastn.flows.get("jira_to_slack")
+schema = fastn.flows.schema("jira_to_slack")   # {"fields": [...], "schema": {...}}
 
-# Check run status
-status = fastn.flows.get_run(run_id="run_xyz")
-print(status["status"])  # "completed", "running", "failed"
+# Deploy, then run by flow name
+fastn.flows.deploy("jira_to_slack", stage="LIVE", comment="first release")
+result = fastn.flows.run("jira_to_slack", input_data={"ticket": "ENG-42"}, stage="LIVE")
 
-# Update a flow (schedule, enable/disable)
-fastn.flows.update(
-    flow_id="flow_abc123",
-    schedule="0 9 * * MON-FRI",  # Every weekday at 9am
-    enabled=True,
-)
-
-# Delete a flow
-fastn.flows.delete(flow_id="flow_abc123")
+# Update the schedule or enable/disable (by flow id), and delete
+flow_id = flows[0]["flow_id"]
+fastn.flows.update(flow_id, schedule="0 9 * * MON-FRI", enabled=True)
+fastn.flows.delete(flow_id)          # also accepts a flow name
 ```
 
 ## Authentication
 
-Fastn supports three authentication types at different levels. The SDK triggers connectors and flows — the SOC 2 certified platform auto-manages OAuth 2.1 token refresh and credential injection.
+fastn supports three authentication types at different levels. The SDK triggers connectors and flows; the platform manages OAuth token refresh and credential injection.
 
 | Auth Type | Who Authenticates | To What | How | Expiry |
 |-----------|------------------|---------|-----|--------|
-| **API Key** | Your app | Fastn platform | `x-fastn-api-key` header | Never |
-| **OAuth Token** | You (developer) | Fastn platform | `Authorization: Bearer` JWT | Auto-refreshed |
+| **API Key** | Your app | fastn platform | `x-fastn-api-key` header | Never |
+| **OAuth Token** | You (developer) | fastn platform | `Authorization: Bearer` JWT | Auto-refreshed |
 | **Connection** | Your end-users | External services (Slack, Jira...) | OAuth vault + `connection_id` | Platform-managed |
 
-### 1. API Key — App-to-Platform
+### 1. API Key: App-to-Platform
 
-Static credential that authenticates your application to the Fastn platform. Created in the [Fastn dashboard](https://fastn.ai), never expires.
+Static credential that authenticates your application to the fastn platform. Create it in the [fastn dashboard](https://app.fastn.dev); it does not expire.
 
 ```
-Your App                          Fastn Platform
+Your App                          fastn Platform
   │                                     │
   │  POST /executeTool                  │
   │  x-fastn-api-key: sk_live_xxx      │
@@ -396,12 +413,12 @@ fastn = FastnClient(api_key="sk_live_xxx", project_id="proj_abc")
 # or: export FASTN_API_KEY=sk_live_xxx
 ```
 
-### 2. OAuth Token — Developer-to-Platform
+### 2. OAuth Token: Developer-to-Platform
 
 JWT obtained via browser-based login (RFC 8628 Device Authorization Grant). Used by the CLI and dashboard. Auto-refreshed with a 30-second expiry buffer.
 
 ```
-Developer          Browser            Fastn (Keycloak)
+Developer          Browser            fastn (Keycloak)
   │                   │                      │
   │  fastn login      │                      │
   │ ──────────────────────────────────────→  │
@@ -439,14 +456,14 @@ Developer          Browser            Fastn (Keycloak)
 fastn = FastnClient()  # Picks up auth_token from config
 ```
 
-### 3. Connection — End-User-to-External-Service
+### 3. Connection: End-User-to-External-Service
 
-OAuth connections that link your end-users to external services (Slack, GitHub, etc.) through the Fastn OAuth vault. Tokens are stored server-side, auto-refreshed by the platform, and isolated per tenant. Your code never sees raw credentials.
+OAuth connections that link your end-users to external services (Slack, GitHub, etc.) through the fastn OAuth vault. Tokens are stored server-side, auto-refreshed by the platform, and isolated per tenant. Your code never sees raw credentials.
 
-[fastn-connect](https://github.com/fastnai/fastn-connect) captures auth and connector config on the frontend. This SDK triggers connectors and flows on the backend — pass `connection_id` to route to the right account.
+The [`@fastn-ai/embed`](https://www.npmjs.com/package/@fastn-ai/embed) widget captures auth and connector config on the frontend. This SDK triggers connectors and flows on the backend; pass `connection_id` to route to the right account.
 
 ```
-Your App (backend)       Frontend (fastn-connect)     Fastn Platform         External Service
+Your App (backend)       Frontend (embed widget)      fastn Platform         External Service
   │                           │                         │                       │
   │  auth.connect(            │                         │                       │
   │    connector="slack"      │                         │                       │
@@ -493,7 +510,7 @@ result = fastn.auth.connect(
     tenant_id="customer_acme",
     redirect_url="https://myapp.com/callback",
 )
-# Pass result["auth_url"] to your frontend (fastn-connect handles the OAuth flow)
+# Send the user to result["auth_url"] (or let the embed widget handle it)
 
 # 2. Check connection status (after user completes auth)
 status = fastn.auth.status(connection_id=result["connection_id"])
@@ -502,7 +519,7 @@ print(status["status"])  # "pending", "authorized", "expired"
 # Or look up by connector + tenant
 status = fastn.auth.status(connector="github", tenant_id="customer_acme")
 
-# 3. Use the connection — credentials injected by platform
+# 3. Use the connection: the platform injects the credentials
 fastn.slack.send_message(
     connection_id=result["connection_id"],
     channel="general", text="Hello!",
@@ -511,7 +528,7 @@ fastn.slack.send_message(
 
 ### Custom Auth Provider
 
-For apps with their own identity provider, configure Fastn to validate end-user tokens via your userinfo endpoint.
+For apps with their own identity provider, configure fastn to validate end-user tokens via your userinfo endpoint.
 
 ```python
 fastn.auth.configure_custom(
@@ -589,29 +606,35 @@ for p in projects:
 | `fastn login` | Authenticate with Fastn and select a project |
 | `fastn logout` | Log out and clear saved credentials |
 | `fastn whoami` | Show the current logged-in user |
-| `fastn connector ls` | List all available connectors |
+| `fastn connector ls` | List all available connectors (`--active`, `--installed` to filter) |
 | `fastn connector ls <name>` | Show tools for a specific connector |
 | `fastn connector sync` | Refresh connector registry, fetch tool schemas, regenerate type stubs |
 | `fastn connector add <name> [...]` | Fetch full tool schemas for specific connectors |
 | `fastn connector remove <name>` | Remove connector stubs |
 | `fastn connector run <name> <tool>` | Execute a connector tool |
 | `fastn connector schema <name> <tool>` | Print a tool's input/output schema |
-| `fastn flow ls` | List all flows |
-| `fastn flow create` | Create a flow from a plain-English prompt |
-| `fastn flow run <flow_id>` | Trigger a flow run |
+| `fastn flow ls [--status deployed]` | List flows |
+| `fastn flow generate` | Generate a flow from a plain-English prompt (interactive) |
+| `fastn flow run <flow_name>` | Run a flow |
+| `fastn flow deploy <flow_name>` | Deploy a flow to `DRAFT` or `LIVE` |
+| `fastn flow schema <flow_name>` | Show a flow's input/output schema |
+| `fastn flow update <flow_id>` / `fastn flow delete <flow_id>` | Update or delete a flow |
+| `fastn kit ls` / `fastn kit get <name>` / `fastn kit config` | Connect Kit connectors and settings |
 | `fastn skill` | List available agent skills |
-| `fastn agent "<prompt>"` | Describe a task in plain English — AI calls the right tools |
+| `fastn agent "<prompt>"` | Describe a task in plain English; the agent calls the right tools |
 | `fastn version` | Show SDK and registry versions |
 
 ### `fastn agent`
 
-Agentic CLI — describe what you want in natural language and the agent discovers tools, sends them to your LLM via native function calling, and executes tool calls in a loop until the task is complete.
+Agentic CLI: describe what you want in natural language and the agent discovers tools, sends them to your LLM via native function calling, and executes tool calls in a loop until the task is complete.
 
 ```bash
 fastn agent "Send hello to #general on Slack"
 fastn agent --connector slack "List all channels"
 fastn agent --eval "Create a Jira ticket for the login bug"
 ```
+
+The first run asks you to pick an LLM provider and enter its API key (saved to `.fastn/config.json`).
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -624,6 +647,8 @@ fastn agent --eval "Create a Jira ticket for the login bug"
 | `--eval` | off | Run LLM-based evaluation after the agent finishes |
 | `--connection-id` | -- | Connection ID for multi-connection connectors |
 | `--tenant` | -- | Tenant ID override |
+| `--model` | -- | Override the LLM model (e.g. `gpt-4o-mini`) |
+| `--setup` | off | Re-run the LLM provider/model setup |
 
 ### `fastn connector run`
 
@@ -639,7 +664,7 @@ fastn connector run slack send_message
 # Inline parameters
 fastn connector run slack send_message --channel general --text "Hello!"
 
-# With tenant override
+# With tenant override (or pass the tenant as a third positional argument)
 fastn connector run slack send_message --tenant acme --channel general --text "Hello!"
 ```
 
@@ -649,13 +674,14 @@ fastn connector run slack send_message --tenant acme --channel general --text "H
 
 ```python
 FastnClient(
-    api_key: str = None,        # Fastn API key (or FASTN_API_KEY)
+    api_key: str = None,        # fastn API key (or FASTN_API_KEY)
     project_id: str = None,     # Project ID (or FASTN_PROJECT_ID)
     auth_token: str = None,     # JWT from fastn login (or FASTN_AUTH_TOKEN)
     tenant_id: str = None,      # Tenant ID (or FASTN_TENANT_ID)
     stage: str = None,          # "LIVE", "STAGING", "DEV" (or FASTN_STAGE)
+    agent_id: str = None,       # Agent ID, for agent-scoped calls
     config_path: str = None,    # Path to config.json
-    timeout: float = 30.0,      # HTTP timeout in seconds
+    timeout: float = None,      # HTTP timeout in seconds (default from config, else 30)
     max_retries: int = 3,       # Retry count for transient failures
     verbose: bool = False,      # Debug logging
 )
@@ -684,11 +710,14 @@ FastnClient(
 
 | Method | Description |
 |--------|-------------|
-| `fastn.flows.create(prompt, answers)` | Create a flow from natural language |
-| `fastn.flows.list(status)` | List flows (optional status filter) |
-| `fastn.flows.run(flow_id, user_id)` | Trigger a flow execution |
+| `fastn.flows.generate(prompt, session_id=None)` | Generate a flow with the flow builder agent (`create` is an alias) |
+| `fastn.flows.list(status=None)` | List flows (optional, case-insensitive status filter) |
+| `fastn.flows.get(flow_name)` | Full flow definition |
+| `fastn.flows.schema(flow_name)` | Input fields the flow expects |
+| `fastn.flows.deploy(flow_name, stage="LIVE", comment="")` | Deploy to `DRAFT` or `LIVE` |
+| `fastn.flows.run(flow_name, input_data=None, stage=None)` | Run a flow |
 | `fastn.flows.get_run(run_id)` | Check run status and results |
-| `fastn.flows.update(flow_id, ...)` | Update schedule, enable/disable |
+| `fastn.flows.update(flow_id, prompt=, schedule=, enabled=, answers=)` | Update schedule, enable/disable |
 | `fastn.flows.delete(flow_id)` | Delete a flow |
 
 **Auth:**
@@ -696,7 +725,7 @@ FastnClient(
 | Method | Description |
 |--------|-------------|
 | `fastn.auth.connect(connector, tenant_id, redirect_url)` | Start OAuth connection flow |
-| `fastn.auth.status(connection_id)` | Check connection status |
+| `fastn.auth.status(connection_id=None, connector=None, tenant_id=None)` | Check connection status |
 | `fastn.auth.configure_custom(userinfo_url)` | Register custom auth provider |
 
 **Skills:**
@@ -710,6 +739,17 @@ FastnClient(
 | Method | Description |
 |--------|-------------|
 | `fastn.projects.list()` | List available projects |
+
+**Connect Kit:**
+
+| Method | Description |
+|--------|-------------|
+| `fastn.kit.get()` | Connect Kit configuration for the project |
+| `fastn.kit.update(settings)` | Update the configuration |
+| `fastn.kit.list(query="", limit=8, offset=0)` | List Connect Kit connectors |
+| `fastn.kit.get_connector(connector_id)` | One connector's details |
+
+Requests are retried on transient failures (`max_retries`, default 3, with exponential backoff).
 
 ### `AsyncFastnClient`
 
@@ -737,9 +777,9 @@ from fastn import (
 try:
     fastn.slack.send_message(channel="general", text="Hello!")
 except AuthError:
-    print("Invalid credentials — check your API key")
+    print("Invalid credentials: check your API key")
 except ConnectorNotFoundError as e:
-    print(f"Connector '{e.connector_name}' not found — run: fastn connector sync")
+    print(f"Connector '{e.connector_name}' not found: run fastn connector add {e.connector_name}")
 except ToolNotFoundError as e:
     print(f"Tool '{e.tool_name}' not found in '{e.connector_name}'")
 except APIError as e:
@@ -764,7 +804,7 @@ except ConfigError:
 
 ## IDE Autocomplete
 
-Type stubs for 250+ connectors ship in the package — autocomplete works after `pip install fastn-ai`:
+Type stubs for the client and 250+ connectors ship in the package, so autocomplete works after `pip install fastn-ai`:
 
 - **PyCharm / IntelliJ**: Works automatically
 - **VS Code (Pylance)**: Works automatically
@@ -774,24 +814,35 @@ To refresh stubs with the latest connector schemas, run `fastn connector sync`.
 
 ## Examples
 
-See [`examples/`](examples/) for runnable scripts:
+Runnable scripts are in the [repository](https://github.com/fastn-ai/fastn-sdk/tree/main/python/examples):
 
-| Directory | Contents |
-|-----------|----------|
-| [`examples/sdk/`](examples/sdk/) | SDK usage — basic, async, LLM agents (OpenAI/Claude/Gemini/Bedrock), multi-tenant, flows, auth, environments, error handling |
-| [`examples/cli/`](examples/cli/) | CLI usage — all commands with examples |
+| File | Contents |
+|------|----------|
+| [`examples/sdk/connectors.py`](https://github.com/fastn-ai/fastn-sdk/blob/main/python/examples/sdk/connectors.py) | Calling connector tools, catalog, multi-connection, multi-tenant |
+| [`examples/sdk/agents.py`](https://github.com/fastn-ai/fastn-sdk/blob/main/python/examples/sdk/agents.py) | LLM agents with `get_tools_for` and `execute` |
+| [`examples/sdk/flows.py`](https://github.com/fastn-ai/fastn-sdk/blob/main/python/examples/sdk/flows.py) | Generating, listing, and running flows |
+| [`examples/cli/cli_commands.sh`](https://github.com/fastn-ai/fastn-sdk/blob/main/python/examples/cli/cli_commands.sh) | Every CLI command with examples |
 
 ## Platform API client (`fastn.platform`)
 
 The fastn platform REST API for Python: every endpoint, generated from fastn's OpenAPI spec, plus a small hand-written
-layer that makes the common partner flow easy. It is the same surface as the Node SDK (`@fastn-ai/sdk`), so the
-Node guide maps 1:1: every operation is a snake_case method (`create_setup_link`) and its operationId is an alias
-(`createSetupLink`); per-call options are keyword arguments.
+layer that makes the common partner flow easy. It mirrors the platform client in the Node SDK (`@fastn-ai/sdk`):
+every operation is a snake_case method on its area (`fastn.embed.create_setup_link`) with the operationId as an alias
+(`createSetupLink`); per-call options are keyword arguments. The Node SDK's workspace tool calls (`ToolsClient`,
+`fastn-sdk-tools`) are Node-only.
+
+This is a different `FastnClient` from `fastn.FastnClient` above: it takes a platform API key from the
+[fastn dashboard](https://app.fastn.dev) and talks to `https://api.fastn.dev`. It is synchronous.
 
 ```python
+import os
 from fastn.platform import FastnClient
 
-fastn = FastnClient(api_key=os.environ["FASTN_API_KEY"])          # https://api.fastn.dev
+fastn = FastnClient(
+    api_key=os.environ["FASTN_API_KEY"],
+    # base_url="https://api.fastn.dev", timeout=60.0, retries=2,
+    # on_request=lambda log: print(log), defaults={...}
+)
 
 # 1. Register a customer under your account, using YOUR id for them.
 customer = fastn.customer("acme-42")
@@ -819,7 +870,8 @@ customer.crm.notes.add({"body": "Booked an intro call", "parent_id": contact["id
 customer.call_log("req-abc")
 
 # Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
-w = customer.watch("hubspot", ["contact.created", "deal.stageChanged"], account_id=hubspot_portal_id)
+account_id = "..."                                                # one of the customer's accounts, from customer.connections()
+w = customer.watch("hubspot", ["contact.created", "deal.stageChanged"], account_id=account_id)
 customer.watches("hubspot")                                       # [{"id", "app", "events", "status", ...}]
 customer.unwatch("hubspot")                                       # or unwatch(w["id"])
 
@@ -857,19 +909,21 @@ fastn.webhooks.test(hook["id"]); fastn.webhooks.deliveries(hook["id"]); fastn.we
   `Retry-After`); a write is retried only when it carries an `idempotency_key` and the platform de-duplicates that
   operation by it (unified record writes, workflow execute).
 - Events: `parse_event(secret, request.headers, raw_body)` verifies `sha256=HMAC-SHA256(secret, "<ts>.<body>")` and
-  parses the delivery (5-minute tolerance). `paginate(fastn.events.list_events, {"status": "failed"}, page_size=100)`
+  parses the delivery (5-minute tolerance). `paginate(fastn.events.list_events, {"outcome": "sent_to_dlq"}, page_size=100)`
   walks `limit`/`offset` and cursor lists.
-- Regenerate after a spec refresh with `python3 scripts/generate_platform.py` (`--check` in CI). The live suite runs
-  with `LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... pytest tests/platform/live` against api.fastn-test.dev;
-  `FASTN_BASE_URL=https://api.fastn.dev LIVE_PROD=1` runs it on production.
+- Also available: `customer.crm.tasks` / `customer.crm.deals` (`move_stage`, `stages`), `customer.calendar.free_slots`,
+  `free_intervals` / `slots_of`, `verify_event_signature`, and the `FastnApiError.is_not_found` / `is_conflict` /
+  `is_rate_limited` / `is_auth` / `is_validation` helpers.
 
 ## Development
+
+Working on the SDK itself (from a clone of the repository):
 
 ```bash
 # Install in dev mode
 pip install -e ".[dev]"
 
-# Run all tests (576 tests, ~7s)
+# Run all tests
 make test
 
 # Run only SDK tests
@@ -887,6 +941,10 @@ python3 -m pytest tests/cli/ -q       # CLI only
 python3 -m pytest tests/ -q           # All
 ```
 
+Generated code is checked in CI: `python3 scripts/generate_platform.py --check` (platform client) and
+`python3 scripts/generate_client_stub.py --check` (the `fastn/__init__.pyi` type stub). The platform live suite runs with
+`LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... pytest tests/platform/live` against api.fastn-test.dev.
+
 ### Test Structure
 
 ```
@@ -900,6 +958,7 @@ tests/
 │   ├── test_oauth.py              # OAuth device flow, token refresh
 │   ├── test_projects.py           # Projects namespace
 │   └── test_skills.py             # Skills namespace
+├── platform/                      # fastn.platform tests (live/ runs against the API)
 └── cli/                           # CLI command tests
     ├── test_cli_commands.py        # All CLI commands (sync, add, remove, list, run, agent, etc.)
     ├── test_cli_helpers.py         # CLI helper functions

@@ -97,13 +97,13 @@ def _handle_401(resp: httpx.Response, config=None, connector_label: str = "") ->
         app_url = _workspace_url(workspace_id)
         raise click.ClickException(
             f"Connector authentication failed{hint}: {detail or 'token invalid'}.\n"
-            f"  Your Fastn login is valid — this means the connector's OAuth token\n"
+            f"  Your Fastn login is valid - this means the connector's OAuth token\n"
             f"  has expired or been revoked.\n"
             f"  Reconnect it at: {app_url}\n"
             f"  Then retry: fastn connector run ..."
         )
 
-    # Token appears expired or we can't tell — assume platform auth issue.
+    # Token appears expired or we can't tell - assume platform auth issue.
     raise click.ClickException(
         detail or "Authentication failed. Run `fastn login` to re-authenticate."
     )
@@ -487,7 +487,7 @@ def _format_schema_properties(schema: dict, indent: int = 6) -> list:
         req = " (required)" if name in required_fields else ""
         desc = pdata.get("description", "")
         if desc:
-            lines.append(f"{pad}{name}: {ptype}{req} — {desc}")
+            lines.append(f"{pad}{name}: {ptype}{req} - {desc}")
         else:
             lines.append(f"{pad}{name}: {ptype}{req}")
     return lines

@@ -39,7 +39,7 @@ Classes:
 from __future__ import annotations
 
 import warnings
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Tuple
 
 from fastn.exceptions import ToolNotFoundError
 

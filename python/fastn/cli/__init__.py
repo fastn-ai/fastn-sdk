@@ -1,4 +1,4 @@
-"""Fastn CLI package — connectors, flows, skills, agent, auth, and system commands."""
+"""Fastn CLI package - connectors, flows, skills, agent, auth, and system commands."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ class ConnectorGroup(OrderedGroup):
         if cmd_name and not cmd_name.startswith("-"):
             cmd = self.get_command(ctx, cmd_name)
             if cmd is None:
-                # Unknown subcommand — treat as: connector ls <name>
+                # Unknown subcommand - treat as: connector ls <name>
                 return super().resolve_command(ctx, ["ls"] + args)
         return super().resolve_command(ctx, args)
 
@@ -98,13 +98,13 @@ GET_TOOLS_URL = "https://live.fastn.ai/api/ucl/getTools"
 @click.option("-v", "--verbose", is_flag=True, default=False, help="Show API calls and responses")
 @click.pass_context
 def cli(ctx: click.Context, verbose: bool) -> None:
-    """Fastn \u2014 The fastest way to add enterprise integrations to any AI agent or app."""
+    """fastn: governed integrations for AI agents and apps."""
     ctx.ensure_object(dict)
     ctx.obj["verbose"] = verbose
 
 
 # ---------------------------------------------------------------------------
-# Connector subgroup — ls, add, remove, sync, run, schema
+# Connector subgroup - ls, add, remove, sync, run, schema
 # ---------------------------------------------------------------------------
 
 @cli.group(

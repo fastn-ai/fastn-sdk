@@ -6,7 +6,6 @@ from __future__ import annotations
 # HTTP / retry defaults
 # ---------------------------------------------------------------------------
 
-DEFAULT_TIMEOUT = 30.0
 MAX_RETRIES = 3
 BACKOFF_FACTOR = 0.5
 
@@ -34,16 +33,6 @@ query getOrganizations($userId: String) {
     deletable
     packageType
     __typename
-  }
-}
-"""
-
-CALL_CORE_PROJECT_FLOW_QUERY = """
-query callCoreProjectFlow($input: CoreProjectFlowProxyInput!) {
-  callCoreProjectFlow(input: $input) {
-    data
-    statusCode
-    message
   }
 }
 """

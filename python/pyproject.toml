@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastn-ai"
-version = "0.4.0"
-description = "Fastn — The fastest way to add enterprise integrations to any AI agent or app."
+version = "0.4.1"
+description = "fastn SDK for Python: governed integrations for AI agents and apps, plus the fastn platform API client."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
@@ -54,13 +54,13 @@ generator = [
 ]
 
 [project.scripts]
-fastn = "fastn.cli:main"
+fastn = "fastn._cli_entry:main"
 
 [project.urls]
 Homepage = "https://fastn.ai"
 Documentation = "https://docs.fastn.ai"
-Repository = "https://github.com/fastnai/fastn-sdk"
-Changelog = "https://github.com/fastnai/fastn-sdk/blob/main/python/CHANGELOG.md"
+Repository = "https://github.com/fastn-ai/fastn-sdk"
+Changelog = "https://github.com/fastn-ai/fastn-sdk/blob/main/python/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fastn"]
