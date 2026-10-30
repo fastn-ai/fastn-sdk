@@ -96,9 +96,14 @@ def error_info(body: Any, fallback: str = "") -> Tuple[str, Optional[Any], Any, 
     return str(text)[:300], None, None, False
 
 
+#: Provider statuses inside a 502 UNIFIED_PROVIDER_ERROR that mean the app refused the request itself: repeating it can
+#: never succeed. Everything else stays retryable, notably 408 (provider timeout), 423 and 425 (clear on their own),
+#: 429 (rate limit), and 404 / 410 (can be a stale cached id that the platform evicts and looks up again).
+PROVIDER_REFUSAL_STATUSES = frozenset({400, 401, 403, 405, 413, 415, 422})
+
+
 def is_provider_refusal(body: Any) -> bool:
-    """A 502 that carries the app's own refusal (UNIFIED_PROVIDER_ERROR with a 4xx providerStatus) is final: the same
-    request can never succeed, so it is not retried."""
+    """A 502 that carries the app's own final refusal (see PROVIDER_REFUSAL_STATUSES) is not retried."""
     if not isinstance(body, dict) or body.get("code") != "UNIFIED_PROVIDER_ERROR":
         return False
     raw = body.get("providerStatus")
@@ -106,4 +111,4 @@ def is_provider_refusal(body: Any) -> bool:
         ps = int(raw) if raw is not None else -1
     except (TypeError, ValueError):
         return False
-    return 400 <= ps < 500
+    return ps in PROVIDER_REFUSAL_STATUSES

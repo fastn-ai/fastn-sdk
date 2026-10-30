@@ -163,6 +163,17 @@ class TestErrorsAndRetries:
         assert client().unified.create_unified_record({"category": "scheduling", "entity": "meeting", "record": {"title": "x"}}, idempotency_key="k")["id"] == "1"
         assert len(m2.calls) == 2
 
+    def test_a_502_whose_provider_status_is_transient_is_still_retried(self, mock: Callable[..., Mock], no_sleep: List[float]) -> None:
+        for ps in (404, 408, 410, 423, 425, 429):
+            m = mock([{"status": 502, "body": {"code": "UNIFIED_PROVIDER_ERROR", "providerStatus": ps}}, {"body": {"id": "1", "provider": "googleCalendar", "data": {}}}])
+            assert client().unified.create_unified_record({"category": "scheduling", "entity": "meeting", "record": {"title": "x"}}, idempotency_key="k")["id"] == "1"
+            assert len(m.calls) == 2, ps
+        for ps in (400, 401, 403, 405, 413, 415, 422):
+            m = mock([{"status": 502, "body": {"code": "UNIFIED_PROVIDER_ERROR", "providerStatus": ps}}])
+            with pytest.raises(FastnApiError):
+                client().unified.create_unified_record({"category": "scheduling", "entity": "meeting", "record": {"title": "x"}}, idempotency_key="k")
+            assert len(m.calls) == 1, ps
+
     def test_get_retries_on_503_then_succeeds(self, mock: Callable[..., Mock], no_sleep: List[float]) -> None:
         m = mock([{"status": 503, "body": {"error": "down"}}, {"body": {"data": []}}])
         assert client().orgs.list_orgs() == {"data": []}
