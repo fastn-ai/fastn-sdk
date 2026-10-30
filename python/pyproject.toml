@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastn-ai"
-version = "0.4.1"
-description = "fastn SDK for Python: governed integrations for AI agents and apps, plus the fastn platform API client."
+version = "0.4.2"
+description = "fastn: embedded integrations for multi-tenant SaaS and AI agents. Let your customers connect their own apps inside your product, through one API."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
@@ -13,13 +13,17 @@ authors = [
     { name = "Fastn", email = "support@fastn.ai" },
 ]
 keywords = [
-    "fastn", "sdk", "integrations", "api", "tools",
-    "slack", "jira", "github", "salesforce",
+    "fastn", "sdk", "embedded integrations", "embedded ipaas", "integration platform",
+    "unified api", "multi-tenant", "saas", "customer integrations", "oauth",
+    "crm api", "calendar api", "webhooks", "mcp", "claude", "anthropic", "openai",
     "ai-agents", "llm", "tool-use", "function-calling",
+    "hubspot", "salesforce", "google calendar", "slack", "jira", "github",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Framework :: AsyncIO",
     "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
@@ -29,6 +33,10 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Office/Business",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
@@ -61,6 +69,11 @@ Homepage = "https://fastn.ai"
 Documentation = "https://docs.fastn.ai"
 Repository = "https://github.com/fastn-ai/fastn-sdk"
 Changelog = "https://github.com/fastn-ai/fastn-sdk/blob/main/python/CHANGELOG.md"
+Issues = "https://github.com/fastn-ai/fastn-sdk/issues"
+"Embedding guide" = "https://docs.fastn.ai/embed/embedding"
+"MCP gateway" = "https://docs.fastn.ai/build/mcp-gateway"
+Pricing = "https://fastn.ai/pricing"
+"llms.txt" = "https://fastn.ai/llms.txt"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fastn"]

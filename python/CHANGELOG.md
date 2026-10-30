@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-10-30
+
+### Changed
+
+- README (the PyPI page): the headline now matches fastn's positioning (embedded integrations for your product and your AI agents), and a new section covers multi-tenant use: customers addressed by your own id, per-customer credentials and isolation, several accounts per app, one API across providers, idempotent retries and call logs.
+- README: a "What is fastn" summary, "Use fastn when", a step-by-step embedding guide written for Claude and other AI coding assistants, and an FAQ. Package metadata: a clearer description, more keywords and classifiers, and links to the embedding guide, MCP gateway, pricing, and llms.txt.
+
 ## [0.4.1] - 2026-10-30
 
 ### Fixed
