@@ -20,9 +20,14 @@ from .customer import EVENT_ALIASES, PROVIDER_TTL_SECONDS, WIDGET_TTL_SECONDS, C
 from .domain import Calendar, Crm, Deals, Entity, Notes, Tasks, free_intervals, slots_of
 from .errors import FastnApiError, FastnNetworkError
 from .events import parse_event, read_event_headers, sign_event_body, verify_event_signature
+from .names import Apps, Categories, Entities, HubSpotEvents
 from .paginate import paginate
 
 __all__ = [
+    "Apps",
+    "Categories",
+    "Entities",
+    "HubSpotEvents",
     "DEFAULT_BASE_URL",
     "EVENT_ALIASES",
     "PROVIDER_TTL_SECONDS",

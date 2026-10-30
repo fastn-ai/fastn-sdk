@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-10-30
+
+### Added
+
+- `fastn.platform.Apps`, `Categories`, `Entities` and `HubSpotEvents`: named values for every app in the unified catalog (36), every category and entity, and HubSpot's change events, so calls read `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`, `fastn.catalog.fields(Categories.crm, Entities.contact)`, `provider=Apps.hubspot` instead of typed strings. Each value is the exact string the API takes (a plain `str`); the string form still works. A test keeps them identical to the Node SDK's. README snippets use the names.
+
+### Fixed
+
+- An empty or missing app name (`""`, `None`) now raises a `TypeError` naming the call, before any request, in `connect`, `watch`, `unwatch` and `watchable_events`. Before, `unwatch("")` read it as "every app" and removed all of the customer's watches.
+
 ## [0.4.4] - 2026-10-30
 
 ### Fixed

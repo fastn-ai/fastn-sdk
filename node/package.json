@@ -1,6 +1,6 @@
 {
   "name": "@fastn-ai/sdk",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "fastn SDK for Node.js and TypeScript: embedded integrations for multi-tenant SaaS and AI agents. Your customers connect their own apps inside your product, through one typed API.",
   "license": "MIT",
   "author": "fastn",
@@ -83,7 +83,7 @@
   ],
   "scripts": {
     "build": "npm run generate && tsup",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
     "test": "vitest run test/unit",
     "lint:package": "publint --strict && attw --pack .",
     "prepublishOnly": "npm run build",

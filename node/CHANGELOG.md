@@ -4,6 +4,15 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-30
+
+- Added: `Apps`, `Categories`, `Entities` and `HubSpotEvents`, named values for every app in the unified catalog (36), every category and entity, and HubSpot's change events, so calls read `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`, `fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }` instead of typed strings. Each value is the exact string the API takes; the string form still works and an app outside the list can be passed by its slug (`AppName` type). README snippets use the names.
+- Changed: `HubSpotEvent` now lists HubSpot's event names so the editor completes them; any other string is still accepted, so existing code compiles unchanged.
+- Changed: the two `watch` overloads (`"hubspot"` with `HubSpotEvent[]`, any app with `string[]`) are one generic signature, `watch<A extends AppName>(app, events: A extends "hubspot" ? HubSpotEvent[] : string[], ...)`; every call that compiled before still compiles. `watches(app?)` takes `AppName`.
+- Added: `npm run typecheck` also compiles `test/types/` (`tsconfig.test.json`), which locks in that the named forms and every 0.4 string form compile and that a misspelt `Apps`/`HubSpotEvents`/`Categories` member does not.
+- Fixed: a missing app, category or entity name (`undefined` from a misspelt member in plain JavaScript, or an empty string) now throws a `TypeError` naming the call, before any request, in `connect`, `watch`, `unwatch`, `watchableEvents` and `catalog.entity/fields/providers`. Before, `unwatch(undefined)` or `unwatch("")` read the missing name as "every app" and removed all of the customer's watches.
+- Note: `HubSpotEvents.dealStageChanged` subscribes to `deal.propertyChange`, so every deal property change arrives; filter on `propertyName === "dealstage"`.
+
 ## [0.4.4] - 2026-10-30
 
 - Fixed: a `502 UNIFIED_PROVIDER_ERROR` whose `providerStatus` says the app refused the request itself (400, 401, 403, 405, 413, 415, 422; for example Google's "Missing attendee email") is no longer retried: the same request can never succeed, and the retries cost two extra calls and several seconds. Transient provider statuses inside that 502 (404 and 410, which can be a stale cached id; 408, 423, 425, 429) and 5xx are retried as before (`PROVIDER_REFUSAL_STATUSES`).

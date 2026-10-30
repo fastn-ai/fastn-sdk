@@ -1,3 +1,4 @@
+import { HubSpotEvents, requireName, type AppName } from "./names.js";
 import type { FastnApis } from "./generated/api.js";
 import type * as T from "./generated/types.js";
 import type { RequestOptions, Transport, OpDef } from "./transport.js";
@@ -57,8 +58,9 @@ export const EVENT_ALIASES: Record<string, Record<string, string>> = {
     "ticket.created": "ticket.creation", "ticket.updated": "ticket.propertyChange", "ticket.deleted": "ticket.deletion",
   },
 };
-/** HubSpot change events, in plain words or as HubSpot names them. */
-export type HubSpotEvent = keyof (typeof EVENT_ALIASES)["hubspot"] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange";
+/** HubSpot change events, in plain words or as HubSpot names them. The editor completes them; any other string is still
+ *  accepted (backward compatible) and `watch` refuses an unknown name before subscribing (400 EVENT_NOT_FOUND). */
+export type HubSpotEvent = (typeof HubSpotEvents)[keyof typeof HubSpotEvents] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange" | (string & {});
 
 /** What `customer.watch(app, events)` takes besides the app and the events. */
 export interface WatchOptions {
@@ -107,7 +109,7 @@ export interface SetupLink {
 }
 
 /** A unified record call scoped to one customer; `category`/`entity`/`provider` come from the catalog. */
-export interface RecordScope { category: string; entity: string; provider?: string; connectionId?: string }
+export interface RecordScope { category: string; entity: string; provider?: AppName; connectionId?: string }
 
 /**
  * Operations whose body field named endOrgId / externalRef is the org being created or edited, not the customer the
@@ -185,9 +187,9 @@ export class Customer implements ProviderResolver {
    * list of valid ones. The connector is found by slug, the customer's account on it by its connections; apps that
    * route events by account number (HubSpot: the portal id) take it in `options.accountId`.
    */
-  async watch(app: "hubspot", events: HubSpotEvent[], options?: WatchOptions, opts?: RequestOptions): Promise<Watch>;
-  async watch(app: string, events: string[], options?: WatchOptions, opts?: RequestOptions): Promise<Watch>;
+  async watch<A extends AppName>(app: A, events: A extends "hubspot" ? HubSpotEvent[] : string[], options?: WatchOptions, opts?: RequestOptions): Promise<Watch>;
   async watch(app: string, events: string[], options: WatchOptions = {}, opts?: RequestOptions): Promise<Watch> {
+    requireName(app, "watch(app, events)");
     if (!Array.isArray(events) || events.length === 0) throw new TypeError("watch(app, events): at least one event name is required");
     const [connector, catalog, id, conns] = await Promise.all([this.connectorBySlug(app, opts), this.watchableEvents(app, opts), this.id(), this.connections(undefined, opts)]);
     const byId = new Map(catalog.map((e: any) => [e.id, e]));
@@ -221,7 +223,7 @@ export class Customer implements ProviderResolver {
   }
 
   /** The watches on this customer's apps (every app, or one). */
-  async watches(app?: string, opts?: RequestOptions): Promise<Watch[]> {
+  async watches(app?: AppName, opts?: RequestOptions): Promise<Watch[]> {
     const id = await this.id();
     const connector = app ? await this.connectorBySlug(app, opts) : undefined;
     // every page: the list is 20 per page by default, and the connectorId query does not match the nested app part, so filter here
@@ -237,7 +239,8 @@ export class Customer implements ProviderResolver {
   }
 
   /** Stops a watch: by its id, or every watch on an app. Answers the ids removed. */
-  async unwatch(appOrWatchId: string, opts?: RequestOptions): Promise<string[]> {
+  async unwatch(appOrWatchId: AppName, opts?: RequestOptions): Promise<string[]> {
+    requireName(appOrWatchId, "unwatch(appOrWatchId)"); // never read a missing name as "every app"
     const byId = /^[0-9a-f-]{36}$|^trg_/i.test(appOrWatchId);
     const mine = await this.watches(byId ? undefined : appOrWatchId, opts);
     const ids = byId ? mine.filter((w) => w.id === appOrWatchId).map((w) => w.id) : mine.map((w) => w.id);
@@ -247,8 +250,8 @@ export class Customer implements ProviderResolver {
   }
 
   /** The events an app can report (its own ids, labels and payload shapes), from the connector's catalog. */
-  async watchableEvents(app: string, opts?: RequestOptions): Promise<Array<{ id: string; label?: string; description?: string; [key: string]: unknown }>> {
-    const connector = await this.connectorBySlug(app, opts);
+  async watchableEvents(app: AppName, opts?: RequestOptions): Promise<Array<{ id: string; label?: string; description?: string; [key: string]: unknown }>> {
+    const connector = await this.connectorBySlug(requireName(app, "watchableEvents(app)"), opts);
     const r: any = await this.root.events.listConnectorEvents({ connectorId: connector.id }, opts);
     return Array.isArray(r?.data) ? r.data : Array.isArray(r?.data?.events) ? r.data.events : [];
   }
@@ -438,9 +441,10 @@ export class Customer implements ProviderResolver {
    * `connect({ connectorId, ... })`: starts an OAuth connection directly (initiateOauthConnection) and returns the
    * URL to send the customer to. The connection is stored on the customer org (endOrgId is filled in).
    */
-  connect(app: string, options?: ConnectOptions, opts?: RequestOptions): Promise<SetupLink>;
+  connect(app: AppName, options?: ConnectOptions, opts?: RequestOptions): Promise<SetupLink>;
   connect(input: Omit<T.InitiateOauthConnectionInput, "endOrgId">, opts?: RequestOptions): Promise<T.InitiateOauthConnectionOutput>;
   async connect(appOrInput: string | Omit<T.InitiateOauthConnectionInput, "endOrgId">, a?: ConnectOptions | RequestOptions, b?: RequestOptions): Promise<SetupLink | T.InitiateOauthConnectionOutput> {
+    if (appOrInput === undefined || appOrInput === null || appOrInput === "") requireName(appOrInput, "connect(app)");
     if (typeof appOrInput !== "string") return this.root.connections.initiateOauthConnection({ ...appOrInput, endOrgId: await this.id() }, a as RequestOptions | undefined);
     const app = appOrInput, options = (a ?? {}) as ConnectOptions, opts = b;
     const widget = await this.widgetFor(app, options.widgetId, opts);

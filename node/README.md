@@ -59,7 +59,7 @@ import { FastnClient } from "@fastn-ai/sdk";             // ESM
 ## 60-second tour
 
 ```ts
-import { FastnClient } from "@fastn-ai/sdk";
+import { Apps, Categories, Entities, FastnClient, HubSpotEvents } from "@fastn-ai/sdk";
 
 const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });   // https://api.fastn.dev
 
@@ -68,7 +68,7 @@ const customer = fastn.customer("acme-42");
 await customer.register({ name: "Acme Dental" });              // idempotent: returns the existing org on repeat
 
 // 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...), by connector slug.
-const link = await customer.connect("googleCalendar");
+const link = await customer.connect(Apps.googleCalendar);
 console.log(link.url);                                         // send this to the customer
 
 // 3. Typed methods on whatever the customer connected: the provider is picked from their connections.
@@ -107,7 +107,7 @@ props or endpoints.
 3. **Let the customer connect their apps.** Either send a hosted setup link, or show the embedded widget in your UI:
 
    ```ts
-   const link = await customer.connect("hubspot");           // hosted page: redirect the customer to link.url
+   const link = await customer.connect(Apps.hubspot);           // hosted page: redirect the customer to link.url
    const token = await customer.embedToken();                // or: a short-lived token for the in-app widget
    ```
 
@@ -140,6 +140,18 @@ new FastnClient({
 });
 ```
 
+## Named apps, categories and events
+
+`Apps`, `Categories`, `Entities` and `HubSpotEvents` name every app in the unified catalog, every category and entity,
+and HubSpot's change events, so calls are completed and checked by your editor instead of typed as strings:
+`customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
+`fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }`. A misspelt member
+(`Apps.googleCalender`, `HubSpotEvents.contactCraeted`) does not compile. Plain strings are still accepted and not
+checked: `watch` refuses an unknown event name before subscribing (`FastnApiError` 400 `EVENT_NOT_FOUND`, with the valid
+names), and a missing name (`undefined` from a misspelt member in plain JavaScript) throws a `TypeError` naming the call. Each value is the exact string the API
+takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
+category or entity outside them can still be passed as a string. Snippets below import them from `@fastn-ai/sdk`.
+
 ## Calendar and CRM, typed
 
 `customer.calendar` and `customer.crm` are the unified API with the fields named: each method takes a TypeScript
@@ -165,8 +177,8 @@ in the catalog with untyped input (`create`, `get`, `list`, `update`, `delete`, 
 ```ts
 // The catalog: which categories and entities exist, the fields each takes, which providers a customer connected.
 const categories = await fastn.catalog.categories();                 // [{ slug: "crm", entities: [{ slug: "contact", operations, createFields }] }]
-const fields = await fastn.catalog.fields("crm", "contact");         // [{ field: "email", type: "string", required: false }, ...]
-const providers = await customer.catalog.providers("crm", "contact"); // [{ connectorSlug: "hubspot", connected: true, operations: [...] }]
+const fields = await fastn.catalog.fields(Categories.crm, Entities.contact);         // [{ field: "email", type: "string", required: false }, ...]
+const providers = await customer.catalog.providers(Categories.crm, Entities.contact); // [{ connectorSlug: "hubspot", connected: true, operations: [...] }]
 ```
 
 Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`. Platform-administration areas (admin, platform config, support) and backend-only routes (OAuth callbacks, credential reads, staff approvals) are not generated: a partner key cannot call them, and leaving them out keeps the surface the SDK promises to keep stable small. The generator's `HIDDEN_TAGS` / `PUBLIC_INTERNAL` lists in `scripts/generate.ts` are the single place that rule lives.
@@ -176,7 +188,7 @@ await fastn.orgs.listOrgs({ type: "end_org" });
 await fastn.connections.listConnections({ endOrgId: await customer.id() });
 await fastn.events.listEventSubscriptions();
 await fastn.embed.getSetupLink({ id: "stp_..." });
-await fastn.call("getTenant", { id: "..." });                   // any operation by operationId
+await fastn.orgs.getTenant({ id: "..." });                     // every operation is a typed method on its area
 await fastn.me();                                               // who this key is: actor, role, org, parentOrg
 ```
 
@@ -207,7 +219,7 @@ and workflow execute routes; without the body field those calls would silently r
 
 ```ts
 // A setup link by app: the account's widget for that connector is found for you (several: pass widgetId).
-const link = await customer.connect("hubspot", { connectionName: "Main CRM", redirectUrl: "https://app.acme.com/connected" });
+const link = await customer.connect(Apps.hubspot, { connectionName: "Main CRM", redirectUrl: "https://app.acme.com/connected" });
 redirect(link.url);                                                   // then customer.links.get(link.setupId) / links.cancel(...)
 
 // Or start OAuth directly, without a widget:
@@ -223,10 +235,11 @@ await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { 
 ```ts
 // Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
 const accountId = "...";                                              // one of the customer's accounts, from customer.connections()
-const w = await customer.watch("hubspot", ["contact.created", "deal.stageChanged"], { accountId });
-await customer.watches("hubspot");                                    // [{ id, app, events, status }]
-await customer.unwatch("hubspot");                                    // or unwatch(w.id)
-await customer.watchableEvents("hubspot");                            // the app's event names you can watch
+const w = await customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated, HubSpotEvents.dealStageChanged], { accountId });
+// HubSpotEvents.dealStageChanged delivers every deal property change: keep stage moves with propertyName === "dealstage".
+await customer.watches(Apps.hubspot);                                 // [{ id, app, events, status }]
+await customer.unwatch(Apps.hubspot);                                 // or unwatch(w.id)
+await customer.watchableEvents(Apps.hubspot);                         // the app's event names you can watch
 
 await customer.disconnect(accountId);                                 // the customer gets connection.revoked
 await customer.renameAccount(accountId, "Front desk calendar");
@@ -289,14 +302,14 @@ switch on there, Google Calendar, HubSpot, Slack, the Fastn Workspace itself, be
 Nothing in the SDK is tied to a connector; turn one on in the workspace and it shows up.
 
 ```ts
-import { ToolsClient } from "@fastn-ai/sdk";              // or new FastnClient({ apiKey, tools: { key, url } }).tools
+import { Apps, ToolsClient } from "@fastn-ai/sdk";        // or new FastnClient({ apiKey, tools: { key, url } }).tools
 
 const connect = new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: "https://mcp.fastn.dev/<workspace>" });
-const tools = await connect.tools();                           // every tool, e.g. googleCalendar__listEvents
-const cal = await connect.toolsOf("googleCalendar");           // one connector's tools, with their input schemas
+const tools = await connect.tools();                           // every tool your workspace has switched on, with its input schema
+const cal = await connect.toolsOf(Apps.googleCalendar);        // one connector's tools
 
-const r = await connect.customer("acme-42").call("googleCalendar__listEvents", { calendarId: "primary", timeMin: new Date().toISOString() });
-r.data                                                     // the tool's answer, JSON-decoded (r.text is the raw text)
+// Call them as typed methods, generated from your workspace (next section): no tool names typed by hand.
+// tools.customer("acme-42").googleCalendar.listEvents({ calendarId: "primary", timeMin: new Date().toISOString() })
 ```
 
 - The workspace key is a different credential from the platform API key. Read it from Settings > API keys in connect.fastn.dev.

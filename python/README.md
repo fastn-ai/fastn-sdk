@@ -56,7 +56,7 @@ props or endpoints.
 
    ```python
    import os
-   from fastn.platform import FastnClient
+   from fastn.platform import Apps, FastnClient
 
    fastn = FastnClient(api_key=os.environ["FASTN_API_KEY"])
    customer = fastn.customer(account.id)          # your id for this customer
@@ -66,7 +66,7 @@ props or endpoints.
 3. **Let the customer connect their apps.** Either send a hosted setup link, or show the embedded widget in your UI:
 
    ```python
-   link = customer.connect("hubspot")             # hosted page: redirect the customer to link["url"]
+   link = customer.connect(Apps.hubspot)             # hosted page: redirect the customer to link["url"]
    token = customer.embed_token()                 # or: a short-lived token for the in-app widget
    ```
 
@@ -900,9 +900,18 @@ every operation is a snake_case method on its area (`fastn.embed.create_setup_li
 This is a different `FastnClient` from `fastn.FastnClient` above: it takes a platform API key from the
 [fastn dashboard](https://app.fastn.dev) and talks to `https://api.fastn.dev`. It is synchronous.
 
+`Apps`, `Categories`, `Entities` and `HubSpotEvents` name every app in the unified catalog, every category and entity,
+and HubSpot's change events, so calls are completed by your editor instead of typed as strings:
+`customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
+`fastn.catalog.fields(Categories.crm, Entities.contact)`, `provider=Apps.hubspot`. Each value is the exact string the
+API takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
+category or entity outside them can still be passed as a string. `HubSpotEvents.dealStageChanged` delivers every deal
+property change: keep stage moves with `propertyName == "dealstage"`. The snippets below import them from
+`fastn.platform`.
+
 ```python
 import os
-from fastn.platform import FastnClient
+from fastn.platform import Apps, Categories, Entities, FastnClient, HubSpotEvents
 
 fastn = FastnClient(
     api_key=os.environ["FASTN_API_KEY"],
@@ -915,7 +924,7 @@ customer = fastn.customer("acme-42")
 customer.register({"name": "Acme Dental"})                        # idempotent: returns the existing org on repeat
 
 # 2. Give them a link to connect their tools (Google Calendar, HubSpot, ...), by connector slug.
-link = customer.connect("googleCalendar")
+link = customer.connect(Apps.googleCalendar)
 print(link["url"])                                                # send this to the customer
 
 # 3. Typed methods on whatever the customer connected: the provider is picked from their connections.
@@ -937,9 +946,9 @@ customer.call_log("req-abc")
 
 # Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
 account_id = "..."                                                # one of the customer's accounts, from customer.connections()
-w = customer.watch("hubspot", ["contact.created", "deal.stageChanged"], account_id=account_id)
-customer.watches("hubspot")                                       # [{"id", "app", "events", "status", ...}]
-customer.unwatch("hubspot")                                       # or unwatch(w["id"])
+w = customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated, HubSpotEvents.dealStageChanged], account_id=account_id)
+customer.watches(Apps.hubspot)                                       # [{"id", "app", "events", "status", ...}]
+customer.unwatch(Apps.hubspot)                                       # or unwatch(w["id"])
 
 customer.disconnect(account_id)                                   # the customer gets connection.revoked
 customer.rename_account(account_id, "Front desk calendar")
@@ -970,15 +979,15 @@ dropped. Every method also takes `provider=`, `connection_id=`, `idempotency_key
 | `crm.deals.create({"name", "amount", "stage", ...})`, `get`, `find`, `list`, `update`, `move_stage(id, stage)`, `delete`, `stages()` | crm/opportunity, crm/stage |
 
 `find(filters, page_size=)` answers one page (the search route has no cursor); `list(page_size=, cursor=)` pages.
-What the typed methods do not cover is still one call away: `customer.records("crm", "contact", provider="hubspot")`
+What the typed methods do not cover is still one call away: `customer.records(Categories.crm, Entities.contact, provider=Apps.hubspot)`
 takes any entity in the catalog with untyped input (`create`, `get`, `list`, `update`, `delete`, plus `search(filters)`
 and `providers()`), and `customer.run_action(connector, action, input)` runs a connector's own action.
 
 ```python
 # The catalog: which categories and entities exist, the fields each takes, which providers a customer connected.
 categories = fastn.catalog.categories()                 # [{"slug": "crm", "entities": [...]}]
-fields = fastn.catalog.fields("crm", "contact")         # [{"field": "email", "type": "string", "required": False}, ...]
-providers = customer.catalog.providers("crm", "contact")  # [{"connectorSlug": "hubspot", "connected": True, ...}]
+fields = fastn.catalog.fields(Categories.crm, Entities.contact)         # [{"field": "email", "type": "string", "required": False}, ...]
+providers = customer.catalog.providers(Categories.crm, Entities.contact)  # [{"connectorSlug": "hubspot", "connected": True, ...}]
 
 # Anything the unified API does not cover: the connector's own action with the customer's connection.
 r = customer.run_action("hubspot", "updateDeal", {"dealId": deal_id, "properties": {"dealstage": "qualifiedtobuy"}})
@@ -992,7 +1001,7 @@ partner key cannot call them.
 fastn.orgs.list_orgs({"type": "end_org"})
 fastn.connections.list_connections({"endOrgId": customer.id()})
 fastn.embed.get_setup_link({"id": "stp_..."})
-fastn.call("getTenant", {"id": "..."})                  # any operation by operationId
+fastn.orgs.get_tenant({"id": "..."})                    # every operation is a typed method on its area
 fastn.me()                                              # who this key is: actor, role, org, parentOrg
 ```
 
@@ -1022,7 +1031,7 @@ links, ...), fills that field in too.
 
 ```python
 # A setup link by app: the account's widget for that connector is found for you (several: pass widget_id=).
-link = customer.connect("hubspot", connection_name="Main CRM", redirect_url="https://app.acme.com/connected")
+link = customer.connect(Apps.hubspot, connection_name="Main CRM", redirect_url="https://app.acme.com/connected")
 link["url"]                                             # then customer.links.get(link["setupId"]) / links.cancel(...)
 
 # Or start OAuth directly, without a widget:
