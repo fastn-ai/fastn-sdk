@@ -66,3 +66,18 @@ export function errorInfo(body: unknown, fallback = ""): { message: string; code
   }
   return { message: String(fallback || body || "").slice(0, 300) };
 }
+
+/**
+ * Provider statuses inside a 502 UNIFIED_PROVIDER_ERROR that mean the app refused the request itself: repeating the same
+ * request can never succeed. Everything else stays retryable, notably 408 (provider timeout), 423 and 425 (clear on
+ * their own), 429 (rate limit), and 404 / 410 (can be a stale cached id that the platform evicts and looks up again).
+ */
+export const PROVIDER_REFUSAL_STATUSES: ReadonlySet<number> = new Set([400, 401, 403, 405, 413, 415, 422]);
+
+/** A 502 that carries the app's own final refusal (see PROVIDER_REFUSAL_STATUSES) is not retried. */
+export function isProviderRefusal(body: unknown): boolean {
+  if (!body || typeof body !== "object") return false;
+  const b = body as { code?: unknown; providerStatus?: unknown };
+  const ps = typeof b.providerStatus === "number" ? b.providerStatus : Number(b.providerStatus);
+  return b.code === "UNIFIED_PROVIDER_ERROR" && PROVIDER_REFUSAL_STATUSES.has(ps);
+}

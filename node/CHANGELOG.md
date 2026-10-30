@@ -4,6 +4,10 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-10-30
+
+- Fixed: a `502 UNIFIED_PROVIDER_ERROR` whose `providerStatus` says the app refused the request itself (400, 401, 403, 405, 413, 415, 422; for example Google's "Missing attendee email") is no longer retried: the same request can never succeed, and the retries cost two extra calls and several seconds. Transient provider statuses inside that 502 (404 and 410, which can be a stale cached id; 408, 423, 425, 429) and 5xx are retried as before (`PROVIDER_REFUSAL_STATUSES`).
+
 ## [0.4.3] - 2026-10-30
 
 - Docs (the npm page): the README now opens with what fastn is (embedded integrations for your product and your AI agents), a multi-tenant section, "Use fastn when", a step-by-step embedding guide written for Claude and other AI coding assistants, a Configuration section (`baseUrl`, `timeoutMs`, `retries`, `defaults`, `onRequest`, `fetch`, `userAgent`, `tools`), and an FAQ. It also shows a CommonJS `require`.
