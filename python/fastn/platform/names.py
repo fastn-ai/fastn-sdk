@@ -110,4 +110,14 @@ class HubSpotEvents:
     ticketDeleted: Final = "ticket.deleted"
 
 
-__all__ = ["Apps", "Categories", "Entities", "HubSpotEvents"]
+
+def require_name(value: object, what: str) -> str:
+    """Checks a name before it is used: an empty or missing name would otherwise reach the API as a confusing error, or,
+    for ``unwatch``, read as "no app" and remove every watch."""
+    if isinstance(value, str) and value != "":
+        return value
+    shown = "an empty string" if value == "" else repr(value)
+    raise TypeError(f"{what}: got {shown}; pass a name such as Apps.googleCalendar or \"googleCalendar\"")
+
+
+__all__ = ["Apps", "Categories", "Entities", "HubSpotEvents", "require_name"]

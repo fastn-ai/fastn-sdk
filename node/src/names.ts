@@ -112,3 +112,12 @@ export const HubSpotEvents = {
   ticketUpdated: "ticket.updated",
   ticketDeleted: "ticket.deleted",
 } as const;
+
+/**
+ * Checks a name before it is used: a misspelt member in plain JavaScript (`Apps.googleCalender`) is `undefined`, which
+ * would otherwise reach the API as a confusing error, or, for `unwatch`, read as "no app" and remove every watch.
+ */
+export function requireName(value: unknown, what: string): string {
+  if (typeof value === "string" && value !== "") return value;
+  throw new TypeError(`${what}: got ${value === "" ? "an empty string" : String(value)}; pass a name such as Apps.googleCalendar or "googleCalendar" (a misspelt Apps / Categories / Entities member is undefined)`);
+}

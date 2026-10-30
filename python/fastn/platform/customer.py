@@ -15,6 +15,7 @@ from ._generated.api import build_apis
 from .catalog import Catalog, rows_of
 from .domain import Calendar, Crm
 from .errors import FastnApiError, FastnNetworkError
+from .names import require_name
 
 if TYPE_CHECKING:
     from typing_extensions import Unpack
@@ -379,6 +380,8 @@ class Customer:
         `connect({"connectorId": ..., ...})`: starts an OAuth connection directly (initiateOauthConnection) and returns
         the answer with the URL to send the customer to. The connection is stored on the customer org (endOrgId is
         filled in)."""
+        if app_or_input is None or app_or_input == "":
+            require_name(app_or_input, "connect(app)")
         if not isinstance(app_or_input, str):
             return dict(self._root.connections.initiate_oauth_connection(_in({**app_or_input, "endOrgId": self.id()}), **options) or {})
         app = app_or_input
@@ -528,6 +531,7 @@ class Customer:
         refused with 400 EVENT_NOT_FOUND and the list of valid ones. The connector is found by slug, the customer's
         account on it by its connections (none: 404 CONNECTION_NOT_FOUND; several: 409 CONNECTION_AMBIGUOUS, pass
         connection_id); apps that route events by account number (HubSpot: the portal id) take it in `account_id`."""
+        require_name(app, "watch(app, events)")
         if not isinstance(events, (list, tuple)) or len(events) == 0:
             raise TypeError("watch(app, events): at least one event name is required")
         connector = self._connector_by_slug(app, opts)
@@ -605,6 +609,7 @@ class Customer:
 
     def unwatch(self, app_or_watch_id: str, **opts: Unpack[RequestOptions]) -> List[str]:
         """Stops a watch: by its id (one of this customer's watches, else 404 WATCH_NOT_FOUND), or every watch on an app. Answers the ids removed."""
+        require_name(app_or_watch_id, "unwatch(app_or_watch_id)")  # never read a missing name as "every app"
         by_id = bool(_WATCH_ID.match(app_or_watch_id))
         mine = self.watches(None if by_id else app_or_watch_id, **opts)
         ids = [str(w["id"]) for w in mine if not by_id or w["id"] == app_or_watch_id]
@@ -616,6 +621,7 @@ class Customer:
 
     def watchable_events(self, app: str, **opts: Unpack[RequestOptions]) -> List[Dict[str, Any]]:
         """The events an app can report (its own ids, labels and payload shapes), from the connector's catalog."""
+        require_name(app, "watchable_events(app)")
         connector = self._connector_by_slug(app, opts)
         r = self._root.events.list_connector_events(_in({"connectorId": connector.get("id")}), **opts)
         if isinstance(r, dict) and isinstance(r.get("data"), dict) and isinstance(r["data"].get("events"), list):

@@ -1,6 +1,7 @@
 // The unified catalog: which categories and entities exist, the fields each entity takes, and which providers a
 // customer has connected for it. `fastn.catalog` answers for the account; `customer.catalog` answers for one customer
 // (providers reflect that customer's own connections).
+import { requireName } from "./names.js";
 import type { FastnApis } from "./generated/api.js";
 import type { RequestOptions } from "./transport.js";
 import { FastnApiError } from "./errors.js";
@@ -82,6 +83,7 @@ export class Catalog {
 
   /** One entity, e.g. ("crm", "contact"): its operations, providers and create fields. */
   async entity(category: string, entity: string, opts?: RequestOptions): Promise<CatalogEntity> {
+    requireName(category, "catalog.entity(category, entity)"); requireName(entity, "catalog.entity(category, entity)");
     const e = (await this.category(category, opts)).entities?.find((x) => x.slug === entity);
     if (!e) throw notFound(`entity "${category}/${entity}"`, "/v1/unified/categories");
     return e;
@@ -89,6 +91,7 @@ export class Catalog {
 
   /** The fields an entity takes on create, with `required` flags. */
   async fields(category: string, entity: string, opts?: RequestOptions): Promise<CatalogField[]> {
+    requireName(category, "catalog.fields(category, entity)"); requireName(entity, "catalog.fields(category, entity)");
     return (await this.entity(category, entity, opts)).createFields ?? [];
   }
 
@@ -98,6 +101,7 @@ export class Catalog {
    * customer's own.
    */
   async providers(category: string, entity: string, opts?: RequestOptions): Promise<EntityProvider[]> {
+    requireName(category, "catalog.providers(category, entity)"); requireName(entity, "catalog.providers(category, entity)");
     const r: any = await this.api.unified.listUnifiedEntityProviders({ category, entity }, opts);
     return (Array.isArray(r?.data) ? r.data : Array.isArray(r) ? r : []) as EntityProvider[];
   }

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Apps, Categories, Entities, HubSpotEvents, EVENT_ALIASES, FastnClient } from "../../src/index.js";
+import { requireName } from "../../src/names.js";
 import { mockFetch } from "../helpers.js";
 
 describe("named apps, categories, entities and events", () => {
@@ -23,5 +24,19 @@ describe("named apps, categories, entities and events", () => {
     const plain = await fastn.catalog.fields("crm", "contact");
     expect(named).toEqual(plain);
     expect(named[0]!.field).toBe("email");
+  });
+
+  it("a missing name (a misspelt member in plain JavaScript is undefined) throws a clear TypeError before any request", async () => {
+    const m = mockFetch(() => ({ body: { data: [] } }));
+    const c = new FastnClient({ apiKey: "k", fetch: m.fetch, retries: 0 }).customer("acme-1");
+    const missing = (Apps as any).googleCalender;   // undefined
+    await expect(c.connect(missing)).rejects.toThrow(/connect\(app\): got undefined/);
+    await expect(c.watch(missing, ["contact.created"])).rejects.toThrow(/watch\(app, events\): got undefined/);
+    await expect(c.unwatch(missing)).rejects.toThrow(/unwatch\(appOrWatchId\): got undefined/);
+    await expect(c.unwatch("")).rejects.toThrow(/got an empty string/);     // never "every app"
+    await expect(c.watchableEvents(missing)).rejects.toThrow(TypeError);
+    await expect(c.catalog.fields((Categories as any).crmm, Entities.contact)).rejects.toThrow(/catalog.fields/);
+    expect(m.calls.length).toBe(0);
+    expect(requireName("googleCalendar", "x")).toBe("googleCalendar");
   });
 });

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Callable
 
 import httpx
+import pytest
 
 from fastn.platform import EVENT_ALIASES, Apps, Categories, Entities, FastnClient, HubSpotEvents
 
@@ -50,3 +51,17 @@ def test_catalog_fields_with_names_is_the_same_call_as_with_strings(mock: Callab
     mock(handler)
     fastn = FastnClient(api_key="k", retries=0)
     assert fastn.catalog.fields(Categories.crm, Entities.contact) == fastn.catalog.fields("crm", "contact")
+
+
+def test_a_missing_or_empty_name_throws_a_clear_type_error_before_any_request(mock: Callable[..., Mock]) -> None:
+    m = mock(lambda url, req: {"body": {"data": []}})
+    c = FastnClient(api_key="k", retries=0).customer("acme-1")
+    with pytest.raises(TypeError, match=r"connect\(app\): got None"):
+        c.connect(None)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match=r"watch\(app, events\): got an empty string"):
+        c.watch("", ["contact.created"])
+    with pytest.raises(TypeError, match="got an empty string"):
+        c.unwatch("")  # never "every app"
+    with pytest.raises(TypeError):
+        c.watchable_events(None)  # type: ignore[arg-type]
+    assert len(m.calls) == 0

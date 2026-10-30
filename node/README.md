@@ -147,7 +147,8 @@ and HubSpot's change events, so calls are completed and checked by your editor i
 `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
 `fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }`. A misspelt member
 (`Apps.googleCalender`, `HubSpotEvents.contactCraeted`) does not compile. Plain strings are still accepted and not
-checked: an unknown event name is refused by the API (400 `EVENT_NOT_FOUND`). Each value is the exact string the API
+checked: `watch` refuses an unknown event name before subscribing (`FastnApiError` 400 `EVENT_NOT_FOUND`, with the valid
+names), and a missing name (`undefined` from a misspelt member in plain JavaScript) throws a `TypeError` naming the call. Each value is the exact string the API
 takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
 category or entity outside them can still be passed as a string. Snippets below import them from `@fastn-ai/sdk`.
 
