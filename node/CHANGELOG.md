@@ -7,7 +7,7 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 ## [0.5.0] - 2026-10-30
 
 - Added: `Apps`, `Categories`, `Entities` and `HubSpotEvents`, named values for every app in the unified catalog (36), every category and entity, and HubSpot's change events, so calls read `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`, `fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }` instead of typed strings. Each value is the exact string the API takes; the string form still works and an app outside the list can be passed by its slug (`AppName` type). README snippets use the names.
-- Changed: `HubSpotEvent` was effectively `string` (it was derived from a loosely typed table); it is now the real list, so a misspelt HubSpot event in `customer.watch("hubspot", [...])` fails to compile. TypeScript code that passes HubSpot events as a `string[]` variable needs `HubSpotEvent[]`.
+- Changed: `HubSpotEvent` now lists HubSpot's event names so the editor completes them; any other string is still accepted, so existing code compiles unchanged.
 
 ## [0.4.3] - 2026-10-30
 

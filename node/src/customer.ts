@@ -59,7 +59,8 @@ export const EVENT_ALIASES: Record<string, Record<string, string>> = {
   },
 };
 /** HubSpot change events, in plain words or as HubSpot names them. */
-export type HubSpotEvent = (typeof HubSpotEvents)[keyof typeof HubSpotEvents] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange";
+/** Completed by the editor; any other string is still accepted (backward compatible). */
+export type HubSpotEvent = (typeof HubSpotEvents)[keyof typeof HubSpotEvents] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange" | (string & {});
 
 /** What `customer.watch(app, events)` takes besides the app and the events. */
 export interface WatchOptions {
