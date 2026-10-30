@@ -4,6 +4,13 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-10-30
+
+- Docs (the npm page): the README now opens with what fastn is (embedded integrations for your product and your AI agents), a multi-tenant section, "Use fastn when", a step-by-step embedding guide written for Claude and other AI coding assistants, a Configuration section (`baseUrl`, `timeoutMs`, `retries`, `defaults`, `onRequest`, `fetch`, `userAgent`, `tools`), and an FAQ. It also shows a CommonJS `require`.
+- Docs: samples that did not compile are fixed (`connect({ connectorId, connectionName, returnUrl })`; `paginate` over `listEvents` filters by `outcome`). "No runtime dependencies" is corrected (`json-schema-to-typescript` is used by the code generator only). The tour uses `customer.callLog`.
+- Docs: newly documented `customer.find()`, `customer.watchableEvents(app)`, `records(...).search` / `.providers`, `create` / `get` / `find` on notes, tasks and deals, `reschedule`'s `duration_minutes`, the `FastnApiError` helpers and `body`, `ToolError.tool` / `connector` / `isUnknownTool` / `isAuth`, `ToolsClient.rpc`, `VerifyOptions.toleranceSeconds`, `readEventHeaders` and `signEventBody`, and the CLI `--import` flag. `npx fastn-sdk-tools` needs the package installed, or use `npx -p @fastn-ai/sdk fastn-sdk-tools`.
+- Package metadata: a clearer description, more keywords, and fastn.ai as the homepage.
+
 ## [0.4.2] - 2026-10-29
 
 - Fixed: `find(filters, { page_size, cursor: undefined })`, the first page of a paging helper, is no longer refused; only a cursor with a value is. The `UnifiedPage` doc says that `list` takes the cursor and `find` answers one page.

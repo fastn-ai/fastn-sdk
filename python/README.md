@@ -951,35 +951,158 @@ hook["secret"]                                                    # shown once: 
 fastn.webhooks.test(hook["id"]); fastn.webhooks.deliveries(hook["id"]); fastn.webhooks.rotate_secret(hook["id"])
 ```
 
-- `customer.calendar` and `customer.crm` are the unified API with the fields named (the catalog's own names,
-  `start_time`, `first_name`, ...; `datetime` values are sent as ISO strings). Answers are `{"id", "provider", "data",
-  "warnings"?}` records or `{"records", "nextCursor", "hasMore"}` pages. No connected provider raises 404
-  `NO_CONNECTED_PROVIDER`, several raise 409 `PROVIDER_AMBIGUOUS` (pass `provider=`).
-- Every area is on the client directly with typed inputs: `fastn.orgs.list_orgs({"type": "end_org"})`,
-  `fastn.embed.get_setup_link({"id": "stp_..."})`, `fastn.call("getTenant", {"id": "..."})`, `fastn.me()`.
-  `fastn.catalog.categories()` / `.fields("crm", "contact")` / `customer.catalog.providers("crm", "contact")` read the
-  unified catalog. `customer.records("crm", "contact", provider="hubspot")` runs any catalog entity with untyped input;
-  `customer.run_action("hubspot", "updateDeal", {...})` runs a connector's own action with the customer's connection.
-- `customer.watch(app, events, account_id=, connection_id=, name=)`: events in plain words (`EVENT_ALIASES`:
-  `contact.created`, `deal.stageChanged`, ...) or as the app names them; unknown names raise 400 `EVENT_NOT_FOUND`
-  with the valid list (`customer.watchable_events(app)`). No account on the app raises 404 `CONNECTION_NOT_FOUND`,
-  several raise 409 `CONNECTION_AMBIGUOUS` (pass `connection_id=`; one of another app is 400 `CONNECTION_MISMATCH`).
-  `watches(app=None)` lists every page, `unwatch(app | id)` removes (an id that is not this customer's is 404
-  `WATCH_NOT_FOUND`); `disconnect` / `rename_account` refuse an account id that is not the customer's. HubSpot has no stage-only event: `deal.stageChanged` is `deal.propertyChange`; check `propertyName ==
-  "dealstage"` in the event.
-- Per-call options: `idempotency_key`, `correlation_id`, `customer={"ref": ...}` or `{"id": ...}`, `installation_id`,
-  `target_org`, `headers`, `extra_body`, `extra_query`, `timeout`, `retries`. `FastnClient(defaults={...})` applies
-  options to every call.
-- Errors: non-2xx raises `FastnApiError` with `status`, `code`, `message`, `details`, `request_id` and `body`; network
-  failures raise `FastnNetworkError`. GET calls are retried on 429/502/503/504 (default 2 retries, honouring
-  `Retry-After`); a write is retried only when it carries an `idempotency_key` and the platform de-duplicates that
-  operation by it (unified record writes, workflow execute).
-- Events: `parse_event(secret, request.headers, raw_body)` verifies `sha256=HMAC-SHA256(secret, "<ts>.<body>")` and
-  parses the delivery (5-minute tolerance). `paginate(fastn.events.list_events, {"outcome": "sent_to_dlq"}, page_size=100)`
-  walks `limit`/`offset` and cursor lists.
-- Also available: `customer.crm.tasks` / `customer.crm.deals` (`move_stage`, `stages`), `customer.calendar.free_slots`,
-  `free_intervals` / `slots_of`, `verify_event_signature`, and the `FastnApiError.is_not_found` / `is_conflict` /
-  `is_rate_limited` / `is_auth` / `is_validation` helpers.
+### Calendar and CRM, typed
+
+`customer.calendar` and `customer.crm` are the unified API with the fields named (the catalog's own names,
+`start_time`, `first_name`, ...; `datetime` values are sent as ISO strings). Answers are `{"id", "provider", "data",
+"warnings"?}` records or `{"records", "nextCursor", "hasMore"}` pages. The provider is the one the customer has
+connected for that entity: no connected provider raises 404 `NO_CONNECTED_PROVIDER` (send them a setup link), several
+raise 409 `PROVIDER_AMBIGUOUS` (pass `provider=`). `warnings` lists fields the provider does not map and therefore
+dropped. Every method also takes `provider=`, `connection_id=`, `idempotency_key=`, `correlation_id=`, ...
+
+| Method | Underneath |
+| --- | --- |
+| `calendar.free_slots({"start_time", "end_time", "timezone"?, "slot_minutes"?})` | scheduling/availability; answers `busy`, `free`, and `slots` of that length |
+| `calendar.book(meeting)`, `get(id)`, `find(filters)`, `list(page_size=, cursor=)`, `reschedule(id, {"start_time", "end_time"})`, `cancel(id)` | scheduling/meeting |
+| `crm.contacts.create / get / find({"email", "phone", "first_name", "last_name"}) / list / update / delete` | crm/contact |
+| `crm.notes.add({"body", "parent_id", "parent_type"})`, `create`, `get`, `find`, `list`, `update`, `delete` | crm/note (`created_at` defaults to now) |
+| `crm.tasks.add({"subject", "due_date", "status", ...})`, `create`, `get`, `find`, `list`, `update`, `delete` | crm/task |
+| `crm.deals.create({"name", "amount", "stage", ...})`, `get`, `find`, `list`, `update`, `move_stage(id, stage)`, `delete`, `stages()` | crm/opportunity, crm/stage |
+
+`find(filters, page_size=)` answers one page (the search route has no cursor); `list(page_size=, cursor=)` pages.
+What the typed methods do not cover is still one call away: `customer.records("crm", "contact", provider="hubspot")`
+takes any entity in the catalog with untyped input (`create`, `get`, `list`, `update`, `delete`, plus `search(filters)`
+and `providers()`), and `customer.run_action(connector, action, input)` runs a connector's own action.
+
+```python
+# The catalog: which categories and entities exist, the fields each takes, which providers a customer connected.
+categories = fastn.catalog.categories()                 # [{"slug": "crm", "entities": [...]}]
+fields = fastn.catalog.fields("crm", "contact")         # [{"field": "email", "type": "string", "required": False}, ...]
+providers = customer.catalog.providers("crm", "contact")  # [{"connectorSlug": "hubspot", "connected": True, ...}]
+
+# Anything the unified API does not cover: the connector's own action with the customer's connection.
+r = customer.run_action("hubspot", "updateDeal", {"dealId": deal_id, "properties": {"dealstage": "qualifiedtobuy"}})
+```
+
+Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`,
+`unified`, `events` and `workflows`; platform-administration and backend-only routes are not generated, because a
+partner key cannot call them.
+
+```python
+fastn.orgs.list_orgs({"type": "end_org"})
+fastn.connections.list_connections({"endOrgId": customer.id()})
+fastn.embed.get_setup_link({"id": "stp_..."})
+fastn.call("getTenant", {"id": "..."})                  # any operation by operationId
+fastn.me()                                              # who this key is: actor, role, org, parentOrg
+```
+
+### Customer ids, explained once
+
+Use `fastn.customer(ref)` (or the `customer=` option) and nothing else. The raw API names the same customer
+differently per operation; those generated input fields still exist, but they are the raw API. Scoping calls to a
+customer needs a multi-tenant partner API key.
+
+| You see in the API docs | What it is | In this SDK |
+| --- | --- | --- |
+| `orgId` (createTenant body) | the id YOU choose for the customer | `fastn.customer(ref)` |
+| `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names | filled in for you |
+| `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `customer.id()` (cached) |
+
+`customer.find()` returns the customer's org row (or `None` when fastn does not know the ref). `register`, `connect`,
+`links`, `watch`, `disconnect`, `rename_account`, `update`, `call_log`, `setup_link`, `embed_token`,
+`connect_with_credentials`, `connections`, `get`, `remove`, `calendar`, `crm` and `records` all take the ref and resolve
+fastn's id only where the API insists on it. The lookup is limited to orgs under your own org, so a key that can see
+more than your account can still never resolve someone else's customer.
+
+`customer.api.<area>.<operation>()` runs any operation for that customer: it sends x-end-org-ref and, on routes that
+take the customer in the body instead (OAuth initiation, stored connections, event subscriptions, secrets, setup
+links, ...), fills that field in too.
+
+### Connecting a customer's apps
+
+```python
+# A setup link by app: the account's widget for that connector is found for you (several: pass widget_id=).
+link = customer.connect("hubspot", connection_name="Main CRM", redirect_url="https://app.acme.com/connected")
+link["url"]                                             # then customer.links.get(link["setupId"]) / links.cancel(...)
+
+# Or start OAuth directly, without a widget:
+answer = customer.connect({"connectorId": "googleCalendar", "connectionName": "Google Calendar", "returnUrl": "https://app.acme.com/connected"})
+
+# Typed-in credentials (API key, basic auth): the fields come from the connector's auth method. The platform checks
+# them; an incomplete set raises 400 CREDENTIALS_INCOMPLETE with the missing names (err.body["missing"]).
+fields = customer.auth_fields("acme-crm")              # {"names", "required", "schema", "authMethodId", ...}
+customer.connect_with_credentials({"connectorId": "acme-crm", "credentials": {"apiKey": "..."}, "name": "Acme CRM"})
+```
+
+Prefer setup links for credentials: fastn's hosted page collects them, so they never pass through your backend.
+
+### Watching changes
+
+`customer.watch(app, events, account_id=, connection_id=, name=)` turns on an app's change events for a customer; each
+change reaches your webhook as `connector.event` and `unified.event`. Name events in plain words (`EVENT_ALIASES`:
+`contact.created`, `deal.stageChanged`, ...) or as the app names them; an unknown name raises 400 `EVENT_NOT_FOUND`
+with the valid list (`customer.watchable_events(app)`). No account on the app raises 404 `CONNECTION_NOT_FOUND`,
+several raise 409 `CONNECTION_AMBIGUOUS` (pass `connection_id=`; one of another app is 400 `CONNECTION_MISMATCH`).
+`watches(app=None)` lists every page, and `unwatch(app | id)` removes (an id that is not this customer's is 404
+`WATCH_NOT_FOUND`). `disconnect` and `rename_account` refuse an account id that is not the customer's. HubSpot has no
+stage-only event: `deal.stageChanged` is `deal.propertyChange`, so check `propertyName == "dealstage"` in the event.
+
+### Responses and errors
+
+Answers are returned as the REST API sends them (usually `{"data": ...}`; unified records are `{"id", "provider",
+"data"}`), so the SDK agrees 1:1 with the REST docs, typed as `TypedDict`s under `fastn.platform.types`.
+
+Non-2xx answers raise `FastnApiError` with `status`, `code` (e.g. `NOT_FOUND`, `VALIDATION_ERROR`,
+`NO_CONNECTED_PROVIDER`, `OPERATION_NOT_SUPPORTED`, `PROVIDER_AMBIGUOUS`), `message`, `details`, `body` and
+`request_id` (quote it when asking fastn for help), plus `is_not_found`, `is_conflict`, `is_rate_limited`, `is_auth`
+and `is_validation`. Network failures raise `FastnNetworkError`. GET calls are retried on 429/502/503/504 (default 2
+retries, honouring `Retry-After`). A write is retried only when it carries an `idempotency_key` **and** the platform
+de-duplicates that operation by it (unified record writes, workflow execute); every other write is never retried, so a
+lost answer cannot make it act twice.
+
+```python
+from fastn.platform import FastnApiError
+
+try:
+    fastn.orgs.get_tenant({"id": tenant_id})
+except FastnApiError as e:
+    if e.is_not_found:
+        ...
+```
+
+### Per-call options
+
+Every method takes keyword options: `idempotency_key`, `correlation_id`, `customer={"ref": ...}` or `{"id": ...}`,
+`installation_id`, `target_org`, `headers`, `extra_body`, `extra_query`, `timeout`, `retries`. `extra_body` and
+`extra_query` send fields the SDK does not know yet; they are passed as given. `FastnClient(defaults={...})` applies
+options to every call, e.g. `defaults={"customer": {"ref": "acme-42"}}` to scope a whole client to one customer.
+
+### Events (webhooks)
+
+```python
+from fastn.platform import parse_event
+
+# Flask: event = parse_event(os.environ["FASTN_EVENT_SECRET"], request.headers, request.get_data())
+event = parse_event(secret, headers, raw_body)          # raises ValueError on a bad signature
+# event["id"] is stable across retries: drop repeats by id.
+```
+
+The signature is `sha256=HMAC-SHA256(secret, "<X-Fastn-Timestamp>.<raw body>")`; deliveries older than 5 minutes are
+rejected (`tolerance_seconds=`, 0 disables the check). Always pass the raw body, never a re-serialised object.
+`verify_event_signature` answers a bool instead, `read_event_headers` reads the fastn headers, `sign_event_body` signs a
+body the same way (for tests), and `internal_ids=True` keeps fastn's internal customer id in a parsed event.
+
+### Pagination and helpers
+
+```python
+from fastn.platform import paginate
+
+for ev in paginate(fastn.events.list_events, {"outcome": "sent_to_dlq"}, page_size=100):
+    ...
+```
+
+Works for `limit`/`offset` lists and cursor lists. Also exported: `free_intervals` and `slots_of` (the slot maths
+behind `calendar.free_slots`).
 
 ## FAQ
 

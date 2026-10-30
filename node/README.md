@@ -1,7 +1,38 @@
-# @fastn-ai/sdk
+# @fastn-ai/sdk: fastn SDK for Node.js and TypeScript
 
-The fastn platform REST API for Node and TypeScript. Every endpoint, generated from fastn's OpenAPI spec, plus a
-small hand-written layer that makes the common partner flow easy.
+**Embedded integrations for your product and your AI agents.**
+
+[fastn](https://fastn.ai) is the embedded integration platform for B2B SaaS. `@fastn-ai/sdk` is its official Node.js
+and TypeScript SDK: add customer-facing integrations (CRM, calendar, Slack, and 1,000+ more apps) to your product
+through one API, and give your AI agents the same integrations as tools.
+
+Your customers connect their own apps inside your product. Your backend uses those connections through the fastn
+platform API, and your agents call them as workspace tools or through the
+[fastn MCP gateway](https://docs.fastn.ai/build/mcp-gateway).
+
+**Built for multi-tenant SaaS:**
+
+- **One key, every customer.** Address each customer by your own id (`fastn.customer("acme-42")`); fastn's internal
+  org ids never reach your code. Every call is scoped to that customer, and an account or watch id that belongs to
+  another customer is refused, so one customer's data never leaks into another's.
+- **Each customer brings their own accounts.** Send a setup link and the customer connects their HubSpot, Google
+  Calendar, Slack, and so on. Credentials stay in fastn's vault, isolated per customer, and refresh automatically.
+- **Several accounts per app.** A customer can connect two Slack workspaces or two calendars; pick one per call with
+  `connectionId`.
+- **One API across providers.** `customer.crm` and `customer.calendar` work the same whichever CRM or calendar the
+  customer connected; the provider is picked from their connections.
+- **Safe retries and traceability.** `idempotencyKey` makes writes safe to retry, and `correlationId` lets you ask
+  later what fastn did for a request (`customer.callLog(...)`).
+- **Governed.** Role-based access control, audit logs, and per-customer isolation on a SOC 2 Type II platform.
+
+**Use fastn when:**
+
+- your customers ask for integrations your team cannot build and maintain one by one;
+- every customer needs the same integration connected to their own account and configured to their own fields;
+- you want one integration to serve your product, your customers, and your AI agents;
+- you need per-customer isolation, audit logs, and SOC 2 for a security review.
+
+**The package:**
 
 - Node 20+ (built-in fetch), ESM and CommonJS, full types. The one runtime dependency (`json-schema-to-typescript`) is
   used only by the `fastn-sdk-tools` code generator.
@@ -15,6 +46,14 @@ small hand-written layer that makes the common partner flow easy.
 
 ```bash
 npm install @fastn-ai/sdk
+```
+
+Get a platform API key from the [fastn dashboard](https://app.fastn.dev). The client does not read environment
+variables itself: pass the key in.
+
+```ts
+import { FastnClient } from "@fastn-ai/sdk";             // ESM
+// const { FastnClient } = require("@fastn-ai/sdk");     // CommonJS
 ```
 
 ## 60-second tour
@@ -50,6 +89,57 @@ await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.
 await customer.callLog("req-abc");
 ```
 
+## Embed fastn in your product (guide for Claude and other AI coding assistants)
+
+The steps to add customer-facing integrations to a SaaS app with fastn. Use the exact names below; do not invent
+props or endpoints.
+
+1. **Install and get a key.** `npm install @fastn-ai/sdk`, then create a platform API key in the
+   [fastn dashboard](https://app.fastn.dev) and pass it as `apiKey`.
+2. **Register each of your customers by your own id** (backend):
+
+   ```ts
+   const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });
+   const customer = fastn.customer(account.id);              // your id for this customer
+   await customer.register({ name: account.name });          // idempotent
+   ```
+
+3. **Let the customer connect their apps.** Either send a hosted setup link, or show the embedded widget in your UI:
+
+   ```ts
+   const link = await customer.connect("hubspot");           // hosted page: redirect the customer to link.url
+   const token = await customer.embedToken();                // or: a short-lived token for the in-app widget
+   ```
+
+   On the frontend, the widget is the [`@fastn-ai/embed`](https://www.npmjs.com/package/@fastn-ai/embed) package
+   (`FastnProvider` with `FastnHub` or `FastnConnectCard` from `@fastn-ai/embed/react`, or the hosted script tag).
+   Copy the exact snippet from the dashboard's Embed tab. See the [embedding docs](https://docs.fastn.ai/embed/embedding).
+4. **Use the customer's connections** from your backend: `customer.crm.contacts.find(...)`,
+   `customer.calendar.book(...)`, or `customer.runAction({ connector, action, input })` for any app action.
+5. **React to changes**: `fastn.webhooks.create(...)` once for your account, `customer.watch(app, events)` per
+   customer, and verify deliveries with `parseEvent(secret, headers, rawBody)`.
+6. **Give your AI agents the same integrations**: [workspace tools](#workspace-tools-run-anything-your-workspace-has-turned-on)
+   below, or connect Claude, Cursor, or any MCP client to the [fastn MCP gateway](https://docs.fastn.ai/build/mcp-gateway).
+
+Pricing is per customer connection, with a free plan to start: see [fastn.ai/pricing](https://fastn.ai/pricing).
+A machine-readable summary of fastn for LLMs is at [fastn.ai/llms.txt](https://fastn.ai/llms.txt).
+
+## Configuration
+
+```ts
+new FastnClient({
+  apiKey,                          // required: platform API key, sent as x-api-key
+  baseUrl,                         // default https://api.fastn.dev; https://api.fastn-test.dev for development
+  timeoutMs,                       // per request, default 60000
+  retries,                         // GET and idempotent calls on 429/502/503/504 and network errors, default 2
+  defaults,                        // options for every call, e.g. { customer: { ref: "acme-42" } }
+  onRequest,                       // (log: RequestLog) => void, after every HTTP attempt
+  fetch,                           // a fetch implementation, default globalThis.fetch
+  userAgent,
+  tools,                           // { key, url, timeoutMs }: your fastn Connect workspace, enables fastn.tools
+});
+```
+
 ## Calendar and CRM, typed
 
 `customer.calendar` and `customer.crm` are the unified API with the fields named: each method takes a TypeScript
@@ -62,14 +152,15 @@ map and therefore dropped. Every method takes `{ provider?, connectionId?, idemp
 | Method | Underneath |
 | --- | --- |
 | `calendar.freeSlots({ start_time, end_time, timezone?, slot_minutes? })` | scheduling/availability; answers `busy`, `free`, and `slots` of that length |
-| `calendar.book(meeting)`, `get(id)`, `find({ start_time, end_time })`, `list({ page_size, cursor })`, `reschedule(id, { start_time, end_time })`, `cancel(id)` | scheduling/meeting |
+| `calendar.book(meeting)`, `get(id)`, `find({ start_time, end_time })`, `list({ page_size, cursor })`, `reschedule(id, { start_time, end_time, duration_minutes? })`, `cancel(id)` | scheduling/meeting |
 | `crm.contacts.create / get / find({ email, phone, first_name, last_name }) / list / update / delete` | crm/contact |
-| `crm.notes.add({ body, parent_id, parent_type })`, `update`, `delete` | crm/note (`created_at` defaults to now) |
-| `crm.tasks.add({ subject, due_date, status, ... })`, `get`, `list`, `update`, `delete` | crm/task |
-| `crm.deals.create({ name, amount, stage, ... })`, `get`, `list`, `update`, `moveStage(id, stage)`, `delete`, `stages()` | crm/opportunity, crm/stage |
+| `crm.notes.add({ body, parent_id, parent_type })`, `create`, `get`, `find`, `list`, `update`, `delete` | crm/note (`created_at` defaults to now) |
+| `crm.tasks.add({ subject, due_date, status, ... })`, `create`, `get`, `find`, `list`, `update`, `delete` | crm/task |
+| `crm.deals.create({ name, amount, stage, ... })`, `get`, `find`, `list`, `update`, `moveStage(id, stage)`, `delete`, `stages()` | crm/opportunity, crm/stage |
 
 What they do not cover is still one call away: `customer.records({ category, entity, provider })` takes any entity
-in the catalog with untyped input, and `customer.runAction(...)` runs a connector's own action.
+in the catalog with untyped input (`create`, `get`, `list`, `update`, `delete`, plus `search(filters)` and
+`providers()`), and `customer.runAction(...)` runs a connector's own action.
 
 ```ts
 // The catalog: which categories and entities exist, the fields each takes, which providers a customer connected.
@@ -102,6 +193,7 @@ rejects the customer headers on a single-tenant key (not exercised by the tests 
 | `externalRef`, `endOrgRef`, `x-end-org-ref` | the same id, under other names       | filled in for you                 |
 | `endOrgId`, `id` (createTenant answer), `x-end-org-id` | fastn's own id of that customer org | `await customer.id()` (cached) |
 
+`customer.find()` returns the customer's org row (or `undefined` when fastn does not know the ref).
 `customer.register()`, `connect(app)`, `links`, `watch()`, `disconnect()`, `renameAccount()`, `update()`, `callLog()`,
 `setupLink()`, `embedToken()`, `connectWithCredentials()`, `connections()`, `get()`, `remove()`, `calendar`, `crm` and
 `records(...)` all take the ref and resolve fastn's id only where the API insists on it. The lookup is
@@ -130,9 +222,11 @@ await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { 
 
 ```ts
 // Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
-const w = await customer.watch("hubspot", ["contact.created", "deal.stageChanged"], { accountId: hubspotPortalId });
+const accountId = "...";                                              // one of the customer's accounts, from customer.connections()
+const w = await customer.watch("hubspot", ["contact.created", "deal.stageChanged"], { accountId });
 await customer.watches("hubspot");                                    // [{ id, app, events, status }]
 await customer.unwatch("hubspot");                                    // or unwatch(w.id)
+await customer.watchableEvents("hubspot");                            // the app's event names you can watch
 
 await customer.disconnect(accountId);                                 // the customer gets connection.revoked
 await customer.renameAccount(accountId, "Front desk calendar");
@@ -161,8 +255,10 @@ Answers are returned exactly as the REST API sends them (usually `{ data: ... }`
 `{ id, provider, data }`), so the SDK agrees 1:1 with the REST docs and Postman collection. Typed where the spec
 describes the answer, `Record<string, any>` otherwise.
 
-Non-2xx answers throw `FastnApiError` with `status`, `code` (e.g. `NOT_FOUND`, `VALIDATION_ERROR`), `message`,
-`details` and `requestId` (quote it when asking fastn for help). Network failures throw `FastnNetworkError`.
+Non-2xx answers throw `FastnApiError` with `status`, `code` (e.g. `NOT_FOUND`, `VALIDATION_ERROR`,
+`NO_CONNECTED_PROVIDER`, `OPERATION_NOT_SUPPORTED`, `PROVIDER_AMBIGUOUS`), `message`, `details`, `body` and `requestId`
+(quote it when asking fastn for help), plus the helpers `isNotFound`, `isConflict`, `isRateLimited`, `isAuth` and
+`isValidation`. Network failures throw `FastnNetworkError`.
 `GET` calls are retried on 429/502/503/504 (default 2 retries, honouring `Retry-After`). A write is retried only when
 it carries an `idempotencyKey` **and** the platform de-duplicates that operation by it (unified record create, update
 and delete, workflow execute; each such method says so in its doc). Every other write is never retried, so a lost
@@ -208,8 +304,8 @@ r.data                                                     // the tool's answer,
   `defaults: { customer: { ref } }` when one client serves one customer.
 - `userId` (sent as X-User-Id) is needed when the workspace runs calls as each person.
 - Failures throw `ToolError` with `kind` "http" (gateway), "rpc" (JSON-RPC, e.g. unknown tool), "tool" (the tool ran
-  and answered an error) or "auth" (the app is not connected for this customer yet), plus `status`, `code` and the
-  gateway's message. For "auth", `e.isConnectionRequired` is true and `e.authorizeUrl` is where to send the customer,
+  and answered an error) or "auth" (the app is not connected for this customer yet), plus `status`, `code`, `tool`,
+  `connector`, the gateway's message, and the helpers `isUnknownTool` and `isAuth`. For "auth", `e.isConnectionRequired` is true and `e.authorizeUrl` is where to send the customer,
   so an agent can ask the user to connect at runtime instead of failing.
 - In "one shared account" mode every call runs as that one account, whatever customer you name. Per-customer accounts
   need the "each customer org" mode in the workspace.
@@ -226,16 +322,20 @@ r.data                                                     // the tool's answer,
   (`endOrgId`, `end_org_id`): the only customer id you see is the one you chose (`orgId` / `tenantRef`). `r.text` keeps
   the raw answer; `parseEvent(..., { internalIds: true })` keeps the id in an event.
 
-### Typed methods for your workspace: `npx fastn-sdk-tools`
+### Typed methods for your workspace: `fastn-sdk-tools`
 
 Tool names as strings work, but your editor cannot check them. The generator turns your workspace's tool list into one
 TypeScript module with a class per connector and a method per tool, each input typed from the tool's schema:
+
+Run it from a project that has `@fastn-ai/sdk` installed (the command ships in this package; there is no separate
+`fastn-sdk-tools` package on npm). Without a local install, use `npx -p @fastn-ai/sdk fastn-sdk-tools ...`.
 
 ```sh
 # once, and again whenever the workspace changes (commit the file)
 export FASTN_TOOLS_KEY=...                                        # the workspace key; it never ends up in the file
 npx fastn-sdk-tools --url https://mcp.fastn.dev/<workspace> --out src/fastn-tools.ts
 npx fastn-sdk-tools --url https://mcp.fastn.dev/<workspace> --out src/fastn-tools.ts --check   # CI: exit 1 on drift
+npx fastn-sdk-tools --import ./my-client.js ...                    # optional: module to import the client from
 ```
 
 ```ts
@@ -252,7 +352,7 @@ const cats = await tools.fastnPlatform.listUnifiedCategories();               //
 created.data                                                                  // ToolResult, as from call(); ToolError on failure
 ```
 
-- `--url` + `--key` (or `FASTN_TOOLS_URL` / `FASTN_TOOLS_KEY`) fetch the listing; `--from tools-list.json` generates
+- `--url` + `--key` (or `FASTN_TOOLS_URL` / `FASTN_TOOLS_KEY`; only the CLI reads these) fetch the listing; `--from tools-list.json` generates
   offline from a saved tools/list (the same list gives the same file). `--customer <ref>` fetches the listing as that
   customer. The header records the url, customer and tool count, never the key.
 - The module exports `createTools`, `Tools`, one class per connector (`GoogleCalendarTools`), one input interface per
@@ -262,7 +362,8 @@ created.data                                                                  //
   that gets a name-derived variant (`create_contact`, `createContactTool`). Property names stay as the schema spells
   them (quoted when needed). A tool whose schema says nothing about a field types it `unknown`; an object with no
   declared properties is `Record<string, unknown>`.
-- `tools.client` is the `ToolsClient` under the methods, for a tool the file does not know yet.
+- `tools.client` is the `ToolsClient` under the methods, for a tool the file does not know yet; `client.rpc(method,
+  params)` sends any other JSON-RPC call to the workspace.
 - Programmatic use: `import { generateToolsModule } from "@fastn-ai/sdk/codegen"`. The schema-to-type step is
   `json-schema-to-typescript`, the package's one runtime dependency (the CLI runs from the installed package, so it
   cannot be a devDependency); it is loaded by the generator only, never by the client.
@@ -278,13 +379,15 @@ const event = parseEvent(process.env.FASTN_EVENT_SECRET!, req.headers, req.body)
 ```
 
 The signature is `sha256=HMAC-SHA256(secret, "<X-Fastn-Timestamp>.<raw body>")`; deliveries older than 5 minutes
-are rejected (configurable). Always pass the raw body, never a re-serialised object.
+are rejected (`{ toleranceSeconds }`, 0 disables the check). Always pass the raw body, never a re-serialised object.
+`parseEvent` throws a plain `Error` on a bad signature. `verifyEventSignature` answers a boolean instead,
+`readEventHeaders` reads the fastn headers, and `signEventBody` signs a body the same way (for tests).
 
 ## Pagination
 
 ```ts
 import { paginate } from "@fastn-ai/sdk";
-for await (const ev of paginate((i) => fastn.events.listEvents(i), { outcome: "sent_to_dlq" }, { pageSize: 100 })) ...
+for await (const ev of paginate((i) => fastn.events.listEvents(i), { outcome: "sent_to_dlq" as const }, { pageSize: 100 })) ...
 ```
 
 Works for `limit`/`offset` lists and cursor lists; stops on a short page, a missing cursor, or a list that ignores paging.
@@ -294,14 +397,15 @@ Works for `limit`/`offset` lists and cursor lists; stops on a short page, a miss
 ```bash
 npm run generate     # spec/openapi-*.json -> src/generated (ops, types, api)
 npm test             # unit tests with a mocked fetch
-LIVE=1 FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... npm run test:live   # live run on api.fastn-test.dev (creates and removes test data)
+FASTN_API_KEY=... FASTN_TEST_CUSTOMER=... npm run test:live   # live run on api.fastn-test.dev (creates and removes test data)
 # FASTN_BASE_URL=https://api.fastn.dev LIVE_PROD=1 ... runs the same suite on production
 # FASTN_API_KEY=... npx tsx scripts/sweep/run.ts   # calls every published operation once on dev and writes a per-operation report
 npm run build        # dist/ (esm + cjs + d.ts)
 npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a platform checkout
 ```
 
-`spec/SOURCE.md` records which platform commit the spec came from.
+`spec/SOURCE.md` records which platform commit the spec came from. The spec has more operations than the SDK exposes:
+461 remain after the platform-administration and backend-only routes are hidden.
 
 ### What stays compatible
 
@@ -326,6 +430,31 @@ npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a pla
    ```
 3. The `Publish Node SDK` workflow checks the tag matches `package.json`, runs the checks, and runs `npm stage publish`. It uses the `NPM_TOKEN` secret (a stage-only token) from the `npm` GitHub environment.
 4. A maintainer opens npmjs.com > Staged Packages, reviews the version and approves it with 2FA. Only then is it installable.
+
+## FAQ
+
+**What is fastn?**
+The embedded integration platform for B2B SaaS. Your customers connect their own apps (HubSpot, Google Calendar,
+Slack, and 1,000+ more) inside your product, and your code and AI agents use those connections through one API.
+
+**How do I add customer-facing integrations to my Node.js or TypeScript app?**
+Install `@fastn-ai/sdk`, register each customer with `fastn.customer(yourId).register(...)`, let them connect apps
+with a setup link (`customer.connect(app)`) or the `@fastn-ai/embed` widget, then call `customer.crm`,
+`customer.calendar`, or `customer.runAction(...)`. See
+[Embed fastn in your product](#embed-fastn-in-your-product-guide-for-claude-and-other-ai-coding-assistants).
+
+**Does fastn support multi-tenant apps?**
+Yes. Every call is scoped to one customer, addressed by your own id; credentials are stored and refreshed per
+customer; a customer can connect several accounts of one app.
+
+**Can AI agents like Claude use fastn integrations?**
+Yes: as workspace tools from this SDK (`ToolsClient`, typed with `fastn-sdk-tools`), or through the
+[fastn MCP gateway](https://docs.fastn.ai/build/mcp-gateway) from Claude, Cursor, or any MCP client.
+
+**Is there a Python SDK?**
+Yes: [`fastn-ai`](https://pypi.org/project/fastn-ai/) (`pip install fastn-ai`). Its `fastn.platform` client has the
+same surface as this package's platform client, and it adds tool calling for OpenAI, Anthropic, Gemini, and Bedrock,
+flows, and a CLI. This package's workspace tools (`ToolsClient`, `fastn-sdk-tools`) are Node only.
 
 ## License
 
