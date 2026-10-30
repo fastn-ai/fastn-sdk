@@ -6,8 +6,8 @@ completes instead of typed-in strings:
     fastn.catalog.fields(Categories.crm, Entities.contact)
 
 Each value is the exact string the API takes (they are plain ``str``), so the string form keeps working and nothing
-changes on the wire. The apps are the ones mapped in fastn's unified catalog; an app outside this list can still be
-passed by its slug. The same names exist in the Node SDK (``import { Apps } from "@fastn-ai/sdk"``).
+changes on the wire. The apps, categories and entities are those in fastn's unified catalog on production as of 0.5.0 (the catalog can
+grow, and an org can add its own); anything outside these lists can still be passed as a string. The same names exist in the Node SDK (``import { Apps } from "@fastn-ai/sdk"``).
 """
 
 from __future__ import annotations
@@ -102,6 +102,8 @@ class HubSpotEvents:
     dealCreated: Final = "deal.created"
     dealUpdated: Final = "deal.updated"
     dealDeleted: Final = "deal.deleted"
+    #: HubSpot has no stage-only event: this subscribes to deal.propertyChange, so every deal property change arrives
+    #: (amount, owner, close date, ...). Keep only stage moves by checking propertyName == "dealstage" in the event.
     dealStageChanged: Final = "deal.stageChanged"
     ticketCreated: Final = "ticket.created"
     ticketUpdated: Final = "ticket.updated"

@@ -7,10 +7,11 @@
  *   fastn.catalog.fields(Categories.crm, Entities.contact)
  *
  * Each value is the exact string the API takes, so the plain string form keeps working and nothing changes on the wire.
- * The apps are the ones mapped in fastn's unified catalog; an app outside this list can still be passed by its slug.
+ * The apps, categories and entities are those in fastn's unified catalog on production as of 0.5.0 (the catalog can grow,
+ * and an org can add its own); anything outside these lists can still be passed as a string.
  */
 
-/** Apps mapped in fastn's unified catalog, by connector slug. */
+/** Apps mapped in fastn's unified catalog on production as of 0.5.0, by connector slug. */
 export const Apps = {
   asana: "asana",
   bmcHelixItsm: "bmcHelixItsm",
@@ -76,7 +77,7 @@ export const Entities = {
   note: "note",
   opportunity: "opportunity",
   stage: "stage",
-  task: "task",
+  task: "task", // crm/task
   user: "user",
   // documents
   document: "document",
@@ -104,7 +105,8 @@ export const HubSpotEvents = {
   dealCreated: "deal.created",
   dealUpdated: "deal.updated",
   dealDeleted: "deal.deleted",
-  /** HubSpot has no stage-only event: this arrives as deal.propertyChange with propertyName "dealstage". */
+  /** HubSpot has no stage-only event: this subscribes to deal.propertyChange, so EVERY deal property change arrives
+   *  (amount, owner, close date, ...). Keep only stage moves by checking propertyName === "dealstage" in the event. */
   dealStageChanged: "deal.stageChanged",
   ticketCreated: "ticket.created",
   ticketUpdated: "ticket.updated",

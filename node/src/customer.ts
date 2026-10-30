@@ -58,8 +58,8 @@ export const EVENT_ALIASES: Record<string, Record<string, string>> = {
     "ticket.created": "ticket.creation", "ticket.updated": "ticket.propertyChange", "ticket.deleted": "ticket.deletion",
   },
 };
-/** HubSpot change events, in plain words or as HubSpot names them. */
-/** Completed by the editor; any other string is still accepted (backward compatible). */
+/** HubSpot change events, in plain words or as HubSpot names them. The editor completes them; any other string is still
+ *  accepted (backward compatible) and an unknown name is refused by the API with 400 EVENT_NOT_FOUND. */
 export type HubSpotEvent = (typeof HubSpotEvents)[keyof typeof HubSpotEvents] | "contact.creation" | "contact.propertyChange" | "contact.deletion" | "contact.merge" | "contact.restore" | "contact.associationChange" | "company.creation" | "company.propertyChange" | "company.deletion" | "company.associationChange" | "deal.creation" | "deal.propertyChange" | "deal.deletion" | "deal.associationChange" | "ticket.creation" | "ticket.propertyChange" | "ticket.deletion" | "ticket.associationChange" | (string & {});
 
 /** What `customer.watch(app, events)` takes besides the app and the events. */
@@ -222,7 +222,7 @@ export class Customer implements ProviderResolver {
   }
 
   /** The watches on this customer's apps (every app, or one). */
-  async watches(app?: string, opts?: RequestOptions): Promise<Watch[]> {
+  async watches(app?: AppName, opts?: RequestOptions): Promise<Watch[]> {
     const id = await this.id();
     const connector = app ? await this.connectorBySlug(app, opts) : undefined;
     // every page: the list is 20 per page by default, and the connectorId query does not match the nested app part, so filter here

@@ -145,9 +145,11 @@ new FastnClient({
 `Apps`, `Categories`, `Entities` and `HubSpotEvents` name every app in the unified catalog, every category and entity,
 and HubSpot's change events, so calls are completed and checked by your editor instead of typed as strings:
 `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
-`fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }`. A misspelt name or HubSpot event
-does not compile. Each value is the exact string the API takes, so the string form still works and an app outside the
-list can be passed by its slug. Snippets below import them from `@fastn-ai/sdk`.
+`fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }`. A misspelt member
+(`Apps.googleCalender`, `HubSpotEvents.contactCraeted`) does not compile. Plain strings are still accepted and not
+checked: an unknown event name is refused by the API (400 `EVENT_NOT_FOUND`). Each value is the exact string the API
+takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
+category or entity outside them can still be passed as a string. Snippets below import them from `@fastn-ai/sdk`.
 
 ## Calendar and CRM, typed
 
@@ -233,9 +235,10 @@ await customer.connectWithCredentials({ connectorId: "acme-crm", credentials: { 
 // Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
 const accountId = "...";                                              // one of the customer's accounts, from customer.connections()
 const w = await customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated, HubSpotEvents.dealStageChanged], { accountId });
-await customer.watches("hubspot");                                    // [{ id, app, events, status }]
-await customer.unwatch(Apps.hubspot);                                    // or unwatch(w.id)
-await customer.watchableEvents("hubspot");                            // the app's event names you can watch
+// HubSpotEvents.dealStageChanged delivers every deal property change: keep stage moves with propertyName === "dealstage".
+await customer.watches(Apps.hubspot);                                 // [{ id, app, events, status }]
+await customer.unwatch(Apps.hubspot);                                 // or unwatch(w.id)
+await customer.watchableEvents(Apps.hubspot);                         // the app's event names you can watch
 
 await customer.disconnect(accountId);                                 // the customer gets connection.revoked
 await customer.renameAccount(accountId, "Front desk calendar");

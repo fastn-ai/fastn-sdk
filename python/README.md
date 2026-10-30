@@ -904,8 +904,10 @@ This is a different `FastnClient` from `fastn.FastnClient` above: it takes a pla
 and HubSpot's change events, so calls are completed by your editor instead of typed as strings:
 `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
 `fastn.catalog.fields(Categories.crm, Entities.contact)`, `provider=Apps.hubspot`. Each value is the exact string the
-API takes, so the string form still works and an app outside the list can be passed by its slug. The snippets below
-import them from `fastn.platform`.
+API takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
+category or entity outside them can still be passed as a string. `HubSpotEvents.dealStageChanged` delivers every deal
+property change: keep stage moves with `propertyName == "dealstage"`. The snippets below import them from
+`fastn.platform`.
 
 ```python
 import os

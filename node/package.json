@@ -83,7 +83,7 @@
   ],
   "scripts": {
     "build": "npm run generate && tsup",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
     "test": "vitest run test/unit",
     "lint:package": "publint --strict && attw --pack .",
     "prepublishOnly": "npm run build",
