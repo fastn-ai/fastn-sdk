@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-10-30
+
+### Changed
+
+- README (the PyPI page): the `fastn.platform` section now has the same structure as the Node SDK guide: Calendar and CRM typed (a method table), the catalog, every area on the client, Customer ids explained once, Connecting a customer's apps (setup link by app, direct OAuth, typed-in credentials), Watching changes, Responses and errors, Per-call options, Events, and Pagination. Every name was checked against the Python client.
+
 ## [0.4.2] - 2026-10-30
 
 ### Changed
