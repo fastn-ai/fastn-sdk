@@ -947,7 +947,7 @@ customer.call_log("req-abc")
 # Changes at an app, sent to your webhook as connector.event / unified.event: watch them per customer.
 account_id = "..."                                                # one of the customer's accounts, from customer.connections()
 w = customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated, HubSpotEvents.dealStageChanged], account_id=account_id)
-customer.watches("hubspot")                                       # [{"id", "app", "events", "status", ...}]
+customer.watches(Apps.hubspot)                                       # [{"id", "app", "events", "status", ...}]
 customer.unwatch(Apps.hubspot)                                       # or unwatch(w["id"])
 
 customer.disconnect(account_id)                                   # the customer gets connection.revoked
@@ -1001,7 +1001,7 @@ partner key cannot call them.
 fastn.orgs.list_orgs({"type": "end_org"})
 fastn.connections.list_connections({"endOrgId": customer.id()})
 fastn.embed.get_setup_link({"id": "stp_..."})
-fastn.call("getTenant", {"id": "..."})                  # any operation by operationId
+fastn.orgs.get_tenant({"id": "..."})                    # every operation is a typed method on its area
 fastn.me()                                              # who this key is: actor, role, org, parentOrg
 ```
 

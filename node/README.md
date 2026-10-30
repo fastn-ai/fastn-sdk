@@ -188,7 +188,7 @@ await fastn.orgs.listOrgs({ type: "end_org" });
 await fastn.connections.listConnections({ endOrgId: await customer.id() });
 await fastn.events.listEventSubscriptions();
 await fastn.embed.getSetupLink({ id: "stp_..." });
-await fastn.call("getTenant", { id: "..." });                   // any operation by operationId
+await fastn.orgs.getTenant({ id: "..." });                     // every operation is a typed method on its area
 await fastn.me();                                               // who this key is: actor, role, org, parentOrg
 ```
 
@@ -302,14 +302,14 @@ switch on there, Google Calendar, HubSpot, Slack, the Fastn Workspace itself, be
 Nothing in the SDK is tied to a connector; turn one on in the workspace and it shows up.
 
 ```ts
-import { ToolsClient } from "@fastn-ai/sdk";              // or new FastnClient({ apiKey, tools: { key, url } }).tools
+import { Apps, ToolsClient } from "@fastn-ai/sdk";        // or new FastnClient({ apiKey, tools: { key, url } }).tools
 
 const connect = new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: "https://mcp.fastn.dev/<workspace>" });
-const tools = await connect.tools();                           // every tool, e.g. googleCalendar__listEvents
-const cal = await connect.toolsOf("googleCalendar");           // one connector's tools, with their input schemas
+const tools = await connect.tools();                           // every tool your workspace has switched on, with its input schema
+const cal = await connect.toolsOf(Apps.googleCalendar);        // one connector's tools
 
-const r = await connect.customer("acme-42").call("googleCalendar__listEvents", { calendarId: "primary", timeMin: new Date().toISOString() });
-r.data                                                     // the tool's answer, JSON-decoded (r.text is the raw text)
+// Call them as typed methods, generated from your workspace (next section): no tool names typed by hand.
+// tools.customer("acme-42").googleCalendar.listEvents({ calendarId: "primary", timeMin: new Date().toISOString() })
 ```
 
 - The workspace key is a different credential from the platform API key. Read it from Settings > API keys in connect.fastn.dev.
