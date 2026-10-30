@@ -15,8 +15,8 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -34,10 +34,18 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Check the tag matches the package version
+        run: |
+          tag="${GITHUB_REF_NAME#python/v}"
+          version=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
+          init=$(grep -m1 '^__version__ = ' fastn/__init__.py | cut -d'"' -f2)
+          echo "tag=$tag pyproject=$version fastn.__version__=$init"
+          test "$tag" = "$version" && test "$tag" = "$init"
+        working-directory: python
       - name: Install build tools
         run: pip install build
       - name: Build package

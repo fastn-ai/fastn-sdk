@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import json
-import os
 import tempfile
 from pathlib import Path
 
@@ -117,12 +115,11 @@ class TestHelpers:
         assert _map_type("array", "python") == "List[Any]"
         assert _map_type("unknown", "python") == "Any"
 
-    def test_map_type_typescript(self) -> None:
-        assert _map_type("string", "typescript") == "string"
-        assert _map_type("integer", "typescript") == "number"
-        assert _map_type("boolean", "typescript") == "boolean"
-        assert _map_type("array", "typescript") == "any[]"
-        assert _map_type("unknown", "typescript") == "any"
+    def test_only_python_is_supported(self) -> None:
+        with pytest.raises(ValueError):
+            _map_type("string", "typescript")
+        with pytest.raises(ValueError):
+            StubGenerator(language="typescript")
 
 
 class TestParseRegistry:
@@ -183,15 +180,6 @@ class TestStubGenerator:
         assert "def create_channel" in result
         assert "channel: str" in result
 
-    def test_generate_typescript_connector(self) -> None:
-        gen = StubGenerator(language="typescript")
-        parsed = parse_registry(SAMPLE_REGISTRY)
-        slack = next(c for c in parsed["connectors"] if c["name"] == "slack")
-        result = gen.generate_connector(slack)
-        assert "class SlackConnector" in result
-        assert "sendMessage" in result
-        assert "createChannel" in result
-
     def test_generate_python_index(self) -> None:
         gen = StubGenerator(language="python")
         parsed = parse_registry(SAMPLE_REGISTRY)
@@ -200,13 +188,6 @@ class TestStubGenerator:
         assert "class AsyncFastn" in result
         assert "slack" in result
         assert "from .connectors.slack import SlackConnector" in result
-
-    def test_generate_typescript_index(self) -> None:
-        gen = StubGenerator(language="typescript")
-        parsed = parse_registry(SAMPLE_REGISTRY)
-        result = gen.generate_index(parsed["connectors"], ["slack"])
-        assert "class Fastn" in result
-        assert "slack" in result
 
     def test_generate_placeholder(self) -> None:
         gen = StubGenerator(language="python")
@@ -233,18 +214,6 @@ class TestStubGenerator:
             assert index_path.exists()
             content = index_path.read_text()
             assert "SlackConnector" in content
-
-    def test_generate_all_typescript(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            files = generate_stubs(
-                SAMPLE_REGISTRY,
-                ["slack"],
-                tmpdir,
-                language="typescript",
-            )
-            assert any("index.d.ts" in f for f in files)
-            assert any("slack.d.ts" in f for f in files)
-            assert any("_placeholders.d.ts" in f for f in files)
 
     def test_no_placeholders_when_all_installed(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

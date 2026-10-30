@@ -1,4 +1,4 @@
-"""Agent command — AI-powered connector discovery and tool execution.
+"""Agent command - AI-powered connector discovery and tool execution.
 
 Contains the ``fastn agent`` command and all supporting helpers for
 LLM-based parameter extraction, the agentic tool-calling loop, cost
@@ -16,7 +16,7 @@ import click
 from fastn.config import FastnConfig, find_fastn_dir, load_config, load_registry, save_config
 
 from fastn.cli import cli, EXECUTE_URL, GET_TOOLS_URL
-from fastn.cli._helpers import _verbose_post, _ensure_fresh_token, _extract_input_fields
+from fastn.cli._helpers import _verbose_post, _ensure_fresh_token
 from fastn.cli._registry import _resolve_friendly_names
 
 
@@ -73,7 +73,7 @@ def _setup_llm_provider(config: FastnConfig) -> Optional[FastnConfig]:
     """Interactive LLM model setup in a single step.
 
     Shows a flat numbered list of all available models (no provider
-    prefix — the model name makes it obvious). The last option lets
+    prefix - the model name makes it obvious). The last option lets
     the user type any model name; the provider is auto-detected from
     the prefix.
 
@@ -167,7 +167,7 @@ def _setup_llm_provider(config: FastnConfig) -> Optional[FastnConfig]:
                 click.echo("  Open the URL above manually.")
 
         click.echo()
-        api_key = click.prompt(f"  API Key")
+        api_key = click.prompt("  API Key")
         if not api_key.strip():
             click.echo("  No API key provided.")
             return None
@@ -188,167 +188,8 @@ def _setup_llm_provider(config: FastnConfig) -> Optional[FastnConfig]:
     save_config(config)
 
     click.echo(f"\n  \u2713 Configured: {selected_model}")
-    click.echo(f"  Saved to .fastn/config.json")
+    click.echo("  Saved to .fastn/config.json")
     return config
-
-
-def _llm_fill_parameters(
-    config: FastnConfig,
-    prompt_str: str,
-    input_schema: dict,
-    tool_description: str,
-    tool_display_name: str,
-) -> Optional[dict]:
-    """Use the configured LLM to extract parameters from the prompt.
-
-    Sends the prompt + tool schema to the LLM and asks it to fill in the
-    parameter values.  Returns a dict of parameters, or None on failure.
-    """
-    from fastn.config import LLM_PROVIDERS
-
-    provider = config.llm_provider
-    api_key = config.llm_api_key
-    model = config.llm_model
-
-    if not provider or not api_key:
-        return None
-
-    provider_info = LLM_PROVIDERS.get(provider)
-    if not provider_info:
-        return None
-
-    model = model or provider_info["default_model"]
-
-    # Build a flat schema for the LLM (unwrap wrappers)
-    _pk, fields, required_fields = _extract_input_fields(input_schema)
-
-    if not fields:
-        return None
-
-    # Build the schema description for the LLM
-    schema_desc = []
-    for name, fdata in fields.items():
-        ftype = fdata.get("type", "string") if isinstance(fdata, dict) else "string"
-        desc = fdata.get("description", "") if isinstance(fdata, dict) else ""
-        req = "required" if name in required_fields else "optional"
-        line = f"  - {name} ({ftype}, {req})"
-        if desc:
-            line += f": {desc}"
-        schema_desc.append(line)
-
-    schema_text = "\n".join(schema_desc)
-
-    system_msg = (
-        f"You are a parameter extraction assistant. "
-        f"Given a user request, extract the parameter values for the tool "
-        f"'{tool_display_name}'.\n\n"
-        f"Tool: {tool_display_name}\n"
-    )
-    if tool_description:
-        system_msg += f"Description: {tool_description}\n"
-    system_msg += (
-        f"\nParameters:\n{schema_text}\n\n"
-        f"Respond with ONLY a valid JSON object containing the extracted "
-        f"parameter values. Do not include any other text. "
-        f"Only include parameters that can be determined from the user's request. "
-        f"Use the exact parameter names shown above."
-    )
-
-    try:
-        if provider == "openai":
-            return _llm_fill_openai(api_key, model, system_msg, prompt_str)
-        elif provider == "anthropic":
-            return _llm_fill_anthropic(api_key, model, system_msg, prompt_str)
-        elif provider == "gemini":
-            return _llm_fill_gemini(api_key, model, system_msg, prompt_str)
-    except Exception as e:
-        click.echo(f"  \u26a0  LLM parameter extraction failed: {e}")
-        return None
-
-    return None
-
-
-def _llm_fill_openai(api_key: str, model: str, system_msg: str, prompt: str) -> Optional[dict]:
-    """Extract parameters using OpenAI."""
-    try:
-        import openai
-    except ImportError:
-        click.echo("  \u26a0  openai package not installed. Run: pip install openai")
-        return None
-
-    client = openai.OpenAI(api_key=api_key)
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0,
-    )
-
-    content = response.choices[0].message.content or ""
-    return _parse_llm_json(content)
-
-
-def _llm_fill_anthropic(api_key: str, model: str, system_msg: str, prompt: str) -> Optional[dict]:
-    """Extract parameters using Anthropic."""
-    try:
-        import anthropic
-    except ImportError:
-        click.echo("  \u26a0  anthropic package not installed. Run: pip install anthropic")
-        return None
-
-    client = anthropic.Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model=model,
-        max_tokens=1024,
-        system=system_msg,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    content = ""
-    for block in response.content:
-        if hasattr(block, "text"):
-            content = block.text
-            break
-    return _parse_llm_json(content)
-
-
-def _llm_fill_gemini(api_key: str, model: str, system_msg: str, prompt: str) -> Optional[dict]:
-    """Extract parameters using Google Gemini."""
-    try:
-        from google import genai
-    except ImportError:
-        click.echo("  \u26a0  google-genai package not installed. Run: pip install google-genai")
-        return None
-
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model=model,
-        contents=f"{system_msg}\n\nUser request: {prompt}",
-    )
-
-    content = response.text or ""
-    return _parse_llm_json(content)
-
-
-def _parse_llm_json(content: str) -> Optional[dict]:
-    """Parse JSON from LLM response, handling markdown fences."""
-    content = content.strip()
-    # Strip markdown code fences if present
-    if content.startswith("```"):
-        lines = content.split("\n")
-        # Remove first line (```json or ```) and last line (```)
-        lines = [l for l in lines if not l.strip().startswith("```")]
-        content = "\n".join(lines).strip()
-
-    try:
-        result = json.loads(content)
-        if isinstance(result, dict):
-            return result
-    except (json.JSONDecodeError, ValueError):
-        pass
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -480,7 +321,7 @@ def _print_agent_summary(
         short_name = name if len(name) <= 26 else name[:23] + "..."
         type_label = "api" if etype == "discovery" else etype
 
-        # Token columns — only for LLM rows
+        # Token columns - only for LLM rows
         # In  = new tokens added since last LLM call (delta)
         # Out = completion tokens
         # Ctx = total context window (prompt_tokens)
@@ -497,14 +338,14 @@ def _print_agent_summary(
             out_str = "\u2014"
             ctx_str = "\u2014"
 
-        # Size column — only for api/tool rows
+        # Size column - only for api/tool rows
         if etype != "llm":
             resp_bytes = entry.get("resp_bytes", 0)
             size_str = _format_bytes(resp_bytes) if resp_bytes else "\u2014"
         else:
             size_str = "\u2014"
 
-        # Cost column — only for LLM rows
+        # Cost column - only for LLM rows
         if etype == "llm":
             call_cost = _estimate_cost(model, entry.get("tokens_in", 0), entry.get("tokens_out", 0))
             cost_str = _format_cost(call_cost)
@@ -660,7 +501,7 @@ def _detect_api_error(result: Any) -> Tuple[bool, str]:
                         return str(first[k])[:200]
             return str(first)[:200]
         if isinstance(val, bool) and val:
-            return ""  # error: true — no extra detail
+            return ""  # error: true - no extra detail
         return str(val)[:200] if val else ""
 
     # ── 1. Explicit error fields ────────────────────────────────────────
@@ -1377,7 +1218,7 @@ def agent(ctx: click.Context, prompt: tuple, connector: Optional[str],
 
     _ensure_fresh_token(config)
 
-    # Check if LLM is configured — if not (or --setup), run setup
+    # Check if LLM is configured - if not (or --setup), run setup
     if force_setup or not config.llm_provider or not config.llm_api_key:
         config = _setup_llm_provider(config) or config
         if not config.llm_provider:
@@ -1424,7 +1265,7 @@ def agent(ctx: click.Context, prompt: tuple, connector: Optional[str],
 
     # Step 1: Discover ALL active connectors and tools via getTools API
     click.echo()
-    click.echo(f"  \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+    click.echo("  \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
     click.echo(f"  \u2502  {prompt_str}")
     if tenant:
         click.echo(f"  \u2502  Tenant: {config.tenant_id}  Project: {workspace_id}")
@@ -1432,7 +1273,7 @@ def agent(ctx: click.Context, prompt: tuple, connector: Optional[str],
         click.echo(f"  \u2502  Connector: {connector}")
     if tool_filter:
         click.echo(f"  \u2502  Tool: {tool_filter}")
-    click.echo(f"  \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
+    click.echo("  \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500")
     click.echo()
     click.echo("  Discovering connectors...")
 

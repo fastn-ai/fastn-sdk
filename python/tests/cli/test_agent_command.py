@@ -23,7 +23,6 @@ from fastn.cli.agent_command import (
     _format_cost,
     _format_duration,
     _format_tokens,
-    _parse_llm_json,
     _print_agent_summary,
     _AGENT_SYSTEM_PROMPT,
 )

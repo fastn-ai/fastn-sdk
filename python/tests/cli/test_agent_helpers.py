@@ -12,7 +12,6 @@ from fastn.cli.agent_command import (
     _format_cost,
     _format_duration,
     _format_tokens,
-    _parse_llm_json,
 )
 
 
@@ -85,33 +84,6 @@ class TestBuildActionMap:
         assert len(result) == 2
         assert "tool_a" in result
         assert "tool_b" in result
-
-
-# ---------------------------------------------------------------------------
-# _parse_llm_json
-# ---------------------------------------------------------------------------
-
-class TestParseLlmJson:
-    def test_plain_json(self) -> None:
-        assert _parse_llm_json('{"channel": "general"}') == {"channel": "general"}
-
-    def test_markdown_fenced_json(self) -> None:
-        content = '```json\n{"key": "value"}\n```'
-        assert _parse_llm_json(content) == {"key": "value"}
-
-    def test_markdown_bare_fences(self) -> None:
-        content = '```\n{"a": 1}\n```'
-        assert _parse_llm_json(content) == {"a": 1}
-
-    def test_invalid_json(self) -> None:
-        assert _parse_llm_json("this is not json") is None
-
-    def test_json_list_returns_none(self) -> None:
-        # _parse_llm_json only accepts dicts
-        assert _parse_llm_json("[1, 2, 3]") is None
-
-    def test_empty_string(self) -> None:
-        assert _parse_llm_json("") is None
 
 
 # ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import click
 
@@ -20,7 +20,6 @@ from fastn.config import (
     load_registry,
     save_manifest,
     save_migrations,
-    save_registry,
 )
 
 # Constants from the main CLI module
@@ -166,7 +165,7 @@ def _select_workspace(config: FastnConfig) -> Optional[str]:
             click.echo(f"  \u2192 {selected['name']}")
             return selected["id"]
 
-        # Multiple matches — show filtered list
+        # Multiple matches - show filtered list
         click.echo()
         for i, ws in enumerate(matches, 1):
             name = ws.get("name", "Unknown")
@@ -183,7 +182,7 @@ def _select_workspace(config: FastnConfig) -> Optional[str]:
             if 1 <= idx <= len(matches):
                 selected = matches[idx - 1]
                 return selected["id"]
-        click.echo(f"  Invalid selection.")
+        click.echo("  Invalid selection.")
 
 
 def _fetch_tools_by_scope(
@@ -218,7 +217,7 @@ def _fetch_tools_by_scope(
     }
     resp = _verbose_post(GRAPHQL_URL, headers, payload)
     if resp.status_code != 200:
-        # Non-fatal for workspace/org — just return empty
+        # Non-fatal for workspace/org - just return empty
         if source != SOURCE_COMMUNITY:
             return {}
         raise click.ClickException(f"Failed to fetch registry: {resp.status_code} {resp.text}")
@@ -243,7 +242,7 @@ def _fetch_tools_by_scope(
         key = name.lower().replace(" ", "_").replace("-", "_")
 
         # The workspace tools connector is returned as "my_connectors"
-        # by the API — rename it to "my_tools" for display.
+        # by the API - rename it to "my_tools" for display.
         if key == "my_connectors":
             key = "my_tools"
             name = "My Tools"
@@ -265,9 +264,9 @@ def _fetch_registry_list(config: FastnConfig) -> dict:
     """Fetch all connectors from the GraphQL API across all scopes.
 
     Fetches connectors from three sources:
-        1. My Workspace — connectors in the user's selected workspace
-        2. My Org — connectors in the user's organization
-        3. Community — public community connectors
+        1. My Workspace - connectors in the user's selected workspace
+        2. My Org - connectors in the user's organization
+        3. Community - public community connectors
     """
     connectors: dict = {}
 
@@ -509,21 +508,17 @@ def _regenerate_stubs(
 def _detect_languages(fastn_dir: Path) -> List[str]:
     """Detect which SDK languages are installed in the current project.
 
-    Checks for Python (importable fastn package) and TypeScript/Node
-    (package.json with @fastn/sdk dependency). Only returns languages
-    whose SDK is actually present, so stub generation can skip languages
-    the user hasn't installed.
+    Only Python has connector stubs (the Node SDK, @fastn-ai/sdk, is the
+    platform API client and has no connector proxy to type), so this returns
+    ["python"] when the fastn package is importable and [] otherwise.
 
     Args:
         fastn_dir: Path to the .fastn directory.
 
     Returns:
-        List of language strings, e.g. ["python"], ["python", "typescript"].
+        ["python"] or [].
     """
-    import json as _json
-
     languages: List[str] = []
-    project_root = fastn_dir.parent
 
     # Python: check if fastn package is importable
     try:
@@ -531,20 +526,6 @@ def _detect_languages(fastn_dir: Path) -> List[str]:
         languages.append("python")
     except ImportError:
         pass
-
-    # TypeScript/Node: check for package.json with @fastn/sdk
-    pkg_json = project_root / "package.json"
-    if pkg_json.exists():
-        try:
-            pkg = _json.loads(pkg_json.read_text())
-            all_deps = {
-                **pkg.get("dependencies", {}),
-                **pkg.get("devDependencies", {}),
-            }
-            if "@fastn/sdk" in all_deps or "fastn" in all_deps:
-                languages.append("typescript")
-        except Exception:
-            pass
 
     return languages
 

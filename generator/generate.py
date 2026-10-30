@@ -1,16 +1,14 @@
 """Fastn SDK Stub Generator.
 
 Reads connector definitions from the Fastn registry API and generates
-type stubs (.pyi for Python, .d.ts for TypeScript) for IDE autocomplete.
+Python type stubs (.pyi) for IDE autocomplete.
 """
 
 from __future__ import annotations
 
-import json
-import os
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -26,18 +24,8 @@ TYPE_MAP_PYTHON = {
     "object": "Dict[str, Any]",
 }
 
-TYPE_MAP_TYPESCRIPT = {
-    "string": "string",
-    "integer": "number",
-    "number": "number",
-    "boolean": "boolean",
-    "array": "any[]",
-    "object": "Record<string, any>",
-}
-
-
 def _sanitize_identifier(name: str) -> str:
-    """Convert a name to a valid Python/TS identifier."""
+    """Convert a name to a valid Python identifier."""
     name = re.sub(r"[^a-zA-Z0-9_]", "_", name)
     if name and name[0].isdigit():
         name = "_" + name
@@ -56,9 +44,10 @@ def _to_pascal_case(snake_str: str) -> str:
 
 
 def _map_type(param_type: str, language: str) -> str:
-    """Map a registry type string to the target language type."""
-    type_map = TYPE_MAP_PYTHON if language == "python" else TYPE_MAP_TYPESCRIPT
-    return type_map.get(param_type, "Any" if language == "python" else "any")
+    """Map a registry type string to the Python stub type."""
+    if language != "python":
+        raise ValueError(f"Unsupported language: {language}")
+    return TYPE_MAP_PYTHON.get(param_type, "Any")
 
 
 def _extract_tool_params(
@@ -262,7 +251,7 @@ class StubGenerator:
     """Generates type stub files from Fastn registry data."""
 
     def __init__(self, language: str = "python") -> None:
-        if language not in ("python", "typescript"):
+        if language != "python":
             raise ValueError(f"Unsupported language: {language}")
         self.language = language
         template_dir = TEMPLATES_DIR / language
@@ -281,8 +270,8 @@ class StubGenerator:
         all_connectors: List[Dict[str, Any]],
         installed_connectors: List[str],
     ) -> str:
-        """Generate the root index stub (index.pyi or index.d.ts)."""
-        ext = "pyi" if self.language == "python" else "d.ts"
+        """Generate the root index stub (__init__.pyi)."""
+        ext = "pyi"
         template = self.env.get_template(f"index.{ext}.j2")
         return template.render(
             connectors=all_connectors,
@@ -291,7 +280,7 @@ class StubGenerator:
 
     def generate_connector(self, connector: Dict[str, Any]) -> str:
         """Generate a full connector stub file."""
-        ext = "pyi" if self.language == "python" else "d.ts"
+        ext = "pyi"
         template = self.env.get_template(f"connector.{ext}.j2")
         return template.render(connector=connector)
 
@@ -299,7 +288,7 @@ class StubGenerator:
         self, connectors: List[Dict[str, Any]]
     ) -> str:
         """Generate placeholder stubs for non-installed connectors."""
-        ext = "pyi" if self.language == "python" else "d.ts"
+        ext = "pyi"
         template = self.env.get_template(f"placeholder.{ext}.j2")
         return template.render(connectors=connectors)
 
@@ -330,9 +319,9 @@ class StubGenerator:
         connectors_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate index
-        ext = "pyi" if self.language == "python" else "d.ts"
+        ext = "pyi"
         index_content = self.generate_index(all_connectors, installed_connectors)
-        index_file = stub_root / f"__init__.{ext}" if self.language == "python" else output_path / f"index.{ext}"
+        index_file = stub_root / f"__init__.{ext}"
         index_file.write_text(index_content)
         generated_files.append(str(index_file))
 
@@ -379,7 +368,7 @@ def generate_stubs(
         registry_data: Full registry JSON from the API.
         installed_connectors: List of connector names the user has added.
         output_dir: Directory to write stub files to.
-        language: 'python' or 'typescript'.
+        language: 'python' (the only supported language).
 
     Returns:
         List of generated file paths.

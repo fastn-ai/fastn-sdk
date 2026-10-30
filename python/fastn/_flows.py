@@ -5,7 +5,7 @@ from __future__ import annotations
 import json as _json
 import re
 import uuid as _uuid
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 
 from fastn._constants import (
     DEPLOY_FLOW_MUTATION,
@@ -748,7 +748,8 @@ class _FlowsSync:
         flows = _fetch_flows_sync(self._client)
 
         if status:
-            flows = [f for f in flows if f.get("status") == status]
+            wanted = status.upper()
+            flows = [f for f in flows if str(f.get("status") or "").upper() == wanted]
 
         return flows
 
@@ -904,7 +905,8 @@ class _FlowsAsync:
         flows = await _fetch_flows_async(self._client)
 
         if status:
-            flows = [f for f in flows if f.get("status") == status]
+            wanted = status.upper()
+            flows = [f for f in flows if str(f.get("status") or "").upper() == wanted]
 
         return flows
 

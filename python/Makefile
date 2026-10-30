@@ -1,9 +1,9 @@
-# Fastn SDK — Development Commands
+# fastn SDK: development commands
 #
 # Quick reference:
-#   make test          Run all tests (375 tests, ~6s)
-#   make test-sdk      Run SDK tests only (129 tests, ~5s)
-#   make test-cli      Run CLI tests only (246 tests, <1s)
+#   make test          Run all tests
+#   make test-sdk      Run SDK tests only
+#   make test-cli      Run CLI tests only
 #   make test-fast     Run CLI tests (fastest subset)
 #   make test-file F=tests/cli/test_cli_commands.py   Run a single file
 #   make lint          Run ruff linter

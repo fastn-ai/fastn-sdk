@@ -1,4 +1,4 @@
-"""CLI commands: fastn kit — manage the Connect Kit (connectors and configurations)."""
+"""CLI commands: fastn kit - manage the Connect Kit (connectors and configurations)."""
 
 from __future__ import annotations
 
@@ -87,7 +87,7 @@ def _fetch_connectors(headers, project_id, query=""):
 )
 @click.pass_context
 def kit(ctx):
-    """Manage the Connect Kit — connectors, AI agent chat, and configurations.
+    """Manage the Connect Kit - connectors, AI agent chat, and configurations.
 
     \b
     Usage:

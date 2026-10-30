@@ -3,7 +3,8 @@
 The fastn platform REST API for Node and TypeScript. Every endpoint, generated from fastn's OpenAPI spec, plus a
 small hand-written layer that makes the common partner flow easy.
 
-- Node 20+ (built-in fetch), no runtime dependencies, ESM and CommonJS, full types.
+- Node 20+ (built-in fetch), ESM and CommonJS, full types. The one runtime dependency (`json-schema-to-typescript`) is
+  used only by the `fastn-sdk-tools` code generator.
 - 461 operations in 19 areas (`orgs`, `embed`, `connections`, `unified`, `events`, `workflows`, ...), one method per
   operation, named exactly like the operation in the API docs and the Fastn Workspace tools. Platform-administration
   routes, which a partner key cannot call, are left out on purpose.
@@ -46,7 +47,7 @@ const contact = records[0] ?? await customer.crm.contacts.create({ first_name: "
 await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.id, parent_type: "contact" });
 
 // 4. What did fastn do for my request id?
-await fastn.unified.listUnifiedCalls({ correlation_id: "req-abc" });
+await customer.callLog("req-abc");
 ```
 
 ## Calendar and CRM, typed
@@ -118,7 +119,7 @@ const link = await customer.connect("hubspot", { connectionName: "Main CRM", red
 redirect(link.url);                                                   // then customer.links.get(link.setupId) / links.cancel(...)
 
 // Or start OAuth directly, without a widget:
-const { data } = await customer.connect({ connectorId: "googleCalendar", returnUrl: "https://app.acme.com/connected" });
+const { data } = await customer.connect({ connectorId: "googleCalendar", connectionName: "Google Calendar", returnUrl: "https://app.acme.com/connected" });
 redirect(data.authorizationUrl);                                      // the connection lands on the customer org
 
 // Typed-in credentials (API key, basic auth): the fields come from the connector's auth method. The platform checks
@@ -283,7 +284,7 @@ are rejected (configurable). Always pass the raw body, never a re-serialised obj
 
 ```ts
 import { paginate } from "@fastn-ai/sdk";
-for await (const ev of paginate((i) => fastn.events.listEvents(i), { status: "failed" }, { pageSize: 100 })) ...
+for await (const ev of paginate((i) => fastn.events.listEvents(i), { outcome: "sent_to_dlq" }, { pageSize: 100 })) ...
 ```
 
 Works for `limit`/`offset` lists and cursor lists; stops on a short page, a missing cursor, or a list that ignores paging.
@@ -321,7 +322,7 @@ npm run spec:refresh -- /path/to/fastn-platform   # pull a newer spec from a pla
 1. Bump `version` in `node/package.json` and update `node/CHANGELOG.md` in a PR.
 2. After merge, tag `main` and push the tag:
    ```bash
-   git tag node/v0.0.1 && git push origin node/v0.0.1
+   git tag node/v<version> && git push origin node/v<version>
    ```
 3. The `Publish Node SDK` workflow checks the tag matches `package.json`, runs the checks, and runs `npm stage publish`. It uses the `NPM_TOKEN` secret (a stage-only token) from the `npm` GitHub environment.
 4. A maintainer opens npmjs.com > Staged Packages, reviews the version and approves it with 2FA. Only then is it installable.

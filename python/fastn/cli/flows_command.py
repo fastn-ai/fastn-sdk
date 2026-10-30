@@ -1,4 +1,4 @@
-"""CLI commands: fastn flow — manage integration flows."""
+"""CLI commands: fastn flow - manage integration flows."""
 
 from __future__ import annotations
 
@@ -43,27 +43,6 @@ def _parse_model_schema(model: dict | None) -> dict | None:
     return None
 
 
-def _build_example_input(fields):
-    """Build a nested example dict from a list of dot-path field names.
-
-    Flat fields produce ``{"name": "..."}``.
-    Nested fields like ``["user.name", "user.email"]`` produce
-    ``{"user": {"name": "...", "email": "..."}}``.
-    """
-    root = {}
-    for field_path in fields:
-        parts = field_path.split(".")
-        current = root
-        for i, part in enumerate(parts):
-            if i == len(parts) - 1:
-                current[part] = "..."
-            else:
-                if part not in current or not isinstance(current[part], dict):
-                    current[part] = {}
-                current = current[part]
-    return root
-
-
 def _require_auth():
     """Load config, check auth, refresh token, return (config, headers, project_id)."""
     config = load_config()
@@ -97,11 +76,11 @@ def _flows_api_post(headers, endpoint, payload):
         error_code = (body or {}).get("error", "")
         if error_code == "FLOW_NOT_FOUND":
             raise click.ClickException(
-                f"Flow not found. Run `fastn flow ls` to see available flows."
+                "Flow not found. Run `fastn flow ls` to see available flows."
             )
         if error_code == "RUN_NOT_FOUND":
             raise click.ClickException(
-                f"Run not found. Check the run_id and try again."
+                "Run not found. Check the run_id and try again."
             )
         raise click.ClickException(f"API error ({resp.status_code}): {resp.text[:200]}")
 
@@ -241,7 +220,7 @@ def generate(prompt):
     """Generate an integration flow via the flow builder agent.
 
     Starts a conversational session with the Fastn flow builder.
-    The agent may ask clarifying questions — answer them interactively
+    The agent may ask clarifying questions - answer them interactively
     until the flow is generated.  Press Ctrl+C or enter an empty line to
     exit early.
 
@@ -335,7 +314,7 @@ def generate(prompt):
         except (ValueError, RuntimeError):
             pass
 
-        # Unwrap {body: ...} envelope — body may be a JSON string
+        # Unwrap {body: ...} envelope - body may be a JSON string
         result = body
         if isinstance(body, dict) and "body" in body:
             result = body["body"]
@@ -365,7 +344,7 @@ def generate(prompt):
             flow_id = result.get("flow_id") or result.get("flowId") or result.get("id") or ""
             if flow_id:
                 flow_name = result.get("name") or result.get("flow_name") or flow_id
-                click.echo(f"  \u2705 Flow generated successfully!")
+                click.echo("  \u2705 Flow generated successfully!")
                 click.echo(f"     ID:   {flow_id}")
                 if flow_name != flow_id:
                     click.echo(f"     Name: {flow_name}")
@@ -612,7 +591,7 @@ def schema(flow_name):
     """Show the input/output schema of a flow in AI tool format.
 
     Returns a JSON object with name, description, toolId, inputSchema,
-    and outputSchema — ready for use with LLM tool calling.
+    and outputSchema - ready for use with LLM tool calling.
 
     Uses the flow's defined inputModel/outputModel when available,
     falling back to step scanning for input discovery.
@@ -639,14 +618,14 @@ def schema(flow_name):
             f"Flow '{flow_name}' not found. Run `fastn flow ls` to see available flows."
         )
 
-    # Build input schema — prefer inputModel.jsonSchema, fall back to step scanning
+    # Build input schema - prefer inputModel.jsonSchema, fall back to step scanning
     input_schema = _parse_model_schema(flow_data.get("inputModel"))
     if not input_schema or not input_schema.get("properties"):
         discovered = _extract_input_fields(flow_data)
         if discovered["fields"]:
             input_schema = discovered["schema"]
 
-    # Build output schema — prefer outputModel.jsonSchema, fall back to hasResponse scanning
+    # Build output schema - prefer outputModel.jsonSchema, fall back to hasResponse scanning
     output_schema = _parse_model_schema(flow_data.get("outputModel"))
     if not output_schema or not output_schema.get("properties"):
         discovered_output = _extract_output_fields(flow_data)
