@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - An empty or missing app name (`""`, `None`) now raises a `TypeError` naming the call, before any request, in `connect`, `watch`, `unwatch` and `watchable_events`. Before, `unwatch("")` read it as "every app" and removed all of the customer's watches.
 
+## [0.4.4] - 2026-10-30
+
+### Fixed
+
+- A `502 UNIFIED_PROVIDER_ERROR` whose `providerStatus` says the app refused the request itself (400, 401, 403, 405, 413, 415, 422; for example Google's "Missing attendee email") is no longer retried: the same request can never succeed. Transient provider statuses inside that 502 (404, 410, 408, 423, 425, 429) and 5xx are retried as before (`PROVIDER_REFUSAL_STATUSES`).
+
 ## [0.4.3] - 2026-10-30
 
 ### Changed

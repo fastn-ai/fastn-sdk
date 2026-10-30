@@ -1,5 +1,5 @@
 import { FastnApiError, FastnNetworkError } from "./errors.js";
-import { RETRY_STATUS, errorInfo, mergeOptions, parseLoose, requestSignal, retryDelay, sleep, backoff } from "./http.js";
+import { RETRY_STATUS, errorInfo, isProviderRefusal, mergeOptions, parseLoose, requestSignal, retryDelay, sleep, backoff } from "./http.js";
 
 export interface ParamDef { key: string; name: string; in: "path" | "query" | "header"; required?: boolean }
 export interface BodyDef {
@@ -27,7 +27,8 @@ export interface RequestOptions {
   /**
    * Sent as Idempotency-Key. On operations the platform de-duplicates by it (unified record writes, workflow
    * execute; see the method's doc) a retry with the same key returns the first answer instead of acting twice, and
-   * the SDK retries those on 429/502/503/504. Other writes are never retried, key or not.
+   * the SDK retries those on 429/502/503/504. Other writes are never retried, key or not. A 502 that carries the app's
+   * own refusal (UNIFIED_PROVIDER_ERROR with a 4xx providerStatus) is never retried: the same request cannot succeed.
    */
   idempotencyKey?: string;
   /** Sent as X-Fastn-Correlation-Id: your own id for the request; look it up later with unified.listUnifiedCalls. */
@@ -176,7 +177,7 @@ export class FetchTransport implements Transport {
       const text = await res.text();
       const parsed = parseLoose(text, res.headers.get("content-type") ?? "");
       if (res.ok) return text === "" ? undefined : parsed;
-      if (attempt < maxRetries && RETRY_STATUS.has(res.status)) { await sleep(retryDelay(res, attempt)); continue; }
+      if (attempt < maxRetries && RETRY_STATUS.has(res.status) && !isProviderRefusal(parsed)) { await sleep(retryDelay(res, attempt)); continue; }
       const info = errorInfo(parsed, `HTTP ${res.status}`);
       const code = info.code === undefined ? undefined : String(info.code);
       throw new FastnApiError(`${op.method} ${op.path} -> ${res.status}${code ? ` ${code}` : ""}: ${info.message}`, { status: res.status, code, details: info.details, method: op.method, path: op.path, requestId, body: parsed });
