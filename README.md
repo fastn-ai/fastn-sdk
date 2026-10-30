@@ -19,21 +19,21 @@ pip install fastn-ai          # or: npm install @fastn-ai/sdk
 
 ```python
 import os
-from fastn.platform import FastnClient
+from fastn.platform import Apps, FastnClient
 
 fastn = FastnClient(api_key=os.environ["FASTN_API_KEY"])
 customer = fastn.customer("acme-42")                 # your id for the customer
 customer.register({"name": "Acme Dental"})
-print(customer.connect("googleCalendar")["url"])     # send this link to the customer
+print(customer.connect(Apps.googleCalendar)["url"])     # send this link to the customer
 ```
 
 ```ts
-import { FastnClient } from "@fastn-ai/sdk";
+import { Apps, FastnClient } from "@fastn-ai/sdk";
 
 const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });
 const customer = fastn.customer("acme-42");
 await customer.register({ name: "Acme Dental" });
-console.log((await customer.connect("googleCalendar")).url);   // send this link to the customer
+console.log((await customer.connect(Apps.googleCalendar)).url);   // send this link to the customer
 ```
 
 ## Quick start: tools for AI agents (Python)

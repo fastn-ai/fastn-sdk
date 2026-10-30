@@ -2,6 +2,7 @@
 // fields (the catalog's own names, e.g. start_time, first_name), fills category/entity, and picks the provider from
 // what the customer has connected unless `opts.provider` says otherwise. Everything here is the unified record
 // routes underneath, so `customer.records({...})` does the same with untyped input.
+import type { AppName } from "./names.js";
 import type { FastnApis } from "./generated/api.js";
 import type { RequestOptions } from "./transport.js";
 import type { UnifiedOperation } from "./catalog.js";
@@ -10,7 +11,7 @@ import { FastnApiError } from "./errors.js";
 /** Options on every typed method: the request options plus which provider and connection to run against. */
 export interface DomainCallOptions extends RequestOptions {
   /** Connector slug (e.g. "hubspot"). Default: the one provider the customer has connected for the entity. */
-  provider?: string;
+  provider?: AppName;
   /** One of the customer's connections on that provider, when they hold several. Ids come from customer.connections(). */
   connectionId?: string;
 }
