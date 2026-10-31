@@ -110,7 +110,7 @@ export class FastnClient {
 export interface FastnClient extends FastnApis {}
 
 export { Customer, Records, PROVIDER_TTL_MS, WIDGET_TTL_MS, EVENT_ALIASES, type RecordScope, type CustomerRow, type ConnectOptions, type SetupLink, type WatchOptions, type Watch, type HubSpotEvent, type CallLogEntry } from "./customer.js";
-export { Apps, Categories, Entities, HubSpotEvents, type AppName, type KnownApp } from "./names.js";
+export { Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, Plans, CustomerStatus, OrgTypes, EventOutcomes, type AppName, type KnownApp, type EventType, type KnownEventType } from "./names.js";
 export { Catalog, type CatalogCategory, type CatalogEntity, type CatalogField, type EntityProvider, type UnifiedOperation } from "./catalog.js";
 export {
   Entity, Calendar, Crm, Notes, Tasks, Deals, freeIntervals, slotsOf,

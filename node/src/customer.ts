@@ -524,7 +524,7 @@ export class Customer implements ProviderResolver {
    * The pin is honoured on fastn's hosted environments; a self-hosted stack without the gateway falls back to
    * picking a connection by name from the calling org's pool (platform ticket KAT-8626).
    */
-  async runAction(input: { connector: string; action: string; input?: Record<string, any>; mockMode?: boolean }, opts?: RequestOptions): Promise<T.ExecuteActionOutput> {
+  async runAction(input: { connector: AppName; action: string; input?: Record<string, any>; mockMode?: boolean }, opts?: RequestOptions): Promise<T.ExecuteActionOutput> {
     const id = await this.id();
     const [conns, insts, acts] = await Promise.all([
       this.connections(undefined, opts),

@@ -1,3 +1,4 @@
+import type { AppName, EventType } from "./names.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { withoutInternalIds } from "./tools.js";
 
@@ -63,7 +64,14 @@ export function verifyEventSignature(secret: string, headers: EventHeaders | Rec
 }
 
 /** A delivered event, as parsed from the request body. Fields beyond `id`/`type` depend on the event. */
-export interface FastnEvent { id?: string; type?: string; [key: string]: any }
+export interface FastnEvent {
+  id?: string;
+  /** Compare with `EventTypes` (`event.type === EventTypes.setupLinkCompleted`); still a plain string underneath. */
+  type?: EventType;
+  /** The app, for connection and app events; compare with `Apps` (`event.app === Apps.hubspot`). */
+  app?: AppName;
+  [key: string]: any;
+}
 
 /**
  * Verifies and parses one delivery. Throws when the signature is wrong; returns the parsed event otherwise.

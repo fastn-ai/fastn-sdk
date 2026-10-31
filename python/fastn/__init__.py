@@ -73,6 +73,7 @@ Platform REST API (customers, setup links, unified records, webhooks):
 from __future__ import annotations
 
 from fastn.client import AsyncFastnClient, FastnClient
+from fastn.names import Connectors, FlowStatus, Stages, ToolFormats
 from fastn.exceptions import (
     APIError,
     AuthError,
@@ -87,10 +88,14 @@ from fastn.exceptions import (
     ToolNotFoundError,
 )
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 __all__ = [
     "APIError",
+    "Connectors",
+    "FlowStatus",
+    "Stages",
+    "ToolFormats",
     "AsyncFastnClient",
     "AuthError",
     "ConfigError",

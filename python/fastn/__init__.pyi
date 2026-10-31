@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Union
 
 from ._auth_ns import _AuthAsync, _AuthSync
+from .names import Connectors as Connectors, FlowStatus as FlowStatus, Stages as Stages, ToolFormats as ToolFormats
 from ._catalog import _ConnectorCatalog, _ConnectorCatalogAsync
 from ._flows import _FlowsAsync, _FlowsSync
 from ._kit import _KitAsync, _KitSync
@@ -291,7 +292,7 @@ from .connectors.zapier import ZapierConnector
 from .connectors.zendesk import ZendeskConnector
 from .connectors.zoho import ZohoConnector
 
-__version__: str = "0.5.0"
+__version__: str = "0.5.1"
 
 
 class FastnClient:
