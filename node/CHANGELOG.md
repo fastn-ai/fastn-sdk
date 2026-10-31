@@ -7,6 +7,7 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 ## [0.5.1] - 2026-10-31
 
 - Added: `EventTypes` (the events your webhook receives: `connectionConnected`, `connectionRevoked`, `connectionExpired`, `setupLinkCompleted`, `setupLinkExpired`, `connectorEvent`, `unifiedEvent`, `endpointTest`) and `UnifiedActions` (`created`, `updated`, `deleted`), so a handler reads `case EventTypes.setupLinkCompleted:` and a webhook `eventTypes: [EventTypes.connectionConnected, ...]` instead of strings. `FastnEvent.type` is `EventType` and `event.app` is `AppName`; `runAction({ connector })` and `ToolsClient.toolsOf(app)` take `AppName`. Each value is the exact string the API sends, and every type still accepts any string, so existing code compiles and behaves unchanged. A unit test keeps `EventTypes` equal to the webhook event types in the API spec.
+- Added: `Plans`, `CustomerStatus`, `OrgTypes`, `EventOutcomes`, each exactly the enum in the API spec (unit test), so `register({ plan: Plans.launch })`, `update({ status: CustomerStatus.suspended })`, `listOrgs({ type: OrgTypes.endOrg })`, `listEvents({ outcome: EventOutcomes.sentToDlq })`. READMEs: no Fastn value is written as a string in any example any more.
 
 ## [0.5.0] - 2026-10-30
 

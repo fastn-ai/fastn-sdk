@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, EVENT_ALIASES, FastnClient, parseEvent, signEventBody } from "../../src/index.js";
+import { Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, Plans, CustomerStatus, OrgTypes, EventOutcomes, EVENT_ALIASES, FastnClient, parseEvent, signEventBody } from "../../src/index.js";
 import { readFileSync } from "node:fs";
 import { requireName } from "../../src/names.js";
 import { mockFetch } from "../helpers.js";
@@ -56,5 +56,14 @@ describe("named apps, categories, entities and events", () => {
     const ev = parseEvent("whsec_t", { "x-fastn-timestamp": String(ts), "x-fastn-signature": signEventBody("whsec_t", ts, body) }, body);
     expect(ev.type).toBe(EventTypes.connectionConnected);
     expect(ev.app).toBe(Apps.hubspot);
+  });
+
+  it("Plans, CustomerStatus, OrgTypes and EventOutcomes are exactly the enums in the API spec", () => {
+    const spec = JSON.parse(readFileSync(new URL("../../spec/openapi-v1.8.2.json", import.meta.url), "utf8"));
+    const enumWith = (marker: string): string[] => { let out: string[] = []; const walk = (o: any): void => { if (o && typeof o === "object") { if (!out.length && Array.isArray(o.enum) && o.enum.includes(marker)) out = o.enum; Object.values(o).forEach(walk); } }; walk(spec); return out; };
+    expect(new Set(Object.values(Plans))).toEqual(new Set(enumWith("launch")));
+    expect(new Set(Object.values(CustomerStatus))).toEqual(new Set(enumWith("suspended")));
+    expect(new Set(Object.values(OrgTypes))).toEqual(new Set(enumWith("end_org")));
+    expect(new Set(Object.values(EventOutcomes))).toEqual(new Set(enumWith("sent_to_dlq")));
   });
 });

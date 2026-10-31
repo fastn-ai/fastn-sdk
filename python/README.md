@@ -159,11 +159,12 @@ fastn sits between your AI agent and the apps your customers connect. The SDK ha
 `get_tools_for(prompt)` sends a semantic search to the platform, which matches the prompt against the full connector registry and returns only the top N tools (default: 5). Sending a handful of tools instead of hundreds keeps the tool context small, and fewer tools also means fewer hallucinated tool calls.
 
 ```python
+from fastn import Connectors, ToolFormats
 # Semantic discovery: only the most relevant tools reach the LLM
-tools = fastn.get_tools_for("Send a Slack message", format="openai", limit=5)
+tools = fastn.get_tools_for("Send a Slack message", format=ToolFormats.openai, limit=5)
 
 # Direct lookup: bypass semantic search when you know the connector name
-tools = fastn.get_tools_for("slack tools", connector="slack", format="openai")
+tools = fastn.get_tools_for("slack tools", connector=Connectors.slack, format=ToolFormats.openai)
 ```
 
 ### Context Optimization
@@ -262,14 +263,14 @@ fastn handles the three hardest parts of giving LLMs access to tools:
 ```python
 import json
 import openai
-from fastn import FastnClient
+from fastn import FastnClient, ToolFormats
 
 fastn = FastnClient()
 
 # 1. Describe what you need and fastn discovers the right tools
 tools = fastn.get_tools_for(
     "Send a message on Slack and create a Jira ticket",
-    format="openai",   # also: anthropic, gemini, bedrock, raw
+    format=ToolFormats.openai,   # also: anthropic, gemini, bedrock, raw
 )
 
 # 2. Send tools + user prompt to the LLM
@@ -304,10 +305,10 @@ print(result)
 
 ```python
 import anthropic
-from fastn import FastnClient
+from fastn import FastnClient, ToolFormats
 
 fastn = FastnClient()
-tools = fastn.get_tools_for("Send a message on Slack", format="anthropic")
+tools = fastn.get_tools_for("Send a message on Slack", format=ToolFormats.anthropic)
 
 client = anthropic.Anthropic()
 response = client.messages.create(
@@ -327,16 +328,16 @@ for block in response.content:
 
 ```python
 from google import genai
-from fastn import FastnClient
+from fastn import FastnClient, ToolFormats
 
 fastn = FastnClient()
-tools = fastn.get_tools_for("Send a Slack message", format="gemini", limit=10)
+tools = fastn.get_tools_for("Send a Slack message", format=ToolFormats.gemini, limit=10)
 
 client = genai.Client()
 response = client.models.generate_content(
     model="gemini-2.0-flash",
     contents="Send a greeting to #general on Slack",
-    # format="gemini" returns function declarations; wrap them in a Tool
+    # format=ToolFormats.gemini returns function declarations; wrap them in a Tool
     config=genai.types.GenerateContentConfig(
         tools=[genai.types.Tool(function_declarations=tools)],
     ),
@@ -352,10 +353,10 @@ for part in response.candidates[0].content.parts:
 
 ```python
 import boto3
-from fastn import FastnClient
+from fastn import FastnClient, ToolFormats
 
 fastn = FastnClient()
-tools = fastn.get_tools_for("Notify the team on Slack", format="bedrock")
+tools = fastn.get_tools_for("Notify the team on Slack", format=ToolFormats.bedrock)
 
 bedrock = boto3.client("bedrock-runtime")
 response = bedrock.converse(
@@ -376,14 +377,15 @@ for block in response["output"]["message"]["content"]:
 For local registry lookup without an API call, pass connector names:
 
 ```python
+from fastn import Connectors, ToolFormats
 # Single connector
-tools = fastn.get_tools_for("slack tools", connector="slack", format="openai")
+tools = fastn.get_tools_for("slack tools", connector=Connectors.slack, format=ToolFormats.openai)
 
 # Multiple connectors: limit applies to the total across all
 tools = fastn.get_tools_for(
     "project tools",
-    connector=["slack", "jira", "github"],
-    format="openai",
+    connector=[Connectors.slack, Connectors.jira, Connectors.github],
+    format=ToolFormats.openai,
     limit=10,
 )
 ```
@@ -393,22 +395,23 @@ tools = fastn.get_tools_for(
 Inspect the connector registry programmatically:
 
 ```python
+from fastn import Connectors
 # List all connectors in the registry
 connectors = fastn.connectors.list()
 for c in connectors:
     print(f"{c['name']}: {c['tool_count']} tools")
 
 # Get details for a specific connector
-slack = fastn.connectors.get("slack")
+slack = fastn.connectors.get(Connectors.slack)
 print(slack["tools"])
 
 # List all tools in a connector with full schemas
-tools = fastn.get_tools("slack")
+tools = fastn.get_tools(Connectors.slack)
 for t in tools:
     print(f"  {t['name']}: {t['description']}")
 
 # Get a single tool's schema
-tool = fastn.get_tool("slack", "send_message")
+tool = fastn.get_tool(Connectors.slack, "send_message")
 print(tool["inputSchema"])
 ```
 
@@ -417,6 +420,7 @@ print(tool["inputSchema"])
 Flows (called *workflows* in the fastn dashboard) chain tools across connectors. Describe one in plain English and the flow builder agent generates it; then deploy it and run it by name.
 
 ```python
+from fastn import FlowStatus, Stages
 import uuid
 
 # Generate a flow with the flow builder agent. It is a conversation: reuse the
@@ -429,17 +433,17 @@ reply = fastn.flows.generate(
 print(reply)  # the agent's answer: the flow it built, or questions for you
 fastn.flows.generate("Use the ENG project and the #engineering channel", session_id=session)
 
-# List flows (status filter is case-insensitive: "DEPLOYED", "DRAFT", ...)
+# List flows (status filter is case-insensitive: FlowStatus.deployed, FlowStatus.draft, ...)
 flows = fastn.flows.list()
-deployed = fastn.flows.list(status="DEPLOYED")
+deployed = fastn.flows.list(status=FlowStatus.deployed)
 
 # Inspect a flow and the input it expects
 flow = fastn.flows.get("jira_to_slack")
 schema = fastn.flows.schema("jira_to_slack")   # {"fields": [...], "schema": {...}}
 
 # Deploy, then run by flow name
-fastn.flows.deploy("jira_to_slack", stage="LIVE", comment="first release")
-result = fastn.flows.run("jira_to_slack", input_data={"ticket": "ENG-42"}, stage="LIVE")
+fastn.flows.deploy("jira_to_slack", stage=Stages.live, comment="first release")
+result = fastn.flows.run("jira_to_slack", input_data={"ticket": "ENG-42"}, stage=Stages.live)
 
 # Update the schedule or enable/disable (by flow id), and delete
 flow_id = flows[0]["flow_id"]
@@ -570,9 +574,10 @@ Your App (backend)       Frontend (embed widget)      fastn Platform         Ext
 ```
 
 ```python
+from fastn import Connectors
 # 1. Start an OAuth connection for your end-user
 result = fastn.auth.connect(
-    connector="slack",
+    connector=Connectors.slack,
     tenant_id="customer_acme",
     redirect_url="https://myapp.com/callback",
 )
@@ -583,7 +588,7 @@ status = fastn.auth.status(connection_id=result["connection_id"])
 print(status["status"])  # "pending", "authorized", "expired"
 
 # Or look up by connector + tenant
-status = fastn.auth.status(connector="github", tenant_id="customer_acme")
+status = fastn.auth.status(connector=Connectors.github, tenant_id="customer_acme")
 
 # 3. Use the connection: the platform injects the credentials
 fastn.slack.send_message(
@@ -640,8 +645,9 @@ fastn = FastnClient(tenant_id="acme")
 Switch between `LIVE`, `STAGING`, and `DEV`:
 
 ```python
-dev = FastnClient(stage="DEV")
-staging = FastnClient(stage="STAGING")
+from fastn import Stages
+dev = FastnClient(stage=Stages.dev)
+staging = FastnClient(stage=Stages.staging)
 prod = FastnClient()  # defaults to LIVE
 ```
 
@@ -939,7 +945,7 @@ customer.calendar.cancel(booked["id"], idempotency_key="cancel-123")
 
 page = customer.crm.contacts.find({"email": "jane@example.com"})  # one page (the search route has no cursor); list() pages
 contact = page["records"][0] if page["records"] else customer.crm.contacts.create({"first_name": "Jane", "last_name": "Doe", "email": "jane@example.com"})
-customer.crm.notes.add({"body": "Booked an intro call", "parent_id": contact["id"], "parent_type": "contact"})
+customer.crm.notes.add({"body": "Booked an intro call", "parent_id": contact["id"], "parent_type": Entities.contact})
 
 # 4. What did fastn do for my request id?
 customer.call_log("req-abc")
@@ -990,7 +996,7 @@ fields = fastn.catalog.fields(Categories.crm, Entities.contact)         # [{"fie
 providers = customer.catalog.providers(Categories.crm, Entities.contact)  # [{"connectorSlug": "hubspot", "connected": True, ...}]
 
 # Anything the unified API does not cover: the connector's own action with the customer's connection.
-r = customer.run_action("hubspot", "updateDeal", {"dealId": deal_id, "properties": {"dealstage": "qualifiedtobuy"}})
+r = customer.run_action(Apps.hubspot, "updateDeal", {"dealId": deal_id, "properties": {"dealstage": "qualifiedtobuy"}})
 ```
 
 Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`,
@@ -998,7 +1004,7 @@ Every area is on the client directly, with typed inputs. The partner flow lives 
 partner key cannot call them.
 
 ```python
-fastn.orgs.list_orgs({"type": "end_org"})
+fastn.orgs.list_orgs({"type": OrgTypes.endOrg})
 fastn.connections.list_connections({"endOrgId": customer.id()})
 fastn.embed.get_setup_link({"id": "stp_..."})
 fastn.orgs.get_tenant({"id": "..."})                    # every operation is a typed method on its area
@@ -1035,7 +1041,7 @@ link = customer.connect(Apps.hubspot, connection_name="Main CRM", redirect_url="
 link["url"]                                             # then customer.links.get(link["setupId"]) / links.cancel(...)
 
 # Or start OAuth directly, without a widget:
-answer = customer.connect({"connectorId": "googleCalendar", "connectionName": "Google Calendar", "returnUrl": "https://app.acme.com/connected"})
+answer = customer.connect({"connectorId": Apps.googleCalendar, "connectionName": "Google Calendar", "returnUrl": "https://app.acme.com/connected"})
 
 # Typed-in credentials (API key, basic auth): the fields come from the connector's auth method. The platform checks
 # them; an incomplete set raises 400 CREDENTIALS_INCOMPLETE with the missing names (err.body["missing"]).
@@ -1108,9 +1114,9 @@ body the same way (for tests), and `internal_ids=True` keeps fastn's internal cu
 ### Pagination and helpers
 
 ```python
-from fastn.platform import paginate
+from fastn.platform import EventOutcomes, paginate
 
-for ev in paginate(fastn.events.list_events, {"outcome": "sent_to_dlq"}, page_size=100):
+for ev in paginate(fastn.events.list_events, {"outcome": EventOutcomes.sentToDlq}, page_size=100):
     ...
 ```
 

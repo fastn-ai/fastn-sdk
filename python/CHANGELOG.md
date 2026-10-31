@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `fastn.platform.EventTypes` (the events your webhook receives: `connectionConnected`, `connectionRevoked`, `connectionExpired`, `setupLinkCompleted`, `setupLinkExpired`, `connectorEvent`, `unifiedEvent`, `endpointTest`) and `UnifiedActions` (`created`, `updated`, `deleted`), plain `str` values identical to the Node SDK's, so a handler compares `event["type"] == EventTypes.setupLinkCompleted` instead of a string. Nothing else changes.
+- `fastn.platform.EventTypes` (the events your webhook receives: `connectionConnected`, `connectionRevoked`, `connectionExpired`, `setupLinkCompleted`, `setupLinkExpired`, `connectorEvent`, `unifiedEvent`, `endpointTest`) and `UnifiedActions` (`created`, `updated`, `deleted`), plain `str` values identical to the Node SDK's, so a handler compares `event["type"] == EventTypes.setupLinkCompleted` instead of a string.
+- `fastn.platform.Plans`, `CustomerStatus`, `OrgTypes`, `EventOutcomes`, exactly the enums in the API spec (identical to Node).
+- Agent tools: `fastn.ToolFormats` (`openai`, `anthropic`, `gemini`, `bedrock`, `raw`), `fastn.Stages`, `fastn.FlowStatus` and `fastn.Connectors` (one per shipped connector stub), so `get_tools_for("...", format=ToolFormats.openai, connector=Connectors.slack)`. Tests keep them equal to the supported formats and the stub list. Strings still work everywhere. README examples use the names.
 
 ## [0.5.0] - 2026-10-30
 

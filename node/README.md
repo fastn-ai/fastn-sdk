@@ -83,7 +83,7 @@ await customer.calendar.cancel(booked.id, { idempotencyKey: "cancel-123" });
 
 const { records } = await customer.crm.contacts.find({ email: "jane@example.com" }); // one page (the search route has no cursor); list() pages
 const contact = records[0] ?? await customer.crm.contacts.create({ first_name: "Jane", last_name: "Doe", email: "jane@example.com" });
-await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.id, parent_type: "contact" });
+await customer.crm.notes.add({ body: "Booked an intro call", parent_id: contact.id, parent_type: Entities.contact });
 
 // 4. What did fastn do for my request id?
 await customer.callLog("req-abc");
@@ -184,7 +184,7 @@ const providers = await customer.catalog.providers(Categories.crm, Entities.cont
 Every area is on the client directly, with typed inputs. The partner flow lives in `orgs`, `embed`, `connections`, `unified`, `events` and `workflows`. Platform-administration areas (admin, platform config, support) and backend-only routes (OAuth callbacks, credential reads, staff approvals) are not generated: a partner key cannot call them, and leaving them out keeps the surface the SDK promises to keep stable small. The generator's `HIDDEN_TAGS` / `PUBLIC_INTERNAL` lists in `scripts/generate.ts` are the single place that rule lives.
 
 ```ts
-await fastn.orgs.listOrgs({ type: "end_org" });
+await fastn.orgs.listOrgs({ type: OrgTypes.endOrg });
 await fastn.connections.listConnections({ endOrgId: await customer.id() });
 await fastn.events.listEventSubscriptions();
 await fastn.embed.getSetupLink({ id: "stp_..." });
@@ -223,7 +223,7 @@ const link = await customer.connect(Apps.hubspot, { connectionName: "Main CRM", 
 redirect(link.url);                                                   // then customer.links.get(link.setupId) / links.cancel(...)
 
 // Or start OAuth directly, without a widget:
-const { data } = await customer.connect({ connectorId: "googleCalendar", connectionName: "Google Calendar", returnUrl: "https://app.acme.com/connected" });
+const { data } = await customer.connect({ connectorId: Apps.googleCalendar, connectionName: "Google Calendar", returnUrl: "https://app.acme.com/connected" });
 redirect(data.authorizationUrl);                                      // the connection lands on the customer org
 
 // Typed-in credentials (API key, basic auth): the fields come from the connector's auth method. The platform checks
@@ -254,7 +254,7 @@ await fastn.webhooks.test(hook.id); await fastn.webhooks.deliveries(hook.id); aw
 
 ```ts
 // Anything the unified API does not cover: run the connector's own action with the customer's connection.
-const r = await customer.runAction({ connector: "hubspot", action: "updateDeal", input: { dealId, properties: { dealstage: "qualifiedtobuy" } } });
+const r = await customer.runAction({ connector: Apps.hubspot, action: "updateDeal", input: { dealId, properties: { dealstage: "qualifiedtobuy" } } });
 r.data.response                                                       // the provider's answer
 ```
 
@@ -405,7 +405,7 @@ are rejected (`{ toleranceSeconds }`, 0 disables the check). Always pass the raw
 
 ```ts
 import { paginate } from "@fastn-ai/sdk";
-for await (const ev of paginate((i) => fastn.events.listEvents(i), { outcome: "sent_to_dlq" as const }, { pageSize: 100 })) ...
+for await (const ev of paginate((i) => fastn.events.listEvents(i), { outcome: EventOutcomes.sentToDlq }, { pageSize: 100 })) ...
 ```
 
 Works for `limit`/`offset` lists and cursor lists; stops on a short page, a missing cursor, or a list that ignores paging.

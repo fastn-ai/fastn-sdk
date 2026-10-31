@@ -20,10 +20,25 @@ from .customer import EVENT_ALIASES, PROVIDER_TTL_SECONDS, WIDGET_TTL_SECONDS, C
 from .domain import Calendar, Crm, Deals, Entity, Notes, Tasks, free_intervals, slots_of
 from .errors import FastnApiError, FastnNetworkError
 from .events import parse_event, read_event_headers, sign_event_body, verify_event_signature
-from .names import Apps, Categories, Entities, EventTypes, HubSpotEvents, UnifiedActions
+from .names import (
+    Apps,
+    Categories,
+    CustomerStatus,
+    Entities,
+    EventOutcomes,
+    EventTypes,
+    HubSpotEvents,
+    OrgTypes,
+    Plans,
+    UnifiedActions,
+)
 from .paginate import paginate
 
 __all__ = [
+    "Plans",
+    "OrgTypes",
+    "EventOutcomes",
+    "CustomerStatus",
     "Apps",
     "Categories",
     "Entities",

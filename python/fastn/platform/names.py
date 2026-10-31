@@ -132,6 +132,54 @@ class UnifiedActions:
     deleted: Final = "deleted"
 
 
+class Plans:
+    """Fastn plans for a customer (``customer.register({ plan })``)."""
+
+    launch: Final = "launch"
+    scale: Final = "scale"
+    enterprise: Final = "enterprise"
+    growth: Final = "growth"
+    free: Final = "free"
+
+
+class CustomerStatus:
+    """A customer's status (``customer.update({ status })``, ``customer.get()``)."""
+
+    active: Final = "active"
+    suspended: Final = "suspended"
+    pendingReview: Final = "pending_review"
+    blocked: Final = "blocked"
+
+
+class OrgTypes:
+    """Kinds of org (``fastn.orgs.listOrgs({ type: OrgTypes.endOrg })``: your customers)."""
+
+    company: Final = "company"
+    partner: Final = "partner"
+    endOrg: Final = "end_org"
+    personal: Final = "personal"
+    account: Final = "account"
+
+
+class EventOutcomes:
+    """What happened to a received event (``fastn.events.listEvents({ outcome })``)."""
+
+    received: Final = "received"
+    firstAttempt: Final = "first_attempt"
+    recovered: Final = "recovered"
+    notProcessed: Final = "not_processed"
+    inProgress: Final = "in_progress"
+    replayed: Final = "replayed"
+    replaySucceeded: Final = "replay_succeeded"
+    replayFailed: Final = "replay_failed"
+    replayedFromDlq: Final = "replayed_from_dlq"
+    rerunByHand: Final = "rerun_by_hand"
+    eventReplay: Final = "event_replay"
+    afterDlq: Final = "after_dlq"
+    recoveredByRetry: Final = "recovered_by_retry"
+    sentToDlq: Final = "sent_to_dlq"
+
+
 def require_name(value: object, what: str) -> str:
     """Checks a name before it is used: an empty or missing name would otherwise reach the API as a confusing error, or,
     for ``unwatch``, read as "no app" and remove every watch."""
@@ -141,4 +189,4 @@ def require_name(value: object, what: str) -> str:
     raise TypeError(f"{what}: got {shown}; pass a name such as Apps.googleCalendar or \"googleCalendar\"")
 
 
-__all__ = ["Apps", "Categories", "Entities", "EventTypes", "HubSpotEvents", "UnifiedActions", "require_name"]
+__all__ = ["Apps", "Categories", "Entities", "EventTypes", "HubSpotEvents", "UnifiedActions", "Plans", "CustomerStatus", "OrgTypes", "EventOutcomes", "require_name"]

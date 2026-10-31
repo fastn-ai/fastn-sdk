@@ -136,6 +136,50 @@ export type EventType = KnownEventType | (string & {});
 /** What a `unified.event` says happened to the record (`event.action`). */
 export const UnifiedActions = { created: "created", updated: "updated", deleted: "deleted" } as const;
 
+/** Fastn plans for a customer (`customer.register({ plan })`). */
+export const Plans = {
+  launch: "launch",
+  scale: "scale",
+  enterprise: "enterprise",
+  growth: "growth",
+  free: "free",
+} as const;
+
+/** A customer's status (`customer.update({ status })`, `customer.get()`). */
+export const CustomerStatus = {
+  active: "active",
+  suspended: "suspended",
+  pendingReview: "pending_review",
+  blocked: "blocked",
+} as const;
+
+/** Kinds of org (`fastn.orgs.listOrgs({ type: OrgTypes.endOrg })`: your customers). */
+export const OrgTypes = {
+  company: "company",
+  partner: "partner",
+  endOrg: "end_org",
+  personal: "personal",
+  account: "account",
+} as const;
+
+/** What happened to a received event (`fastn.events.listEvents({ outcome })`). */
+export const EventOutcomes = {
+  received: "received",
+  firstAttempt: "first_attempt",
+  recovered: "recovered",
+  notProcessed: "not_processed",
+  inProgress: "in_progress",
+  replayed: "replayed",
+  replaySucceeded: "replay_succeeded",
+  replayFailed: "replay_failed",
+  replayedFromDlq: "replayed_from_dlq",
+  rerunByHand: "rerun_by_hand",
+  eventReplay: "event_replay",
+  afterDlq: "after_dlq",
+  recoveredByRetry: "recovered_by_retry",
+  sentToDlq: "sent_to_dlq",
+} as const;
+
 /**
  * Checks a name before it is used: a misspelt member in plain JavaScript (`Apps.googleCalender`) is `undefined`, which
  * would otherwise reach the API as a confusing error, or, for `unwatch`, read as "no app" and remove every watch.

@@ -44,10 +44,10 @@ fastn login
 ```
 
 ```python
-from fastn import FastnClient
+from fastn import FastnClient, ToolFormats
 
 fastn = FastnClient()
-tools = fastn.get_tools_for("Send a Slack message", format="openai")   # only the relevant tools reach the LLM
+tools = fastn.get_tools_for("Send a Slack message", format=ToolFormats.openai)   # only the relevant tools reach the LLM
 # ...send `tools` to your LLM, then run its tool call:
 # fastn.execute(tool=call.function.name, params=json.loads(call.function.arguments))
 ```

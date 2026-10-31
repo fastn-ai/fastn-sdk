@@ -1,6 +1,6 @@
 // Compile-time checks for the named values (run by `npm run typecheck` through tsconfig.test.json; never executed).
 // 1. the named forms compile; 2. every 0.4 string form still compiles (backward compatible); 3. a misspelt member does not.
-import { FastnClient, ToolsClient, Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, parseEvent, type HubSpotEvent, type FastnEvent } from "../../src/index.js";
+import { FastnClient, ToolsClient, Plans, CustomerStatus, OrgTypes, EventOutcomes, Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, parseEvent, type HubSpotEvent, type FastnEvent } from "../../src/index.js";
 
 declare const events: string[];
 declare const app: string;
@@ -71,4 +71,14 @@ export async function webhooksAndActions(): Promise<void> {
 export function misspeltEventMember(): void {
   // @ts-expect-error not a member of EventTypes
   void EventTypes.setupLinkComplete;
+}
+
+export async function accountNames(): Promise<void> {
+  await c.register({ name: "x", plan: Plans.launch });
+  await c.register({ name: "x", plan: "launch" });
+  await c.update({ status: CustomerStatus.suspended });
+  await c.update({ status: "active" });
+  await fastn.orgs.listOrgs({ type: OrgTypes.endOrg });
+  await fastn.events.listEvents({ outcome: EventOutcomes.sentToDlq });
+  await c.crm.notes.add({ body: "b", parent_id: "1", parent_type: Entities.contact });
 }

@@ -13,10 +13,14 @@ from fastn.platform import (
     EVENT_ALIASES,
     Apps,
     Categories,
+    CustomerStatus,
     Entities,
+    EventOutcomes,
     EventTypes,
     FastnClient,
     HubSpotEvents,
+    OrgTypes,
+    Plans,
     UnifiedActions,
     parse_event,
     sign_event_body,
@@ -45,7 +49,7 @@ def test_every_name_is_the_exact_string_the_api_takes() -> None:
 
 
 def test_the_names_are_the_same_as_in_the_node_sdk() -> None:
-    for name, cls in (("Apps", Apps), ("Categories", Categories), ("Entities", Entities), ("HubSpotEvents", HubSpotEvents), ("EventTypes", EventTypes), ("UnifiedActions", UnifiedActions)):
+    for name, cls in (("Apps", Apps), ("Categories", Categories), ("Entities", Entities), ("HubSpotEvents", HubSpotEvents), ("EventTypes", EventTypes), ("UnifiedActions", UnifiedActions), ("Plans", Plans), ("CustomerStatus", CustomerStatus), ("OrgTypes", OrgTypes), ("EventOutcomes", EventOutcomes)):
         assert _py(cls) == _node_block(name), name
 
 
