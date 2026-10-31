@@ -1,6 +1,6 @@
 {
   "name": "@fastn-ai/sdk",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "fastn SDK for Node.js and TypeScript: embedded integrations for multi-tenant SaaS and AI agents. Your customers connect their own apps inside your product, through one typed API.",
   "license": "MIT",
   "author": "fastn",

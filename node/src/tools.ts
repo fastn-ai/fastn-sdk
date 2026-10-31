@@ -3,11 +3,12 @@
 //   import { ToolsClient } from "@fastn-ai/sdk";
 //   const connect = new ToolsClient({ key: process.env.FASTN_TOOLS_KEY!, url: "https://mcp.fastn.dev/<workspace>" });
 //   const tools = await connect.tools();                                     // every tool turned on in the workspace
-//   const r = await connect.customer("acme-42").call("googleCalendar__listEvents", { calendarId: "primary" });
+//   // typed per-tool methods for your workspace: npx fastn-sdk-tools (see the README)
 //   r.data                                                               // the tool's answer, JSON-decoded
 //
 // Which tools exist is decided in the workspace, not here: turn a connector on in the workspace and it shows up in tools().
 import { FastnNetworkError } from "./errors.js";
+import type { AppName } from "./names.js";
 import { RETRY_STATUS, backoff, defaultUserAgent, errorInfo, mergeOptions, parseLoose, requestSignal, sleep } from "./http.js";
 
 export interface ToolsClientConfig {
@@ -165,7 +166,7 @@ export class ToolsClient {
    * The tools of one connector, e.g. tools for "googleCalendar". Pass `from` (a list from tools()) to filter without
    * another listing; otherwise the list is fetched once and reused for `cacheMs` (default 60s) on this client.
    */
-  async toolsOf(connector: string, opts: ToolCallOptions & { from?: Tool[]; cacheMs?: number } = {}): Promise<Tool[]> {
+  async toolsOf(connector: AppName, opts: ToolCallOptions & { from?: Tool[]; cacheMs?: number } = {}): Promise<Tool[]> {
     const prefix = `${connector}__`;
     const { from, cacheMs = 60_000, ...callOpts } = opts;
     const list = from ?? await this.cachedTools(callOpts, cacheMs);

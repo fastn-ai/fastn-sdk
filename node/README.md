@@ -59,7 +59,7 @@ import { FastnClient } from "@fastn-ai/sdk";             // ESM
 ## 60-second tour
 
 ```ts
-import { Apps, Categories, Entities, FastnClient, HubSpotEvents } from "@fastn-ai/sdk";
+import { Apps, Categories, Entities, EventTypes, FastnClient, HubSpotEvents } from "@fastn-ai/sdk";
 
 const fastn = new FastnClient({ apiKey: process.env.FASTN_API_KEY! });   // https://api.fastn.dev
 
@@ -142,8 +142,8 @@ new FastnClient({
 
 ## Named apps, categories and events
 
-`Apps`, `Categories`, `Entities` and `HubSpotEvents` name every app in the unified catalog, every category and entity,
-and HubSpot's change events, so calls are completed and checked by your editor instead of typed as strings:
+`Apps`, `Categories`, `Entities`, `HubSpotEvents`, `EventTypes` and `UnifiedActions` name every app in the unified
+catalog, every category and entity, HubSpot's change events, and the events your webhook receives, so calls are completed and checked by your editor instead of typed as strings:
 `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
 `fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }`. A misspelt member
 (`Apps.googleCalender`, `HubSpotEvents.contactCraeted`) does not compile. Plain strings are still accepted and not
@@ -247,7 +247,7 @@ await customer.update({ name: "Acme Dental Ltd" });                   // or { st
 await customer.callLog("req-abc");                                    // what fastn did for your request id
 
 // Your webhook, once for the whole account.
-const hook = await fastn.webhooks.create({ url: "https://app.acme.com/fastn", eventTypes: ["connection.connected", "setup_link.completed", "connector.event", "unified.event"] });
+const hook = await fastn.webhooks.create({ url: "https://app.acme.com/fastn", eventTypes: [EventTypes.connectionConnected, EventTypes.setupLinkCompleted, EventTypes.connectorEvent, EventTypes.unifiedEvent] });
 hook.secret                                                           // shown once: the signing secret for parseEvent
 await fastn.webhooks.test(hook.id); await fastn.webhooks.deliveries(hook.id); await fastn.webhooks.rotateSecret(hook.id);
 ```
@@ -384,11 +384,16 @@ created.data                                                                  //
 ## Events (webhooks)
 
 ```ts
-import { parseEvent, verifyEventSignature } from "@fastn-ai/sdk";
+import { Apps, EventTypes, parseEvent, verifyEventSignature } from "@fastn-ai/sdk";
 
 // Express: app.post("/fastn/events", express.raw({ type: "application/json" }), (req, res) => {
 const event = parseEvent(process.env.FASTN_EVENT_SECRET!, req.headers, req.body);   // throws on a bad signature
 // event.id is stable across retries: drop repeats by id.
+switch (event.type) {
+  case EventTypes.connectionConnected: if (event.app === Apps.hubspot) { /* start a watch */ } break;
+  case EventTypes.setupLinkCompleted: /* event.connections: app -> account id */ break;
+  case EventTypes.unifiedEvent: /* event.action: UnifiedActions.created | updated | deleted */ break;
+}
 ```
 
 The signature is `sha256=HMAC-SHA256(secret, "<X-Fastn-Timestamp>.<raw body>")`; deliveries older than 5 minutes

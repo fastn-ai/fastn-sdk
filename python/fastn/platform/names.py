@@ -111,6 +111,27 @@ class HubSpotEvents:
 
 
 
+class EventTypes:
+    """The events Fastn sends to your webhook (``event["type"]``), and the values ``fastn.webhooks.create({"eventTypes": [...]})`` takes."""
+
+    connectionConnected: Final = "connection.connected"
+    connectionRevoked: Final = "connection.revoked"
+    connectionExpired: Final = "connection.expired"
+    setupLinkCompleted: Final = "setup_link.completed"
+    setupLinkExpired: Final = "setup_link.expired"
+    connectorEvent: Final = "connector.event"
+    unifiedEvent: Final = "unified.event"
+    endpointTest: Final = "endpoint.test"
+
+
+class UnifiedActions:
+    """What a ``unified.event`` says happened to the record (``event["action"]``)."""
+
+    created: Final = "created"
+    updated: Final = "updated"
+    deleted: Final = "deleted"
+
+
 def require_name(value: object, what: str) -> str:
     """Checks a name before it is used: an empty or missing name would otherwise reach the API as a confusing error, or,
     for ``unwatch``, read as "no app" and remove every watch."""
@@ -120,4 +141,4 @@ def require_name(value: object, what: str) -> str:
     raise TypeError(f"{what}: got {shown}; pass a name such as Apps.googleCalendar or \"googleCalendar\"")
 
 
-__all__ = ["Apps", "Categories", "Entities", "HubSpotEvents", "require_name"]
+__all__ = ["Apps", "Categories", "Entities", "EventTypes", "HubSpotEvents", "UnifiedActions", "require_name"]

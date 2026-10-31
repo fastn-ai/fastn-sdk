@@ -9,7 +9,18 @@ from typing import Callable
 import httpx
 import pytest
 
-from fastn.platform import EVENT_ALIASES, Apps, Categories, Entities, FastnClient, HubSpotEvents
+from fastn.platform import (
+    EVENT_ALIASES,
+    Apps,
+    Categories,
+    Entities,
+    EventTypes,
+    FastnClient,
+    HubSpotEvents,
+    UnifiedActions,
+    parse_event,
+    sign_event_body,
+)
 
 from .conftest import Mock, Reply
 
@@ -20,7 +31,7 @@ def _node_block(name: str) -> dict[str, str]:
     src = NODE_NAMES.read_text()
     block = src[src.index(f"export const {name} = {{"):]
     block = block[: block.index("} as const;")]
-    return dict(re.findall(r'^\s+(\w+): "([^"]+)",', block, re.M))
+    return dict(re.findall(r'(\w+): "([^"]+)"', block))
 
 
 def _py(cls: type) -> dict[str, str]:
@@ -34,7 +45,7 @@ def test_every_name_is_the_exact_string_the_api_takes() -> None:
 
 
 def test_the_names_are_the_same_as_in_the_node_sdk() -> None:
-    for name, cls in (("Apps", Apps), ("Categories", Categories), ("Entities", Entities), ("HubSpotEvents", HubSpotEvents)):
+    for name, cls in (("Apps", Apps), ("Categories", Categories), ("Entities", Entities), ("HubSpotEvents", HubSpotEvents), ("EventTypes", EventTypes), ("UnifiedActions", UnifiedActions)):
         assert _py(cls) == _node_block(name), name
 
 
@@ -65,3 +76,12 @@ def test_a_missing_or_empty_name_throws_a_clear_type_error_before_any_request(mo
     with pytest.raises(TypeError):
         c.watchable_events(None)  # type: ignore[arg-type]
     assert len(m.calls) == 0
+
+
+def test_a_parsed_event_compares_equal_to_the_named_values() -> None:
+    body = '{"id": "evt_1", "type": "setup_link.completed", "app": "googleCalendar", "tenantRef": "acme-1"}'
+    import time
+
+    ts = int(time.time())
+    ev = parse_event("whsec_t", {"x-fastn-timestamp": str(ts), "x-fastn-signature": sign_event_body("whsec_t", ts, body)}, body)
+    assert ev["type"] == EventTypes.setupLinkCompleted and ev["app"] == Apps.googleCalendar

@@ -4,6 +4,10 @@ All notable changes to `@fastn-ai/sdk` are documented here.
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-31
+
+- Added: `EventTypes` (the events your webhook receives: `connectionConnected`, `connectionRevoked`, `connectionExpired`, `setupLinkCompleted`, `setupLinkExpired`, `connectorEvent`, `unifiedEvent`, `endpointTest`) and `UnifiedActions` (`created`, `updated`, `deleted`), so a handler reads `case EventTypes.setupLinkCompleted:` and a webhook `eventTypes: [EventTypes.connectionConnected, ...]` instead of strings. `FastnEvent.type` is `EventType` and `event.app` is `AppName`; `runAction({ connector })` and `ToolsClient.toolsOf(app)` take `AppName`. Each value is the exact string the API sends, and every type still accepts any string, so existing code compiles and behaves unchanged. A unit test keeps `EventTypes` equal to the webhook event types in the API spec.
+
 ## [0.5.0] - 2026-10-30
 
 - Added: `Apps`, `Categories`, `Entities` and `HubSpotEvents`, named values for every app in the unified catalog (36), every category and entity, and HubSpot's change events, so calls read `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`, `fastn.catalog.fields(Categories.crm, Entities.contact)`, `{ provider: Apps.hubspot }` instead of typed strings. Each value is the exact string the API takes; the string form still works and an app outside the list can be passed by its slug (`AppName` type). README snippets use the names.

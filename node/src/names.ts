@@ -113,6 +113,29 @@ export const HubSpotEvents = {
   ticketDeleted: "ticket.deleted",
 } as const;
 
+/** The events Fastn sends to your webhook (`event.type`), and the values `fastn.webhooks.create({ eventTypes })` takes. */
+export const EventTypes = {
+  connectionConnected: "connection.connected",
+  connectionRevoked: "connection.revoked",
+  connectionExpired: "connection.expired",
+  setupLinkCompleted: "setup_link.completed",
+  setupLinkExpired: "setup_link.expired",
+  /** A change in a customer's app, as the app sent it (after `customer.watch`). */
+  connectorEvent: "connector.event",
+  /** The same change as a unified record (after `customer.watch`). */
+  unifiedEvent: "unified.event",
+  /** Sent by `fastn.webhooks.test(id)`; never subscribed to. */
+  endpointTest: "endpoint.test",
+} as const;
+
+/** One of `EventTypes`. */
+export type KnownEventType = (typeof EventTypes)[keyof typeof EventTypes];
+/** An event type: one of `EventTypes` (completed by the editor), or any other string (new types keep working). */
+export type EventType = KnownEventType | (string & {});
+
+/** What a `unified.event` says happened to the record (`event.action`). */
+export const UnifiedActions = { created: "created", updated: "updated", deleted: "deleted" } as const;
+
 /**
  * Checks a name before it is used: a misspelt member in plain JavaScript (`Apps.googleCalender`) is `undefined`, which
  * would otherwise reach the API as a confusing error, or, for `unwatch`, read as "no app" and remove every watch.

@@ -1,6 +1,6 @@
 // Compile-time checks for the named values (run by `npm run typecheck` through tsconfig.test.json; never executed).
 // 1. the named forms compile; 2. every 0.4 string form still compiles (backward compatible); 3. a misspelt member does not.
-import { FastnClient, Apps, Categories, Entities, HubSpotEvents, type HubSpotEvent } from "../../src/index.js";
+import { FastnClient, ToolsClient, Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, parseEvent, type HubSpotEvent, type FastnEvent } from "../../src/index.js";
 
 declare const events: string[];
 declare const app: string;
@@ -41,4 +41,34 @@ export async function misspeltMembers(): Promise<void> {
   await c.watch(Apps.hubspot, [HubSpotEvents.contactCraeted]);
   // @ts-expect-error not a member of Categories
   await fastn.catalog.fields(Categories.crmm, Entities.contact);
+}
+
+export function eventNames(event: FastnEvent): string {
+  // named: compiles and narrows nothing away
+  switch (event.type) {
+    case EventTypes.setupLinkCompleted: return "link";
+    case EventTypes.connectionConnected: return event.app === Apps.hubspot ? "hubspot" : "other";
+    case EventTypes.unifiedEvent: return event.action === UnifiedActions.created ? "new" : "changed";
+    default: return "x";
+  }
+}
+
+export function eventStringsFrom04(event: FastnEvent): boolean {
+  const e = parseEvent("whsec", {}, "{}");
+  return event.type === "setup_link.completed" || event.app === "hubspot" || e.type === "connection.connected" || event.type === "some.future.event";
+}
+
+export async function webhooksAndActions(): Promise<void> {
+  await fastn.webhooks.create({ url: "https://x", eventTypes: [EventTypes.connectionConnected, EventTypes.setupLinkCompleted, EventTypes.connectorEvent, EventTypes.unifiedEvent] });
+  await fastn.webhooks.create({ url: "https://x", eventTypes: ["connection.connected"] });
+  await c.runAction({ connector: Apps.hubspot, action: "getContact", input: {} });
+  await c.runAction({ connector: "hubspot", action: "getContact" });
+  const t = new ToolsClient({ key: "k", url: "https://mcp.fastn.dev/w" });
+  await t.toolsOf(Apps.googleCalendar);
+  await t.toolsOf("googleCalendar");
+}
+
+export function misspeltEventMember(): void {
+  // @ts-expect-error not a member of EventTypes
+  void EventTypes.setupLinkComplete;
 }

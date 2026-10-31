@@ -900,8 +900,8 @@ every operation is a snake_case method on its area (`fastn.embed.create_setup_li
 This is a different `FastnClient` from `fastn.FastnClient` above: it takes a platform API key from the
 [fastn dashboard](https://app.fastn.dev) and talks to `https://api.fastn.dev`. It is synchronous.
 
-`Apps`, `Categories`, `Entities` and `HubSpotEvents` name every app in the unified catalog, every category and entity,
-and HubSpot's change events, so calls are completed by your editor instead of typed as strings:
+`Apps`, `Categories`, `Entities`, `HubSpotEvents`, `EventTypes` and `UnifiedActions` name every app in the unified
+catalog, every category and entity, HubSpot's change events, and the events your webhook receives, so calls are completed by your editor instead of typed as strings:
 `customer.connect(Apps.googleCalendar)`, `customer.watch(Apps.hubspot, [HubSpotEvents.contactCreated])`,
 `fastn.catalog.fields(Categories.crm, Entities.contact)`, `provider=Apps.hubspot`. Each value is the exact string the
 API takes, so existing string calls keep working. The lists are the unified catalog on production as of 0.5.0; an app,
@@ -911,7 +911,7 @@ property change: keep stage moves with `propertyName == "dealstage"`. The snippe
 
 ```python
 import os
-from fastn.platform import Apps, Categories, Entities, FastnClient, HubSpotEvents
+from fastn.platform import Apps, Categories, Entities, EventTypes, FastnClient, HubSpotEvents
 
 fastn = FastnClient(
     api_key=os.environ["FASTN_API_KEY"],
@@ -955,7 +955,7 @@ customer.rename_account(account_id, "Front desk calendar")
 customer.update({"name": "Acme Dental Ltd"})                      # or {"status": "suspended"}
 
 # Your webhook, once for the whole account.
-hook = fastn.webhooks.create({"url": "https://app.acme.com/fastn", "eventTypes": ["connection.connected", "setup_link.completed", "connector.event", "unified.event"]})
+hook = fastn.webhooks.create({"url": "https://app.acme.com/fastn", "eventTypes": [EventTypes.connectionConnected, EventTypes.setupLinkCompleted, EventTypes.connectorEvent, EventTypes.unifiedEvent]})
 hook["secret"]                                                    # shown once: the signing secret for parse_event
 fastn.webhooks.test(hook["id"]); fastn.webhooks.deliveries(hook["id"]); fastn.webhooks.rotate_secret(hook["id"])
 ```
@@ -1089,11 +1089,15 @@ options to every call, e.g. `defaults={"customer": {"ref": "acme-42"}}` to scope
 ### Events (webhooks)
 
 ```python
-from fastn.platform import parse_event
+from fastn.platform import Apps, EventTypes, parse_event
 
 # Flask: event = parse_event(os.environ["FASTN_EVENT_SECRET"], request.headers, request.get_data())
 event = parse_event(secret, headers, raw_body)          # raises ValueError on a bad signature
 # event["id"] is stable across retries: drop repeats by id.
+if event["type"] == EventTypes.connectionConnected and event.get("app") == Apps.hubspot:
+    ...                                                 # start a watch
+elif event["type"] == EventTypes.setupLinkCompleted:
+    ...                                                 # event["connections"]: app -> account id
 ```
 
 The signature is `sha256=HMAC-SHA256(secret, "<X-Fastn-Timestamp>.<raw body>")`; deliveries older than 5 minutes are

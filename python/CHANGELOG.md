@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-10-31
+
+### Added
+
+- `fastn.platform.EventTypes` (the events your webhook receives: `connectionConnected`, `connectionRevoked`, `connectionExpired`, `setupLinkCompleted`, `setupLinkExpired`, `connectorEvent`, `unifiedEvent`, `endpointTest`) and `UnifiedActions` (`created`, `updated`, `deleted`), plain `str` values identical to the Node SDK's, so a handler compares `event["type"] == EventTypes.setupLinkCompleted` instead of a string. Nothing else changes.
+
 ## [0.5.0] - 2026-10-30
 
 ### Added

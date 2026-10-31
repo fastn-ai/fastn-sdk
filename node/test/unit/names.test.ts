@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { Apps, Categories, Entities, HubSpotEvents, EVENT_ALIASES, FastnClient } from "../../src/index.js";
+import { Apps, Categories, Entities, HubSpotEvents, EventTypes, UnifiedActions, EVENT_ALIASES, FastnClient, parseEvent, signEventBody } from "../../src/index.js";
+import { readFileSync } from "node:fs";
 import { requireName } from "../../src/names.js";
 import { mockFetch } from "../helpers.js";
 
@@ -38,5 +39,22 @@ describe("named apps, categories, entities and events", () => {
     await expect(c.catalog.fields((Categories as any).crmm, Entities.contact)).rejects.toThrow(/catalog.fields/);
     expect(m.calls.length).toBe(0);
     expect(requireName("googleCalendar", "x")).toBe("googleCalendar");
+  });
+
+  it("EventTypes are exactly the event types the API spec lists for webhooks, plus endpoint.test", () => {
+    const spec = JSON.parse(readFileSync(new URL("../../spec/openapi-v1.8.2.json", import.meta.url), "utf8"));
+    let fromSpec: string[] = [];
+    const walk = (o: any): void => { if (o && typeof o === "object") { if (Array.isArray(o.enum) && o.enum.includes("connection.connected")) fromSpec = o.enum; Object.values(o).forEach(walk); } };
+    walk(spec);
+    expect(new Set(Object.values(EventTypes))).toEqual(new Set([...fromSpec, "endpoint.test"]));
+    expect(Object.values(UnifiedActions)).toEqual(["created", "updated", "deleted"]);
+  });
+
+  it("a parsed event compares equal to the named values", () => {
+    const body = JSON.stringify({ id: "evt_1", type: "connection.connected", app: "hubspot", tenantRef: "acme-1" });
+    const ts = Math.floor(Date.now() / 1000);
+    const ev = parseEvent("whsec_t", { "x-fastn-timestamp": String(ts), "x-fastn-signature": signEventBody("whsec_t", ts, body) }, body);
+    expect(ev.type).toBe(EventTypes.connectionConnected);
+    expect(ev.app).toBe(Apps.hubspot);
   });
 });

@@ -291,7 +291,7 @@ from .connectors.zapier import ZapierConnector
 from .connectors.zendesk import ZendeskConnector
 from .connectors.zoho import ZohoConnector
 
-__version__: str = "0.5.0"
+__version__: str = "0.5.1"
 
 
 class FastnClient:
